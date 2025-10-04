@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Heart, Baby, ShieldCheck } from 'lucide-react';
+import { Baby, ShieldCheck, Heart, Utensils } from 'lucide-react';
 
 const AuthPage = ({ onLogin, onRegister }) => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -26,38 +26,42 @@ const AuthPage = ({ onLogin, onRegister }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-rose-50 via-white to-blue-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 via-white to-blue-50">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
         <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/2 w-64 h-64 bg-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-500"></div>
+        <div className="absolute bottom-1/4 left-1/2 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse delay-500"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-8 fade-in">
           <div className="flex justify-center mb-6">
-            <div className="p-4 bg-white rounded-full shadow-lg border-2 border-rose-100">
-              <Baby className="w-12 h-12 text-rose-600" />
+            <div className="p-4 bg-white rounded-full shadow-lg border-2 border-green-100">
+              <Baby className="w-12 h-12 text-green-600" />
             </div>
           </div>
           <h1 className="text-4xl font-bold font-display text-gray-900 mb-3">
-            Baby Tracker
+            Baby Steps
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Track your little one's journey with love and confidence
+          <p className="text-lg text-gray-600 leading-relaxed mb-4">
+            Safe nutrition and emergency guidance for new parents
           </p>
           
           {/* Features preview */}
           <div className="flex justify-center gap-6 mt-6 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-rose-400" />
-              <span>Feeding & Sleep</span>
+              <Utensils className="w-4 h-4 text-green-500" />
+              <span>Food Safety</span>
             </div>
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-blue-400" />
-              <span>Growth Tracking</span>
+              <ShieldCheck className="w-4 h-4 text-red-500" />
+              <span>Emergency Training</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="w-4 h-4 text-orange-500" />
+              <span>Meal Planning</span>
             </div>
           </div>
         </div>
@@ -66,7 +70,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
         <Card className="glass-strong shadow-2xl border-0 slide-up">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-center text-gray-800">
-              Welcome Back
+              Join Baby Steps
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -101,7 +105,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
                       value={loginData.email}
                       onChange={(e) => setLoginData({...loginData, email: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="login-email-input"
                     />
                   </div>
@@ -116,14 +120,14 @@ const AuthPage = ({ onLogin, onRegister }) => {
                       value={loginData.password}
                       onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="login-password-input"
                     />
                   </div>
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                     data-testid="login-submit-btn"
                   >
                     {loading ? (
@@ -151,7 +155,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
                       value={registerData.name}
                       onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="register-name-input"
                     />
                   </div>
@@ -166,7 +170,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
                       value={registerData.email}
                       onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="register-email-input"
                     />
                   </div>
@@ -181,10 +185,19 @@ const AuthPage = ({ onLogin, onRegister }) => {
                       value={registerData.password}
                       onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="register-password-input"
                     />
                   </div>
+                  
+                  {/* Disclaimer */}
+                  <div className="disclaimer">
+                    <p className="text-xs text-gray-600">
+                      <span className="warning-text">⚠️ Important:</span> Baby Steps provides educational content only. 
+                      Always consult your pediatrician for medical advice. Emergency training content is not a substitute for formal CPR/First Aid certification.
+                    </p>
+                  </div>
+                  
                   <Button
                     type="submit"
                     disabled={loading}
@@ -208,7 +221,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>Trusted by families worldwide</p>
+          <p>Trusted nutrition and safety guidance for parents</p>
         </div>
       </div>
     </div>

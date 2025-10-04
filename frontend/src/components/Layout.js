@@ -5,12 +5,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { 
   Home, 
   Baby, 
-  Activity, 
-  BookOpen, 
+  Search, 
+  ShieldAlert, 
+  ChefHat,
   LogOut, 
   Menu,
   X,
-  Heart
+  Utensils
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -21,21 +22,22 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Baby Profile', href: '/baby-profile', icon: Baby },
-    { name: 'Track Activities', href: '/tracking', icon: Activity },
-    { name: 'Research & Tips', href: '/research', icon: BookOpen },
+    { name: 'Food Research', href: '/food-research', icon: Search },
+    { name: 'Emergency Training', href: '/emergency-training', icon: ShieldAlert },
+    { name: 'Meal Planner', href: '/meal-planner', icon: ChefHat },
   ];
 
   const isActive = (href) => location.pathname === href;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           variant="outline"
           size="sm"
-          className="bg-white/90 backdrop-blur-sm border-rose-200"
+          className="bg-white/90 backdrop-blur-sm border-green-200"
           data-testid="mobile-menu-toggle"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -51,19 +53,19 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl border-r border-rose-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl border-r border-green-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-center h-16 px-6 border-b border-rose-100 bg-gradient-to-r from-rose-500 to-pink-500 text-white">
-            <Heart className="w-6 h-6 mr-2" />
-            <h1 className="text-xl font-bold font-display">Baby Tracker</h1>
+          <div className="flex items-center justify-center h-16 px-6 border-b border-green-100 bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+            <Utensils className="w-6 h-6 mr-2" />
+            <h1 className="text-xl font-bold font-display">Baby Steps</h1>
           </div>
 
           {/* Baby Selector */}
           {babies.length > 0 && (
-            <div className="p-4 border-b border-rose-100 bg-rose-50/50">
+            <div className="p-4 border-b border-green-100 bg-green-50/50">
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Select Baby
               </label>
@@ -75,7 +77,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
                 }}
               >
                 <SelectTrigger 
-                  className="w-full bg-white border-rose-200"
+                  className="w-full bg-white border-green-200"
                   data-testid="baby-selector"
                 >
                   <SelectValue placeholder="Select a baby" />
@@ -84,7 +86,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
                   {babies.map((baby) => (
                     <SelectItem key={baby.id} value={baby.id}>
                       <div className="flex items-center gap-2">
-                        <Baby className="w-4 h-4 text-rose-500" />
+                        <Baby className="w-4 h-4 text-green-500" />
                         {baby.name}
                       </div>
                     </SelectItem>
@@ -98,23 +100,39 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const Icon = item.icon;
+              const isEmergency = item.href === '/emergency-training';
               return (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`nav-link ${isActive(item.href) ? 'active' : ''}`}
+                  className={`nav-link ${isActive(item.href) ? 'active' : ''} ${
+                    isEmergency ? 'emergency-nav-link' : ''
+                  }`}
                   data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <Icon className="w-5 h-5" />
                   {item.name}
+                  {isEmergency && (
+                    <span className="ml-auto text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
+                      Emergency
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
 
+          {/* Disclaimer */}
+          <div className="p-4 border-t border-green-100 bg-yellow-50">
+            <div className="text-xs text-gray-600">
+              <p className="font-medium text-gray-800 mb-1">⚠️ Important Notice</p>
+              <p>This app provides educational content only. Always consult your pediatrician for medical advice.</p>
+            </div>
+          </div>
+
           {/* Footer */}
-          <div className="p-4 border-t border-rose-100">
+          <div className="p-4 border-t border-green-100">
             <Button
               onClick={onLogout}
               variant="outline"
@@ -136,6 +154,13 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
           </div>
         </main>
       </div>
+
+      <style jsx>{`
+        .emergency-nav-link:hover {
+          background: rgba(239, 68, 68, 0.1) !important;
+          color: #ef4444 !important;
+        }
+      `}</style>
     </div>
   );
 };

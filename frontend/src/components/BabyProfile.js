@@ -3,10 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Baby, Calendar as CalendarIcon, Weight, Ruler, Plus, Heart } from 'lucide-react';
+import { Baby, Calendar as CalendarIcon, Plus, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -14,10 +13,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
   const [showAddForm, setShowAddForm] = useState(!currentBaby);
   const [formData, setFormData] = useState({
     name: '',
-    birth_date: new Date(),
-    birth_weight: '',
-    birth_length: '',
-    gender: ''
+    birth_date: new Date()
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -25,21 +21,11 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
     e.preventDefault();
     
     try {
-      const babyData = {
-        ...formData,
-        birth_weight: formData.birth_weight ? parseFloat(formData.birth_weight) : null,
-        birth_length: formData.birth_length ? parseFloat(formData.birth_length) : null,
-        gender: formData.gender || null
-      };
-
-      await onAddBaby(babyData);
+      await onAddBaby(formData);
       setShowAddForm(false);
       setFormData({
         name: '',
-        birth_date: new Date(),
-        birth_weight: '',
-        birth_length: '',
-        gender: ''
+        birth_date: new Date()
       });
     } catch (error) {
       console.error('Failed to add baby:', error);
@@ -53,6 +39,9 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
       </div>
     );
   }
+
+  const babyAgeMonths = currentBaby ? Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 0;
+  const babyAgeDays = currentBaby ? Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24)) : 0;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 fade-in">
@@ -69,7 +58,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
         {currentBaby && !showAddForm && (
           <Button
             onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             data-testid="add-another-baby-btn"
           >
             <Plus className="w-5 h-5 mr-2" />
@@ -81,7 +70,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
       {/* Current Baby Profile */}
       {currentBaby && (
         <Card className="glass-strong border-0 overflow-hidden">
-          <div className="bg-gradient-to-r from-rose-500 to-pink-500 p-6 text-white">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 text-white">
             <div className="flex items-center gap-6">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <Baby className="w-10 h-10 text-white" />
@@ -90,20 +79,18 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
                 <h2 className="text-3xl font-bold font-display" data-testid="current-baby-name">
                   {currentBaby.name}
                 </h2>
-                <p className="text-rose-100 text-lg mt-1">
+                <p className="text-green-100 text-lg mt-1">
                   Born {format(new Date(currentBaby.birth_date), 'MMMM dd, yyyy')}
                 </p>
                 <div className="flex items-center gap-4 mt-3 text-sm">
                   <div className="flex items-center gap-1">
                     <CalendarIcon className="w-4 h-4" />
-                    <span>{Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24))} days old</span>
+                    <span>{babyAgeDays} days old</span>
                   </div>
-                  {currentBaby.gender && (
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      <span className="capitalize">{currentBaby.gender}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-4 h-4" />
+                    <span>{babyAgeMonths} months old</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,57 +98,38 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
 
           <CardContent className="p-6">
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Birth Stats */}
+              {/* Age Information */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Weight className="w-5 h-5 text-rose-500" />
-                  Birth Information
+                  <CalendarIcon className="w-5 h-5 text-green-500" />
+                  Age Information
                 </h3>
                 <div className="space-y-4">
                   <StatItem
-                    label="Birth Weight"
-                    value={currentBaby.birth_weight ? `${currentBaby.birth_weight} lbs` : 'Not recorded'}
-                    icon={<Weight className="w-4 h-4 text-blue-500" />}
+                    label="Days Old"
+                    value={babyAgeDays}
+                    icon={<CalendarIcon className="w-4 h-4 text-blue-500" />}
                   />
                   <StatItem
-                    label="Birth Length"
-                    value={currentBaby.birth_length ? `${currentBaby.birth_length} inches` : 'Not recorded'}
-                    icon={<Ruler className="w-4 h-4 text-green-500" />}
+                    label="Months Old"
+                    value={babyAgeMonths}
+                    icon={<Baby className="w-4 h-4 text-green-500" />}
                   />
                   <StatItem
-                    label="Gender"
-                    value={currentBaby.gender ? currentBaby.gender.charAt(0).toUpperCase() + currentBaby.gender.slice(1) : 'Not specified'}
-                    icon={<Baby className="w-4 h-4 text-purple-500" />}
+                    label="Weeks Old"
+                    value={Math.floor(babyAgeDays / 7)}
+                    icon={<Heart className="w-4 h-4 text-purple-500" />}
                   />
                 </div>
               </div>
 
-              {/* Growth Milestones Preview */}
+              {/* Feeding Stage */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-rose-500" />
-                  Quick Stats
+                  <Heart className="w-5 h-5 text-green-500" />
+                  Development Stage
                 </h3>
-                <div className="space-y-4">
-                  <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-100">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">
-                      {Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 7))}
-                    </div>
-                    <div className="text-sm text-blue-700 font-medium">Weeks Old</div>
-                  </div>
-                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
-                    <div className="text-2xl font-bold text-green-600 mb-1">
-                      {Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44))}
-                    </div>
-                    <div className="text-sm text-green-700 font-medium">Months Old</div>
-                  </div>
-                  <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-100">
-                    <div className="text-lg font-bold text-purple-600 mb-1">
-                      Growing Strong
-                    </div>
-                    <div className="text-sm text-purple-700 font-medium">Every day counts</div>
-                  </div>
-                </div>
+                <FeedingStageInfo babyAgeMonths={babyAgeMonths} />
               </div>
             </div>
           </CardContent>
@@ -173,7 +141,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
         <Card className="glass-strong border-0">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
-              <Baby className="w-6 h-6 text-rose-500" />
+              <Baby className="w-6 h-6 text-green-500" />
               Add Baby Profile
             </CardTitle>
           </CardHeader>
@@ -193,7 +161,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                       data-testid="baby-name-input"
                     />
                   </div>
@@ -206,7 +174,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal px-4 py-3 h-auto border-2 border-gray-200 rounded-xl hover:border-rose-400 focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+                          className="w-full justify-start text-left font-normal px-4 py-3 h-auto border-2 border-gray-200 rounded-xl hover:border-green-400 focus:border-green-400 focus:ring-2 focus:ring-green-100"
                           data-testid="birth-date-picker"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -227,64 +195,23 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
                       </PopoverContent>
                     </Popover>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="gender" className="text-sm font-medium text-gray-700">
-                      Gender
-                    </Label>
-                    <Select value={formData.gender} onValueChange={(value) => setFormData({...formData, gender: value})}>
-                      <SelectTrigger 
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
-                        data-testid="gender-selector"
-                      >
-                        <SelectValue placeholder="Select gender (optional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="boy">Boy</SelectItem>
-                        <SelectItem value="girl">Girl</SelectItem>
-                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
 
-                {/* Birth Statistics */}
+                {/* Safety Information */}
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="birth-weight" className="text-sm font-medium text-gray-700">
-                      Birth Weight (lbs)
-                    </Label>
-                    <Input
-                      id="birth-weight"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g., 7.5"
-                      value={formData.birth_weight}
-                      onChange={(e) => setFormData({...formData, birth_weight: e.target.value})}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
-                      data-testid="birth-weight-input"
-                    />
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <h4 className="text-sm font-medium text-green-800 mb-2">Why we need this information:</h4>
+                    <ul className="text-xs text-green-700 space-y-1">
+                      <li>• Provide age-appropriate food safety guidance</li>
+                      <li>• Recommend suitable emergency training content</li>
+                      <li>• Suggest developmentally appropriate meals</li>
+                      <li>• Track important feeding milestones</li>
+                    </ul>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="birth-length" className="text-sm font-medium text-gray-700">
-                      Birth Length (inches)
-                    </Label>
-                    <Input
-                      id="birth-length"
-                      type="number"
-                      step="0.1"
-                      placeholder="e.g., 20.5"
-                      value={formData.birth_length}
-                      onChange={(e) => setFormData({...formData, birth_length: e.target.value})}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
-                      data-testid="birth-length-input"
-                    />
-                  </div>
-
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-700">
-                      <strong>Tip:</strong> Birth measurements help track your baby's growth over time. You can add these details later if you don't have them now.
+                  <div className="disclaimer">
+                    <p className="text-xs text-gray-600">
+                      <span className="warning-text">⚠️ Privacy:</span> We only store your baby's name and birth date to provide personalized guidance. No other personal information is collected.
                     </p>
                   </div>
                 </div>
@@ -294,7 +221,7 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <Button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   data-testid="save-baby-btn"
                 >
                   <Baby className="w-5 h-5 mr-2" />
@@ -324,18 +251,18 @@ const BabyProfile = ({ currentBaby, onAddBaby }) => {
 const EmptyState = ({ onAddBaby }) => (
   <Card className="glass-strong border-0 max-w-md mx-auto text-center">
     <CardContent className="p-8">
-      <div className="w-20 h-20 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
         <Baby className="w-10 h-10 text-white" />
       </div>
       <h2 className="text-2xl font-bold font-display text-gray-900 mb-4">
-        Add Your First Baby
+        Add Your Baby
       </h2>
       <p className="text-gray-600 mb-6">
-        Create a profile for your little one to start tracking their growth, feeding, sleep, and milestones.
+        Create a profile for your little one to get personalized nutrition guidance and safety information.
       </p>
       <Button
         onClick={onAddBaby}
-        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
         data-testid="create-baby-profile-btn"
       >
         <Plus className="w-5 h-5 mr-2" />
@@ -356,5 +283,42 @@ const StatItem = ({ label, value, icon }) => (
     </div>
   </div>
 );
+
+const FeedingStageInfo = ({ babyAgeMonths }) => {
+  let stage, description, stageColor;
+
+  if (babyAgeMonths < 4) {
+    stage = "Exclusive Milk";
+    description = "Breast milk or formula only. No solid foods recommended.";
+    stageColor = "age-0-6";
+  } else if (babyAgeMonths < 6) {
+    stage = "Pre-Solids";
+    description = "Preparing for solid food introduction around 6 months.";
+    stageColor = "age-0-6";
+  } else if (babyAgeMonths < 12) {
+    stage = "Food Introduction";
+    description = "Introducing purees and soft finger foods gradually.";
+    stageColor = "age-6-12";
+  } else {
+    stage = "Family Foods";
+    description = "Transitioning to family meals with appropriate modifications.";
+    stageColor = "age-12-plus";
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className={`p-4 rounded-lg ${stageColor}`}>
+        <h4 className="font-medium mb-1">{stage}</h4>
+        <p className="text-sm">{description}</p>
+      </div>
+      
+      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+        <p className="text-xs text-blue-700">
+          <strong>Remember:</strong> Every baby develops at their own pace. Always consult your pediatrician for personalized feeding guidance.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default BabyProfile;
