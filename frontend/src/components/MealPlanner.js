@@ -4,42 +4,52 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Textarea } from './ui/textarea';
-import { Badge } from './ui/badge';
 import { 
   ChefHat, 
   Plus, 
   Clock, 
   Baby,
+  Search,
   Utensils,
-  Globe,
   BookOpen
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MealPlanner = ({ currentBaby }) => {
   const [mealPlans, setMealPlans] = useState([]);
-  const [suggestions, setSuggestions] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     meal_name: '',
     ingredients: [''],
     instructions: [''],
-    nutrition_notes: '',
-    cultural_context: ''
+    nutrition_notes: ''
   });
 
-  const culturalContexts = [
-    'Western/American',
-    'Mediterranean',
-    'Asian',
-    'Latin American',
-    'Middle Eastern',
-    'African',
-    'Indian/South Asian',
-    'Mixed/Multi-cultural'
+  // Common search suggestions for easy access
+  const commonSuggestions = [
+    // Food Safety Questions
+    'Is honey safe for babies?',
+    'When can babies have eggs?',
+    'Can babies eat strawberries?',
+    'Is peanut butter safe for infants?',
+    'When can babies drink water?',
+    'Are grapes safe for toddlers?',
+    'Can babies have dairy products?',
+    'Is fish safe for babies?',
+    
+    // Meal Ideas
+    'First food ideas for 6 month old',
+    'Easy puree recipes',
+    'Finger foods for 8 month old',
+    'Breakfast ideas for toddlers',
+    'Healthy snacks for babies',
+    'Iron rich foods for babies',
+    'Soft foods for teething babies',
+    'One year old meal ideas'
   ];
 
   useEffect(() => {
@@ -59,23 +69,30 @@ const MealPlanner = ({ currentBaby }) => {
     }
   };
 
-  const handleGetSuggestions = async (cultural_context = null) => {
-    if (!currentBaby) return;
+  const handleSearch = async (query = searchQuery) => {
+    if (!query.trim()) return;
 
     setLoading(true);
     try {
-      const babyAgeMonths = Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44));
-      
-      const response = await axios.get(`/meals/suggestions/${babyAgeMonths}`, {
-        params: cultural_context ? { cultural_context } : {}
+      const babyAgeMonths = currentBaby ? 
+        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : null;
+
+      const response = await axios.post('/meals/search', {
+        query: query,
+        baby_age_months: babyAgeMonths
       });
-      
-      setSuggestions(response.data);
+
+      setSearchResults(response.data);
+      setSearchQuery('');
     } catch (error) {
-      toast.error('Failed to get meal suggestions');
+      toast.error('Failed to search meals and food safety info');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    handleSearch(suggestion);
   };
 
   const handleAddIngredient = () => {
@@ -126,8 +143,7 @@ const MealPlanner = ({ currentBaby }) => {
         meal_name: '',
         ingredients: [''],
         instructions: [''],
-        nutrition_notes: '',
-        cultural_context: ''
+        nutrition_notes: ''
       });
       
       fetchMealPlans();
@@ -166,31 +182,20 @@ const MealPlanner = ({ currentBaby }) => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="meal-planner-title">
-            Meal Planner
+            Meal Planner & Food Safety
           </h1>
           <p className="text-lg text-gray-600 mt-2">
-            Age-appropriate meals for <span className="font-semibold text-orange-600">{currentBaby.name}</span> ({babyAgeMonths} months)
+            Search meal ideas and food safety info for <span className="font-semibold text-orange-600">{currentBaby.name}</span> ({babyAgeMonths} months)
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button
-            onClick={() => handleGetSuggestions()}
-            disabled={loading}
-            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-            data-testid="get-suggestions-btn"
-          >
-            <BookOpen className="w-5 h-5 mr-2" />
-            Get AI Suggestions
-          </Button>
-          <Button
-            onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-            data-testid="add-meal-btn"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Add Meal Plan
-          </Button>
-        </div>
+        <Button
+          onClick={() => setShowAddForm(true)}
+          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          data-testid="add-meal-btn"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          Save Custom Meal
+        </Button>
       </div>
 
       {/* Hero Image */}
@@ -202,9 +207,9 @@ const MealPlanner = ({ currentBaby }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-orange-600/80 to-amber-600/80 flex items-center justify-center">
           <div className="text-center text-white">
-            <ChefHat className="w-12 h-12 mx-auto mb-3 opacity-90" />
-            <h2 className="text-2xl font-bold mb-2">Nutritious Meal Planning</h2>
-            <p className="text-orange-100">Safe, culturally-diverse recipes for growing babies</p>
+            <Search className="w-12 h-12 mx-auto mb-3 opacity-90" />
+            <h2 className="text-2xl font-bold mb-2">Smart Food & Meal Search</h2>
+            <p className="text-orange-100">Ask about any food or get meal ideas instantly</p>
           </div>
         </div>
       </div>
@@ -213,65 +218,116 @@ const MealPlanner = ({ currentBaby }) => {
       <AgeAppropriateAlert babyAgeMonths={babyAgeMonths} />
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Main Content */}
+        {/* Main Search Interface */}
         <div className="lg:col-span-2 space-y-6">
-          {/* AI Suggestions */}
-          {suggestions && (
-            <Card className="glass-strong border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-800">
-                  <BookOpen className="w-5 h-5 text-orange-500" />
-                  AI Meal Suggestions ({suggestions.age_months} months)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="prose prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-800">{suggestions.suggestions}</div>
-                </div>
-                {suggestions.cultural_context && (
-                  <Badge variant="outline" className="mt-3">
-                    <Globe className="w-3 h-3 mr-1" />
-                    {suggestions.cultural_context}
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Cultural Meal Suggestions */}
-          <Card className="glass border-0">
+          {/* Search Bar */}
+          <Card className="glass-strong border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
-                <Globe className="w-5 h-5 text-blue-500" />
-                Cultural Meal Ideas
+                <Search className="w-5 h-5 text-orange-500" />
+                Search Meals & Food Safety
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {culturalContexts.map((context) => (
-                  <Button
-                    key={context}
-                    variant="outline"
-                    onClick={() => handleGetSuggestions(context)}
-                    disabled={loading}
-                    className="text-sm p-3 h-auto hover:bg-orange-50 hover:border-orange-300"
-                    data-testid={`cultural-${context.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-                  >
-                    {context}
-                  </Button>
-                ))}
+            <CardContent className="space-y-4">
+              {/* Search Form */}
+              <div className="flex gap-3">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Ask about food safety or search for meal ideas... (e.g., 'Is honey safe?' or 'breakfast ideas')"
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all duration-200"
+                  data-testid="meal-search-input"
+                />
+                <Button
+                  onClick={() => handleSearch()}
+                  disabled={loading || !searchQuery.trim()}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
+                  data-testid="search-submit-btn"
+                >
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Search className="w-5 h-5" />
+                  )}
+                </Button>
+              </div>
+
+              {/* Common Suggestions */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-700">Popular searches:</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {commonSuggestions.slice(0, 8).map((suggestion, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      disabled={loading}
+                      className="text-left justify-start p-3 h-auto border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200 text-xs"
+                      data-testid={`suggestion-${index}`}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    const moreButton = document.getElementById('more-suggestions');
+                    moreButton.style.display = moreButton.style.display === 'none' ? 'block' : 'none';
+                  }}
+                  className="text-orange-600 text-sm"
+                >
+                  Show more suggestions →
+                </Button>
+                <div id="more-suggestions" style={{display: 'none'}} className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {commonSuggestions.slice(8).map((suggestion, index) => (
+                    <Button
+                      key={index + 8}
+                      variant="outline"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      disabled={loading}
+                      className="text-left justify-start p-3 h-auto border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all duration-200 text-xs"
+                      data-testid={`suggestion-${index + 8}`}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Add Meal Form */}
+          {/* Search Results */}
+          {searchResults && (
+            <Card className="glass-strong border-0">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-800">
+                  <BookOpen className="w-5 h-5 text-green-500" />
+                  Results for "{searchResults.query}"
+                  {searchResults.age_months && (
+                    <span className="text-sm bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                      {searchResults.age_months} months
+                    </span>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-sm max-w-none">
+                  <div className="whitespace-pre-wrap text-gray-800">{searchResults.results}</div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Add Custom Meal Form */}
           {showAddForm && (
             <Card className="glass-strong border-0">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-gray-800">
                     <Plus className="w-5 h-5 text-green-500" />
-                    Add New Meal Plan
+                    Save Custom Meal Plan
                   </div>
                   <Button
                     variant="outline"
@@ -298,25 +354,6 @@ const MealPlanner = ({ currentBaby }) => {
                           required
                           data-testid="meal-name-input"
                         />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-gray-700">Cultural Context</Label>
-                        <Select 
-                          value={formData.cultural_context} 
-                          onValueChange={(value) => setFormData({...formData, cultural_context: value})}
-                        >
-                          <SelectTrigger data-testid="cultural-context-select">
-                            <SelectValue placeholder="Select cultural context (optional)" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {culturalContexts.map((context) => (
-                              <SelectItem key={context} value={context}>
-                                {context}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                       </div>
                     </div>
 
@@ -400,7 +437,7 @@ const MealPlanner = ({ currentBaby }) => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Clock className="w-5 h-5 text-green-500" />
-                Your Meal Plans
+                Your Saved Meals
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -413,7 +450,7 @@ const MealPlanner = ({ currentBaby }) => {
               ) : (
                 <div className="text-center py-8">
                   <ChefHat className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">No meal plans yet. Start by getting AI suggestions or adding your own!</p>
+                  <p className="text-gray-500">No saved meals yet. Use the search above to find meal ideas, then save your favorites!</p>
                 </div>
               )}
             </CardContent>
@@ -452,14 +489,17 @@ const MealPlanner = ({ currentBaby }) => {
             </CardContent>
           </Card>
 
-          {/* Cultural Note */}
+          {/* Search Tips */}
           <Card className="glass border-0 bg-gradient-to-br from-blue-50 to-purple-50">
-            <CardContent className="p-4 text-center">
-              <Globe className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-sm text-gray-700 font-medium mb-1">Cultural Diversity</p>
-              <p className="text-xs text-gray-600">
-                We celebrate diverse feeding practices while maintaining safety standards for all babies.
-              </p>
+            <CardContent className="p-4">
+              <Search className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+              <p className="text-sm text-gray-700 font-medium mb-1 text-center">Search Tips</p>
+              <div className="text-xs text-gray-600 space-y-1">
+                <p>• Ask "Is [food] safe for my baby?"</p>
+                <p>• Search "[age] month meal ideas"</p>
+                <p>• Try "finger foods for teething"</p>
+                <p>• Ask "how to prepare [food]"</p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -494,7 +534,7 @@ const AgeAppropriateAlert = ({ babyAgeMonths }) => {
     alert = {
       message: "Transitioning to family foods! Most foods are safe with appropriate modifications.",
       type: "safe",
-      icon: <Globe className="w-5 h-5" />
+      icon: <BookOpen className="w-5 h-5" />
     };
   }
 
@@ -516,17 +556,9 @@ const MealPlanCard = ({ meal }) => (
       <div className="flex justify-between items-start mb-3">
         <div>
           <h3 className="font-semibold text-gray-900">{meal.meal_name}</h3>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline" className="text-xs">
-              {meal.age_months} months
-            </Badge>
-            {meal.cultural_context && (
-              <Badge variant="outline" className="text-xs">
-                <Globe className="w-3 h-3 mr-1" />
-                {meal.cultural_context}
-              </Badge>
-            )}
-          </div>
+          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            {meal.age_months} months
+          </span>
         </div>
       </div>
       

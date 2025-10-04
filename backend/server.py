@@ -200,7 +200,7 @@ class ReminderCreate(BaseModel):
     next_due: datetime
     interval_hours: Optional[int] = None
 
-# Food Safety & Meal Planning Models
+# Food Safety & Meal Planning Models - Simplified
 class FoodQuery(BaseModel):
     question: str
     baby_age_months: Optional[int] = None
@@ -230,7 +230,6 @@ class MealPlan(BaseModel):
     ingredients: List[str]
     instructions: List[str]
     nutrition_notes: Optional[str] = None
-    cultural_context: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class MealPlanCreate(BaseModel):
@@ -240,7 +239,6 @@ class MealPlanCreate(BaseModel):
     ingredients: List[str]
     instructions: List[str]
     nutrition_notes: Optional[str] = None
-    cultural_context: Optional[str] = None
 
 class FoodSafetyCheck(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -264,6 +262,16 @@ class ResearchQuery(BaseModel):
 class ResearchResponse(BaseModel):
     answer: str
     sources: List[str] = []
+
+# Meal Search Model - New simplified search
+class MealSearchQuery(BaseModel):
+    query: str
+    baby_age_months: Optional[int] = None
+
+class MealSearchResponse(BaseModel):
+    results: str
+    query: str
+    age_months: Optional[int] = None
 
 # Utility functions
 def verify_password(plain_password, hashed_password):
@@ -388,7 +396,7 @@ async def get_babies(current_user: User = Depends(get_current_user)):
     babies = await db.babies.find({"user_id": current_user.id}).to_list(length=None)
     return [Baby(**parse_from_mongo(baby)) for baby in babies]
 
-# Baby Tracking Routes
+# Baby Tracking Routes (keeping all existing routes for feedings, diapers, sleep, pumping, measurements, milestones, reminders)
 @api_router.post("/feedings", response_model=Feeding)
 async def create_feeding(feeding_data: FeedingCreate, current_user: User = Depends(get_current_user)):
     baby = await db.babies.find_one({"id": feeding_data.baby_id, "user_id": current_user.id})
@@ -613,21 +621,19 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
             session_id=f"food_research_{current_user.id}",
-            system_message="""You are a specialized pediatric nutrition assistant following American Academy of Pediatrics (AAP) guidelines and cultural feeding practices. 
+            system_message="""You are a specialized pediatric nutrition assistant following American Academy of Pediatrics (AAP) guidelines. 
 
 IMPORTANT: Always provide:
 1. Clear safety assessment (safe/caution/avoid/consult_doctor)
 2. Age-appropriate guidance 
-3. Cultural sensitivity for diverse feeding practices
-4. Evidence-based recommendations
+3. Evidence-based recommendations
+4. Brief, practical answers
 
 For each response, assess safety level:
 - "safe": Generally safe when prepared appropriately
 - "caution": Safe but requires specific preparation or timing
 - "avoid": Not recommended for this age
-- "consult_doctor": Medical consultation recommended
-
-Include both AAP guidelines AND acknowledge cultural feeding variations when relevant."""
+- "consult_doctor": Medical consultation recommended"""
         ).with_model("openai", "gpt-5")
         
         user_message = UserMessage(text=age_context + query.question)
@@ -656,7 +662,7 @@ Include both AAP guidelines AND acknowledge cultural feeding variations when rel
             answer=response,
             safety_level=safety_level,
             age_recommendation=age_rec,
-            sources=["AAP Pediatric Guidelines", "Cultural Feeding Practices", "Evidence-based Nutrition"]
+            sources=["AAP Pediatric Guidelines", "Evidence-based Nutrition"]
         )
     except Exception as e:
         logging.error(f"Food research error: {str(e)}")
@@ -793,7 +799,7 @@ Topic: {query.emergency_type} {age_context}"""
             when_to_call_911=["ALWAYS - when emergency information is unavailable"]
         )
 
-# Meal Planning Routes
+# Simplified Meal Planning Routes
 @api_router.post("/meals", response_model=MealPlan)
 async def create_meal_plan(meal_data: MealPlanCreate, current_user: User = Depends(get_current_user)):
     baby = await db.babies.find_one({"id": meal_data.baby_id, "user_id": current_user.id})
@@ -816,25 +822,39 @@ async def get_meal_plans(baby_id: Optional[str] = None, age_months: Optional[int
     meals = await db.meal_plans.find(query).sort("created_at", -1).to_list(length=None)
     return [MealPlan(**parse_from_mongo(meal)) for meal in meals]
 
-@api_router.get("/meals/suggestions/{age_months}")
-async def get_meal_suggestions(age_months: int, cultural_context: Optional[str] = None, current_user: User = Depends(get_current_user)):
+# New Simplified Meal Search Route
+@api_router.post("/meals/search", response_model=MealSearchResponse)
+async def search_meals_and_food_safety(search_query: MealSearchQuery, current_user: User = Depends(get_current_user)):
     try:
-        culture_note = f"with {cultural_context} cultural influences" if cultural_context else "with diverse cultural options"
+        age_context = ""
+        if search_query.baby_age_months is not None:
+            age_context = f"for a {search_query.baby_age_months} month old baby"
         
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
-            session_id=f"meals_{current_user.id}",
-            system_message="You are a pediatric nutrition expert specializing in age-appropriate meal planning with cultural diversity. Provide safe, nutritious meal ideas following AAP guidelines while respecting cultural feeding practices."
+            session_id=f"meal_search_{current_user.id}",
+            system_message="""You are a pediatric nutrition expert. Provide helpful, safe meal ideas and food safety information following AAP guidelines. 
+
+For meal searches: Include age-appropriate recipes with simple preparation steps.
+For food safety questions: Provide clear safety assessments and age recommendations.
+Always be concise and practical."""
         ).with_model("openai", "gpt-5")
         
-        question = f"Suggest 5 healthy, age-appropriate meal ideas for a {age_months} month old baby {culture_note}. Include ingredients and simple preparation steps."
-        user_message = UserMessage(text=question)
+        user_message = UserMessage(text=f"{search_query.query} {age_context}")
         response = await chat.send_message(user_message)
         
-        return {"suggestions": response, "age_months": age_months, "cultural_context": cultural_context}
+        return MealSearchResponse(
+            results=response,
+            query=search_query.query,
+            age_months=search_query.baby_age_months
+        )
     except Exception as e:
-        logging.error(f"Meal suggestions error: {str(e)}")
-        return {"suggestions": "Unable to generate meal suggestions at this time. Please consult your pediatrician for feeding guidance.", "age_months": age_months}
+        logging.error(f"Meal search error: {str(e)}")
+        return MealSearchResponse(
+            results="Unable to search at this time. Please consult your pediatrician for feeding guidance.",
+            query=search_query.query,
+            age_months=search_query.baby_age_months
+        )
 
 # General Research Routes
 @api_router.post("/research", response_model=ResearchResponse)
