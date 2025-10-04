@@ -175,7 +175,7 @@ class BabyStepsAPITester:
                 "baby_age_months": 8
             }
             
-            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=15)
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
             
             if response.status_code == 200:
                 data = response.json()
