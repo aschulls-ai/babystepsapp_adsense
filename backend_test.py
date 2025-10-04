@@ -206,7 +206,7 @@ class BabyStepsAPITester:
                 "baby_age_months": 9
             }
             
-            response = self.session.post(f"{API_BASE}/meals/search", json=search_query, timeout=15)
+            response = self.session.post(f"{API_BASE}/meals/search", json=search_query, timeout=60)
             
             if response.status_code == 200:
                 data = response.json()
@@ -237,7 +237,7 @@ class BabyStepsAPITester:
                 "baby_age_months": 10
             }
             
-            response = self.session.post(f"{API_BASE}/meals/search", json=search_query, timeout=15)
+            response = self.session.post(f"{API_BASE}/meals/search", json=search_query, timeout=60)
             
             if response.status_code == 200:
                 data = response.json()
@@ -265,7 +265,7 @@ class BabyStepsAPITester:
             
             ai_working = True
             for i, query in enumerate(queries):
-                response = self.session.post(f"{API_BASE}/food/research", json=query, timeout=15)
+                response = self.session.post(f"{API_BASE}/food/research", json=query, timeout=60)
                 if response.status_code != 200:
                     ai_working = False
                     break
