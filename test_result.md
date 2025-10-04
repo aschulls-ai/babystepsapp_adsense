@@ -204,8 +204,6 @@
 
 ## test_plan:
   current_focus:
-    - "Simplified search functionality for food research"
-    - "AI integration for meal ideas and food safety"
     - "Unified search interface in FoodResearch component"
   stuck_tasks: []
   test_all: false
