@@ -1,52 +1,198 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import axios from 'axios';
+import { Toaster } from './components/ui/sonner';
+import { toast } from 'sonner';
+import './App.css';
+
+// Components
+import AuthPage from './components/AuthPage';
+import Dashboard from './components/Dashboard';
+import BabyProfile from './components/BabyProfile';
+import TrackingPage from './components/TrackingPage';
+import Research from './components/Research';
+import Layout from './components/Layout';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const Home = () => {
-  const helloWorldApi = async () => {
+// Set up axios defaults
+axios.defaults.baseURL = API;
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [currentBaby, setCurrentBaby] = useState(null);
+  const [babies, setBabies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    checkAuthState();
+  }, []);
+
+  const checkAuthState = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      try {
+        await fetchBabies();
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        logout();
+      }
+    }
+    setLoading(false);
+  };
+
+  const fetchBabies = async () => {
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      const response = await axios.get('/babies');
+      setBabies(response.data);
+      if (response.data.length > 0 && !currentBaby) {
+        setCurrentBaby(response.data[0]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch babies:', error);
+      throw error;
     }
   };
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post('/auth/login', { email, password });
+      const { access_token } = response.data;
+      
+      localStorage.setItem('token', access_token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      
+      await fetchBabies();
+      toast.success('Successfully logged in!');
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Login failed');
+      return false;
+    }
+  };
+
+  const register = async (name, email, password) => {
+    try {
+      const response = await axios.post('/auth/register', { name, email, password });
+      const { access_token } = response.data;
+      
+      localStorage.setItem('token', access_token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      
+      toast.success('Account created successfully!');
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Registration failed');
+      return false;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
+    setUser(null);
+    setCurrentBaby(null);
+    setBabies([]);
+    toast.success('Logged out successfully');
+  };
+
+  const addBaby = async (babyData) => {
+    try {
+      const response = await axios.post('/babies', babyData);
+      const newBaby = response.data;
+      setBabies([...babies, newBaby]);
+      if (!currentBaby) {
+        setCurrentBaby(newBaby);
+      }
+      toast.success(`${newBaby.name} added successfully!`);
+      return newBaby;
+    } catch (error) {
+      toast.error('Failed to add baby');
+      throw error;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-blue-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const isAuthenticated = localStorage.getItem('token');
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
+    <div className="App min-h-screen bg-gradient-to-br from-rose-50 via-white to-blue-50">
+      <Router>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route 
+            path="/auth" 
+            element={
+              isAuthenticated ? 
+              <Navigate to="/dashboard" replace /> : 
+              <AuthPage onLogin={login} onRegister={register} />
+            } 
+          />
+          
+          <Route 
+            path="/*" 
+            element={
+              !isAuthenticated ? 
+              <Navigate to="/auth" replace /> : 
+              <Layout 
+                currentBaby={currentBaby}
+                babies={babies}
+                onSwitchBaby={setCurrentBaby}
+                onLogout={logout}
+              >
+                <Routes>
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <Dashboard 
+                        currentBaby={currentBaby}
+                        onAddBaby={addBaby}
+                      />
+                    } 
+                  />
+                  <Route 
+                    path="/baby-profile" 
+                    element={
+                      <BabyProfile 
+                        currentBaby={currentBaby}
+                        onAddBaby={addBaby}
+                      />
+                    } 
+                  />
+                  <Route 
+                    path="/tracking" 
+                    element={
+                      <TrackingPage 
+                        currentBaby={currentBaby}
+                      />
+                    } 
+                  />
+                  <Route 
+                    path="/research" 
+                    element={<Research />} 
+                  />
+                  <Route 
+                    path="/" 
+                    element={<Navigate to="/dashboard" replace />} 
+                  />
+                </Routes>
+              </Layout>
+            } 
+          />
         </Routes>
-      </BrowserRouter>
+        <Toaster position="top-right" />
+      </Router>
     </div>
   );
 }
