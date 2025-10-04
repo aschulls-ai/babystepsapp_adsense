@@ -5,9 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { 
   Home, 
   Baby, 
+  Activity,
   Search, 
   ShieldAlert, 
   ChefHat,
+  BookOpen,
   LogOut, 
   Menu,
   X,
@@ -22,25 +24,27 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Baby Profile', href: '/baby-profile', icon: Baby },
+    { name: 'Track Activities', href: '/tracking', icon: Activity },
     { name: 'Food Research', href: '/food-research', icon: Search },
     { name: 'Emergency Training', href: '/emergency-training', icon: ShieldAlert },
     { name: 'Meal Planner', href: '/meal-planner', icon: ChefHat },
+    { name: 'Research & Tips', href: '/research', icon: BookOpen },
   ];
 
   const isActive = (href) => location.pathname === href;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      {/* Mobile menu button */}
+      {/* Mobile menu button - Made bigger for better usability */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           variant="outline"
-          size="sm"
-          className="bg-white/90 backdrop-blur-sm border-green-200"
+          size="lg"
+          className="bg-white/90 backdrop-blur-sm border-green-200 w-14 h-14 p-0 shadow-lg"
           data-testid="mobile-menu-toggle"
         >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
         </Button>
       </div>
 

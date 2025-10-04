@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Baby, ShieldCheck, Heart, Utensils } from 'lucide-react';
+import { Baby, ShieldCheck, Heart, Utensils, Activity, ChefHat } from 'lucide-react';
 
 const AuthPage = ({ onLogin, onRegister }) => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -46,22 +46,34 @@ const AuthPage = ({ onLogin, onRegister }) => {
             Baby Steps
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed mb-4">
-            Safe nutrition and emergency guidance for new parents
+            Complete parenting companion for baby tracking, nutrition & safety
           </p>
           
           {/* Features preview */}
-          <div className="flex justify-center gap-6 mt-6 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-3 gap-4 mt-6 text-xs text-gray-500">
+            <div className="flex flex-col items-center gap-1">
+              <Activity className="w-4 h-4 text-rose-500" />
+              <span>Activity Tracking</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
               <Utensils className="w-4 h-4 text-green-500" />
               <span>Food Safety</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-1">
               <ShieldCheck className="w-4 h-4 text-red-500" />
               <span>Emergency Training</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-orange-500" />
+            <div className="flex flex-col items-center gap-1">
+              <ChefHat className="w-4 h-4 text-orange-500" />
               <span>Meal Planning</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Heart className="w-4 h-4 text-purple-500" />
+              <span>Growth Tracking</span>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <Baby className="w-4 h-4 text-blue-500" />
+              <span>Multi-Baby Support</span>
             </div>
           </div>
         </div>
@@ -72,6 +84,9 @@ const AuthPage = ({ onLogin, onRegister }) => {
             <CardTitle className="text-2xl font-semibold text-center text-gray-800">
               Join Baby Steps
             </CardTitle>
+            <p className="text-center text-sm text-gray-600 mt-2">
+              Perfect for multiple parents - everyone can access the same data on their devices
+            </p>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="w-full">
@@ -190,6 +205,13 @@ const AuthPage = ({ onLogin, onRegister }) => {
                     />
                   </div>
                   
+                  {/* Multi-device note */}
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-xs text-green-700">
+                      <strong>Multi-Device Access:</strong> Both parents can sign in with the same account on different devices to access all baby data together.
+                    </p>
+                  </div>
+                  
                   {/* Disclaimer */}
                   <div className="disclaimer">
                     <p className="text-xs text-gray-600">
@@ -221,7 +243,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>Trusted nutrition and safety guidance for parents</p>
+          <p>Complete parenting companion for modern families</p>
         </div>
       </div>
     </div>

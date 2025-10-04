@@ -27,10 +27,10 @@ pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 security = HTTPBearer()
 SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'fallback-key')
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours for multiple device support
 
 # Create the main app
-app = FastAPI(title="Baby Tracker Plus - Complete Parenting Companion")
+app = FastAPI(title="Baby Steps - Complete Parenting Companion")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -279,6 +279,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
+    # Add unique token ID to support multiple concurrent sessions
+    to_encode.update({"jti": str(uuid.uuid4())})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -332,7 +334,7 @@ def parse_from_mongo(item):
         return result
     return item
 
-# Authentication Routes
+# Authentication Routes - Support multiple concurrent sessions
 @api_router.post("/auth/register", response_model=Token)
 async def register(user_data: UserCreate):
     existing_user = await db.users.find_one({"email": user_data.email})
@@ -349,6 +351,7 @@ async def register(user_data: UserCreate):
     user_to_store = prepare_for_mongo(user_dict)
     await db.users.insert_one(user_to_store)
     
+    # Create token with longer expiry for multi-device support
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user_data.email}, expires_delta=access_token_expires
@@ -365,6 +368,7 @@ async def login(user_data: UserLogin):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # Create token with longer expiry for multi-device support
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user_data.email}, expires_delta=access_token_expires
@@ -859,7 +863,7 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
 # Health check
 @api_router.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "Baby Tracker Plus API", "timestamp": datetime.now(timezone.utc).isoformat()}
+    return {"status": "healthy", "service": "Baby Steps API", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 # Include the router in the main app
 app.include_router(api_router)
