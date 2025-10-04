@@ -9,8 +9,9 @@ import './App.css';
 import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import BabyProfile from './components/BabyProfile';
-import TrackingPage from './components/TrackingPage';
-import Research from './components/Research';
+import FoodResearch from './components/FoodResearch';
+import EmergencyTraining from './components/EmergencyTraining';
+import MealPlanner from './components/MealPlanner';
 import Layout from './components/Layout';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -65,7 +66,7 @@ function App() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
       await fetchBabies();
-      toast.success('Successfully logged in!');
+      toast.success('Welcome to Baby Steps!');
       return true;
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Login failed');
@@ -81,7 +82,7 @@ function App() {
       localStorage.setItem('token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
-      toast.success('Account created successfully!');
+      toast.success('Account created successfully! Welcome to Baby Steps!');
       return true;
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Registration failed');
@@ -106,20 +107,20 @@ function App() {
       if (!currentBaby) {
         setCurrentBaby(newBaby);
       }
-      toast.success(`${newBaby.name} added successfully!`);
+      toast.success(`${newBaby.name}'s profile created successfully!`);
       return newBaby;
     } catch (error) {
-      toast.error('Failed to add baby');
+      toast.error('Failed to add baby profile');
       throw error;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading Baby Steps...</p>
         </div>
       </div>
     );
@@ -128,7 +129,7 @@ function App() {
   const isAuthenticated = localStorage.getItem('token');
 
   return (
-    <div className="App min-h-screen bg-gradient-to-br from-rose-50 via-white to-blue-50">
+    <div className="App min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <Router>
         <Routes>
           <Route 
@@ -171,16 +172,24 @@ function App() {
                     } 
                   />
                   <Route 
-                    path="/tracking" 
+                    path="/food-research" 
                     element={
-                      <TrackingPage 
+                      <FoodResearch 
                         currentBaby={currentBaby}
                       />
                     } 
                   />
                   <Route 
-                    path="/research" 
-                    element={<Research />} 
+                    path="/emergency-training" 
+                    element={<EmergencyTraining currentBaby={currentBaby} />} 
+                  />
+                  <Route 
+                    path="/meal-planner" 
+                    element={
+                      <MealPlanner 
+                        currentBaby={currentBaby}
+                      />
+                    } 
                   />
                   <Route 
                     path="/" 

@@ -1,15 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary-rose: #f43f5e;
+  --primary-green: #10b981;
   --primary-blue: #3b82f6;
-  --accent-peach: #fbbf24;
+  --accent-orange: #f59e0b;
   --neutral-warm: #f8fafc;
   --text-dark: #1e293b;
   --text-medium: #64748b;
   --text-light: #94a3b8;
   --glass-bg: rgba(255, 255, 255, 0.25);
   --glass-border: rgba(255, 255, 255, 0.18);
+  --safety-red: #ef4444;
+  --caution-amber: #f59e0b;
+  --safe-green: #10b981;
 }
 
 * {
@@ -24,7 +27,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 50%, #eff6ff 100%);
+  background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 50%, #eff6ff 100%);
   min-height: 100vh;
   color: var(--text-dark);
 }
@@ -57,9 +60,30 @@ body {
   box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
 }
 
+/* Safety Level Colors */
+.safety-safe {
+  background: linear-gradient(135deg, var(--safe-green) 0%, #059669 100%);
+  color: white;
+}
+
+.safety-caution {
+  background: linear-gradient(135deg, var(--caution-amber) 0%, #d97706 100%);
+  color: white;
+}
+
+.safety-avoid {
+  background: linear-gradient(135deg, var(--safety-red) 0%, #dc2626 100%);
+  color: white;
+}
+
+.safety-consult {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #2563eb 100%);
+  color: white;
+}
+
 /* Enhanced button styles */
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-rose) 0%, #ec4899 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, #059669 100%);
   border: none;
   border-radius: 12px;
   padding: 12px 24px;
@@ -68,11 +92,29 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-emergency {
+  background: linear-gradient(135deg, var(--safety-red) 0%, #dc2626 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.btn-emergency:hover {
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
   transform: translateY(-2px);
 }
 
@@ -120,6 +162,38 @@ body {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Emergency card styles */
+.emergency-card {
+  background: linear-gradient(145deg, #fef2f2 0%, #ffffff 100%);
+  border: 2px solid #fecaca;
+}
+
+.emergency-card:hover {
+  border-color: var(--safety-red);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.2);
+}
+
+/* Food safety indicators */
+.food-safe {
+  border-left: 4px solid var(--safe-green);
+  background: linear-gradient(90deg, #ecfdf5 0%, #ffffff 100%);
+}
+
+.food-caution {
+  border-left: 4px solid var(--caution-amber);
+  background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.food-avoid {
+  border-left: 4px solid var(--safety-red);
+  background: linear-gradient(90deg, #fef2f2 0%, #ffffff 100%);
+}
+
+.food-consult {
+  border-left: 4px solid var(--primary-blue);
+  background: linear-gradient(90deg, #eff6ff 0%, #ffffff 100%);
+}
+
 /* Input field styling */
 .input-field {
   width: 100%;
@@ -133,8 +207,8 @@ body {
 }
 
 .input-field:focus {
-  border-color: var(--primary-rose);
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   background: rgba(255, 255, 255, 0.95);
 }
 
@@ -152,74 +226,68 @@ body {
 }
 
 .nav-link:hover {
-  background: rgba(244, 63, 94, 0.1);
-  color: var(--primary-rose);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--primary-green);
   transform: translateX(4px);
 }
 
 .nav-link.active {
-  background: linear-gradient(135deg, var(--primary-rose) 0%, #ec4899 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, #059669 100%);
   color: white;
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
-/* Stats and metrics */
-.stat-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
-  padding: 20px;
-  text-align: center;
-  border: 2px solid rgba(148, 163, 184, 0.1);
-  transition: all 0.3s ease;
+/* Age group indicators */
+.age-0-6 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
 }
 
-.stat-card:hover {
-  border-color: var(--primary-rose);
-  transform: scale(1.02);
+.age-6-12 {
+  background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+  color: #5b21b6;
 }
 
-.stat-number {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--primary-rose);
-  font-family: 'Inter', sans-serif;
+.age-12-plus {
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+  color: #1e40af;
 }
 
-.stat-label {
-  font-size: 14px;
-  color: var(--text-medium);
-  font-weight: 500;
-  margin-top: 4px;
-}
-
-/* Activity feed */
-.activity-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.6);
+/* Disclaimer and warning styles */
+.disclaimer {
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+  border: 2px solid #fecaca;
   border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.warning-text {
+  color: var(--safety-red);
+  font-weight: 600;
+}
+
+/* Emergency steps */
+.emergency-step {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
   margin-bottom: 12px;
-  border-left: 4px solid var(--primary-rose);
-  transition: all 0.3s ease;
+  border-left: 4px solid var(--safety-red);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.activity-item:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateX(4px);
-}
-
-.activity-icon {
-  width: 40px;
-  height: 40px;
+.emergency-step-number {
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  background: var(--safety-red);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary-rose) 0%, #ec4899 100%);
-  color: white;
-  font-size: 18px;
+  font-weight: bold;
+  margin-right: 12px;
 }
 
 /* Mobile responsiveness */
@@ -229,13 +297,9 @@ body {
     border-radius: 16px;
   }
   
-  .btn-primary, .btn-secondary {
+  .btn-primary, .btn-secondary, .btn-emergency {
     padding: 10px 20px;
     font-size: 14px;
-  }
-  
-  .stat-number {
-    font-size: 24px;
   }
   
   .input-field {
@@ -281,12 +345,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-rose);
+  background: var(--primary-green);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e11d48;
+  background: #059669;
 }
 
 /* Animation utilities */
@@ -310,7 +374,7 @@ body {
 
 /* Success states */
 .success-state {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--safe-green) 0%, #059669 100%);
   color: white;
   border-radius: 12px;
   padding: 16px;
@@ -320,7 +384,7 @@ body {
 
 /* Error states */
 .error-state {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, var(--safety-red) 0%, #dc2626 100%);
   color: white;
   border-radius: 12px;
   padding: 16px;
@@ -330,6 +394,35 @@ body {
 
 /* Focus visible for accessibility */
 .focus-visible {
-  outline: 2px solid var(--primary-rose);
+  outline: 2px solid var(--primary-green);
   outline-offset: 2px;
+}
+
+/* Special styling for food items and research */
+.food-item {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.food-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Meal planner specific styles */
+.meal-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.meal-card:hover {
+  border-color: var(--primary-green);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
 }
