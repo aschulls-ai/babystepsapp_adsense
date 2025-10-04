@@ -265,7 +265,7 @@ def parse_from_mongo(item):
                 if isinstance(value, str):
                     try:
                         result[key] = datetime.fromisoformat(value.replace('Z', '+00:00'))
-                    except:
+                    except (ValueError, TypeError):
                         result[key] = value
                 else:
                     result[key] = value
