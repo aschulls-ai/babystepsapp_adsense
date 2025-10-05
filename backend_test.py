@@ -70,7 +70,7 @@ class BabyStepsAPITester:
                 "password": self.test_user_password
             }
             
-            response = self.session.post(f"{API_BASE}/auth/register", json=user_data, timeout=10)
+            response = self.session.post(f"{API_BASE}/auth/register", json=user_data, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
