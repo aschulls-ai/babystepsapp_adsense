@@ -657,11 +657,14 @@ async def get_dashboard_layout(current_user: User = Depends(get_current_user)):
             }
         ]
         
-        layout_data = DashboardLayout(
-            user_id=current_user.id,
-            widgets=default_widgets,
-            layout_config={"cols": 12, "rowHeight": 60}
-        ).dict()
+        layout_data = {
+            "id": str(uuid.uuid4()),
+            "user_id": current_user.id,
+            "widgets": default_widgets,
+            "layout_config": {"cols": 12, "rowHeight": 60},
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
         
         layout_to_store = prepare_for_mongo(layout_data)
         await db.dashboard_layouts.insert_one(layout_to_store)
