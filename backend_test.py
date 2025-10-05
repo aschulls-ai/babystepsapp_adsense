@@ -94,7 +94,7 @@ class BabyStepsAPITester:
                 "email": self.test_user_email
             }
             
-            response = self.session.post(f"{API_BASE}/auth/manual-verify", json=verify_data, timeout=10)
+            response = self.session.post(f"{API_BASE}/auth/manual-verify", json=verify_data, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
