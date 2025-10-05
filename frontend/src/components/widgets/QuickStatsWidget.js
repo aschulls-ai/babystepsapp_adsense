@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BaseWidget from './BaseWidget';
-import { Bottle, Clock, Baby, TrendingUp } from 'lucide-react';
+import { Clock, Baby, TrendingUp, Activity } from 'lucide-react';
 import axios from 'axios';
 
 const QuickStatsWidget = ({ widget, currentBaby, isEditing, onRemove, onSettings }) => {
