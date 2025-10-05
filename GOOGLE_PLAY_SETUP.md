@@ -44,10 +44,16 @@ Key Password: babysteps2024
 3. Wait for Google's approval (usually 1-3 days)
 
 ## 🔒 Security Notes:
-- **Google Play App Signing** automatically manages all signing keys
-- No keystore management needed on your side
-- Google handles production signing securely
-- Updates can be uploaded using the same process
+- **Keep your upload keystore safe** (`release.keystore`) - Store it securely
+- **Google Play App Signing** manages your production signing key
+- The upload keystore is used only for uploading updates
+- Never share your keystore passwords publicly
+
+## 🆘 If You Lose Your Upload Keystore:
+With Google Play App Signing enabled, you can:
+1. Contact Google Play support to reset your upload key
+2. Generate a new upload keystore 
+3. Continue updating your app
 
 ## 📱 App Details:
 - **App Name**: Baby Steps
