@@ -29,9 +29,6 @@
       "resize": "body",
       "style": "dark",
       "resizeOnFullScreen": true
-    },
-    "Storage": {
-      "group": "BabyStepsData"
     }
   },
   "android": {
