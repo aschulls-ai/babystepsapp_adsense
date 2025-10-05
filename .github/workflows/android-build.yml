@@ -71,6 +71,11 @@ jobs:
         api-level: 35
         build-tools: 35.0.0
         
+    - name: 📱 Install Android SDK Platforms
+      run: |
+        echo "Installing additional SDK platforms..."
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
