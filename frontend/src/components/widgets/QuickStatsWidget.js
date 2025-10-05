@@ -72,7 +72,7 @@ const QuickStatsWidget = ({ widget, currentBaby, isEditing, onRemove, onSettings
 
   const statItems = [
     {
-      icon: Bottle,
+      icon: Activity,
       label: "Today's Feedings",
       value: stats.todayFeedings,
       color: "text-blue-600"
