@@ -1,0 +1,57 @@
+name: Simple Android Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install Dependencies
+      working-directory: frontend
+      run: |
+        npm install -g yarn
+        yarn install
+        
+    - name: Build React App
+      working-directory: frontend
+      run: yarn build
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Make Gradle Executable
+      working-directory: frontend/android
+      run: chmod +x ./gradlew
+      
+    - name: Sync Capacitor
+      working-directory: frontend
+      run: npx cap sync android
+      
+    - name: Build AAB
+      working-directory: frontend/android
+      run: ./gradlew bundleRelease --stacktrace
+      
+    - name: Upload AAB
+      uses: actions/upload-artifact@v4
+      with:
+        name: baby-steps-app-bundle
+        path: frontend/android/app/build/outputs/bundle/release/*.aab
+        retention-days: 30
