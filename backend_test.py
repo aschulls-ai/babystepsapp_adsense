@@ -129,12 +129,12 @@ class BabyStepsAPITester:
             self.log_result("Manual User Verification", False, f"Error: {str(e)}")
             return False
 
-    def test_user_login(self):
-        """Test user login endpoint"""
+    def test_immediate_login_without_verification(self):
+        """Test that new user can login immediately WITHOUT email verification"""
         try:
             login_data = {
-                "email": self.test_user_email,
-                "password": self.test_user_password
+                "email": self.new_user_email,
+                "password": self.new_user_password
             }
             
             response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
@@ -142,19 +142,44 @@ class BabyStepsAPITester:
             if response.status_code == 200:
                 data = response.json()
                 if 'access_token' in data and data.get('token_type') == 'bearer':
-                    # Update token in case it's different
+                    # Store token for further testing
                     self.auth_token = data['access_token']
                     self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
-                    self.log_result("User Login", True, "Login successful")
+                    self.log_result("Immediate Login Without Verification", True, "New user can login without email verification")
                     return True
                 else:
-                    self.log_result("User Login", False, f"Invalid response format: {data}")
+                    self.log_result("Immediate Login Without Verification", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_result("User Login", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("Immediate Login Without Verification", False, f"HTTP {response.status_code}: {response.text}")
                 return False
         except Exception as e:
-            self.log_result("User Login", False, f"Error: {str(e)}")
+            self.log_result("Immediate Login Without Verification", False, f"Error: {str(e)}")
+            return False
+
+    def test_existing_user_login(self):
+        """Test existing user login"""
+        try:
+            login_data = {
+                "email": self.existing_user_email,
+                "password": self.existing_user_password
+            }
+            
+            response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'access_token' in data and data.get('token_type') == 'bearer':
+                    self.log_result("Existing User Login", True, "Existing user login successful")
+                    return True
+                else:
+                    self.log_result("Existing User Login", False, f"Invalid response format: {data}")
+                    return False
+            else:
+                self.log_result("Existing User Login", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Existing User Login", False, f"Error: {str(e)}")
             return False
     
     def test_baby_profile_creation(self):
