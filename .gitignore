@@ -194,3 +194,7 @@ frontend/node_modules/.cache/default-development/1.pack
 *.env
 *.env.*
 github_final/baby-steps-app/node_modules/.cache/default-development/0.pack
+-e 
+# Environment files
+*.env
+*.env.*
