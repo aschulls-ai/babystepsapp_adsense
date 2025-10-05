@@ -347,8 +347,12 @@ class BabyStepsAPITester:
         if not self.test_user_registration():
             print("❌ Registration failed - stopping auth tests")
         else:
-            self.test_user_login()
-            self.test_authentication_required_endpoints()
+            # Manually verify user for testing
+            if self.test_manual_verification():
+                self.test_user_login()
+                self.test_authentication_required_endpoints()
+            else:
+                print("❌ Manual verification failed - stopping auth tests")
         
         # Test baby profile management (requires auth)
         if self.auth_token:
