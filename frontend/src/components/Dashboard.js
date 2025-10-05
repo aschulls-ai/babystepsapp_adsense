@@ -5,12 +5,6 @@ import { Baby, Plus } from 'lucide-react';
 import CustomizableDashboard from './CustomizableDashboard';
 
 const Dashboard = ({ currentBaby, onAddBaby }) => {
-  const [recentActivity, setRecentActivity] = useState({
-    foodChecks: [],
-    mealPlans: [],
-    emergencyViews: []
-  });
-  
   if (!currentBaby) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -19,35 +13,11 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
     );
   }
 
-  const babyAgeMonths = Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44));
-
   return (
     <div className="space-y-6 fade-in">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="dashboard-title">
-            Welcome to Baby Steps! 👶
-          </h1>
-          <p className="text-lg text-gray-600 mt-2">
-            Safe nutrition guidance for <span className="font-semibold text-green-600">{currentBaby.name}</span>
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <p className="text-sm text-gray-500">Age</p>
-            <p className="font-medium text-gray-900">
-              {babyAgeMonths} months old
-            </p>
-          </div>
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-            <Baby className="w-8 h-8 text-white" />
-          </div>
-        </div>
-      </div>
-
-      {/* Age-based Safety Alert */}
-      <AgeBasedAlert babyAgeMonths={babyAgeMonths} />
+      <CustomizableDashboard currentBaby={currentBaby} />
+    </div>
+  );
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
