@@ -45,7 +45,8 @@ class BabyStepsAPITester:
     def test_health_check(self):
         """Test API health endpoint"""
         try:
-            response = self.session.get(f"{API_BASE}/health", timeout=10)
+            # Use a fresh session for health check
+            response = requests.get(f"{API_BASE}/health", timeout=30)
             if response.status_code == 200:
                 data = response.json()
                 if data.get('status') == 'healthy':
