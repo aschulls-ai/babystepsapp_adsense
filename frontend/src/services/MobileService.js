@@ -1,5 +1,5 @@
 import { Capacitor } from '@capacitor/core';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Network } from '@capacitor/network';
