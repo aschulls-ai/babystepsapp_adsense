@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BaseWidget from './BaseWidget';
 import { Button } from '../ui/button';
-import { Bottle, Moon, Baby } from 'lucide-react';
+import { Moon, Baby } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
