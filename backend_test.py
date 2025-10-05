@@ -356,7 +356,8 @@ class BabyStepsAPITester:
                 
                 data = response.json()
                 # Check if we get a meaningful response (not just error message)
-                if "sorry" in data.get('answer', '').lower() or "trouble" in data.get('answer', '').lower():
+                answer = data.get('answer', '').lower()
+                if "sorry" in answer or "trouble" in answer or "unable to assess" in answer or len(answer) < 10:
                     ai_working = False
                     break
             
