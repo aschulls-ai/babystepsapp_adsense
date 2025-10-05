@@ -4,6 +4,7 @@ import FoodSafetyQuickWidget from './FoodSafetyQuickWidget';
 import EmergencyTrainingWidget from './EmergencyTrainingWidget';
 import MealIdeasWidget from './MealIdeasWidget';
 import QuickStatsWidget from './QuickStatsWidget';
+import MilestonesWidget from './MilestonesWidget';
 
 // Widget registry - maps widget types to their components
 export const WidgetRegistry = {
