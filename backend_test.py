@@ -21,6 +21,8 @@ API_BASE = f"{BACKEND_URL}/api"
 class BabyStepsAPITester:
     def __init__(self):
         self.session = requests.Session()
+        # Set session timeout and retry settings
+        self.session.timeout = 30
         self.auth_token = None
         self.test_user_email = f"sarah.johnson.{uuid.uuid4().hex[:8]}@example.com"
         self.test_user_name = "Sarah Johnson"
