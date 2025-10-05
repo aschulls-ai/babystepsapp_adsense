@@ -227,15 +227,43 @@ const PrivacyPolicy = () => {
               </ul>
             </section>
 
+            {/* Advertising and Third-Party Services */}
+            <section>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Advertising and Third-Party Services</h2>
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-blue-900 mb-2">📢 Google AdSense</h3>
+                  <ul className="text-blue-800 space-y-1 text-sm list-disc pl-4">
+                    <li>We use Google AdSense to display advertisements</li>
+                    <li>Google may use cookies to serve ads based on your interests</li>
+                    <li>You can opt out of personalized ads at <a href="https://adssettings.google.com" className="underline" target="_blank" rel="noopener noreferrer">Google Ads Settings</a></li>
+                    <li>No baby data is used for advertising targeting</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-2">🍪 Cookies and Tracking</h3>
+                  <p className="text-gray-700 text-sm">
+                    Our advertising partners may use cookies and similar technologies to:
+                  </p>
+                  <ul className="text-gray-700 space-y-1 text-sm list-disc pl-4 mt-2">
+                    <li>Serve relevant advertisements</li>
+                    <li>Measure ad effectiveness</li>
+                    <li>Provide analytics about ad performance</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Children's Privacy */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Children's Privacy</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">9. Children's Privacy (COPPA Compliance)</h2>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-900">
                   <strong>👶 Special Protection for Children:</strong> While our app tracks baby information, 
                   we recognize that babies cannot consent to data collection. Parents/guardians have full control 
                   over their baby's data and can request deletion at any time. We never use baby data for 
-                  marketing or advertising purposes.
+                  marketing or advertising purposes. We comply with COPPA (Children's Online Privacy Protection Act) 
+                  and do not knowingly collect personal information from children under 13.
                 </p>
               </div>
             </section>
