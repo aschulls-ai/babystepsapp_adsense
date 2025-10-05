@@ -14,9 +14,11 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Get backend URL from frontend environment
+# Get backend URL from frontend environment, but use localhost for testing
 BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://babysteps-app.preview.emergentagent.com')
-API_BASE = f"{BACKEND_URL}/api"
+# Use localhost for direct backend testing
+LOCAL_BACKEND_URL = "http://localhost:8001"
+API_BASE = f"{LOCAL_BACKEND_URL}/api"
 
 class BabyStepsAPITester:
     def __init__(self):
