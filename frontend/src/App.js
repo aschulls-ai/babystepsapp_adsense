@@ -3,6 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import axios from 'axios';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { mobileService } from './services/MobileService';
 import './App.css';
 
 // Components
