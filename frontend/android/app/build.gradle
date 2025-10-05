@@ -18,11 +18,12 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty("BABY_STEPS_UPLOAD_STORE_FILE")) {
-                storeFile file(BABY_STEPS_UPLOAD_STORE_FILE)
-                storePassword BABY_STEPS_UPLOAD_STORE_PASSWORD
-                keyAlias BABY_STEPS_UPLOAD_KEY_ALIAS
-                keyPassword BABY_STEPS_UPLOAD_KEY_PASSWORD
+            def keystoreFile = System.getenv("BABY_STEPS_UPLOAD_STORE_FILE")
+            if (keystoreFile != null) {
+                storeFile file(keystoreFile)
+                storePassword System.getenv("BABY_STEPS_UPLOAD_STORE_PASSWORD")
+                keyAlias System.getenv("BABY_STEPS_UPLOAD_KEY_ALIAS")
+                keyPassword System.getenv("BABY_STEPS_UPLOAD_KEY_PASSWORD")
             }
         }
     }
