@@ -43,11 +43,6 @@ function App() {
         await initializeMobileApp();
       }
       
-      const baseURL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
-      if (baseURL) {
-        axios.defaults.baseURL = baseURL;
-      }
-      
       await checkAuthState();
     };
     
