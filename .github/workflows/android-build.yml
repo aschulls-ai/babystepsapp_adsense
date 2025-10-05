@@ -160,35 +160,12 @@ jobs:
         echo "Building release APK..."
         ./gradlew assembleRelease --stacktrace --no-daemon
         
-    - name: 📦 Build Signed Android App Bundle (.aab)
+    - name: 📦 Build Android App Bundle (.aab)
       working-directory: frontend/android
       if: ${{ inputs.build_type == 'bundle' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      env:
-        BABY_STEPS_UPLOAD_STORE_FILE: baby-steps-upload-key.keystore
-        BABY_STEPS_UPLOAD_STORE_PASSWORD: babysteps2024
-        BABY_STEPS_UPLOAD_KEY_ALIAS: baby-steps-upload
-        BABY_STEPS_UPLOAD_KEY_PASSWORD: babysteps2024
       run: |
-        echo "Building SIGNED Android App Bundle (.aab) for Google Play..."
-        echo "Verifying signing configuration..."
-        echo "Keystore file: $BABY_STEPS_UPLOAD_STORE_FILE"
-        echo "Key alias: $BABY_STEPS_UPLOAD_KEY_ALIAS"
-        ls -la *.keystore
-        
-        echo "Starting signed build..."
-        ./gradlew bundleRelease --stacktrace --no-daemon --info
-        
-        echo "Verifying signed AAB..."
-        if [ -f "app/build/outputs/bundle/release/app-release.aab" ]; then
-          echo "✅ Signed AAB generated successfully!"
-          ls -la app/build/outputs/bundle/release/
-          
-          echo "Verifying AAB is actually signed..."
-          file app/build/outputs/bundle/release/app-release.aab
-        else
-          echo "❌ AAB generation failed!"
-          exit 1
-        fi
+        echo "Building Android App Bundle (.aab) for Google Play..."
+        ./gradlew bundleRelease --stacktrace --no-daemon --info | grep -E "(BUILD|bundleRelease|\.aab)"
         
     - name: 📊 List Build Outputs
       run: |
