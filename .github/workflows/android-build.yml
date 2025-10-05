@@ -157,6 +157,9 @@ jobs:
         echo "Gradle wrapper properties:"
         cat gradle/wrapper/gradle-wrapper.properties
         
+        echo "Gradle properties configuration:"
+        cat gradle.properties
+        
     - name: 🧹 Clean and Validate Gradle
       working-directory: frontend/android
       run: |
