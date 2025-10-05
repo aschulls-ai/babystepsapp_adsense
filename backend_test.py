@@ -25,9 +25,10 @@ class BabyStepsAPITester:
         # Set session timeout and retry settings
         self.session.timeout = 30
         self.auth_token = None
-        self.test_user_email = f"sarah.johnson.{uuid.uuid4().hex[:8]}@example.com"
-        self.test_user_name = "Sarah Johnson"
-        self.test_user_password = "SecureParent2024!"
+        # Use test credentials from review request
+        self.test_user_email = "test@babysteps.com"
+        self.test_user_name = "Test User"
+        self.test_user_password = "TestPassword123"
         self.baby_id = None
         self.results = {
             'passed': 0,
