@@ -175,9 +175,18 @@ function App() {
             element={
               isAuthenticated ? 
               <Navigate to="/dashboard" replace /> : 
-              <AuthPage onLogin={login} onRegister={register} />
+              <AuthPage 
+                onLogin={login} 
+                onRegister={register}
+                onRequestPasswordReset={requestPasswordReset}
+                onResendVerification={resendVerification}
+              />
             } 
           />
+          
+          {/* Email verification and password reset routes - accessible without authentication */}
+          <Route path="/verify-email/:token" element={<EmailVerification />} />
+          <Route path="/reset-password/:token" element={<PasswordReset />} />
           
           <Route 
             path="/*" 
