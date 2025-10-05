@@ -27,6 +27,14 @@ import Layout from './components/Layout';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Debug logging
+console.log('Environment configuration:', {
+  BACKEND_URL,
+  API,
+  processEnv: process.env.REACT_APP_BACKEND_URL,
+  importMeta: import.meta.env?.REACT_APP_BACKEND_URL
+});
+
 // Set up axios defaults
 axios.defaults.baseURL = API;
 
