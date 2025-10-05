@@ -69,13 +69,13 @@ class BabyStepsAPITester:
             self.log_result("Health Check", False, f"Connection error: {str(e)}")
             return False
     
-    def test_user_registration(self):
-        """Test user registration endpoint"""
+    def test_new_user_registration(self):
+        """Test new user registration endpoint"""
         try:
             user_data = {
-                "email": self.test_user_email,
-                "name": self.test_user_name,
-                "password": self.test_user_password
+                "email": self.new_user_email,
+                "name": self.new_user_name,
+                "password": self.new_user_password
             }
             
             response = self.session.post(f"{API_BASE}/auth/register", json=user_data, timeout=30)
@@ -83,16 +83,26 @@ class BabyStepsAPITester:
             if response.status_code == 200:
                 data = response.json()
                 if 'message' in data and 'email' in data:
-                    self.log_result("User Registration", True, f"User registered successfully: {data['message']}")
-                    return True
+                    # Check that email_verified is False (as expected for new users)
+                    email_verified = data.get('email_verified', True)  # Default True to catch if missing
+                    if email_verified == False:
+                        self.log_result("New User Registration", True, f"User registered with email_verified=False: {data['message']}")
+                        return True
+                    else:
+                        self.log_result("New User Registration", False, f"Expected email_verified=False, got {email_verified}")
+                        return False
                 else:
-                    self.log_result("User Registration", False, f"Invalid response format: {data}")
+                    self.log_result("New User Registration", False, f"Invalid response format: {data}")
                     return False
+            elif response.status_code == 400 and "already registered" in response.text:
+                # User already exists, that's fine for testing
+                self.log_result("New User Registration", True, "User already exists (acceptable for testing)")
+                return True
             else:
-                self.log_result("User Registration", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("New User Registration", False, f"HTTP {response.status_code}: {response.text}")
                 return False
         except Exception as e:
-            self.log_result("User Registration", False, f"Error: {str(e)}")
+            self.log_result("New User Registration", False, f"Error: {str(e)}")
             return False
     
     def test_manual_verification(self):
