@@ -134,7 +134,7 @@ function App() {
     );
   }
 
-  const isAuthenticated = localStorage.getItem('token');
+  const isAuthenticated = user || localStorage.getItem('token');
 
   return (
     <div className="App min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
