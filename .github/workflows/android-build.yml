@@ -95,6 +95,9 @@ jobs:
         echo "Keystore generated successfully"
         ls -la *.keystore
         
+        echo "Verifying keystore..."
+        keytool -list -v -keystore baby-steps-upload-key.keystore -storepass babysteps2024
+        
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
