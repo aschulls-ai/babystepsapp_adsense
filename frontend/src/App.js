@@ -38,6 +38,8 @@ function App() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       try {
         await fetchBabies();
+        // Set a basic user object to indicate authentication
+        setUser({ authenticated: true });
       } catch (error) {
         console.error('Auth check failed:', error);
         logout();
