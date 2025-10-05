@@ -601,6 +601,202 @@ async def reset_password(password_data: PasswordReset):
     
     return {"message": "Password reset successfully"}
 
+# Dashboard Management Routes
+@api_router.get("/dashboard/layout")
+async def get_dashboard_layout(current_user: User = Depends(get_current_user)):
+    """Get user's dashboard layout"""
+    layout = await db.dashboard_layouts.find_one({"user_id": current_user.id})
+    
+    if not layout:
+        # Create default layout
+        default_widgets = [
+            {
+                "id": str(uuid.uuid4()),
+                "type": "baby_profile",
+                "title": "Baby Profile",
+                "size": "medium",
+                "position": {"x": 0, "y": 0, "w": 6, "h": 4},
+                "config": {},
+                "enabled": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "type": "recent_activities",
+                "title": "Recent Activities",
+                "size": "large",
+                "position": {"x": 6, "y": 0, "w": 6, "h": 4},
+                "config": {},
+                "enabled": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "type": "food_safety_quick",
+                "title": "Food Safety Quick Check",
+                "size": "medium",
+                "position": {"x": 0, "y": 4, "w": 6, "h": 3},
+                "config": {},
+                "enabled": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "type": "quick_stats",
+                "title": "Today's Stats",
+                "size": "medium",
+                "position": {"x": 6, "y": 4, "w": 6, "h": 3},
+                "config": {},
+                "enabled": True
+            }
+        ]
+        
+        layout_data = DashboardLayout(
+            user_id=current_user.id,
+            widgets=default_widgets,
+            layout_config={"cols": 12, "rowHeight": 60}
+        ).dict()
+        
+        layout_to_store = prepare_for_mongo(layout_data)
+        await db.dashboard_layouts.insert_one(layout_to_store)
+        return layout_data
+    
+    return parse_from_mongo(layout)
+
+@api_router.put("/dashboard/layout")
+async def update_dashboard_layout(
+    layout_data: LayoutUpdate,
+    current_user: User = Depends(get_current_user)
+):
+    """Update user's dashboard layout"""
+    update_data = {
+        "widgets": [widget.dict() for widget in layout_data.widgets],
+        "layout_config": layout_data.layout_config,
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    result = await db.dashboard_layouts.update_one(
+        {"user_id": current_user.id},
+        {"$set": prepare_for_mongo(update_data)}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dashboard layout not found"
+        )
+    
+    return {"message": "Dashboard layout updated successfully"}
+
+@api_router.post("/dashboard/widgets")
+async def add_dashboard_widget(
+    widget_data: WidgetCreate,
+    current_user: User = Depends(get_current_user)
+):
+    """Add a new widget to user's dashboard"""
+    new_widget = DashboardWidget(**widget_data.dict()).dict()
+    
+    result = await db.dashboard_layouts.update_one(
+        {"user_id": current_user.id},
+        {"$push": {"widgets": prepare_for_mongo(new_widget)}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Dashboard layout not found"
+        )
+    
+    return {"message": "Widget added successfully", "widget": new_widget}
+
+@api_router.delete("/dashboard/widgets/{widget_id}")
+async def remove_dashboard_widget(
+    widget_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Remove a widget from user's dashboard"""
+    result = await db.dashboard_layouts.update_one(
+        {"user_id": current_user.id},
+        {"$pull": {"widgets": {"id": widget_id}}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Widget not found"
+        )
+    
+    return {"message": "Widget removed successfully"}
+
+@api_router.get("/dashboard/available-widgets")
+async def get_available_widgets():
+    """Get list of all available widget types"""
+    available_widgets = [
+        {
+            "type": "baby_profile",
+            "name": "Baby Profile",
+            "description": "Quick overview of your baby's info and milestones",
+            "icon": "👶",
+            "defaultSize": "medium",
+            "category": "baby"
+        },
+        {
+            "type": "recent_activities",
+            "name": "Recent Activities",
+            "description": "Latest feeding, sleep, and diaper tracking",
+            "icon": "📝",
+            "defaultSize": "large",
+            "category": "tracking"
+        },
+        {
+            "type": "food_safety_quick",
+            "name": "Food Safety Quick Check",
+            "description": "Quick search for food safety questions",
+            "icon": "🥗",
+            "defaultSize": "medium",
+            "category": "nutrition"
+        },
+        {
+            "type": "emergency_training",
+            "name": "Emergency Training",
+            "description": "Quick access to CPR and choking guides",
+            "icon": "🚨",
+            "defaultSize": "medium",
+            "category": "safety"
+        },
+        {
+            "type": "meal_ideas",
+            "name": "Meal Ideas",
+            "description": "Age-appropriate meal suggestions",
+            "icon": "🍼",
+            "defaultSize": "medium",
+            "category": "nutrition"
+        },
+        {
+            "type": "growth_charts",
+            "name": "Growth Charts",
+            "description": "Baby growth trends and percentiles",
+            "icon": "📊",
+            "defaultSize": "large",
+            "category": "tracking"
+        },
+        {
+            "type": "quick_stats",
+            "name": "Today's Stats",
+            "description": "Daily summary of activities",
+            "icon": "📈",
+            "defaultSize": "medium",
+            "category": "tracking"
+        },
+        {
+            "type": "research_bookmarks",
+            "name": "Research Bookmarks",
+            "description": "Your saved research topics and articles",
+            "icon": "🔖",
+            "defaultSize": "medium",
+            "category": "research"
+        }
+    ]
+    
+    return {"widgets": available_widgets}
+
 # Baby Management Routes
 @api_router.post("/babies", response_model=Baby)
 async def create_baby(baby_data: BabyCreate, current_user: User = Depends(get_current_user)):
