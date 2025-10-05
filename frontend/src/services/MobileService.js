@@ -26,7 +26,7 @@ class MobileService {
     try {
       const data = typeof value === 'string' ? value : JSON.stringify(value);
       if (this.isNative) {
-        await Storage.set({ key, value: data });
+        await Preferences.set({ key, value: data });
       } else {
         localStorage.setItem(key, data);
       }
@@ -38,7 +38,7 @@ class MobileService {
   async getItem(key) {
     try {
       if (this.isNative) {
-        const { value } = await Storage.get({ key });
+        const { value } = await Preferences.get({ key });
         return value;
       } else {
         return localStorage.getItem(key);
@@ -52,7 +52,7 @@ class MobileService {
   async removeItem(key) {
     try {
       if (this.isNative) {
-        await Storage.remove({ key });
+        await Preferences.remove({ key });
       } else {
         localStorage.removeItem(key);
       }
@@ -64,7 +64,7 @@ class MobileService {
   async clear() {
     try {
       if (this.isNative) {
-        await Storage.clear();
+        await Preferences.clear();
       } else {
         localStorage.clear();
       }
