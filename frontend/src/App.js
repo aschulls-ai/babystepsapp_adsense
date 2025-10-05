@@ -14,6 +14,8 @@ import FoodResearch from './components/FoodResearch';
 import EmergencyTraining from './components/EmergencyTraining';
 import MealPlanner from './components/MealPlanner';
 import Research from './components/Research';
+import EmailVerification from './components/EmailVerification';
+import PasswordReset from './components/PasswordReset';
 import Layout from './components/Layout';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
