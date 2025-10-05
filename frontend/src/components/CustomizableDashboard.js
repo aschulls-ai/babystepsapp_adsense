@@ -7,6 +7,8 @@ import { Plus, Settings, Save, X } from 'lucide-react';
 import { getWidgetComponent, DefaultWidgetConfigs } from './widgets/WidgetRegistry';
 import { toast } from 'sonner';
 import axios from 'axios';
+import InContentAd from './ads/InContentAd';
+import SidebarAd from './ads/SidebarAd';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
