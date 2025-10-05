@@ -3,8 +3,17 @@
 ## 🚀 Your Baby Steps App is Ready for Google Play!
 
 ### 📦 What You'll Get:
-- **✅ AAB file** (`app-release.aab`) - Ready for upload to Google Play Console
+- **✅ SIGNED AAB file** (`app-release.aab`) - Ready for upload to Google Play Console
+- **🔐 Upload keystore** (`release.keystore`) - Keep this safe for future updates
 - **📋 Mapping files** (for crash debugging)
+
+### 🔐 Keystore Information:
+```
+Keystore: release.keystore
+Store Password: babysteps2024
+Key Alias: babysteps
+Key Password: babysteps2024
+```
 
 ## 📋 Google Play Console Upload Steps:
 
