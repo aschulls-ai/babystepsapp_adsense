@@ -797,6 +797,30 @@ async def get_available_widgets():
     
     return {"widgets": available_widgets}
 
+# Temporary testing endpoint - remove in production
+@api_router.post("/auth/manual-verify")
+async def manual_verify_user(email_data: dict):
+    """Manually verify a user for testing purposes"""
+    email = email_data.get("email")
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email is required"
+        )
+    
+    result = await db.users.update_one(
+        {"email": email},
+        {"$set": {"email_verified": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return {"message": "User verified successfully"}
+
 # Baby Management Routes
 @api_router.post("/babies", response_model=Baby)
 async def create_baby(baby_data: BabyCreate, current_user: User = Depends(get_current_user)):
