@@ -17,12 +17,14 @@ android {
         }
     }
     signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         release {
-            // For production, you'll need to add keystore configuration
-            // storeFile file('baby-steps-release-key.keystore')
-            // keyAlias 'baby-steps'
-            // storePassword System.getenv('KEYSTORE_PASSWORD')
-            // keyPassword System.getenv('KEY_PASSWORD')
+            // Will be configured with generated keystore
         }
     }
     buildTypes {
