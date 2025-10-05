@@ -39,10 +39,11 @@ android {
         }
     }
     
-    // Workaround for ARM64 compatibility
-    packagingOptions {
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libjsc.so'
+    // Workaround for ARM64 compatibility  
+    packaging {
+        resources {
+            pickFirsts += ['**/libc++_shared.so', '**/libjsc.so']
+        }
     }
 }
 
