@@ -74,6 +74,35 @@ class PasswordReset(BaseModel):
 class EmailVerification(BaseModel):
     token: str
 
+# Dashboard Widget Models
+class DashboardWidget(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type: str  # 'baby_profile', 'recent_activities', 'food_safety', 'emergency_training', etc.
+    title: str
+    size: str = "medium"  # 'small', 'medium', 'large'
+    position: Dict[str, Any]  # {x: 0, y: 0, w: 2, h: 2}
+    config: Dict[str, Any] = {}  # Widget-specific configuration
+    enabled: bool = True
+
+class DashboardLayout(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    widgets: List[DashboardWidget] = []
+    layout_config: Dict[str, Any] = {}  # Grid settings, theme, etc.
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class WidgetCreate(BaseModel):
+    type: str
+    title: str
+    size: str = "medium"
+    position: Dict[str, Any]
+    config: Dict[str, Any] = {}
+
+class LayoutUpdate(BaseModel):
+    widgets: List[DashboardWidget]
+    layout_config: Dict[str, Any] = {}
+
 class Baby(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
