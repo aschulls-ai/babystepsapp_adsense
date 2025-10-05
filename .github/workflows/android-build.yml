@@ -76,6 +76,30 @@ jobs:
         echo "Installing additional SDK platforms..."
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
         
+    - name: 🔐 Setup Keystore for Signing
+      working-directory: frontend/android/app
+      run: |
+        echo "Setting up keystore for AAB signing..."
+        # Generate release keystore if not exists
+        if [ ! -f "release.keystore" ]; then
+          keytool -genkeypair -v \
+            -keystore release.keystore \
+            -alias babysteps \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass babysteps2024 \
+            -keypass babysteps2024 \
+            -dname "CN=Baby Steps,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
+          echo "Release keystore generated"
+        fi
+        
+        # Configure signing in gradle.properties
+        echo "RELEASE_STORE_FILE=release.keystore" >> ../gradle.properties
+        echo "RELEASE_STORE_PASSWORD=babysteps2024" >> ../gradle.properties
+        echo "RELEASE_KEY_ALIAS=babysteps" >> ../gradle.properties
+        echo "RELEASE_KEY_PASSWORD=babysteps2024" >> ../gradle.properties
+        
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
