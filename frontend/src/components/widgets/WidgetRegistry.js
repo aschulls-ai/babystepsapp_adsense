@@ -14,6 +14,7 @@ export const WidgetRegistry = {
   emergency_training: EmergencyTrainingWidget,
   meal_ideas: MealIdeasWidget,
   quick_stats: QuickStatsWidget,
+  milestones: MilestonesWidget,
   growth_charts: QuickStatsWidget, // Placeholder - using QuickStats for now
   research_bookmarks: QuickStatsWidget, // Placeholder - using QuickStats for now
 };
