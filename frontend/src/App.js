@@ -22,6 +22,7 @@ import EmailVerification from './components/EmailVerification';
 import PasswordReset from './components/PasswordReset';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Layout from './components/Layout';
+import BottomBannerAd from './components/ads/BottomBannerAd';
 
 // Get backend URL with fallback for different environments
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
