@@ -361,6 +361,73 @@ def parse_from_mongo(item):
         return result
     return item
 
+# Email utility functions
+def create_verification_token(email: str) -> str:
+    """Create email verification token"""
+    expire = datetime.now(timezone.utc) + timedelta(hours=VERIFICATION_TOKEN_EXPIRE_HOURS)
+    to_encode = {
+        "sub": email,
+        "exp": expire,
+        "type": "email_verification",
+        "jti": secrets.token_urlsafe(16)
+    }
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def create_password_reset_token(email: str) -> str:
+    """Create password reset token"""
+    expire = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    to_encode = {
+        "sub": email,
+        "exp": expire,
+        "type": "password_reset",
+        "jti": secrets.token_urlsafe(16)
+    }
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def verify_token(token: str, expected_type: str) -> Optional[str]:
+    """Verify and decode JWT token"""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        if email is None or token_type != expected_type:
+            return None
+        
+        return email
+    except JWTError:
+        return None
+
+async def send_verification_email_mock(email: str, verification_token: str):
+    """Mock email service - logs instead of sending"""
+    verification_url = f"{FRONTEND_URL}/verify-email/{verification_token}"
+    
+    print(f"\n🔔 EMAIL VERIFICATION (Mock Service)")
+    print(f"📧 To: {email}")
+    print(f"📝 Subject: Verify Your Email Address")
+    print(f"🔗 Verification URL: {verification_url}")
+    print(f"⏰ Expires: {datetime.now(timezone.utc) + timedelta(hours=VERIFICATION_TOKEN_EXPIRE_HOURS)}")
+    print(f"=" * 60)
+    
+    # In production, replace this with actual email sending
+    # await send_actual_email(email, verification_url)
+
+async def send_password_reset_email_mock(email: str, reset_token: str):
+    """Mock password reset email service"""
+    reset_url = f"{FRONTEND_URL}/reset-password/{reset_token}"
+    
+    print(f"\n🔔 PASSWORD RESET (Mock Service)")
+    print(f"📧 To: {email}")
+    print(f"📝 Subject: Password Reset Request")
+    print(f"🔗 Reset URL: {reset_url}")
+    print(f"⏰ Expires: {datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)}")
+    print(f"=" * 60)
+    
+    # In production, replace this with actual email sending
+    # await send_actual_email(email, reset_url)
+
 # Authentication Routes - Support multiple concurrent sessions
 @api_router.post("/auth/register", response_model=Token)
 async def register(user_data: UserCreate):
