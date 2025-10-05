@@ -308,6 +308,9 @@ function App() {
         
         {/* Bottom Banner Ad - Only show when user is logged in */}
         {user && <BottomBannerAd />}
+        
+        {/* Add padding to prevent content overlap with bottom banner */}
+        {user && <div className="h-16 md:h-20" />}
       </Router>
     </div>
   );
