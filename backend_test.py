@@ -105,28 +105,47 @@ class BabyStepsAPITester:
             self.log_result("New User Registration", False, f"Error: {str(e)}")
             return False
     
-    def test_manual_verification(self):
-        """Manually verify user for testing purposes"""
+    def test_protected_endpoints_with_token(self):
+        """Test that protected endpoints work with JWT token from unverified user"""
         try:
-            verify_data = {
-                "email": self.test_user_email
-            }
+            # Test accessing babies endpoint (protected)
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
             
-            response = self.session.post(f"{API_BASE}/auth/manual-verify", json=verify_data, timeout=30)
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_result("Protected Endpoints Access", True, "Can access protected endpoints with token from unverified user")
+                    return True
+                else:
+                    self.log_result("Protected Endpoints Access", False, f"Unexpected response format: {data}")
+                    return False
+            else:
+                self.log_result("Protected Endpoints Access", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Protected Endpoints Access", False, f"Error: {str(e)}")
+            return False
+
+    def test_email_verification_still_exists(self):
+        """Test that email verification functionality still exists"""
+        try:
+            # Test resend verification endpoint exists
+            email_data = {"email": self.new_user_email}
+            response = self.session.post(f"{API_BASE}/auth/resend-verification", json=email_data, timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
                 if 'message' in data:
-                    self.log_result("Manual User Verification", True, "User verified for testing")
+                    self.log_result("Email Verification Functionality", True, "Email verification endpoints still exist")
                     return True
                 else:
-                    self.log_result("Manual User Verification", False, f"Invalid response: {data}")
+                    self.log_result("Email Verification Functionality", False, f"Invalid response: {data}")
                     return False
             else:
-                self.log_result("Manual User Verification", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("Email Verification Functionality", False, f"HTTP {response.status_code}: {response.text}")
                 return False
         except Exception as e:
-            self.log_result("Manual User Verification", False, f"Error: {str(e)}")
+            self.log_result("Email Verification Functionality", False, f"Error: {str(e)}")
             return False
 
     def test_immediate_login_without_verification(self):
