@@ -93,6 +93,39 @@ function App() {
     }
   };
 
+  const resendVerification = async (email) => {
+    try {
+      await axios.post('/auth/resend-verification', { email });
+      toast.success('Verification email sent! Please check your inbox.');
+      return true;
+    } catch (error) {
+      toast.error('Failed to send verification email');
+      return false;
+    }
+  };
+
+  const requestPasswordReset = async (email) => {
+    try {
+      await axios.post('/auth/request-password-reset', { email });
+      toast.success('Password reset link sent! Please check your email.');
+      return true;
+    } catch (error) {
+      toast.error('Failed to send password reset email');
+      return false;
+    }
+  };
+
+  const resetPassword = async (token, newPassword) => {
+    try {
+      await axios.post('/auth/reset-password', { token, new_password: newPassword });
+      toast.success('Password reset successful! You can now log in.');
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Password reset failed');
+      return false;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     delete axios.defaults.headers.common['Authorization'];
