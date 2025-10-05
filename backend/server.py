@@ -494,13 +494,8 @@ async def login(user_data: UserLogin):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Check if email is verified
-    if not user.get("email_verified", False):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please verify your email before logging in. Check your email for verification link.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # Email verification is optional - users can login without verifying
+    # This allows immediate access to the app while still supporting email verification
     
     # Create token with longer expiry for multi-device support
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
