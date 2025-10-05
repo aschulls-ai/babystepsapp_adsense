@@ -270,7 +270,7 @@ const PrivacyPolicy = () => {
 
             {/* International Users */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">9. International Users</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">10. International Users</h2>
               <p className="text-gray-700 leading-relaxed">
                 If you are accessing Baby Steps from outside the United States, please note that your information 
                 may be transferred to, stored, and processed in the United States. We ensure appropriate safeguards 
