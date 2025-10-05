@@ -76,28 +76,6 @@ jobs:
         echo "Installing additional SDK platforms..."
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
         
-    - name: 🔐 Generate Upload Keystore
-      working-directory: frontend/android
-      run: |
-        echo "Generating upload keystore for Google Play..."
-        # Generate a keystore for upload (Google Play App Signing)
-        keytool -genkeypair -v \
-          -storetype PKCS12 \
-          -keystore baby-steps-upload-key.keystore \
-          -alias baby-steps-upload \
-          -keyalg RSA \
-          -keysize 2048 \
-          -validity 10000 \
-          -storepass babysteps2024 \
-          -keypass babysteps2024 \
-          -dname "CN=Baby Steps, OU=Development, O=Baby Steps App, L=City, ST=State, C=US"
-          
-        echo "Keystore generated successfully"
-        ls -la *.keystore
-        
-        echo "Verifying keystore..."
-        keytool -list -v -keystore baby-steps-upload-key.keystore -storepass babysteps2024
-        
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
