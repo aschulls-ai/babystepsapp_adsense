@@ -174,27 +174,33 @@
 ## frontend:
   - task: "Unified search interface in FoodResearch component"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/FoodResearch.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
         -comment: "Updated UI to show single search bar instead of separate cultural meal options. Added common suggestions for easy searching."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ TESTED: Unified search interface is working perfectly! Found search input, search button, and 6 quick check suggestions ('Can my baby have honey?', 'Is avocado safe for babies?', etc.). Search functionality submits queries correctly with loading indicators. Age-appropriate guidelines widget displays correctly. Emergency training link present. Interface properly shows 'No Baby Profile' state when no profile exists, then displays full search interface after baby profile creation."
 
   - task: "Authentication and navigation flow"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: true
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
         -comment: "Existing functionality - needs verification that app routing and auth still work correctly after recent changes."
+        -working: false
+        -agent: "testing"
+        -comment: "❌ CRITICAL ISSUE: Frontend authentication flow is broken. Both registration and login return 401 errors despite backend working correctly (confirmed via curl). Backend logs show successful auth requests from other sources but frontend requests fail. Navigation works perfectly (7/7 pages accessible) when authenticated. Mobile responsiveness excellent. Issue is specifically with frontend auth form submission - may be CORS, request formatting, or token handling problem."
 
 ## metadata:
   created_by: "main_agent"
