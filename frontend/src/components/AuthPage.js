@@ -6,10 +6,13 @@ import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Baby, ShieldCheck, Heart, Utensils, Activity, ChefHat } from 'lucide-react';
 
-const AuthPage = ({ onLogin, onRegister }) => {
+const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerification }) => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '' });
+  const [resetEmail, setResetEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,8 +24,26 @@ const AuthPage = ({ onLogin, onRegister }) => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onRegister(registerData.name, registerData.email, registerData.password);
+    const result = await onRegister(registerData.name, registerData.email, registerData.password);
+    if (result && result.requiresVerification) {
+      setRegistrationResult(result);
+    }
     setLoading(false);
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await onRequestPasswordReset(resetEmail);
+    setLoading(false);
+    setShowPasswordReset(false);
+    setResetEmail('');
+  };
+
+  const handleResendVerification = async () => {
+    if (registrationResult && registrationResult.email) {
+      await onResendVerification(registrationResult.email);
+    }
   };
 
   return (
