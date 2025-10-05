@@ -194,15 +194,14 @@ jobs:
         retention-days: 90
         if-no-files-found: error
         
-    - name: 📦 Upload SIGNED Android App Bundle (.aab) - READY FOR GOOGLE PLAY
+    - name: 📦 Upload Android App Bundle (.aab) - READY FOR GOOGLE PLAY
       if: ${{ inputs.build_type == 'bundle' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       uses: actions/upload-artifact@v4
       with:
-        name: baby-steps-SIGNED-app-bundle-v${{ steps.version.outputs.version }}-GOOGLE-PLAY-READY
+        name: baby-steps-app-bundle-v${{ steps.version.outputs.version }}-GOOGLE-PLAY-READY
         path: |
           frontend/android/app/build/outputs/bundle/release/*.aab
           frontend/android/app/build/outputs/mapping/release/
-          frontend/android/baby-steps-upload-key.keystore
         retention-days: 365
         if-no-files-found: error
         
