@@ -100,13 +100,20 @@ jobs:
         sed -i "s/versionCode .*/versionCode ${{ github.run_number }}/" app/build.gradle
         echo "Updated to version ${{ steps.version.outputs.version }} (code: ${{ github.run_number }})"
         
-    - name: 🔐 Make Gradle Wrapper Executable
+    - name: 🔐 Setup Gradle Wrapper
       working-directory: frontend/android
-      run: chmod +x ./gradlew
-      
-    - name: 🧹 Clean Gradle
+      run: |
+        chmod +x ./gradlew
+        # Verify wrapper integrity
+        ls -la gradle/wrapper/
+        # Clean any corrupted gradle files
+        rm -rf .gradle || true
+        
+    - name: 🧹 Clean and Validate Gradle
       working-directory: frontend/android
-      run: ./gradlew clean
+      run: |
+        ./gradlew --version
+        ./gradlew clean --stacktrace
       
     - name: 🏗️ Build Debug APK
       working-directory: frontend/android
