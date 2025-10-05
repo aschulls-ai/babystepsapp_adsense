@@ -175,6 +175,17 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
                       'Sign In'
                     )}
                   </Button>
+                  
+                  {/* Forgot Password Link */}
+                  <div className="text-center mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordReset(true)}
+                      className="text-sm text-blue-600 hover:text-blue-800 underline"
+                    >
+                      Forgot your password?
+                    </button>
+                  </div>
                 </form>
               </TabsContent>
 
