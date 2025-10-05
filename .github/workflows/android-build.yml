@@ -111,7 +111,7 @@ jobs:
           echo "Gradle wrapper JAR missing or empty, regenerating..."
           # Install gradle temporarily to regenerate wrapper
           sudo apt-get update && sudo apt-get install -y gradle
-          gradle wrapper --gradle-version 8.11.1
+          gradle wrapper --gradle-version 8.10.2
           chmod +x ./gradlew
         fi
         
