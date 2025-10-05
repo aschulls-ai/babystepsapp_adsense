@@ -105,24 +105,30 @@ jobs:
         sed -i "s/versionCode .*/versionCode ${{ github.run_number }}/" app/build.gradle
         echo "Updated to version ${{ steps.version.outputs.version }} (code: ${{ github.run_number }})"
         
-    - name: 🔐 Setup Gradle Wrapper  
-      uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: wrapper
-        
-    - name: 🔐 Verify Gradle Setup
+    - name: 🔐 Fix Gradle Wrapper
       working-directory: frontend/android
       run: |
-        # Ensure wrapper is executable
+        echo "Checking Gradle wrapper status..."
+        ls -la gradle/wrapper/ || echo "Wrapper directory missing"
+        
+        # Remove potentially corrupted wrapper files
+        rm -f gradle/wrapper/gradle-wrapper.jar
+        rm -rf .gradle || true
+        
+        # Download fresh gradle-wrapper.jar directly
+        echo "Downloading fresh Gradle wrapper..."
+        mkdir -p gradle/wrapper
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.10.2/gradle/wrapper/gradle-wrapper.jar
+        
+        # Ensure wrapper script is executable
         chmod +x ./gradlew
         
-        # Verify wrapper files exist and are valid
+        # Verify the setup
+        echo "Gradle wrapper files after fix:"
         ls -la gradle/wrapper/
-        echo "Gradle wrapper configuration:"
-        cat gradle/wrapper/gradle-wrapper.properties
         
-        # Clean any corrupted gradle cache
-        rm -rf .gradle || true
+        echo "Gradle wrapper properties:"
+        cat gradle/wrapper/gradle-wrapper.properties
         
     - name: 🧹 Clean and Validate Gradle
       working-directory: frontend/android
