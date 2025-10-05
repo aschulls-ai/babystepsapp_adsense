@@ -645,6 +645,15 @@ async def get_dashboard_layout(current_user: User = Depends(get_current_user)):
                 "position": {"x": 6, "y": 4, "w": 6, "h": 3},
                 "config": {},
                 "enabled": True
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "type": "milestones",
+                "title": "Developmental Milestones",
+                "size": "medium",
+                "position": {"x": 0, "y": 7, "w": 6, "h": 5},
+                "config": {},
+                "enabled": True
             }
         ]
         
