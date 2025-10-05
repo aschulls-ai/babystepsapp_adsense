@@ -165,9 +165,8 @@
 
 ## test_plan:
   current_focus:
-    - "Web application functionality"
-  stuck_tasks: 
-    - "Web application functionality"
+    - "API endpoints functionality"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
