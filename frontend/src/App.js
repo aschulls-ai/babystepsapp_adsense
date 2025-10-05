@@ -83,20 +83,13 @@ function App() {
   const register = async (name, email, password) => {
     try {
       const response = await axios.post('/auth/register', { name, email, password });
-      const { access_token } = response.data;
       
-      localStorage.setItem('token', access_token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-      
-      // Set user state to trigger re-render
-      setUser({ email, name });
-      await fetchBabies();
-      
-      toast.success('Account created successfully! Welcome to Baby Steps!');
-      return true;
+      // Registration now requires email verification
+      toast.success('Account created! Please check your email for verification link.');
+      return { success: true, requiresVerification: true, email };
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Registration failed');
-      return false;
+      return { success: false };
     }
   };
 
