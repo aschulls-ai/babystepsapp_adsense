@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Fix Gradle build.gradle evaluation error on line 1 related to packagingOptions syntax and Guava dependency conflict to complete Android app conversion"
+## user_problem_statement: "Test the Baby Steps frontend authentication to diagnose login issues reported by user. The backend authentication is confirmed working perfectly."
 
 ## backend:
   - task: "API endpoints functionality"
