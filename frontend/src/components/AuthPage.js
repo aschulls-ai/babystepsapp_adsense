@@ -273,9 +273,79 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
           </CardContent>
         </Card>
 
+        {/* Email Verification Notice */}
+        {registrationResult && registrationResult.requiresVerification && (
+          <Card className="mt-6 border-blue-200 bg-blue-50">
+            <CardContent className="p-6">
+              <div className="text-center">
+                <div className="text-blue-600 text-lg font-semibold mb-2">
+                  📧 Check Your Email!
+                </div>
+                <p className="text-sm text-blue-700 mb-4">
+                  We've sent a verification link to <strong>{registrationResult.email}</strong>
+                </p>
+                <p className="text-xs text-blue-600 mb-4">
+                  Please click the link in your email to verify your account before logging in.
+                </p>
+                <Button
+                  onClick={handleResendVerification}
+                  variant="outline"
+                  className="text-blue-600 border-blue-600 hover:bg-blue-100"
+                >
+                  Resend Verification Email
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Password Reset Modal */}
+        {showPasswordReset && (
+          <Card className="mt-6 border-orange-200 bg-orange-50">
+            <CardHeader>
+              <CardTitle className="text-center text-orange-800">Reset Password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handlePasswordReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email" className="text-sm font-medium text-gray-700">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all duration-200"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    {loading ? 'Sending...' : 'Send Reset Link'}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setShowPasswordReset(false)}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>Complete parenting companion for modern families</p>
+          <p>Parenting made easy</p>
         </div>
       </div>
     </div>
