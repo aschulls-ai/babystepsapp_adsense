@@ -344,8 +344,25 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
         )}
 
         {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500">
+        <div className="text-center mt-8 text-sm text-gray-500 space-y-2">
           <p>Parenting made easy</p>
+          <div className="flex justify-center items-center gap-4">
+            <a 
+              href="/privacy-policy" 
+              className="text-blue-600 hover:text-blue-800 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy Policy
+            </a>
+            <span>•</span>
+            <a 
+              href="mailto:support@babysteps.app" 
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              Contact Support
+            </a>
+          </div>
         </div>
       </div>
     </div>
