@@ -87,6 +87,30 @@ class BabyStepsAPITester:
             self.log_result("User Registration", False, f"Error: {str(e)}")
             return False
     
+    def test_manual_verification(self):
+        """Manually verify user for testing purposes"""
+        try:
+            verify_data = {
+                "email": self.test_user_email
+            }
+            
+            response = self.session.post(f"{API_BASE}/auth/manual-verify", json=verify_data, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data:
+                    self.log_result("Manual User Verification", True, "User verified for testing")
+                    return True
+                else:
+                    self.log_result("Manual User Verification", False, f"Invalid response: {data}")
+                    return False
+            else:
+                self.log_result("Manual User Verification", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Manual User Verification", False, f"Error: {str(e)}")
+            return False
+
     def test_user_login(self):
         """Test user login endpoint"""
         try:
