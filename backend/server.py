@@ -63,6 +63,17 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+# Email-related models
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str
+
+class EmailVerification(BaseModel):
+    token: str
+
 class Baby(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
