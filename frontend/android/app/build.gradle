@@ -18,13 +18,11 @@ android {
     }
     signingConfigs {
         release {
-            def keystoreFile = System.getenv("BABY_STEPS_UPLOAD_STORE_FILE")
-            if (keystoreFile != null) {
-                storeFile file(keystoreFile)
-                storePassword System.getenv("BABY_STEPS_UPLOAD_STORE_PASSWORD")
-                keyAlias System.getenv("BABY_STEPS_UPLOAD_KEY_ALIAS")
-                keyPassword System.getenv("BABY_STEPS_UPLOAD_KEY_PASSWORD")
-            }
+            // For production, you'll need to add keystore configuration
+            // storeFile file('baby-steps-release-key.keystore')
+            // keyAlias 'baby-steps'
+            // storePassword System.getenv('KEYSTORE_PASSWORD')
+            // keyPassword System.getenv('KEY_PASSWORD')
         }
     }
     buildTypes {
