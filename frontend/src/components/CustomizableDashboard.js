@@ -247,26 +247,38 @@ const CustomizableDashboard = ({ currentBaby }) => {
         </div>
       </div>
 
-      {/* Dashboard Grid */}
+      {/* Dashboard Grid with Ads */}
       {widgets.length > 0 ? (
-        <div className={isEditing ? 'ring-2 ring-blue-200 rounded-lg p-2' : ''}>
-          <ResponsiveGridLayout
-            className="layout"
-            layouts={{ lg: layout }}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            rowHeight={60}
-            onLayoutChange={handleLayoutChange}
-            isDraggable={isEditing}
-            isResizable={isEditing}
-            margin={[16, 16]}
-          >
-            {widgets.map((widget) => (
-              <div key={widget.id}>
-                {renderWidget(widget)}
-              </div>
-            ))}
-          </ResponsiveGridLayout>
+        <div className="flex gap-6">
+          {/* Main Dashboard Content */}
+          <div className={`flex-1 ${isEditing ? 'ring-2 ring-blue-200 rounded-lg p-2' : ''}`}>
+            <ResponsiveGridLayout
+              className="layout"
+              layouts={{ lg: layout }}
+              breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+              cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+              rowHeight={60}
+              onLayoutChange={handleLayoutChange}
+              isDraggable={isEditing}
+              isResizable={isEditing}
+              margin={[16, 16]}
+            >
+              {widgets.map((widget, index) => (
+                <div key={widget.id}>
+                  {renderWidget(widget)}
+                  {/* Add in-content ads after every 3rd widget */}
+                  {(index + 1) % 3 === 0 && index < widgets.length - 1 && (
+                    <div className="col-span-full mt-6">
+                      <InContentAd />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </ResponsiveGridLayout>
+          </div>
+          
+          {/* Sidebar Ad for Desktop */}
+          <SidebarAd className="flex-shrink-0" />
         </div>
       ) : (
         <Card className="p-8 text-center">
