@@ -127,8 +127,10 @@ jobs:
     - name: 🧹 Clean and Validate Gradle
       working-directory: frontend/android
       run: |
+        echo "Using Gradle wrapper version:"
         ./gradlew --version
-        ./gradlew clean --stacktrace
+        echo "Cleaning project..."
+        ./gradlew clean --stacktrace --no-daemon
       
     - name: 🏗️ Build Debug APK
       working-directory: frontend/android
