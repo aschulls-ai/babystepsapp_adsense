@@ -72,7 +72,14 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "build:mobile": "npm run build && npx cap sync",
+    "android:build": "npm run build:mobile && npx cap build android",
+    "android:dev": "npm run build:mobile && npx cap run android",
+    "android:bundle": "npm run build:mobile && cd android && ./gradlew bundleRelease",
+    "capacitor:sync": "npx cap sync",
+    "capacitor:build": "npx cap build",
+    "mobile:setup": "npx cap add android && npx cap sync"
   },
   "browserslist": {
     "production": [
