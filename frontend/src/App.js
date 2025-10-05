@@ -305,6 +305,9 @@ function App() {
           />
         </Routes>
         <Toaster position="top-right" />
+        
+        {/* Bottom Banner Ad - Only show when user is logged in */}
+        {user && <BottomBannerAd />}
       </Router>
     </div>
   );
