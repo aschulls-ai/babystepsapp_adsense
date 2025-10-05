@@ -126,12 +126,15 @@
 ## frontend:
   - task: "Web application functionality"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
+        -working: false
+        -agent: "testing"
+        -comment: "❌ CRITICAL AUTHENTICATION ISSUE IDENTIFIED: Frontend login is making POST requests to '/auth/login' (404 error) instead of correct '/api/auth/login' endpoint. Root cause: axios baseURL configuration issue. The login form submits but axios is not properly configured with the backend URL. Environment variables (REACT_APP_BACKEND_URL) are not being accessed correctly in the React app. Form shows 'Login failed' toast message. Backend is working correctly, issue is purely frontend axios configuration."
         -working: true
         -agent: "testing"
         -comment: "✅ TESTED: Complete web application working correctly - authentication, navigation, food research interface, baby profiles all functional."
