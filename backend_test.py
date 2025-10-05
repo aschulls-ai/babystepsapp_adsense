@@ -74,10 +74,8 @@ class BabyStepsAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                if 'access_token' in data and data.get('token_type') == 'bearer':
-                    self.auth_token = data['access_token']
-                    self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
-                    self.log_result("User Registration", True, f"User registered successfully")
+                if 'message' in data and 'email' in data:
+                    self.log_result("User Registration", True, f"User registered successfully: {data['message']}")
                     return True
                 else:
                     self.log_result("User Registration", False, f"Invalid response format: {data}")
