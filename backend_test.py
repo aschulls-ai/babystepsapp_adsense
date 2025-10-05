@@ -395,40 +395,60 @@ class BabyStepsAPITester:
             return False
     
     def run_all_tests(self):
-        """Run all backend tests"""
-        print(f"🚀 Starting Baby Steps Backend API Tests")
+        """Run all backend tests focusing on email verification optional login"""
+        print(f"🚀 Testing Baby Steps Backend Authentication - Email Verification Optional")
         print(f"📍 Testing against: {API_BASE}")
-        print("=" * 60)
+        print("=" * 80)
         
         # Test basic connectivity first
         if not self.test_health_check():
             print("❌ Health check failed - stopping tests")
             return self.results
         
-        # Test authentication flow
-        if not self.test_user_registration():
-            print("❌ Registration failed - stopping auth tests")
-        else:
-            # Manually verify user for testing
-            if self.test_manual_verification():
-                self.test_user_login()
-                self.test_authentication_required_endpoints()
-            else:
-                print("❌ Manual verification failed - stopping auth tests")
+        # MAIN TEST SEQUENCE AS PER REVIEW REQUEST:
+        print("\n🔍 TESTING EMAIL VERIFICATION OPTIONAL LOGIN FLOW:")
+        print("=" * 80)
         
-        # Test baby profile management (requires auth)
+        # 1. Create New Test User
+        print("1️⃣ Creating new test user...")
+        if not self.test_new_user_registration():
+            print("❌ New user registration failed")
+        
+        # 2. Immediate Login Test (WITHOUT verification)
+        print("2️⃣ Testing immediate login WITHOUT email verification...")
+        if not self.test_immediate_login_without_verification():
+            print("❌ Immediate login failed - this is the main issue to fix!")
+        
+        # 3. Test Protected Endpoints
+        print("3️⃣ Testing protected endpoints with token from unverified user...")
         if self.auth_token:
+            self.test_protected_endpoints_with_token()
             self.test_baby_profile_creation()
             self.test_get_babies()
         
-        # Test food research functionality (high priority)
+        # 4. Test Existing User
+        print("4️⃣ Testing existing user login...")
+        self.test_existing_user_login()
+        
+        # 5. Verify email verification functionality still exists
+        print("5️⃣ Verifying email verification functionality still exists...")
+        self.test_email_verification_still_exists()
+        
+        # Additional authentication tests
+        print("\n🔒 ADDITIONAL AUTHENTICATION TESTS:")
+        print("=" * 80)
+        self.test_authentication_required_endpoints()
+        
+        # Test core functionality if we have auth
         if self.auth_token:
+            print("\n🍼 TESTING CORE FUNCTIONALITY:")
+            print("=" * 80)
             self.test_food_research_endpoint()
             self.test_unified_meal_search()
             self.test_food_safety_search()
             self.test_ai_integration()
         
-        print("=" * 60)
+        print("=" * 80)
         print(f"📊 Test Results Summary:")
         print(f"✅ Passed: {self.results['passed']}")
         print(f"❌ Failed: {self.results['failed']}")
@@ -437,6 +457,17 @@ class BabyStepsAPITester:
             print(f"\n🔍 Failed Tests Details:")
             for error in self.results['errors']:
                 print(f"   • {error}")
+        
+        # Specific summary for the review request
+        print(f"\n🎯 EMAIL VERIFICATION OPTIONAL LOGIN TEST SUMMARY:")
+        print("=" * 80)
+        if self.results['failed'] == 0:
+            print("✅ SUCCESS: Email verification is now optional for login!")
+            print("✅ Users can access the app immediately after registration")
+            print("✅ Email verification functionality still exists for users who want it")
+        else:
+            print("❌ ISSUES FOUND: Email verification optional login has problems")
+            print("❌ Review the failed tests above for specific issues")
         
         return self.results
 
