@@ -429,8 +429,8 @@ async def send_password_reset_email_mock(email: str, reset_token: str):
     # await send_actual_email(email, reset_url)
 
 # Authentication Routes - Support multiple concurrent sessions
-@api_router.post("/auth/register", response_model=Token)
-async def register(user_data: UserCreate):
+@api_router.post("/auth/register")
+async def register(user_data: UserCreate, background_tasks: BackgroundTasks):
     existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(
@@ -439,18 +439,21 @@ async def register(user_data: UserCreate):
         )
     
     hashed_password = get_password_hash(user_data.password)
-    user_dict = User(email=user_data.email, name=user_data.name).dict()
+    user_dict = User(email=user_data.email, name=user_data.name, email_verified=False).dict()
     user_dict["hashed_password"] = hashed_password
     
     user_to_store = prepare_for_mongo(user_dict)
     await db.users.insert_one(user_to_store)
     
-    # Create token with longer expiry for multi-device support
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user_data.email}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+    # Generate verification token and send email
+    verification_token = create_verification_token(user_data.email)
+    background_tasks.add_task(send_verification_email_mock, user_data.email, verification_token)
+    
+    return {
+        "message": "Account created successfully! Please check your email for verification.",
+        "email": user_data.email,
+        "email_verified": False
+    }
 
 @api_router.post("/auth/login", response_model=Token)
 async def login(user_data: UserLogin):
