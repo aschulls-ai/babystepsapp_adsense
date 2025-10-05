@@ -1,24 +1,3 @@
-#!/bin/bash
-
-# Baby Steps - GitHub Preparation Script
-echo "🚀 Preparing Baby Steps App for GitHub Deployment..."
-
-# Create deployment directory
-mkdir -p /app/github_deploy/baby-steps-app
-
-# Copy frontend (main app)
-echo "📁 Copying frontend files..."
-cp -r /app/frontend /app/github_deploy/baby-steps-app/
-
-# Copy configuration files
-echo "⚙️ Copying configuration files..."
-cp /app/vercel.json /app/github_deploy/baby-steps-app/
-cp /app/VERCEL_DEPLOYMENT_GUIDE.md /app/github_deploy/baby-steps-app/README.md
-cp /app/ADSENSE_SETUP_GUIDE.md /app/github_deploy/baby-steps-app/
-cp /app/GOOGLE_PLAY_SETUP.md /app/github_deploy/baby-steps-app/
-
-# Create main README
-cat > /app/github_deploy/baby-steps-app/README.md << 'EOF'
 # Baby Steps - Parenting Made Easy
 
 A comprehensive parenting app with baby tracking, nutrition guidance, and AI-powered features.
@@ -66,16 +45,3 @@ Visit: [Your Vercel URL will go here]
 
 ## 📄 License
 MIT License - Feel free to use for your own parenting app!
-EOF
-
-# List deployment files
-echo "📋 Files ready for GitHub:"
-find /app/github_deploy/baby-steps-app -type f | head -20
-
-echo "✅ Ready! Your files are in: /app/github_deploy/baby-steps-app"
-echo ""
-echo "🎯 Next Steps:"
-echo "1. Copy all files from /app/github_deploy/baby-steps-app to your GitHub repo"
-echo "2. Or use Emergent's 'Save to GitHub' feature"
-echo "3. Deploy to Vercel with Root Directory: 'frontend'"
-echo "4. Get your Vercel URL for AdSense!"
