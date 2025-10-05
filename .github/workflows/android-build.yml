@@ -118,7 +118,7 @@ jobs:
         # Download fresh gradle-wrapper.jar directly
         echo "Downloading fresh Gradle wrapper..."
         mkdir -p gradle/wrapper
-        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.10.2/gradle/wrapper/gradle-wrapper.jar
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v9.0.0/gradle/wrapper/gradle-wrapper.jar
         
         # Ensure wrapper script is executable
         chmod +x ./gradlew
