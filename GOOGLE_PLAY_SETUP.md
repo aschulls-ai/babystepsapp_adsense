@@ -17,12 +17,12 @@ Key Password: babysteps2024
 
 ## 📋 Google Play Console Upload Steps:
 
-### 1. **First Time Setup (Google Play App Signing - Automatic)**
+### 1. **First Time Setup (Google Play App Signing)**
 1. Go to [Google Play Console](https://play.google.com/console)
 2. Create a new app or select existing app
 3. Navigate to **Release > Setup > App signing**
 4. Choose **"Let Google manage and protect your app signing key"** (Recommended)
-5. Upload your AAB file (Google will handle signing automatically)
+5. Upload your SIGNED AAB file - Google Play will accept it now!
 
 ### 2. **Upload Your AAB**
 1. Go to **Release > Production**
