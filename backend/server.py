@@ -786,6 +786,14 @@ async def get_available_widgets():
             "category": "tracking"
         },
         {
+            "type": "milestones",
+            "name": "Developmental Milestones",
+            "description": "Track your baby's developmental progress and upcoming milestones",
+            "icon": "⭐",
+            "defaultSize": "medium",
+            "category": "baby"
+        },
+        {
             "type": "research_bookmarks",
             "name": "Research Bookmarks",
             "description": "Your saved research topics and articles",
