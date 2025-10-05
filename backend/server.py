@@ -31,6 +31,11 @@ SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'fallback-key')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours for multiple device support
 
+# Email Configuration
+VERIFICATION_TOKEN_EXPIRE_HOURS = 24
+RESET_TOKEN_EXPIRE_MINUTES = 60
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
 # Create the main app
 app = FastAPI(title="Baby Steps - Complete Parenting Companion")
 
