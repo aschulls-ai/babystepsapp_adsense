@@ -37,9 +37,13 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       
-    - name: Make Gradle Executable
+    - name: Setup Gradle Wrapper
       working-directory: frontend/android
-      run: chmod +x ./gradlew
+      run: |
+        chmod +x ./gradlew
+        ls -la gradle/wrapper/
+        rm -rf .gradle || true
+        ./gradlew --version
       
     - name: Sync Capacitor
       working-directory: frontend
