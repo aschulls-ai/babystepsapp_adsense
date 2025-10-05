@@ -189,6 +189,9 @@ function App() {
           <Route path="/verify-email/:token" element={<EmailVerification />} />
           <Route path="/reset-password/:token" element={<PasswordReset />} />
           
+          {/* Privacy policy - accessible without authentication */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          
           <Route 
             path="/*" 
             element={
