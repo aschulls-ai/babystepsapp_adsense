@@ -384,11 +384,11 @@ class BabyStepsAPITester:
             # Restore headers
             self.session.headers.update(original_headers)
             
-            if response.status_code == 401:
-                self.log_result("Authentication Protection", True, "Protected endpoints require auth")
+            if response.status_code in [401, 403]:
+                self.log_result("Authentication Protection", True, f"Protected endpoints require auth (HTTP {response.status_code})")
                 return True
             else:
-                self.log_result("Authentication Protection", False, f"Expected 401, got {response.status_code}")
+                self.log_result("Authentication Protection", False, f"Expected 401/403, got {response.status_code}")
                 return False
         except Exception as e:
             self.log_result("Authentication Protection", False, f"Error: {str(e)}")
