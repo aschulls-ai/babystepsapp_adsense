@@ -84,6 +84,10 @@ function App() {
       localStorage.setItem('token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
+      // Set user state to trigger re-render
+      setUser({ email, name });
+      await fetchBabies();
+      
       toast.success('Account created successfully! Welcome to Baby Steps!');
       return true;
     } catch (error) {
