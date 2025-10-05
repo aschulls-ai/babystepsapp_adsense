@@ -85,7 +85,7 @@ const AuthPage = ({ onLogin, onRegister }) => {
               Join Baby Steps
             </CardTitle>
             <p className="text-center text-sm text-gray-600 mt-2">
-              Perfect for multiple parents - everyone can access the same data on their devices
+              Parenting made easy
             </p>
           </CardHeader>
           <CardContent>
