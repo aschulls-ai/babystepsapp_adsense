@@ -248,7 +248,8 @@ jobs:
           ## 📱 Baby Steps v${{ steps.version.outputs.version }}
           
           **Download for Android:**
-          - 📦 **app-release.aab** - Upload this to Google Play Console
+          - 📦 **app-release.aab** - SIGNED App Bundle ready for Google Play Console upload
+          - 🔐 **baby-steps-upload-key.keystore** - Upload key for Google Play App Signing
           - 📱 **app-release.apk** - Direct install APK
           
           **Features:**
