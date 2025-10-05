@@ -36,8 +36,40 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuthState();
+    const initializeApp = async () => {
+      // Initialize mobile features if running on native platform
+      if (Capacitor.isNativePlatform()) {
+        await initializeMobileApp();
+      }
+      
+      const baseURL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      if (baseURL) {
+        axios.defaults.baseURL = baseURL;
+      }
+      
+      await checkAuthState();
+    };
+    
+    initializeApp();
   }, []);
+
+  const initializeMobileApp = async () => {
+    try {
+      // Set status bar style
+      await StatusBar.setStyle({ style: Style.Light });
+      await StatusBar.setBackgroundColor({ color: '#10b981' });
+      
+      // Hide splash screen after app is ready
+      await SplashScreen.hide();
+      
+      // Initialize mobile service
+      await mobileService.initializeServices();
+      
+      console.log('Mobile app initialized successfully');
+    } catch (error) {
+      console.error('Mobile app initialization failed:', error);
+    }
+  };
 
   const checkAuthState = async () => {
     const token = localStorage.getItem('token');
