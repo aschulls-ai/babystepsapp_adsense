@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import React from 'react';
+import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
-import { 
-  Baby, 
-  Search, 
-  ShieldAlert, 
-  ChefHat, 
-  Heart, 
-  Clock,
-  Plus,
-  AlertTriangle,
-  CheckCircle,
-  BookOpen
-} from 'lucide-react';
-import { toast } from 'sonner';
+import { Baby, Plus } from 'lucide-react';
+import CustomizableDashboard from './CustomizableDashboard';
 
 const Dashboard = ({ currentBaby, onAddBaby }) => {
   const [recentActivity, setRecentActivity] = useState({
