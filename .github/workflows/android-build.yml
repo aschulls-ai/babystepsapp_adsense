@@ -137,21 +137,21 @@ jobs:
       if: ${{ inputs.build_type == 'debug' || inputs.build_type == '' }}
       run: |
         echo "Building debug APK..."
-        ./gradlew assembleDebug --stacktrace
+        ./gradlew assembleDebug --stacktrace --no-daemon
         
     - name: 🏗️ Build Release APK
       working-directory: frontend/android
       if: ${{ inputs.build_type == 'release' && github.event_name != 'pull_request' }}
       run: |
         echo "Building release APK..."
-        ./gradlew assembleRelease --stacktrace
+        ./gradlew assembleRelease --stacktrace --no-daemon
         
     - name: 📦 Build Android App Bundle (.aab)
       working-directory: frontend/android
       if: ${{ inputs.build_type == 'bundle' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       run: |
         echo "Building Android App Bundle (.aab)..."
-        ./gradlew bundleRelease --stacktrace --info | grep -E "(BUILD|bundleRelease|\.aab)"
+        ./gradlew bundleRelease --stacktrace --no-daemon --info | grep -E "(BUILD|bundleRelease|\.aab)"
         
     - name: 📊 List Build Outputs
       run: |
