@@ -480,6 +480,98 @@ async def login(user_data: UserLogin):
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+# Email Verification Routes
+@api_router.get("/auth/verify-email/{token}")
+async def verify_email(token: str):
+    """Verify email address using token"""
+    email = verify_token(token, "email_verification")
+    
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification token"
+        )
+    
+    # Update user verification status
+    result = await db.users.update_one(
+        {"email": email},
+        {"$set": {"email_verified": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return {
+        "message": "Email verified successfully! You can now log in.",
+        "email": email
+    }
+
+@api_router.post("/auth/resend-verification")
+async def resend_verification(email_data: dict, background_tasks: BackgroundTasks):
+    """Resend verification email"""
+    email = email_data.get("email")
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email is required"
+        )
+    
+    user = await db.users.find_one({"email": email})
+    if not user:
+        # Don't reveal if email exists
+        return {"message": "If the email exists, a verification link has been sent."}
+    
+    if user.get("email_verified", False):
+        return {"message": "Email is already verified"}
+    
+    # Generate new verification token and send email
+    verification_token = create_verification_token(email)
+    background_tasks.add_task(send_verification_email_mock, email, verification_token)
+    
+    return {"message": "Verification email sent successfully"}
+
+# Password Reset Routes
+@api_router.post("/auth/request-password-reset")
+async def request_password_reset(email_data: PasswordResetRequest, background_tasks: BackgroundTasks):
+    """Request password reset email"""
+    user = await db.users.find_one({"email": email_data.email})
+    
+    # Always return success to prevent email enumeration
+    if user:
+        reset_token = create_password_reset_token(email_data.email)
+        background_tasks.add_task(send_password_reset_email_mock, email_data.email, reset_token)
+    
+    return {"message": "If the email exists, a password reset link has been sent."}
+
+@api_router.post("/auth/reset-password")
+async def reset_password(password_data: PasswordReset):
+    """Reset password using token"""
+    email = verify_token(password_data.token, "password_reset")
+    
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+    
+    # Hash new password and update in database
+    hashed_password = get_password_hash(password_data.new_password)
+    result = await db.users.update_one(
+        {"email": email},
+        {"$set": {"hashed_password": hashed_password}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return {"message": "Password reset successfully"}
+
 # Baby Management Routes
 @api_router.post("/babies", response_model=Baby)
 async def create_baby(baby_data: BabyCreate, current_user: User = Depends(get_current_user)):
