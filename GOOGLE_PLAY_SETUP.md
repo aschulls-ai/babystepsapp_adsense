@@ -3,26 +3,17 @@
 ## 🚀 Your Baby Steps App is Ready for Google Play!
 
 ### 📦 What You'll Get:
-- **✅ Signed AAB file** (`app-release.aab`) - Ready for upload
-- **🔐 Upload keystore** (`baby-steps-upload-key.keystore`) - For Google Play App Signing
-- **📋 Keystore details** (see below)
-
-### 🔐 Keystore Information:
-```
-Keystore: baby-steps-upload-key.keystore
-Store Password: babysteps2024
-Key Alias: baby-steps-upload
-Key Password: babysteps2024
-```
+- **✅ AAB file** (`app-release.aab`) - Ready for upload to Google Play Console
+- **📋 Mapping files** (for crash debugging)
 
 ## 📋 Google Play Console Upload Steps:
 
-### 1. **First Time Setup (Google Play App Signing)**
+### 1. **First Time Setup (Google Play App Signing - Automatic)**
 1. Go to [Google Play Console](https://play.google.com/console)
 2. Create a new app or select existing app
 3. Navigate to **Release > Setup > App signing**
 4. Choose **"Let Google manage and protect your app signing key"** (Recommended)
-5. Upload your signed AAB file
+5. Upload your AAB file (Google will handle signing automatically)
 
 ### 2. **Upload Your AAB**
 1. Go to **Release > Production**
