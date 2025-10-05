@@ -156,11 +156,11 @@
 
 ## test_plan:
   current_focus:
-    - "Authentication and navigation flow"
-  stuck_tasks:
-    - "Authentication and navigation flow"
+    - "API endpoints functionality"
+    - "Web application functionality"
+  stuck_tasks: []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 ## agent_communication:
     -agent: "main"
