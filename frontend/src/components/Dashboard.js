@@ -5,6 +5,91 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Plus, Baby, Activity, Apple, BookOpen, Calendar, Heart, TrendingUp, Clock } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
 
+const getMilestonesForAge = (ageMonths) => {
+  const milestones = {
+    0: [
+      "Follows objects with eyes",
+      "Lifts head briefly when on tummy", 
+      "Responds to loud sounds",
+      "Focuses on faces 8-12 inches away"
+    ],
+    1: [
+      "Smiles responsively",
+      "Follows objects past midline",
+      "Holds head up 45 degrees",
+      "Makes cooing sounds"
+    ],
+    2: [
+      "Holds head steady when upright",
+      "Pushes up on arms during tummy time",
+      "Begins to laugh and squeal",
+      "Tracks objects with eyes smoothly"
+    ],
+    3: [
+      "Reaches for and grabs objects",
+      "Holds head up 90 degrees",
+      "Bears weight on legs when supported",
+      "Babbles with expression"
+    ],
+    4: [
+      "Rolls from tummy to back",
+      "Brings hands together",
+      "Laughs out loud",
+      "Shows excitement when seeing food"
+    ],
+    5: [
+      "Rolls from back to tummy",
+      "Sits with support",
+      "Shows curiosity about objects",
+      "Recognizes familiar people"
+    ],
+    6: [
+      "Sits without support briefly",
+      "Transfers objects hand to hand",
+      "Starts eating solid foods",
+      "Responds to own name"
+    ],
+    9: [
+      "Crawls or scoots",
+      "Pulls to standing position",
+      "Says 'mama' and 'dada'",
+      "Plays peek-a-boo"
+    ],
+    12: [
+      "Takes first steps",
+      "Says first words",
+      "Drinks from a cup",
+      "Waves goodbye"
+    ],
+    15: [
+      "Walks independently",
+      "Uses 10-20 words",
+      "Stacks 2 blocks",
+      "Points to body parts"
+    ],
+    18: [
+      "Runs and climbs stairs",
+      "Uses 20-50 words",
+      "Feeds self with utensils",
+      "Shows affection to familiar people"
+    ]
+  };
+
+  // Find the appropriate milestone set for the age
+  const ageKeys = Object.keys(milestones).map(Number).sort((a, b) => a - b);
+  let appropriateAge = 0;
+  
+  for (let i = 0; i < ageKeys.length; i++) {
+    if (ageMonths >= ageKeys[i]) {
+      appropriateAge = ageKeys[i];
+    } else {
+      break;
+    }
+  }
+  
+  return milestones[appropriateAge] || [];
+};
+
 const Dashboard = ({ currentBaby, onAddBaby }) => {
   if (!currentBaby) {
     return (
