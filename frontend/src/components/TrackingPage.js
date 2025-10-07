@@ -333,8 +333,41 @@ const TrackingPage = ({ currentBaby }) => {
           </Card>
         </div>
 
-        {/* Recent Activities */}
-        <div>
+        <div className="space-y-6">
+          {/* Reminders Section */}
+          <Card className="glass border-0">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-gray-800">
+                  <Bell className="w-5 h-5 text-blue-500" />
+                  Reminders
+                </CardTitle>
+                <Button
+                  onClick={() => setShowReminderForm(true)}
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ReminderList 
+                reminders={reminders}
+                onToggle={toggleReminder}
+                onDelete={deleteReminder}
+              />
+              {showReminderForm && (
+                <ReminderForm
+                  onSubmit={createReminder}
+                  onCancel={() => setShowReminderForm(false)}
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recent Activities */}
           <Card className="glass border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
