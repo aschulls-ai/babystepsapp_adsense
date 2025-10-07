@@ -465,9 +465,15 @@ const TrackingPage = ({ currentBaby }) => {
 
       <div className="grid lg:grid-cols-4 gap-6">
         {/* Tracking Forms */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <Card className="glass-strong border-0">
-            <CardContent className="p-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-gray-800">
+                <Activity className="w-5 h-5 text-blue-600" />
+                Log Activity Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 pt-0">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid grid-cols-3 lg:grid-cols-6 mb-6 bg-gray-100 p-1 rounded-xl">
                   {tabs.map((tab) => {
@@ -505,6 +511,58 @@ const TrackingPage = ({ currentBaby }) => {
                   <MilestoneForm babyId={currentBaby.id} onSuccess={fetchRecentActivities} />
                 </TabsContent>
               </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Reminders Section */}
+          <Card className="glass border-0">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-gray-800">
+                  <Bell className="w-5 h-5 text-blue-500" />
+                  Reminders
+                </CardTitle>
+                <Button
+                  onClick={() => setShowReminderForm(true)}
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ReminderList 
+                reminders={reminders}
+                onToggle={toggleReminder}
+                onDelete={deleteReminder}
+              />
+              {showReminderForm && (
+                <ReminderForm
+                  onSubmit={createReminder}
+                  onCancel={() => setShowReminderForm(false)}
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recent Activities */}
+          <Card className="glass border-0">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-gray-800">
+                <Clock className="w-5 h-5 text-rose-500" />
+                Recent {tabs.find(t => t.id === activeTab)?.label}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RecentActivityList 
+                activities={recentActivities[activeTab] || []}
+                type={activeTab}
+              />
             </CardContent>
           </Card>
         </div>
