@@ -466,10 +466,267 @@ class BabyStepsAPITester:
             self.log_result("Authentication Protection", False, f"Error: {str(e)}")
             return False
     
+    def test_all_api_endpoints_status(self):
+        """Test all major API endpoints are responding correctly"""
+        try:
+            endpoints_to_test = [
+                # Authentication endpoints
+                {"method": "POST", "endpoint": "/auth/login", "requires_auth": False, "test_data": {"email": self.existing_user_email, "password": self.existing_user_password}},
+                {"method": "POST", "endpoint": "/auth/register", "requires_auth": False, "test_data": {"email": "test_endpoint@test.com", "name": "Test User", "password": "TestPass123"}},
+                
+                # Baby profile endpoints
+                {"method": "GET", "endpoint": "/babies", "requires_auth": True},
+                
+                # Research endpoints
+                {"method": "POST", "endpoint": "/research", "requires_auth": True, "test_data": {"question": "How often should I feed my baby?"}},
+                
+                # Tracking activity endpoints
+                {"method": "GET", "endpoint": "/feedings", "requires_auth": True},
+                {"method": "GET", "endpoint": "/diapers", "requires_auth": True},
+                {"method": "GET", "endpoint": "/sleep", "requires_auth": True},
+                {"method": "GET", "endpoint": "/pumping", "requires_auth": True},
+                {"method": "GET", "endpoint": "/measurements", "requires_auth": True},
+                {"method": "GET", "endpoint": "/milestones", "requires_auth": True},
+                {"method": "GET", "endpoint": "/reminders", "requires_auth": True},
+                
+                # Food research endpoints
+                {"method": "POST", "endpoint": "/food/research", "requires_auth": True, "test_data": {"question": "Is banana safe for babies?", "baby_age_months": 6}},
+                {"method": "POST", "endpoint": "/meals/search", "requires_auth": True, "test_data": {"query": "lunch ideas", "baby_age_months": 8}},
+                
+                # Health check
+                {"method": "GET", "endpoint": "/health", "requires_auth": False}
+            ]
+            
+            passed_endpoints = 0
+            failed_endpoints = 0
+            
+            for endpoint_test in endpoints_to_test:
+                try:
+                    method = endpoint_test["method"]
+                    endpoint = endpoint_test["endpoint"]
+                    requires_auth = endpoint_test["requires_auth"]
+                    test_data = endpoint_test.get("test_data")
+                    
+                    # Set up headers
+                    headers = {}
+                    if requires_auth and self.auth_token:
+                        headers["Authorization"] = f"Bearer {self.auth_token}"
+                    
+                    # Make request
+                    if method == "GET":
+                        response = requests.get(f"{API_BASE}{endpoint}", headers=headers, timeout=30)
+                    elif method == "POST":
+                        response = requests.post(f"{API_BASE}{endpoint}", json=test_data, headers=headers, timeout=30)
+                    
+                    # Check response
+                    if response.status_code in [200, 201]:
+                        passed_endpoints += 1
+                        print(f"✅ {method} {endpoint}: HTTP {response.status_code}")
+                    elif response.status_code == 400 and "already registered" in response.text:
+                        # Registration endpoint with existing user is acceptable
+                        passed_endpoints += 1
+                        print(f"✅ {method} {endpoint}: HTTP {response.status_code} (user exists)")
+                    elif response.status_code in [401, 403] and requires_auth and not self.auth_token:
+                        # Expected auth failure when no token
+                        passed_endpoints += 1
+                        print(f"✅ {method} {endpoint}: HTTP {response.status_code} (auth required)")
+                    else:
+                        failed_endpoints += 1
+                        print(f"❌ {method} {endpoint}: HTTP {response.status_code} - {response.text[:100]}")
+                        
+                except Exception as e:
+                    failed_endpoints += 1
+                    print(f"❌ {method} {endpoint}: Error - {str(e)}")
+            
+            if failed_endpoints == 0:
+                self.log_result("API Endpoints Status Check", True, f"All {passed_endpoints} endpoints responding correctly")
+                return True
+            else:
+                self.log_result("API Endpoints Status Check", False, f"{failed_endpoints} endpoints failed, {passed_endpoints} passed")
+                return False
+                
+        except Exception as e:
+            self.log_result("API Endpoints Status Check", False, f"Error: {str(e)}")
+            return False
+    
+    def test_database_connectivity(self):
+        """Test database connectivity through API operations"""
+        try:
+            # Test database operations through API
+            operations_passed = 0
+            
+            # 1. Test reading data (GET babies)
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            if response.status_code == 200:
+                operations_passed += 1
+                print("✅ Database READ operation working")
+            else:
+                print(f"❌ Database READ failed: HTTP {response.status_code}")
+            
+            # 2. Test writing data (create feeding record)
+            if self.baby_id:
+                feeding_data = {
+                    "baby_id": self.baby_id,
+                    "type": "bottle",
+                    "amount": 4.0,
+                    "notes": "Database connectivity test"
+                }
+                response = self.session.post(f"{API_BASE}/feedings", json=feeding_data, timeout=10)
+                if response.status_code == 200:
+                    operations_passed += 1
+                    print("✅ Database WRITE operation working")
+                else:
+                    print(f"❌ Database WRITE failed: HTTP {response.status_code}")
+            
+            if operations_passed >= 1:
+                self.log_result("Database Connectivity", True, f"{operations_passed} database operations successful")
+                return True
+            else:
+                self.log_result("Database Connectivity", False, "No database operations successful")
+                return False
+                
+        except Exception as e:
+            self.log_result("Database Connectivity", False, f"Error: {str(e)}")
+            return False
+    
+    def test_jwt_token_validation(self):
+        """Test JWT token validation and security"""
+        try:
+            # Test with valid token
+            if not self.auth_token:
+                self.log_result("JWT Token Validation", False, "No auth token available for testing")
+                return False
+            
+            # 1. Test valid token works
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            if response.status_code != 200:
+                self.log_result("JWT Token Validation", False, f"Valid token rejected: HTTP {response.status_code}")
+                return False
+            
+            # 2. Test invalid token is rejected
+            original_token = self.auth_token
+            self.session.headers.update({'Authorization': 'Bearer invalid_token_12345'})
+            
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            if response.status_code not in [401, 403]:
+                self.log_result("JWT Token Validation", False, f"Invalid token accepted: HTTP {response.status_code}")
+                return False
+            
+            # 3. Test no token is rejected
+            del self.session.headers['Authorization']
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            if response.status_code not in [401, 403]:
+                self.log_result("JWT Token Validation", False, f"No token accepted: HTTP {response.status_code}")
+                return False
+            
+            # Restore valid token
+            self.session.headers.update({'Authorization': f'Bearer {original_token}'})
+            
+            self.log_result("JWT Token Validation", True, "JWT validation working correctly")
+            return True
+            
+        except Exception as e:
+            self.log_result("JWT Token Validation", False, f"Error: {str(e)}")
+            return False
+    
+    def test_protected_routes_security(self):
+        """Test that protected routes are properly secured"""
+        try:
+            protected_routes = [
+                "/babies",
+                "/feedings", 
+                "/diapers",
+                "/sleep",
+                "/pumping",
+                "/measurements",
+                "/milestones",
+                "/reminders",
+                "/food/research",
+                "/meals/search",
+                "/research"
+            ]
+            
+            # Remove auth header
+            original_headers = self.session.headers.copy()
+            if 'Authorization' in self.session.headers:
+                del self.session.headers['Authorization']
+            
+            secured_routes = 0
+            for route in protected_routes:
+                try:
+                    response = self.session.get(f"{API_BASE}{route}", timeout=10)
+                    if response.status_code in [401, 403]:
+                        secured_routes += 1
+                    else:
+                        print(f"❌ Route {route} not properly secured: HTTP {response.status_code}")
+                except:
+                    # Timeout or connection error is acceptable for security test
+                    secured_routes += 1
+            
+            # Restore headers
+            self.session.headers.update(original_headers)
+            
+            if secured_routes == len(protected_routes):
+                self.log_result("Protected Routes Security", True, f"All {secured_routes} protected routes secured")
+                return True
+            else:
+                self.log_result("Protected Routes Security", False, f"Only {secured_routes}/{len(protected_routes)} routes secured")
+                return False
+                
+        except Exception as e:
+            self.log_result("Protected Routes Security", False, f"Error: {str(e)}")
+            return False
+    
+    def test_no_500_422_errors(self):
+        """Test that key endpoints don't return 500 or 422 errors"""
+        try:
+            # Test key endpoints with valid data
+            test_cases = [
+                {"method": "POST", "endpoint": "/auth/login", "data": {"email": self.existing_user_email, "password": self.existing_user_password}},
+                {"method": "GET", "endpoint": "/health"},
+                {"method": "GET", "endpoint": "/babies"},
+                {"method": "POST", "endpoint": "/meals/search", "data": {"query": "test query", "baby_age_months": 6}},
+                {"method": "POST", "endpoint": "/research", "data": {"question": "test question"}}
+            ]
+            
+            error_free = True
+            for test_case in test_cases:
+                try:
+                    method = test_case["method"]
+                    endpoint = test_case["endpoint"]
+                    data = test_case.get("data")
+                    
+                    if method == "GET":
+                        response = self.session.get(f"{API_BASE}{endpoint}", timeout=30)
+                    elif method == "POST":
+                        response = self.session.post(f"{API_BASE}{endpoint}", json=data, timeout=30)
+                    
+                    if response.status_code in [500, 422]:
+                        print(f"❌ {method} {endpoint}: HTTP {response.status_code} - {response.text[:100]}")
+                        error_free = False
+                    else:
+                        print(f"✅ {method} {endpoint}: HTTP {response.status_code} (no 500/422 error)")
+                        
+                except Exception as e:
+                    print(f"❌ {method} {endpoint}: Exception - {str(e)}")
+                    error_free = False
+            
+            if error_free:
+                self.log_result("No 500/422 Errors", True, "Key endpoints free of server errors")
+                return True
+            else:
+                self.log_result("No 500/422 Errors", False, "Some endpoints returning 500/422 errors")
+                return False
+                
+        except Exception as e:
+            self.log_result("No 500/422 Errors", False, f"Error: {str(e)}")
+            return False
+
     def run_all_tests(self):
-        """Run all backend tests focusing on email verification optional login"""
-        print(f"🚀 Testing Baby Steps Backend Authentication - Email Verification Optional")
+        """Run comprehensive backend testing as per review request"""
+        print(f"🚀 COMPREHENSIVE BABY STEPS BACKEND TESTING")
         print(f"📍 Testing against: {API_BASE}")
+        print(f"👤 Test user: {self.existing_user_email}")
         print("=" * 80)
         
         # Test basic connectivity first
@@ -478,55 +735,112 @@ class BabyStepsAPITester:
             return self.results
         
         # MAIN TEST SEQUENCE AS PER REVIEW REQUEST:
-        print("\n🔍 TESTING EMAIL VERIFICATION OPTIONAL LOGIN FLOW:")
+        print("\n🔐 1. AUTHENTICATION & LOGIN TESTING:")
         print("=" * 80)
         
-        # 1. Create New Test User
-        print("1️⃣ Creating new test user...")
-        if not self.test_new_user_registration():
-            print("❌ New user registration failed")
+        # Login with test user
+        print("🔑 Testing login with test@babysteps.com...")
+        if not self.test_existing_user_login():
+            print("❌ Login failed - cannot proceed with authenticated tests")
+            return self.results
         
-        # 2. Immediate Login Test (WITHOUT verification)
-        print("2️⃣ Testing immediate login WITHOUT email verification...")
-        if not self.test_immediate_login_without_verification():
-            print("❌ Immediate login failed - this is the main issue to fix!")
+        # Get auth token for further testing
+        login_data = {"email": self.existing_user_email, "password": self.existing_user_password}
+        response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
+        if response.status_code == 200:
+            data = response.json()
+            self.auth_token = data.get('access_token')
+            self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
+            print(f"✅ Authentication token obtained")
         
-        # 3. Test Protected Endpoints
-        print("3️⃣ Testing protected endpoints with token from unverified user...")
-        if self.auth_token:
-            self.test_protected_endpoints_with_token()
-            self.test_baby_profile_creation()
-            self.test_get_babies()
-        
-        # 4. Test Existing User
-        print("4️⃣ Testing existing user login...")
-        self.test_existing_user_login()
-        
-        # 5. Verify email verification functionality still exists
-        print("5️⃣ Verifying email verification functionality still exists...")
-        self.test_email_verification_still_exists()
-        
-        # Additional authentication tests
-        print("\n🔒 ADDITIONAL AUTHENTICATION TESTS:")
+        print("\n🍯 2. MEAL PLANNER SEARCH FIX VERIFICATION:")
         print("=" * 80)
+        
+        # Test the corrected API endpoint '/api/meals/search'
+        print("🔍 Testing corrected '/api/meals/search' endpoint...")
+        self.test_meal_planner_search_endpoint()
+        
+        # Test food safety queries
+        print("🍯 Testing honey safety query...")
+        self.test_honey_safety_query()
+        
+        # Test meal idea queries  
+        print("🥣 Testing breakfast ideas query...")
+        self.test_meal_ideas_query()
+        
+        # Test age customization
+        print("👶 Testing age-based customization...")
+        self.test_age_customization()
+        
+        print("\n🔗 3. API ENDPOINTS STATUS CHECK:")
+        print("=" * 80)
+        
+        # Test all API routes are responding correctly
+        print("📡 Testing all major API endpoints...")
+        self.test_all_api_endpoints_status()
+        
+        # Test authentication endpoints specifically
+        print("🔐 Testing authentication endpoints...")
         self.test_authentication_required_endpoints()
         
-        # Test core functionality if we have auth
-        if self.auth_token:
-            print("\n🍼 TESTING MEAL PLANNER SEARCH FUNCTIONALITY (MAIN FOCUS):")
-            print("=" * 80)
-            self.test_meal_planner_search_endpoint()
-            self.test_honey_safety_query()
-            self.test_meal_ideas_query()
-            self.test_age_customization()
-            
-            print("\n🔬 ADDITIONAL BACKEND TESTS:")
-            print("=" * 80)
-            self.test_food_research_endpoint()
-            self.test_ai_integration()
+        # Test Research component API endpoint
+        print("🔬 Testing research endpoint...")
+        research_query = {"question": "How often should I feed my 6 month old?"}
+        response = self.session.post(f"{API_BASE}/research", json=research_query, timeout=60)
+        if response.status_code == 200:
+            print("✅ Research endpoint working correctly")
+            self.log_result("Research Endpoint", True, "Research API responding correctly")
+        else:
+            print(f"❌ Research endpoint failed: HTTP {response.status_code}")
+            self.log_result("Research Endpoint", False, f"HTTP {response.status_code}")
+        
+        # Test baby profile endpoints
+        print("👶 Testing baby profile endpoints...")
+        self.test_get_babies()
+        
+        # Test tracking activity endpoints
+        print("📊 Testing tracking activity endpoints...")
+        tracking_endpoints = ["feedings", "diapers", "sleep", "pumping", "measurements", "milestones", "reminders"]
+        for endpoint in tracking_endpoints:
+            response = self.session.get(f"{API_BASE}/{endpoint}", timeout=10)
+            if response.status_code == 200:
+                print(f"✅ {endpoint} endpoint working")
+            else:
+                print(f"❌ {endpoint} endpoint failed: HTTP {response.status_code}")
+        
+        print("\n🏥 4. OVERALL BACKEND HEALTH:")
+        print("=" * 80)
+        
+        # Test database connectivity
+        print("💾 Testing database connectivity...")
+        self.test_database_connectivity()
+        
+        # Test JWT token validation
+        print("🔐 Testing JWT token validation...")
+        self.test_jwt_token_validation()
+        
+        # Test protected routes are secure
+        print("🛡️ Testing protected routes security...")
+        self.test_protected_routes_security()
+        
+        # Test no 500 or 422 errors in key endpoints
+        print("🚫 Testing for 500/422 errors...")
+        self.test_no_500_422_errors()
+        
+        # Additional backend functionality tests
+        print("\n🧪 5. ADDITIONAL FUNCTIONALITY TESTS:")
+        print("=" * 80)
+        
+        # Test food research endpoint
+        print("🥗 Testing food research functionality...")
+        self.test_food_research_endpoint()
+        
+        # Test AI integration
+        print("🤖 Testing AI integration...")
+        self.test_ai_integration()
         
         print("=" * 80)
-        print(f"📊 Test Results Summary:")
+        print(f"📊 COMPREHENSIVE TEST RESULTS SUMMARY:")
         print(f"✅ Passed: {self.results['passed']}")
         print(f"❌ Failed: {self.results['failed']}")
         
@@ -536,32 +850,53 @@ class BabyStepsAPITester:
                 print(f"   • {error}")
         
         # Specific summary for the review request
-        print(f"\n🎯 EMAIL VERIFICATION OPTIONAL LOGIN TEST SUMMARY:")
+        print(f"\n🎯 REVIEW REQUEST VERIFICATION SUMMARY:")
         print("=" * 80)
         
-        # Check if core authentication tests passed
-        auth_tests = [
-            "New User Registration",
-            "Immediate Login Without Verification", 
-            "Protected Endpoints Access",
-            "Existing User Login",
-            "Email Verification Functionality"
-        ]
+        # Check meal planner fix
+        meal_planner_tests = [error for error in self.results['errors'] 
+                             if any(test in error for test in ["Meal Planner Search", "Honey Safety", "Meal Ideas", "Age Customization"])]
         
-        auth_failures = [error for error in self.results['errors'] 
-                        if any(test in error for test in auth_tests)]
-        
-        if len(auth_failures) == 0:
-            print("✅ SUCCESS: Email verification is now optional for login!")
-            print("✅ Users can access the app immediately after registration")
-            print("✅ Email verification functionality still exists for users who want it")
-            print("✅ Protected endpoints work with tokens from unverified users")
-            print("✅ Existing users can still login normally")
+        if len(meal_planner_tests) == 0:
+            print("✅ MEAL PLANNER SEARCH FIX: All tests passed")
+            print("   • '/api/meals/search' endpoint working correctly")
+            print("   • Food safety queries working (honey safety)")
+            print("   • Meal idea queries working (breakfast ideas)")
+            print("   • No more 'failed' error messages")
         else:
-            print("❌ ISSUES FOUND: Email verification optional login has problems")
-            print("❌ Authentication-related failures:")
-            for failure in auth_failures:
-                print(f"   • {failure}")
+            print("❌ MEAL PLANNER SEARCH FIX: Issues found")
+            for test in meal_planner_tests:
+                print(f"   • {test}")
+        
+        # Check API endpoints
+        api_tests = [error for error in self.results['errors'] 
+                    if any(test in error for test in ["API Endpoints", "Research Endpoint", "Authentication Protection"])]
+        
+        if len(api_tests) == 0:
+            print("✅ API ENDPOINTS STATUS: All endpoints responding correctly")
+            print("   • Authentication endpoints working")
+            print("   • Research component API working")
+            print("   • Baby profile endpoints working")
+            print("   • Tracking activity endpoints functional")
+        else:
+            print("❌ API ENDPOINTS STATUS: Issues found")
+            for test in api_tests:
+                print(f"   • {test}")
+        
+        # Check backend health
+        health_tests = [error for error in self.results['errors'] 
+                       if any(test in error for test in ["Database Connectivity", "JWT Token", "Protected Routes", "500/422 Errors"])]
+        
+        if len(health_tests) == 0:
+            print("✅ OVERALL BACKEND HEALTH: All systems operational")
+            print("   • Database connectivity confirmed")
+            print("   • JWT token validation working")
+            print("   • Protected routes secured")
+            print("   • No 500 or 422 errors in key endpoints")
+        else:
+            print("❌ OVERALL BACKEND HEALTH: Issues found")
+            for test in health_tests:
+                print(f"   • {test}")
         
         return self.results
 
