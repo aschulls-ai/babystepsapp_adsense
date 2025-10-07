@@ -492,6 +492,374 @@ const DiagramComponent = ({ type, details }) => {
   }
 };
 
+// Training Slides Data
+const getTrainingSlides = (topicId, babyAgeMonths) => {
+  const isInfant = babyAgeMonths < 12;
+  const ageGroup = isInfant ? 'infant' : 'toddler';
+
+  switch (topicId) {
+    case 'choking':
+      return getChokingSlides(isInfant);
+    case 'cpr':
+      return getCPRSlides(isInfant);
+    case 'assessment':
+      return getAssessmentSlides();
+    default:
+      return [];
+  }
+};
+
+const getChokingSlides = (isInfant) => [
+  {
+    title: "Choking Emergency Response",
+    subtitle: `For ${isInfant ? 'Infants (Under 12 months)' : 'Toddlers (12+ months)'}`,
+    diagram: {
+      emoji: "🚨",
+      type: "emergency_alert",
+      details: { description: "Recognize choking signs immediately" }
+    },
+    emergency: [
+      "Baby cannot cry, cough, or make sounds",
+      "Baby is turning blue around lips or face",
+      "Baby appears panicked or distressed",
+      "Baby is unconscious"
+    ]
+  },
+  {
+    title: "Step 1: Assess the Situation",
+    instructions: [
+      "Stay calm and act quickly",
+      "Check if baby can cry or cough - if yes, encourage coughing",
+      "Look in mouth for visible object - remove only if you can see it clearly",
+      "DO NOT blindly finger sweep - this can push object deeper"
+    ],
+    notes: [
+      "If baby is coughing forcefully, let them continue",
+      "Never shake a choking baby",
+      "Call for someone to dial 911 immediately"
+    ]
+  },
+  {
+    title: isInfant ? "Step 2: Position Baby (Infant)" : "Step 2: Position Child (Toddler)",
+    diagram: {
+      emoji: isInfant ? "👶" : "🧒",
+      type: "body_position",
+      details: {
+        position: isInfant ? "Face down on your forearm, head lower than body" : "Bend child forward at waist",
+        support: isInfant ? "Support head with your hand" : "Support chest with one hand"
+      }
+    },
+    instructions: isInfant ? [
+      "Sit down and place baby face-down along your forearm",
+      "Support baby's head with your hand under the jaw",
+      "Keep baby's head lower than their body",
+      "Rest your arm on your thigh for support"
+    ] : [
+      "Stand or kneel beside the child",
+      "Bend child forward at the waist",
+      "Support their chest with one hand",
+      "Keep their head lower than chest"
+    ]
+  },
+  {
+    title: "Step 3: Back Blows",
+    diagram: {
+      emoji: "✋",
+      type: "hand_position",
+      details: {
+        position: "Heel of hand between shoulder blades",
+        pressure: "Firm, sharp blows - don't hold back"
+      }
+    },
+    instructions: [
+      "Use the heel of your free hand",
+      "Give 5 firm back blows between the shoulder blades",
+      "Each blow should be separate and forceful",
+      "Check mouth after each blow for the object"
+    ],
+    notes: [
+      "Back blows should be firm enough to dislodge object",
+      "Don't be afraid to use force - you're trying to save a life"
+    ]
+  },
+  {
+    title: isInfant ? "Step 4: Chest Thrusts (Infant)" : "Step 4: Abdominal Thrusts (Toddler)",
+    diagram: {
+      emoji: isInfant ? "👐" : "🤲",
+      type: "technique",
+      details: {
+        steps: isInfant ? [
+          { icon: "👶", text: "Turn baby face-up" },
+          { icon: "☝️", text: "2 fingers on breastbone" },
+          { icon: "⬇️", text: "5 quick thrusts" },
+          { icon: "👀", text: "Check mouth" }
+        ] : [
+          { icon: "🧒", text: "Stand behind child" },
+          { icon: "✊", text: "Fist above navel" },
+          { icon: "⬆️", text: "5 upward thrusts" },
+          { icon: "👀", text: "Check mouth" }
+        ]
+      }
+    },
+    instructions: isInfant ? [
+      "Turn baby face-up on your arm or lap",
+      "Place 2 fingers on breastbone, just below nipple line",
+      "Give 5 quick, firm chest thrusts",
+      "Push down about 1.5 inches each time"
+    ] : [
+      "Stand behind child, wrap arms around waist",
+      "Make a fist with one hand, place above navel",
+      "Grasp fist with other hand",
+      "Give 5 quick upward thrusts"
+    ]
+  },
+  {
+    title: "Step 5: Continue Cycle",
+    instructions: [
+      "Alternate between back blows and chest/abdominal thrusts",
+      "Continue until object comes out or baby becomes unconscious",
+      "Check mouth between cycles - remove object if visible",
+      "If baby becomes unconscious, begin CPR immediately"
+    ],
+    emergency: [
+      "Baby becomes unconscious",
+      "Baby stops breathing",
+      "You cannot dislodge the object after several cycles",
+      "Baby's lips turn blue"
+    ]
+  },
+  {
+    title: "Prevention Tips",
+    instructions: [
+      "Cut food into small pieces (smaller than baby's thumb nail)",
+      "Avoid hard foods like nuts, hard candy, whole grapes",
+      "Always supervise meals and snacks",
+      "Keep small objects out of reach",
+      "Teach older children to chew slowly"
+    ],
+    notes: [
+      "Most choking incidents are preventable",
+      "Learn to recognize choking hazards",
+      "Take a hands-on first aid course for practice"
+    ]
+  }
+];
+
+const getCPRSlides = (isInfant) => [
+  {
+    title: "Infant CPR Overview",
+    subtitle: `For ${isInfant ? 'Babies Under 12 months' : 'Children 12+ months'}`,
+    diagram: {
+      emoji: "❤️",
+      type: "emergency_alert",
+      details: { description: "CPR can save lives when breathing or heartbeat stops" }
+    },
+    emergency: [
+      "Baby is not breathing",
+      "Baby has no pulse or heartbeat",
+      "Baby is unconscious and unresponsive",
+      "Baby's skin is blue or gray"
+    ]
+  },
+  {
+    title: "Step 1: Check Responsiveness",
+    instructions: [
+      "Gently tap baby's shoulders and shout their name",
+      "Look for normal breathing for no more than 10 seconds",
+      "Check for pulse (if trained) - don't spend more than 10 seconds",
+      "If no response and no normal breathing, begin CPR immediately"
+    ],
+    notes: [
+      "Don't shake the baby vigorously",
+      "Agonal breathing (gasping) is not normal breathing",
+      "When in doubt, start CPR - it's better to do CPR on someone who doesn't need it than to not do it when they do"
+    ]
+  },
+  {
+    title: "Step 2: Position Baby",
+    diagram: {
+      emoji: "👶",
+      type: "body_position",
+      details: {
+        position: "Baby on firm, flat surface - back, head tilted slightly",
+        support: "Open airway by tilting head back gently"
+      }
+    },
+    instructions: [
+      "Place baby on firm, flat surface (floor, table)",
+      "Tilt head back slightly by lifting chin",
+      "Don't overextend the neck - babies have short necks",
+      "Ensure airway is open"
+    ],
+    notes: [
+      "Surface must be firm for effective compressions",
+      "If on bed, consider moving to floor"
+    ]
+  },
+  {
+    title: "Step 3: Hand Position for Compressions",
+    diagram: {
+      emoji: "✌️",
+      type: "hand_position",
+      details: {
+        position: isInfant ? "2 fingers on breastbone, below nipple line" : "Heel of one hand on lower breastbone",
+        pressure: isInfant ? "Press down 1.5 inches" : "Press down 2 inches"
+      }
+    },
+    instructions: isInfant ? [
+      "Place 2 fingers (index and middle) on breastbone",
+      "Position just below the nipple line",
+      "Keep fingers straight and perpendicular to chest",
+      "Use only fingertips, not whole hand"
+    ] : [
+      "Place heel of one hand on lower half of breastbone",
+      "Place other hand on top, interlace fingers",
+      "Keep arms straight, shoulders over hands",
+      "Don't lean on ribs"
+    ]
+  },
+  {
+    title: "Step 4: Perform Compressions",
+    diagram: {
+      emoji: "🔄",
+      type: "technique",
+      details: {
+        steps: [
+          { icon: "⬇️", text: "Push hard & fast" },
+          { icon: "⬆️", text: "Complete release" },
+          { icon: "🎵", text: "100-120/minute" },
+          { icon: "🔢", text: "Count out loud" }
+        ]
+      }
+    },
+    instructions: [
+      `Push hard and fast - compress at least ${isInfant ? '1.5' : '2'} inches`,
+      "Allow complete chest recoil between compressions",
+      "Compress at 100-120 beats per minute",
+      "Count out loud: '1 and 2 and 3...'",
+      "Minimize interruptions"
+    ],
+    notes: [
+      "Don't be afraid to push hard - broken ribs heal, brains don't",
+      "Quality compressions save lives",
+      "Switch with someone every 2 minutes if possible"
+    ]
+  },
+  {
+    title: "Step 5: Rescue Breaths (If Trained)",
+    instructions: [
+      "After 30 compressions, tilt head back and lift chin",
+      "Cover baby's mouth and nose with your mouth",
+      "Give 2 gentle breaths, watch chest rise with each",
+      "If trained in hands-only CPR, continue compressions without breaths"
+    ],
+    notes: [
+      "Breaths should be gentle - baby's lungs are small",
+      "Hands-only CPR is still effective",
+      "Don't delay compressions for rescue breaths"
+    ]
+  },
+  {
+    title: "Continue CPR Until Help Arrives",
+    instructions: [
+      "Continue cycles of 30 compressions and 2 breaths",
+      "Don't stop unless baby starts breathing normally",
+      "Switch with someone every 2 minutes to avoid fatigue",
+      "Continue until emergency medical services arrive"
+    ],
+    emergency: [
+      "Continue CPR even if you're tired",
+      "Don't check pulse during CPR unless baby moves",
+      "Be prepared to continue for extended periods"
+    ]
+  }
+];
+
+const getAssessmentSlides = () => [
+  {
+    title: "Emergency Assessment",
+    subtitle: "How to Quickly Assess Any Emergency Situation",
+    diagram: {
+      emoji: "🔍",
+      type: "emergency_alert",
+      details: { description: "Quick assessment can save precious time" }
+    },
+    instructions: [
+      "Stay calm and think before acting",
+      "Ensure scene is safe for you and baby",
+      "Call 911 immediately for serious emergencies",
+      "Follow the ABC approach: Airway, Breathing, Circulation"
+    ]
+  },
+  {
+    title: "Check for Responsiveness",
+    diagram: {
+      emoji: "👋",
+      type: "technique",
+      details: {
+        steps: [
+          { icon: "👋", text: "Gentle tap" },
+          { icon: "🗣️", text: "Call name loudly" },
+          { icon: "👀", text: "Watch for response" },
+          { icon: "📞", text: "Call 911 if none" }
+        ]
+      }
+    },
+    instructions: [
+      "Gently tap baby's shoulders",
+      "Call their name loudly",
+      "Look for any movement or response",
+      "If no response, call 911 immediately"
+    ],
+    notes: [
+      "Don't shake vigorously",
+      "Any response, even slight movement, is good"
+    ]
+  },
+  {
+    title: "Check Breathing",
+    instructions: [
+      "Look at chest for rise and fall",
+      "Listen for breath sounds",
+      "Feel for air on your cheek",
+      "Normal breathing: 20-60 breaths per minute for infants"
+    ],
+    notes: [
+      "Irregular breathing in babies can be normal",
+      "Gasping is NOT normal breathing",
+      "When in doubt, get medical help"
+    ]
+  },
+  {
+    title: "When to Call 911 Immediately",
+    emergency: [
+      "Baby is unconscious or unresponsive",
+      "Not breathing or turning blue",
+      "Choking and cannot cry or cough",
+      "Severe allergic reaction",
+      "High fever with lethargy (under 3 months: any fever)",
+      "Severe injury or bleeding",
+      "Poisoning or suspected poisoning",
+      "Any time you're worried about baby's safety"
+    ]
+  },
+  {
+    title: "Information to Give 911",
+    instructions: [
+      "Your location and phone number",
+      "Baby's age and what happened",
+      "Current condition (conscious, breathing, etc.)",
+      "What you've done so far",
+      "Follow dispatcher's instructions exactly"
+    ],
+    notes: [
+      "Stay on the phone unless told to hang up",
+      "Dispatcher can guide you through emergency care",
+      "Don't hang up until help arrives"
+    ]
+  }
+];
+
 const AgeSpecificNotes = ({ babyAgeMonths }) => {
   let notes;
 
