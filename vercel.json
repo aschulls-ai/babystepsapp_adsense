@@ -8,21 +8,29 @@
       "config": {
         "distDir": "build"
       }
+    },
+    {
+      "src": "frontend/api/**/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/frontend/api/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "https://babysteps-backend.onrender.com",
+    "REACT_APP_BACKEND_URL": "",
     "REACT_APP_ADSENSE_CLIENT_ID": "ca-pub-1934622676928053"
   },
   "functions": {
-    "frontend/build/static/js/*.js": {
-      "maxDuration": 30
+    "frontend/api/**/*.js": {
+      "maxDuration": 10
     }
   }
 }
