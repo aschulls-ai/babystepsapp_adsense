@@ -1237,6 +1237,53 @@ const QuickActionButton = ({ icon: Icon, label, color, onClick }) => {
   );
 };
 
+// Timer Quick Action Button Component with live timer display
+const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onClick }) => {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    let interval;
+    if (isActive && timer.startTime) {
+      interval = setInterval(() => {
+        setElapsed(Math.floor((Date.now() - timer.startTime) / 1000));
+      }, 1000);
+    } else {
+      setElapsed(0);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, timer.startTime]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const colorClasses = {
+    blue: isActive ? 'bg-blue-200 text-blue-800 border-2 border-blue-400 animate-pulse' : 'bg-blue-100 text-blue-700 hover:bg-blue-200',
+    green: isActive ? 'bg-green-200 text-green-800 border-2 border-green-400 animate-pulse' : 'bg-green-100 text-green-700 hover:bg-green-200',
+    purple: isActive ? 'bg-purple-200 text-purple-800 border-2 border-purple-400 animate-pulse' : 'bg-purple-100 text-purple-700 hover:bg-purple-200',
+    pink: isActive ? 'bg-pink-200 text-pink-800 border-2 border-pink-400 animate-pulse' : 'bg-pink-100 text-pink-700 hover:bg-pink-200',
+    orange: isActive ? 'bg-orange-200 text-orange-800 border-2 border-orange-400 animate-pulse' : 'bg-orange-100 text-orange-700 hover:bg-orange-200',
+    yellow: isActive ? 'bg-yellow-200 text-yellow-800 border-2 border-yellow-400 animate-pulse' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`${colorClasses[color]} p-4 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-md flex flex-col items-center gap-2 text-center`}
+    >
+      <Icon className="w-6 h-6" />
+      <span className="text-sm font-medium">{label}</span>
+      {isActive && (
+        <div className="text-xs font-mono bg-white bg-opacity-50 px-2 py-1 rounded">
+          {formatTime(elapsed)}
+        </div>
+      )}
+    </button>
+  );
+};
+
 // Reminder Form Component
 const ReminderForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
