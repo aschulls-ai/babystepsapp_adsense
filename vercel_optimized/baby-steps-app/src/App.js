@@ -15,6 +15,7 @@ import Dashboard from './components/Dashboard';
 import BabyProfile from './components/BabyProfile';
 import TrackingPage from './components/TrackingPage';
 import FoodResearch from './components/FoodResearch';
+import FormulaComparison from './components/FormulaComparison';
 import EmergencyTraining from './components/EmergencyTraining';
 import MealPlanner from './components/MealPlanner';
 import Research from './components/Research';
@@ -299,6 +300,14 @@ function App() {
                     path="/food-research" 
                     element={
                       <FoodResearch 
+                        currentBaby={currentBaby}
+                      />
+                    } 
+                  />
+                  <Route 
+                    path="/formula-comparison" 
+                    element={
+                      <FormulaComparison 
                         currentBaby={currentBaby}
                       />
                     } 
