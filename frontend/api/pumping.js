@@ -39,6 +39,11 @@ export default async function handler(req, res) {
     const rightBreast = pumpingData.rightBreast || pumpingData.right_breast || 0;
     const totalAmount = leftBreast + rightBreast;
     
+    // Ensure we have minimum required data
+    if (!pumpingData.baby_id) {
+      return res.status(422).json({ detail: 'baby_id is required' });
+    }
+    
     const newPumping = {
       id: Date.now().toString(),
       timestamp: new Date().toISOString(),
