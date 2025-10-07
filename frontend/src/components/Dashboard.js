@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Plus, Baby, Activity, Apple, BookOpen, Calendar, Heart, TrendingUp, Clock } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
+import PageAd from './ads/PageAd';
 
 const getMilestonesForAge = (ageMonths) => {
   const milestones = {
