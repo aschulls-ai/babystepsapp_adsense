@@ -39,11 +39,18 @@ export default async function handler(req, res) {
         return res.status(422).json({ detail: 'Baby name is required' });
       }
 
-      // Format birth_date if it's a Date object
+      // Format birth_date - handle various formats
       let formattedBirthDate = babyData.birth_date;
       if (babyData.birth_date) {
-        const date = new Date(babyData.birth_date);
-        formattedBirthDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+        try {
+          const date = new Date(babyData.birth_date);
+          if (!isNaN(date.getTime())) {
+            formattedBirthDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+          }
+        } catch (error) {
+          console.error('Date formatting error:', error);
+          formattedBirthDate = babyData.birth_date; // Keep original if formatting fails
+        }
       }
       
       // Return the updated baby data
