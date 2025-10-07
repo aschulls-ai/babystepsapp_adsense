@@ -195,8 +195,9 @@
 
 ## test_plan:
   current_focus:
-    - "Track Activities page with Quick Action Buttons and Reminder System"
-  stuck_tasks: []
+    - "Enhanced tracking activities with timer functionality and new user registration"
+  stuck_tasks:
+    - "Login functionality - critical authentication issue"
   test_all: false
   test_priority: "high_first"
 
