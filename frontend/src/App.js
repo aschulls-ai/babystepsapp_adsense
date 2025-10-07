@@ -88,12 +88,35 @@ function App() {
 
   const checkAuthState = async () => {
     const token = localStorage.getItem('token');
+    const rememberMe = localStorage.getItem('rememberMe') === 'true';
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+
     if (token) {
+      // Check if token is expired for remembered sessions
+      if (rememberMe && tokenExpiration) {
+        const now = new Date().getTime();
+        if (now > parseInt(tokenExpiration)) {
+          // Token expired, clear remembered session
+          logout();
+          setLoading(false);
+          return;
+        }
+      }
+
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       try {
         await fetchBabies();
-        // Set a basic user object to indicate authentication
-        setUser({ authenticated: true });
+        // Set user object with remembered email if available
+        setUser({ 
+          authenticated: true, 
+          email: rememberedEmail,
+          rememberMe: rememberMe
+        });
+        
+        if (rememberMe && rememberedEmail) {
+          console.log('Auto-logged in with remembered credentials');
+        }
       } catch (error) {
         console.error('Auth check failed:', error);
         logout();
