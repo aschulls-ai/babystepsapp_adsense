@@ -335,7 +335,7 @@ const TrackingPage = ({ currentBaby }) => {
       {/* Quick Action Buttons */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
         <QuickActionButton 
-          icon={Milk} 
+          icon={Baby2} 
           label="Quick Feed" 
           color="blue"
           onClick={() => handleQuickAction('feeding')}
@@ -346,16 +346,20 @@ const TrackingPage = ({ currentBaby }) => {
           color="green"
           onClick={() => handleQuickAction('diaper')}
         />
-        <QuickActionButton 
-          icon={Moon} 
-          label="Start Sleep" 
+        <TimerQuickActionButton 
+          icon={activeTimers.sleep.active ? Square : Moon}
+          label={activeTimers.sleep.active ? "Stop Sleep" : "Start Sleep"}
           color="purple"
+          isActive={activeTimers.sleep.active}
+          timer={activeTimers.sleep}
           onClick={() => handleQuickAction('sleep')}
         />
-        <QuickActionButton 
-          icon={Activity} 
-          label="Pumping" 
+        <TimerQuickActionButton 
+          icon={activeTimers.pumping.active ? Square : Zap}
+          label={activeTimers.pumping.active ? "Stop Pump" : "Start Pump"}
           color="pink"
+          isActive={activeTimers.pumping.active}
+          timer={activeTimers.pumping}
           onClick={() => handleQuickAction('pumping')}
         />
         <QuickActionButton 
