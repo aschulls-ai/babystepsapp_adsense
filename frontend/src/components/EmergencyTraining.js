@@ -186,47 +186,14 @@ const EmergencyTraining = ({ currentBaby }) => {
               </CardContent>
             </Card>
           ) : (
-            /* Training Content */
-            <Card className="emergency-card border-0">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2 text-gray-800">
-                    {selectedTopic.icon}
-                    {selectedTopic.title}
-                    {currentBaby && (
-                      <Badge variant="outline" className="ml-2">
-                        {babyAgeMonths} months old
-                      </Badge>
-                    )}
-                  </CardTitle>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSelectedTopic(null);
-                      setTrainingContent(null);
-                    }}
-                    data-testid="back-to-topics"
-                  >
-                    Back to Topics
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <div className="text-center py-8">
-                    <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading emergency training content...</p>
-                  </div>
-                ) : trainingContent ? (
-                  <EmergencyTrainingContent content={trainingContent} />
-                ) : (
-                  <div className="text-center py-8">
-                    <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                    <p className="text-gray-600">Failed to load training content. In a real emergency, call 911 immediately.</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            /* Training Slideshow */
+            <EmergencySlideshow 
+              topic={selectedTopic}
+              currentSlide={currentSlide}
+              setCurrentSlide={setCurrentSlide}
+              babyAgeMonths={babyAgeMonths}
+              onBack={() => setSelectedTopic(null)}
+            />
           )}
         </div>
 
