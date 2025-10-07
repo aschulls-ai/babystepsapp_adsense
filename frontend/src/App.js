@@ -141,7 +141,14 @@ function App() {
       toast.success('Account created! Please check your email for verification link.');
       return { success: true, requiresVerification: true, email };
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Registration failed');
+      console.error('Registration error:', error);
+      if (error.code === 'ERR_NETWORK') {
+        toast.error('Unable to connect to server. Please check your internet connection.');
+      } else if (error.response?.status === 404) {
+        toast.error('Registration service not available. Please try again later.');
+      } else {
+        toast.error(error.response?.data?.detail || 'Registration failed');
+      }
       return { success: false };
     }
   };
