@@ -421,6 +421,15 @@ const TrackingPage = ({ currentBaby }) => {
           </Card>
         </div>
       </div>
+
+      {/* Quick Action Modal */}
+      <QuickActionModal
+        show={quickActionModal.show}
+        type={quickActionModal.type}
+        data={quickActionModal.data}
+        onSubmit={handleQuickSubmit}
+        onCancel={() => setQuickActionModal({ show: false, type: null, data: {} })}
+      />
     </div>
   );
 };
