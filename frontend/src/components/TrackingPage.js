@@ -206,6 +206,46 @@ const TrackingPage = ({ currentBaby }) => {
         </div>
       </div>
 
+      {/* Quick Action Buttons */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        <QuickActionButton 
+          icon={Milk} 
+          label="Quick Feed" 
+          color="blue"
+          onClick={() => handleQuickAction('feeding')}
+        />
+        <QuickActionButton 
+          icon={Droplet} 
+          label="Diaper Change" 
+          color="green"
+          onClick={() => handleQuickAction('diaper')}
+        />
+        <QuickActionButton 
+          icon={Moon} 
+          label="Start Sleep" 
+          color="purple"
+          onClick={() => handleQuickAction('sleep')}
+        />
+        <QuickActionButton 
+          icon={Activity} 
+          label="Pumping" 
+          color="pink"
+          onClick={() => handleQuickAction('pumping')}
+        />
+        <QuickActionButton 
+          icon={Scale} 
+          label="Measure" 
+          color="orange"
+          onClick={() => handleQuickAction('measurements')}
+        />
+        <QuickActionButton 
+          icon={Trophy} 
+          label="Milestone" 
+          color="yellow"
+          onClick={() => handleQuickAction('milestones')}
+        />
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Tracking Forms */}
         <div className="lg:col-span-2">
