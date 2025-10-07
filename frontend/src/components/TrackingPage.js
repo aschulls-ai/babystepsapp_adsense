@@ -1549,27 +1549,58 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         );
       case 'pumping':
         return (
-          <>
-            <div>
-              <Label className="text-sm font-medium">Amount (oz)</Label>
-              <Input
-                type="number"
-                step="0.5"
-                value={formData.amount}
-                onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                className="mt-1"
-              />
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">
+              {data.isCompleting ? 'Complete Pumping Session' : 'Log Pumping Session'}
+            </h3>
+            {data.isCompleting && (
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <Clock className="w-4 h-4 inline mr-1" />
+                  Session Duration: {data.duration} minutes
+                </p>
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Left Breast (oz)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={formData.leftBreast || ''}
+                  onChange={(e) => setFormData({...formData, leftBreast: parseFloat(e.target.value) || 0})}
+                  placeholder="0"
+                />
+              </div>
+              <div>
+                <Label>Right Breast (oz)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={formData.rightBreast || ''}
+                  onChange={(e) => setFormData({...formData, rightBreast: parseFloat(e.target.value) || 0})}
+                  placeholder="0"
+                />
+              </div>
             </div>
             <div>
-              <Label className="text-sm font-medium">Duration (minutes)</Label>
-              <Input
-                type="number"
-                value={formData.duration}
-                onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                className="mt-1"
-              />
+              <Label>Total Amount: {((formData.leftBreast || 0) + (formData.rightBreast || 0)).toFixed(1)} oz</Label>
+              <div className="text-sm text-gray-500 mt-1">
+                Enter the amount pumped from each breast separately
+              </div>
             </div>
-          </>
+            {!data.isCompleting && (
+              <div>
+                <Label>Duration (minutes)</Label>
+                <Input
+                  type="number"
+                  value={formData.duration || ''}
+                  onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                  placeholder="15"
+                />
+              </div>
+            )}
+          </div>
         );
       case 'measurements':
         return (
