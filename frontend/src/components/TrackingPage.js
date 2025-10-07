@@ -103,11 +103,11 @@ const TrackingPage = ({ currentBaby }) => {
     const now = new Date();
     
     reminders.forEach(reminder => {
-      if (!reminder.enabled) return;
+      if (!reminder.is_active) return;
 
-      const reminderTime = new Date(reminder.next_notification);
+      const reminderTime = new Date(reminder.next_due);
       
-      if (reminderTime <= now && !reminder.notified) {
+      if (reminderTime <= now) {
         showNotification(reminder);
         markReminderAsNotified(reminder.id);
       }
