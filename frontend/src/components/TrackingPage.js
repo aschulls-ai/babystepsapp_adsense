@@ -1340,4 +1340,225 @@ const ReminderList = ({ reminders, onToggle, onDelete }) => {
   );
 };
 
+// Quick Action Modal Component
+const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState(data);
+
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
+
+  if (!show) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  const getModalTitle = () => {
+    switch (type) {
+      case 'feeding': return 'Quick Feeding';
+      case 'diaper': return 'Quick Diaper Change';
+      case 'sleep': return 'Start Sleep Session';
+      case 'pumping': return 'Quick Pumping';
+      case 'measurements': return 'Quick Measurement';
+      case 'milestones': return 'Record Milestone';
+      default: return 'Quick Action';
+    }
+  };
+
+  const renderFormFields = () => {
+    switch (type) {
+      case 'feeding':
+        return (
+          <>
+            <div>
+              <Label className="text-sm font-medium">Type</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bottle">Bottle</SelectItem>
+                  <SelectItem value="breast">Breastfeeding</SelectItem>
+                  <SelectItem value="solid">Solid Food</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {formData.type === 'bottle' && (
+              <div>
+                <Label className="text-sm font-medium">Amount (oz)</Label>
+                <Input
+                  type="number"
+                  step="0.5"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                  className="mt-1"
+                />
+              </div>
+            )}
+            {formData.type === 'breast' && (
+              <div>
+                <Label className="text-sm font-medium">Duration (minutes)</Label>
+                <Input
+                  type="number"
+                  value={formData.duration}
+                  onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                  className="mt-1"
+                />
+              </div>
+            )}
+          </>
+        );
+      case 'diaper':
+        return (
+          <div>
+            <Label className="text-sm font-medium">Type</Label>
+            <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="wet">Wet</SelectItem>
+                <SelectItem value="dirty">Dirty</SelectItem>
+                <SelectItem value="mixed">Mixed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        );
+      case 'sleep':
+        return (
+          <div>
+            <Label className="text-sm font-medium">Expected Duration (minutes)</Label>
+            <Input
+              type="number"
+              value={formData.duration}
+              onChange={(e) => setFormData({...formData, duration: e.target.value})}
+              placeholder="e.g., 60"
+              className="mt-1"
+            />
+          </div>
+        );
+      case 'pumping':
+        return (
+          <>
+            <div>
+              <Label className="text-sm font-medium">Amount (oz)</Label>
+              <Input
+                type="number"
+                step="0.5"
+                value={formData.amount}
+                onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-medium">Duration (minutes)</Label>
+              <Input
+                type="number"
+                value={formData.duration}
+                onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                className="mt-1"
+              />
+            </div>
+          </>
+        );
+      case 'measurements':
+        return (
+          <>
+            <div>
+              <Label className="text-sm font-medium">Weight (lbs)</Label>
+              <Input
+                type="number"
+                step="0.1"
+                value={formData.weight}
+                onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-medium">Height (inches)</Label>
+              <Input
+                type="number"
+                step="0.1"
+                value={formData.height}
+                onChange={(e) => setFormData({...formData, height: e.target.value})}
+                className="mt-1"
+              />
+            </div>
+          </>
+        );
+      case 'milestones':
+        return (
+          <>
+            <div>
+              <Label className="text-sm font-medium">Title</Label>
+              <Input
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                placeholder="e.g., First smile"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-medium">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="physical">Physical</SelectItem>
+                  <SelectItem value="cognitive">Cognitive</SelectItem>
+                  <SelectItem value="social">Social</SelectItem>
+                  <SelectItem value="feeding">Feeding</SelectItem>
+                  <SelectItem value="sleep">Sleep</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">{getModalTitle()}</h3>
+          <button
+            onClick={onCancel}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {renderFormFields()}
+          
+          <div className="flex gap-3 pt-4">
+            <Button
+              type="submit"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save
+            </Button>
+            <Button
+              type="button"
+              onClick={onCancel}
+              variant="outline"
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default TrackingPage;
