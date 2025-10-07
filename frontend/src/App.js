@@ -195,6 +195,29 @@ function App() {
     }
   };
 
+  const updateBaby = async (babyData) => {
+    try {
+      const response = await axios.put(`/babies/${currentBaby.id}`, babyData);
+      const updatedBaby = response.data;
+      
+      // Update babies array
+      setBabies(babies.map(baby => 
+        baby.id === updatedBaby.id ? updatedBaby : baby
+      ));
+      
+      // Update current baby if it's the one being updated
+      if (currentBaby.id === updatedBaby.id) {
+        setCurrentBaby(updatedBaby);
+      }
+      
+      toast.success(`${updatedBaby.name}'s profile updated successfully!`);
+      return updatedBaby;
+    } catch (error) {
+      toast.error('Failed to update baby profile');
+      throw error;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-blue-50">
