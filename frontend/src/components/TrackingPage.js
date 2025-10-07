@@ -167,6 +167,47 @@ const TrackingPage = ({ currentBaby }) => {
     }
   };
 
+  const handleQuickAction = (type) => {
+    const quickActions = {
+      feeding: () => {
+        // Quick log with default values
+        axios.post('/feedings', {
+          baby_id: currentBaby.id,
+          type: 'bottle',
+          amount: 4, // default amount
+          timestamp: new Date().toISOString()
+        }).then(() => {
+          toast.success('Quick feeding logged!');
+          fetchRecentActivities();
+        }).catch(() => toast.error('Failed to log feeding'));
+      },
+      diaper: () => {
+        axios.post('/diapers', {
+          baby_id: currentBaby.id,
+          type: 'wet',
+          timestamp: new Date().toISOString()
+        }).then(() => {
+          toast.success('Diaper change logged!');
+          fetchRecentActivities();
+        }).catch(() => toast.error('Failed to log diaper change'));
+      },
+      sleep: () => {
+        axios.post('/sleep', {
+          baby_id: currentBaby.id,
+          start_time: new Date().toISOString()
+        }).then(() => {
+          toast.success('Sleep session started!');
+          fetchRecentActivities();
+        }).catch(() => toast.error('Failed to start sleep session'));
+      },
+      pumping: () => setActiveTab('pumping'),
+      measurements: () => setActiveTab('measurements'),
+      milestones: () => setActiveTab('milestones')
+    };
+    
+    quickActions[type]();
+  };
+
   if (!currentBaby) {
     return (
       <div className="min-h-screen flex items-center justify-center">
