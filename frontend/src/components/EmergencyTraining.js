@@ -277,67 +277,220 @@ const EmergencyTraining = ({ currentBaby }) => {
   );
 };
 
-// Helper Components
-const EmergencyTrainingContent = ({ content }) => (
-  <div className="space-y-6">
-    {/* Steps */}
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-        <AlertTriangle className="w-5 h-5 text-red-500" />
-        Emergency Steps
-      </h3>
-      {content.steps.map((step, index) => (
-        <div key={index} className="emergency-step">
-          <div className="flex items-start gap-3">
-            <div className="emergency-step-number">
-              {index + 1}
-            </div>
-            <div className="flex-1">
-              <p className="text-gray-800">{step}</p>
-            </div>
-          </div>
+// Emergency Training Slideshows
+const EmergencySlideshow = ({ topic, currentSlide, setCurrentSlide, babyAgeMonths, onBack }) => {
+  const slides = getTrainingSlides(topic.id, babyAgeMonths);
+  const totalSlides = slides.length;
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  return (
+    <Card className="emergency-card border-0">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-gray-800">
+            {topic.icon}
+            {topic.title}
+            <Badge variant="outline" className="ml-2">
+              {currentSlide + 1} of {totalSlides}
+            </Badge>
+          </CardTitle>
+          <Button variant="outline" onClick={onBack} data-testid="back-to-topics">
+            Back to Topics
+          </Button>
         </div>
-      ))}
+      </CardHeader>
+      <CardContent>
+        {/* Slide Content */}
+        <div className="min-h-[400px] mb-6">
+          <SlideContent slide={slides[currentSlide]} />
+        </div>
+
+        {/* Navigation Controls */}
+        <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+          <Button
+            variant="outline"
+            onClick={prevSlide}
+            disabled={currentSlide === 0}
+            className="flex items-center gap-2"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Previous
+          </Button>
+
+          {/* Slide Indicators */}
+          <div className="flex space-x-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentSlide 
+                    ? 'bg-red-500' 
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+              />
+            ))}
+          </div>
+
+          <Button
+            variant="outline"
+            onClick={nextSlide}
+            disabled={currentSlide === totalSlides - 1}
+            className="flex items-center gap-2"
+          >
+            Next
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Restart Button */}
+        {currentSlide === totalSlides - 1 && (
+          <div className="text-center mt-4">
+            <Button
+              onClick={() => setCurrentSlide(0)}
+              className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 mx-auto"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Restart Training
+            </Button>
+          </div>
+        )}
+
+        {/* Small Disclaimer */}
+        <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-xs text-yellow-800 text-center">
+            Educational content only. Take official AHA courses for certification. Call 911 in emergencies.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Slide Content Component
+const SlideContent = ({ slide }) => (
+  <div className="space-y-4">
+    <div className="text-center">
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">{slide.title}</h2>
+      {slide.subtitle && (
+        <p className="text-lg text-gray-600">{slide.subtitle}</p>
+      )}
     </div>
+
+    {/* Visual Diagram */}
+    {slide.diagram && (
+      <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+        <div className="text-6xl mb-4">{slide.diagram.emoji}</div>
+        <div className="max-w-md mx-auto">
+          <DiagramComponent type={slide.diagram.type} details={slide.diagram.details} />
+        </div>
+      </div>
+    )}
+
+    {/* Instructions */}
+    {slide.instructions && (
+      <div className="bg-white border border-gray-200 rounded-lg p-4">
+        <div className="space-y-2">
+          {slide.instructions.map((instruction, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                {index + 1}
+              </div>
+              <p className="text-gray-800">{instruction}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
     {/* Important Notes */}
-    {content.important_notes.length > 0 && (
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <AlertTriangle className="w-5 h-5 text-orange-500" />
-          Important Notes
-        </h3>
-        {content.important_notes.map((note, index) => (
-          <div key={index} className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-            <p className="text-orange-800 text-sm">{note}</p>
+    {slide.notes && (
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="flex items-start gap-2">
+          <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+          <div className="space-y-2">
+            <p className="font-semibold text-orange-800">Important:</p>
+            {slide.notes.map((note, index) => (
+              <p key={index} className="text-orange-700 text-sm">• {note}</p>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     )}
 
-    {/* When to Call 911 */}
-    {content.when_to_call_911.length > 0 && (
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <Phone className="w-5 h-5 text-red-500" />
-          When to Call 911
-        </h3>
-        {content.when_to_call_911.map((situation, index) => (
-          <div key={index} className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm font-medium">{situation}</p>
+    {/* Emergency Alert */}
+    {slide.emergency && (
+      <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+        <div className="flex items-start gap-2">
+          <Phone className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-bold text-red-800 mb-1">CALL 911 IF:</p>
+            {slide.emergency.map((situation, index) => (
+              <p key={index} className="text-red-700 text-sm">• {situation}</p>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     )}
-
-    {/* Disclaimer */}
-    <div className="disclaimer bg-yellow-50 border-yellow-200">
-      <AlertTriangle className="w-5 h-5 text-yellow-600 mb-2" />
-      <p className="warning-text text-yellow-800 font-semibold mb-2">DISCLAIMER</p>
-      <p className="text-xs text-yellow-700">{content.disclaimer}</p>
-    </div>
   </div>
 );
+
+// Diagram Component for Visual Instructions
+const DiagramComponent = ({ type, details }) => {
+  switch (type) {
+    case 'hand_position':
+      return (
+        <div className="space-y-2">
+          <div className="border-2 border-gray-400 rounded-lg p-4 bg-white">
+            <Hand className="w-12 h-12 mx-auto text-gray-600 mb-2" />
+            <p className="text-sm text-gray-700 text-center">{details.position}</p>
+            <p className="text-xs text-gray-500 text-center mt-1">{details.pressure}</p>
+          </div>
+        </div>
+      );
+    
+    case 'body_position':
+      return (
+        <div className="space-y-2">
+          <div className="border-2 border-gray-400 rounded-lg p-4 bg-white">
+            <Users className="w-12 h-12 mx-auto text-gray-600 mb-2" />
+            <p className="text-sm text-gray-700 text-center">{details.position}</p>
+            <p className="text-xs text-gray-500 text-center mt-1">{details.support}</p>
+          </div>
+        </div>
+      );
+      
+    case 'technique':
+      return (
+        <div className="grid grid-cols-2 gap-2">
+          {details.steps.map((step, index) => (
+            <div key={index} className="border border-gray-300 rounded p-2 bg-white text-center">
+              <div className="text-2xl mb-1">{step.icon}</div>
+              <p className="text-xs text-gray-700">{step.text}</p>
+            </div>
+          ))}
+        </div>
+      );
+      
+    default:
+      return (
+        <div className="text-center p-4 border border-gray-300 rounded bg-white">
+          <p className="text-sm text-gray-600">{details.description}</p>
+        </div>
+      );
+  }
+};
 
 const AgeSpecificNotes = ({ babyAgeMonths }) => {
   let notes;
