@@ -121,7 +121,14 @@ function App() {
       toast.success('Welcome to Baby Steps!');
       return true;
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed');
+      console.error('Login error:', error);
+      if (error.code === 'ERR_NETWORK') {
+        toast.error('Unable to connect to server. Please check your internet connection.');
+      } else if (error.response?.status === 404) {
+        toast.error('Login service not available. Please try again later.');
+      } else {
+        toast.error(error.response?.data?.detail || 'Login failed');
+      }
       return false;
     }
   };
