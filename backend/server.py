@@ -849,6 +849,27 @@ async def get_babies(current_user: User = Depends(get_current_user)):
     babies = await db.babies.find({"user_id": current_user.id}).to_list(length=None)
     return [Baby(**parse_from_mongo(baby)) for baby in babies]
 
+@api_router.put("/babies/{baby_id}", response_model=Baby)
+async def update_baby(baby_id: str, baby_data: BabyCreate, current_user: User = Depends(get_current_user)):
+    # Check if baby exists and belongs to current user
+    existing_baby = await db.babies.find_one({"id": baby_id, "user_id": current_user.id})
+    if not existing_baby:
+        raise HTTPException(status_code=404, detail="Baby not found")
+    
+    # Update baby data
+    update_data = baby_data.dict()
+    update_data = prepare_for_mongo(update_data)
+    
+    # Update the baby in database
+    await db.babies.update_one(
+        {"id": baby_id, "user_id": current_user.id},
+        {"$set": update_data}
+    )
+    
+    # Fetch and return updated baby
+    updated_baby = await db.babies.find_one({"id": baby_id, "user_id": current_user.id})
+    return Baby(**parse_from_mongo(updated_baby))
+
 # Baby Tracking Routes (keeping all existing routes for feedings, diapers, sleep, pumping, measurements, milestones, reminders)
 @api_router.post("/feedings", response_model=Feeding)
 async def create_feeding(feeding_data: FeedingCreate, current_user: User = Depends(get_current_user)):
