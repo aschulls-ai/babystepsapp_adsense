@@ -38,8 +38,25 @@ const TrackingPage = ({ currentBaby }) => {
   useEffect(() => {
     if (currentBaby) {
       fetchRecentActivities();
+      fetchReminders();
     }
   }, [currentBaby, activeTab]);
+
+  useEffect(() => {
+    // Request notification permission
+    if ('Notification' in window) {
+      setNotificationPermission(Notification.permission);
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          setNotificationPermission(permission);
+        });
+      }
+    }
+
+    // Check reminders every minute
+    const reminderInterval = setInterval(checkReminders, 60000);
+    return () => clearInterval(reminderInterval);
+  }, [reminders]);
 
   const fetchRecentActivities = async () => {
     if (!currentBaby) return;
