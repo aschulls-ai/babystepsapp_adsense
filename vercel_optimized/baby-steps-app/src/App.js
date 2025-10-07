@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import { mobileService } from './services/MobileService';
 import './App.css';
 
@@ -196,6 +195,29 @@ function App() {
     }
   };
 
+  const updateBaby = async (babyData) => {
+    try {
+      const response = await axios.put(`/babies/${currentBaby.id}`, babyData);
+      const updatedBaby = response.data;
+      
+      // Update babies array
+      setBabies(babies.map(baby => 
+        baby.id === updatedBaby.id ? updatedBaby : baby
+      ));
+      
+      // Update current baby if it's the one being updated
+      if (currentBaby.id === updatedBaby.id) {
+        setCurrentBaby(updatedBaby);
+      }
+      
+      toast.success(`${updatedBaby.name}'s profile updated successfully!`);
+      return updatedBaby;
+    } catch (error) {
+      toast.error('Failed to update baby profile');
+      throw error;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-blue-50">
@@ -261,6 +283,7 @@ function App() {
                       <BabyProfile 
                         currentBaby={currentBaby}
                         onAddBaby={addBaby}
+                        onUpdateBaby={updateBaby}
                       />
                     } 
                   />
@@ -312,9 +335,6 @@ function App() {
         
         {/* Add padding to prevent content overlap with bottom banner */}
         {user && <div className="h-16 md:h-20" />}
-        
-        {/* Vercel Speed Insights */}
-        <SpeedInsights />
       </Router>
     </div>
   );
