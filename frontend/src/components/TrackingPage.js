@@ -1117,4 +1117,187 @@ const RecentActivityList = ({ activities, type }) => {
   );
 };
 
+// Quick Action Button Component
+const QuickActionButton = ({ icon: Icon, label, color, onClick }) => {
+  const colorClasses = {
+    blue: 'bg-blue-100 text-blue-700 hover:bg-blue-200',
+    green: 'bg-green-100 text-green-700 hover:bg-green-200',
+    purple: 'bg-purple-100 text-purple-700 hover:bg-purple-200',
+    pink: 'bg-pink-100 text-pink-700 hover:bg-pink-200',
+    orange: 'bg-orange-100 text-orange-700 hover:bg-orange-200',
+    yellow: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`${colorClasses[color]} p-4 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-md flex flex-col items-center gap-2 text-center`}
+    >
+      <Icon className="w-6 h-6" />
+      <span className="text-sm font-medium">{label}</span>
+    </button>
+  );
+};
+
+// Reminder Form Component
+const ReminderForm = ({ onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    type: 'feeding',
+    frequency: 'daily',
+    time: '09:00',
+    enabled: true
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const now = new Date();
+    const [hours, minutes] = formData.time.split(':');
+    const nextNotification = new Date();
+    nextNotification.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    
+    // If time has passed today, set for tomorrow
+    if (nextNotification <= now) {
+      nextNotification.setDate(nextNotification.getDate() + 1);
+    }
+
+    onSubmit({
+      ...formData,
+      next_notification: nextNotification.toISOString()
+    });
+  };
+
+  return (
+    <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
+      <h4 className="font-medium text-gray-800 mb-3">Create New Reminder</h4>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <Label className="text-sm font-medium">Reminder Title</Label>
+          <Input
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
+            placeholder="e.g., Morning feeding"
+            required
+            className="mt-1"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label className="text-sm font-medium">Type</Label>
+            <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="feeding">Feeding</SelectItem>
+                <SelectItem value="pumping">Pumping</SelectItem>
+                <SelectItem value="diaper">Diaper Check</SelectItem>
+                <SelectItem value="medicine">Medicine</SelectItem>
+                <SelectItem value="playtime">Play Time</SelectItem>
+                <SelectItem value="bath">Bath Time</SelectItem>
+                <SelectItem value="appointment">Appointment</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label className="text-sm font-medium">Time</Label>
+            <Input
+              type="time"
+              value={formData.time}
+              onChange={(e) => setFormData({...formData, time: e.target.value})}
+              className="mt-1"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label className="text-sm font-medium">Frequency</Label>
+          <Select value={formData.frequency} onValueChange={(value) => setFormData({...formData, frequency: value})}>
+            <SelectTrigger className="mt-1">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="once">One-time</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex gap-2 pt-2">
+          <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Check className="w-4 h-4 mr-1" />
+            Create Reminder
+          </Button>
+          <Button type="button" onClick={onCancel} variant="outline" size="sm">
+            <X className="w-4 h-4 mr-1" />
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+// Reminder List Component
+const ReminderList = ({ reminders, onToggle, onDelete }) => {
+  if (reminders.length === 0) {
+    return (
+      <div className="text-center py-4 text-gray-500">
+        <AlarmClock className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+        <p className="text-sm">No reminders set</p>
+        <p className="text-xs">Add reminders to get notified about important activities</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {reminders.map((reminder) => {
+        const nextTime = new Date(reminder.next_notification);
+        return (
+          <div key={reminder.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h4 className="font-medium text-gray-800 text-sm">{reminder.title}</h4>
+                <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                  {reminder.type}
+                </span>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">
+                Next: {format(nextTime, 'MMM d, h:mm a')} ({reminder.frequency})
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onToggle(reminder.id, !reminder.enabled)}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                  reminder.enabled 
+                    ? 'bg-green-100 text-green-600 hover:bg-green-200' 
+                    : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                }`}
+                title={reminder.enabled ? 'Disable' : 'Enable'}
+              >
+                <Bell className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => onDelete(reminder.id)}
+                className="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center transition-colors"
+                title="Delete"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export default TrackingPage;
