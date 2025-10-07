@@ -15,7 +15,8 @@ import {
   Heart,
   CheckCircle,
   XCircle,
-  Info
+  Info,
+  Clock
 } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
 
