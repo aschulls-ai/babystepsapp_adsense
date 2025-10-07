@@ -272,6 +272,9 @@ const Research = () => {
           </Card>
         </div>
       </div>
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
