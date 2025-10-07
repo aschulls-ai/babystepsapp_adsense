@@ -305,6 +305,14 @@ function App() {
                     } 
                   />
                   <Route 
+                    path="/formula-comparison" 
+                    element={
+                      <FormulaComparison 
+                        currentBaby={currentBaby}
+                      />
+                    } 
+                  />
+                  <Route 
                     path="/emergency-training" 
                     element={<EmergencyTraining currentBaby={currentBaby} />} 
                   />
