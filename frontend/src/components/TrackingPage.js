@@ -31,6 +31,9 @@ import { format, formatDistanceToNow } from 'date-fns';
 const TrackingPage = ({ currentBaby }) => {
   const [activeTab, setActiveTab] = useState('feeding');
   const [recentActivities, setRecentActivities] = useState({});
+  const [reminders, setReminders] = useState([]);
+  const [showReminderForm, setShowReminderForm] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState('default');
 
   useEffect(() => {
     if (currentBaby) {
