@@ -34,6 +34,7 @@ const TrackingPage = ({ currentBaby }) => {
   const [reminders, setReminders] = useState([]);
   const [showReminderForm, setShowReminderForm] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState('default');
+  const [quickActionModal, setQuickActionModal] = useState({ show: false, type: null, data: {} });
 
   useEffect(() => {
     if (currentBaby) {
