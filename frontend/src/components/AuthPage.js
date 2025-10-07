@@ -345,11 +345,8 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
         )}
 
         {/* Small AdSense Space */}
-        <div className="mt-8 max-w-md mx-auto">
-          <InContentAd 
-            title="Sponsored" 
-            className="text-center"
-          />
+        <div className="mt-8">
+          <LoginPageAd className="max-w-xs mx-auto" />
         </div>
 
         {/* Footer */}
