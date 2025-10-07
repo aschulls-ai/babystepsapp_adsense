@@ -72,15 +72,13 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
+    "build": "craco build && echo 'Build completed successfully'",
+    "test": "craco test --coverage --watchAll=false",
+    "analyze": "npm run build && npx bundle-analyzer build/static/js/*.js",
     "build:mobile": "npm run build && npx cap sync",
     "android:build": "npm run build:mobile && npx cap build android",
-    "android:dev": "npm run build:mobile && npx cap run android",
     "android:bundle": "npm run build:mobile && cd android && ./gradlew bundleRelease",
-    "capacitor:sync": "npx cap sync",
-    "capacitor:build": "npx cap build",
-    "mobile:setup": "npx cap add android && npx cap sync"
+    "vercel-build": "yarn build"
   },
   "browserslist": {
     "production": [
