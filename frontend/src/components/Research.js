@@ -201,6 +201,10 @@ const Research = () => {
                     <Send className="w-5 h-5" />
                   </Button>
                 </form>
+                <p className="text-xs text-gray-500 mt-2 flex items-center">
+                  <Clock className="w-3 h-3 mr-1" />
+                  Response may take up to a minute due to AI processing and research
+                </p>
               </div>
             </CardContent>
           </Card>
