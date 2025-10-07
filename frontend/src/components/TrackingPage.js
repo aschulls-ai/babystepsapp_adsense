@@ -1536,15 +1536,47 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         );
       case 'sleep':
         return (
-          <div>
-            <Label className="text-sm font-medium">Expected Duration (minutes)</Label>
-            <Input
-              type="number"
-              value={formData.duration}
-              onChange={(e) => setFormData({...formData, duration: e.target.value})}
-              placeholder="e.g., 60"
-              className="mt-1"
-            />
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">
+              {data.isCompleting ? 'Complete Sleep Session' : 'Log Sleep Session'}
+            </h3>
+            {data.isCompleting && (
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <p className="text-sm text-purple-800">
+                  <Clock className="w-4 h-4 inline mr-1" />
+                  Sleep Duration: {data.duration} minutes ({Math.floor(data.duration / 60)}h {data.duration % 60}m)
+                </p>
+              </div>
+            )}
+            <div>
+              <Label>Duration (minutes)</Label>
+              <Input
+                type="number"
+                value={formData.duration || data.duration || ''}
+                onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                placeholder="60"
+                readOnly={data.isCompleting}
+              />
+              {data.isCompleting && (
+                <div className="text-sm text-gray-500 mt-1">
+                  Duration automatically calculated from timer. You can adjust if needed.
+                </div>
+              )}
+            </div>
+            <div>
+              <Label>Sleep Quality</Label>
+              <Select value={formData.quality || 'good'} onValueChange={(value) => setFormData({...formData, quality: value})}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="excellent">😴 Excellent</SelectItem>
+                  <SelectItem value="good">😊 Good</SelectItem>
+                  <SelectItem value="fair">😐 Fair</SelectItem>
+                  <SelectItem value="restless">😣 Restless</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         );
       case 'pumping':
