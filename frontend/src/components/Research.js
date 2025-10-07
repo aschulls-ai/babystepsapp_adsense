@@ -290,12 +290,12 @@ const MessageBubble = ({ message }) => {
       </div>
       
       <div className={`max-w-md ${isBot ? '' : 'text-right'}`}>
-        <div className={`inline-block px-4 py-3 rounded-lg ${
+        <div className={`inline-block px-4 py-3 rounded-lg max-w-full ${
           isBot 
             ? 'bg-gray-100 text-gray-900' 
             : 'bg-blue-500 text-white'
         }`}>
-          <p className="whitespace-pre-wrap">{message.content}</p>
+          <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
           {message.sources && message.sources.length > 0 && (
             <div className="mt-2 pt-2 border-t border-gray-200">
               <p className="text-xs text-gray-500">Sources: {message.sources.join(', ')}</p>
