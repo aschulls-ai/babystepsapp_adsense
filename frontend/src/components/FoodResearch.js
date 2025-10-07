@@ -208,6 +208,10 @@ const FoodResearch = ({ currentBaby }) => {
                   )}
                 </Button>
               </div>
+              <p className="text-xs text-gray-500 mt-2 flex items-center">
+                <Clock className="w-3 h-3 mr-1" />
+                Response may take up to a minute due to AI processing and customizing for {currentBaby?.name || 'your baby'}
+              </p>
 
               {/* Quick Check Buttons */}
               <div className="space-y-3">
