@@ -286,6 +286,15 @@ const TrackingPage = ({ currentBaby }) => {
       await axios.post(endpoint, payload);
       toast.success(successMessage);
       fetchRecentActivities();
+      
+      // Reset active timers if completing a timer-based action
+      if (data.isCompleting) {
+        setActiveTimers(prev => ({
+          ...prev,
+          [type]: { active: false, startTime: null, elapsed: 0 }
+        }));
+      }
+      
       setQuickActionModal({ show: false, type: null, data: {} });
       
     } catch (error) {
