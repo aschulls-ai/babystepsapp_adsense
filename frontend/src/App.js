@@ -115,7 +115,7 @@ function App() {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = false) => {
     try {
       const response = await axios.post('/auth/login', { email, password });
       const { access_token } = response.data;
@@ -123,10 +123,24 @@ function App() {
       localStorage.setItem('token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
+      // Handle remember me functionality
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('rememberedEmail', email);
+        // Set longer expiration for remembered sessions (30 days)
+        const expirationTime = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+        localStorage.setItem('tokenExpiration', expirationTime.toString());
+        toast.success('Welcome back! You will stay signed in on this device.');
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('tokenExpiration');
+        toast.success('Welcome to Baby Steps!');
+      }
+      
       // Set user state to trigger re-render
       setUser({ email });
       await fetchBabies();
-      toast.success('Welcome to Baby Steps!');
       return true;
     } catch (error) {
       console.error('Login error:', error);
