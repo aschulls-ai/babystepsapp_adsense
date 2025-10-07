@@ -75,24 +75,14 @@ const EmergencyTraining = ({ currentBaby }) => {
           </Badge>
         </div>
 
-        {/* Critical Disclaimer */}
-        <Card className="emergency-card border-2 border-red-300">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <AlertTriangle className="w-8 h-8 text-red-600 flex-shrink-0 mt-1" />
-              <div className="space-y-2">
-                <h2 className="text-xl font-bold text-red-800">⚠️ CRITICAL DISCLAIMER</h2>
-                <div className="text-red-700 space-y-2">
-                  <p className="font-semibold">THIS IS EDUCATIONAL CONTENT ONLY - NOT PROFESSIONAL TRAINING</p>
-                  <ul className="text-sm space-y-1 list-disc list-inside">
-                    <li>This content does NOT replace formal CPR/First Aid certification</li>
-                    <li>We STRONGLY recommend taking an AHA-certified course from qualified instructors</li>
-                    <li>In ANY emergency: <strong>CALL 911 IMMEDIATELY</strong></li>
-                    <li>This app and its creators are not liable for any outcomes from using this information</li>
-                    <li>Always prioritize professional medical help over app-based guidance</li>
-                  </ul>
-                </div>
-              </div>
+        {/* Disclaimer */}
+        <Card className="bg-yellow-50 border border-yellow-200">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+              <p className="text-sm text-yellow-800">
+                <strong>Educational content only.</strong> Take official AHA courses for certification. Always call 911 in emergencies.
+              </p>
             </div>
           </CardContent>
         </Card>
