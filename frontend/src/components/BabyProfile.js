@@ -38,6 +38,29 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
     }
   };
 
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      if (onUpdateBaby) {
+        await onUpdateBaby(editData);
+        setShowEditForm(false);
+        toast.success('Baby profile updated successfully!');
+      }
+    } catch (error) {
+      console.error('Failed to update baby:', error);
+      toast.error('Failed to update baby profile');
+    }
+  };
+
+  const startEdit = () => {
+    setEditData({
+      name: currentBaby?.name || '',
+      birth_date: currentBaby?.birth_date ? new Date(currentBaby.birth_date) : new Date()
+    });
+    setShowEditForm(true);
+  };
+
   if (!currentBaby && !showAddForm) {
     return (
       <div className="min-h-screen flex items-center justify-center">
