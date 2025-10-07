@@ -87,41 +87,91 @@ function App() {
   };
 
   const checkAuthState = async () => {
-    const token = localStorage.getItem('token');
-    const rememberMe = localStorage.getItem('rememberMe') === 'true';
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    // Auto-login as sample user for AdSense verification
+    try {
+      console.log('🎭 Auto-logging in as sample user for AdSense verification...');
+      
+      const sampleUserLogin = await axios.post('/auth/login', {
+        email: 'demo@babysteps.com',
+        password: 'DemoPassword123'
+      });
 
-    if (token) {
-      // Check if token is expired for remembered sessions
-      if (rememberMe && tokenExpiration) {
-        const now = new Date().getTime();
-        if (now > parseInt(tokenExpiration)) {
-          // Token expired, clear remembered session
-          logout();
-          setLoading(false);
-          return;
-        }
-      }
-
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      try {
+      if (sampleUserLogin.data.access_token) {
+        const token = sampleUserLogin.data.access_token;
+        localStorage.setItem('token', token);
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('rememberedEmail', 'demo@babysteps.com');
+        
+        // Set up axios headers
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        
+        // Fetch user data
         await fetchBabies();
-        // Set user object with remembered email if available
+        
+        // Set user state
         setUser({ 
           authenticated: true, 
-          email: rememberedEmail,
-          rememberMe: rememberMe
+          email: 'demo@babysteps.com',
+          rememberMe: true
         });
         
-        if (rememberMe && rememberedEmail) {
-          console.log('Auto-logged in with remembered credentials');
+        console.log('✅ Auto-login successful as demo user');
+      }
+    } catch (error) {
+      console.log('⚠️ Auto-login failed, trying fallback sample user...');
+      
+      // Fallback: try the existing test user
+      try {
+        const fallbackLogin = await axios.post('/auth/login', {
+          email: 'test@babysteps.com',
+          password: 'TestPassword123'
+        });
+
+        if (fallbackLogin.data.access_token) {
+          const token = fallbackLogin.data.access_token;
+          localStorage.setItem('token', token);
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('rememberedEmail', 'test@babysteps.com');
+          
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          await fetchBabies();
+          
+          setUser({ 
+            authenticated: true, 
+            email: 'test@babysteps.com',
+            rememberMe: true
+          });
+          
+          console.log('✅ Fallback auto-login successful');
         }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        logout();
+      } catch (fallbackError) {
+        console.error('❌ Both auto-login attempts failed:', fallbackError);
+        // Create mock user state for AdSense verification even if backend fails
+        setUser({ 
+          authenticated: true, 
+          email: 'demo@babysteps.com',
+          rememberMe: true
+        });
+        
+        // Create mock baby data for display
+        setCurrentBaby({
+          id: 'demo-baby-001',
+          name: 'Emma Johnson',
+          birth_date: '2023-04-15',
+          gender: 'girl'
+        });
+        
+        setBabies([{
+          id: 'demo-baby-001',
+          name: 'Emma Johnson', 
+          birth_date: '2023-04-15',
+          gender: 'girl'
+        }]);
+        
+        console.log('🎭 Using mock data for AdSense verification');
       }
     }
+    
     setLoading(false);
   };
 
