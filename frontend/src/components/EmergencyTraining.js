@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -10,9 +9,13 @@ import {
   Baby, 
   Heart,
   Clock,
-  BookOpen
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  RotateCcw,
+  Hand,
+  Users
 } from 'lucide-react';
-import { toast } from 'sonner';
 
 const EmergencyTraining = ({ currentBaby }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
