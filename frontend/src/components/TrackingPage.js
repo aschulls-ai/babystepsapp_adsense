@@ -455,6 +455,9 @@ const TrackingPage = ({ currentBaby }) => {
         />
       </div>
 
+      {/* Page Ad */}
+      <PageAd />
+
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Tracking Forms */}
         <div className="lg:col-span-2">
