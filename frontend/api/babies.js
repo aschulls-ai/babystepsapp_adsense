@@ -31,7 +31,22 @@ export default async function handler(req, res) {
   }
   else if (req.method === 'PUT') {
     // Mock baby update
-    res.status(200).json({ message: 'Baby updated successfully' });
+    const babyData = req.body;
+    console.log('Updating baby with data:', babyData);
+    
+    // Return the updated baby data (merge with existing data)
+    const updatedBaby = {
+      id: '1', // In a real app, this would come from the URL parameter
+      name: babyData.name || 'Emma Johnson',
+      birth_date: babyData.birth_date || '2024-03-15',
+      gender: babyData.gender || 'female',
+      birth_weight: babyData.birth_weight || 7.2,
+      birth_length: babyData.birth_length || 20.5,
+      ...babyData // Include any additional fields
+    };
+    
+    console.log('Returning updated baby:', updatedBaby);
+    res.status(200).json(updatedBaby);
   }
   else {
     res.status(405).json({ detail: 'Method not allowed' });
