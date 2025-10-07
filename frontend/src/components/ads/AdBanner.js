@@ -38,7 +38,7 @@ const AdBanner = ({
         data-ad-client={process.env.REACT_APP_ADSENSE_CLIENT_ID || "ca-pub-0000000000000000"}
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
-        data-full-width-responsive={fullWidthResponsive}
+        data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
       />
     </div>
   );
