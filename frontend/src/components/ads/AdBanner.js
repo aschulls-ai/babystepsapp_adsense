@@ -9,12 +9,15 @@ const AdBanner = ({
 }) => {
   useEffect(() => {
     try {
-      // Initialize AdSense ad
-      if (window.adsbygoogle && window.adsbygoogle.loaded) {
+      // Initialize AdSense ad only in production
+      if (process.env.NODE_ENV === 'production' && window.adsbygoogle) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch (error) {
-      console.error('AdSense error:', error);
+      // Suppress AdSense errors in development
+      if (process.env.NODE_ENV !== 'development') {
+        console.error('AdSense error:', error);
+      }
     }
   }, []);
 
