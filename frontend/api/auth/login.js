@@ -24,7 +24,21 @@ export default async function handler(req, res) {
       return res.status(422).json({ detail: 'Email and password are required' });
     }
 
-    // Check test user first
+    // Check demo user for AdSense verification
+    if (email === 'demo@babysteps.com' && password === 'DemoPassword123') {
+      console.log('Demo user login successful for AdSense verification');
+      const token = Buffer.from(JSON.stringify({ 
+        email, 
+        name: 'Demo Parent',
+        exp: Date.now() + 24*60*60*1000 
+      })).toString('base64');
+      return res.status(200).json({ 
+        access_token: token,
+        token_type: 'bearer'
+      });
+    }
+
+    // Check test user
     if (email === 'test@babysteps.com' && password === 'TestPassword123') {
       console.log('Test user login successful');
       const token = Buffer.from(JSON.stringify({ 
