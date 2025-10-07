@@ -8,7 +8,7 @@ import { Baby, ShieldCheck, Heart, Utensils, Activity, ChefHat } from 'lucide-re
 import LoginPageAd from './ads/LoginPageAd';
 
 const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerification }) => {
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginData, setLoginData] = useState({ email: '', password: '', rememberMe: false });
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '' });
   const [resetEmail, setResetEmail] = useState('');
   const [loading, setLoading] = useState(false);
