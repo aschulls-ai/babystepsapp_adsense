@@ -205,7 +205,7 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900">{currentBaby?.name}</h2>
                 <p className="text-gray-600">
-                  Born {currentBaby?.birthDate ? new Date(currentBaby.birthDate).toLocaleDateString() : 'Date not set'}
+                  Born {currentBaby?.birth_date ? new Date(currentBaby.birth_date).toLocaleDateString() : 'Date not set'}
                 </p>
               </div>
             </div>
