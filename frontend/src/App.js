@@ -233,6 +233,9 @@ function App() {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('rememberedEmail');
+    localStorage.removeItem('tokenExpiration');
     delete axios.defaults.headers.common['Authorization'];
     setUser(null);
     setCurrentBaby(null);
