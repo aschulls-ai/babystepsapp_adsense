@@ -52,6 +52,7 @@ const TrackingPage = ({ currentBaby }) => {
     if (currentBaby) {
       fetchRecentActivities();
       fetchReminders();
+      fetchAllActivities();
     }
   }, [currentBaby, activeTab]);
 
