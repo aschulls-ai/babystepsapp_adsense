@@ -1028,6 +1028,56 @@ async def get_reminders(baby_id: Optional[str] = None, current_user: User = Depe
     reminders = await db.reminders.find(query).sort("next_due", 1).to_list(length=None)
     return [Reminder(**parse_from_mongo(reminder)) for reminder in reminders]
 
+@api_router.patch("/reminders/{reminder_id}")
+async def update_reminder(reminder_id: str, update_data: dict, current_user: User = Depends(get_current_user)):
+    # Check if reminder exists and belongs to current user
+    existing_reminder = await db.reminders.find_one({"id": reminder_id, "user_id": current_user.id})
+    if not existing_reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    
+    # Update reminder
+    await db.reminders.update_one(
+        {"id": reminder_id, "user_id": current_user.id},
+        {"$set": prepare_for_mongo(update_data)}
+    )
+    
+    return {"message": "Reminder updated successfully"}
+
+@api_router.patch("/reminders/{reminder_id}/notified")
+async def mark_reminder_notified(reminder_id: str, current_user: User = Depends(get_current_user)):
+    # Check if reminder exists and belongs to current user
+    existing_reminder = await db.reminders.find_one({"id": reminder_id, "user_id": current_user.id})
+    if not existing_reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    
+    # Calculate next notification time based on frequency
+    current_next_due = datetime.fromisoformat(existing_reminder['next_due'].replace('Z', '+00:00'))
+    interval_hours = existing_reminder.get('interval_hours', 24)  # Default to daily
+    next_due = current_next_due + timedelta(hours=interval_hours)
+    
+    # Update reminder with next due time
+    await db.reminders.update_one(
+        {"id": reminder_id, "user_id": current_user.id},
+        {"$set": {"next_due": next_due.isoformat()}}
+    )
+    
+    return {"message": "Reminder marked as notified and next due time updated"}
+
+@api_router.delete("/reminders/{reminder_id}")
+async def delete_reminder(reminder_id: str, current_user: User = Depends(get_current_user)):
+    # Check if reminder exists and belongs to current user
+    existing_reminder = await db.reminders.find_one({"id": reminder_id, "user_id": current_user.id})
+    if not existing_reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    
+    # Delete reminder (or mark as inactive)
+    await db.reminders.update_one(
+        {"id": reminder_id, "user_id": current_user.id},
+        {"$set": {"is_active": False}}
+    )
+    
+    return {"message": "Reminder deleted successfully"}
+
 # Dashboard/Analytics Routes
 @api_router.get("/dashboard/{baby_id}")
 async def get_dashboard(baby_id: str, current_user: User = Depends(get_current_user)):
