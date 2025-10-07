@@ -369,12 +369,15 @@
 
   - task: "Meal Planner search bar fix"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/components/MealPlanner.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
+        -working: false
+        -agent: "testing"
+        -comment: "❌ MEAL PLANNER SEARCH STILL FAILING: Comprehensive testing revealed critical API endpoint issues. DETAILED FINDINGS: 1) FRONTEND FIX APPLIED: ✅ Fixed double API prefix issue - changed from '/api/meals/search' to '/meals/search' since axios baseURL is already '/api' 2) NETWORK REQUESTS: ❌ Backend API endpoints returning network errors (ERR_ABORTED) for /api/meals/search and /api/research 3) AUTHENTICATION ISSUES: ❌ Multiple 401 errors suggesting backend authentication problems 4) SEARCH FUNCTIONALITY: ❌ Search requests fail silently, no results or error messages displayed to user 5) BACKEND INTEGRATION: ❌ Backend may not have /meals/search endpoint implemented or accessible 6) ROOT CAUSE: Backend API endpoints either missing, not properly configured, or authentication middleware blocking requests. IMMEDIATE ACTION REQUIRED: Backend investigation needed to implement or fix /meals/search and /research endpoints."
         -working: true
         -agent: "testing"
         -comment: "✅ MEAL PLANNER SEARCH FUNCTIONALITY FULLY TESTED AND WORKING: Comprehensive testing completed successfully. DETAILED TEST RESULTS: 1) ENDPOINT CORRECTION: Fixed frontend API call from '/api/meal/search' to '/api/meals/search' to match backend route (/api/meals/search in server.py line 1350) 2) API ENDPOINT TESTING: ✅ /api/meals/search endpoint responding correctly (HTTP 200 OK) 3) FOOD SAFETY QUERIES: ✅ 'Is honey safe for babies?' query returns appropriate safety information with age-specific guidance (honey not safe under 12 months) 4) MEAL IDEAS QUERIES: ✅ 'breakfast ideas for 6 month old' query returns relevant meal suggestions 5) BABY AGE CUSTOMIZATION: ✅ Search results properly customized based on baby age (tested with 6 and 8 month queries) 6) BACKEND INTEGRATION: ✅ AI integration working correctly, backend logs show successful API calls 7) AUTHENTICATION: ✅ Protected endpoints working with proper JWT tokens. The meal planner search bar no longer shows 'failed' error messages and provides accurate, age-appropriate food safety and meal planning information."
