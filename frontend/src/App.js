@@ -56,6 +56,16 @@ function App() {
       }
       
       await checkAuthState();
+      
+      // Run API tests in development/debugging mode
+      if (process.env.NODE_ENV === 'development' || window.location.hostname.includes('vercel')) {
+        runApiTests().then(results => {
+          console.log('API Test Results:', results);
+          if (!results.overall) {
+            console.warn('⚠️ API connection issues detected. Check deployment configuration.');
+          }
+        });
+      }
     };
     
     initializeApp();
