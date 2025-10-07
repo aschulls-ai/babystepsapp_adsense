@@ -72,7 +72,7 @@ const Research = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/research', {
+      const response = await axios.post('/research', {
         question: userMessage.content
       });
 
