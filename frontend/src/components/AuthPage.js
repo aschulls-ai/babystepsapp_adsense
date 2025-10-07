@@ -344,8 +344,16 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
           </Card>
         )}
 
+        {/* Small AdSense Space */}
+        <div className="mt-8 max-w-md mx-auto">
+          <InContentAd 
+            title="Sponsored" 
+            className="text-center"
+          />
+        </div>
+
         {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500 space-y-2">
+        <div className="text-center mt-6 text-sm text-gray-500 space-y-2">
           <p>Parenting made easy</p>
           <div className="flex justify-center items-center gap-4">
             <a 
