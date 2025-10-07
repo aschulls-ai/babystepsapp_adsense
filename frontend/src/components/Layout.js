@@ -26,6 +26,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
     { name: 'Baby Profile', href: '/baby-profile', icon: Baby },
     { name: 'Track Activities', href: '/tracking', icon: Activity },
     { name: 'Food Research', href: '/food-research', icon: Search },
+    { name: 'Formula Comparison', href: '/formula-comparison', icon: Utensils },
     { name: 'Emergency Training', href: '/emergency-training', icon: ShieldAlert },
     { name: 'Meal Planner', href: '/meal-planner', icon: ChefHat },
     { name: 'Research & Tips', href: '/research', icon: BookOpen },
