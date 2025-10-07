@@ -84,6 +84,89 @@ const TrackingPage = ({ currentBaby }) => {
     }
   };
 
+  const fetchReminders = async () => {
+    if (!currentBaby) return;
+    
+    try {
+      const response = await axios.get('/reminders', {
+        params: { baby_id: currentBaby.id }
+      });
+      setReminders(response.data);
+    } catch (error) {
+      console.error('Failed to fetch reminders:', error);
+    }
+  };
+
+  const checkReminders = () => {
+    if (!reminders.length || notificationPermission !== 'granted') return;
+
+    const now = new Date();
+    
+    reminders.forEach(reminder => {
+      if (!reminder.enabled) return;
+
+      const reminderTime = new Date(reminder.next_notification);
+      
+      if (reminderTime <= now && !reminder.notified) {
+        showNotification(reminder);
+        markReminderAsNotified(reminder.id);
+      }
+    });
+  };
+
+  const showNotification = (reminder) => {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(`Baby Steps - ${reminder.title}`, {
+        body: `Time for ${currentBaby.name}'s ${reminder.type}`,
+        icon: '/favicon.ico',
+        tag: `reminder-${reminder.id}`
+      });
+    }
+  };
+
+  const markReminderAsNotified = async (reminderId) => {
+    try {
+      await axios.patch(`/reminders/${reminderId}/notified`);
+      fetchReminders(); // Refresh reminders
+    } catch (error) {
+      console.error('Failed to mark reminder as notified:', error);
+    }
+  };
+
+  const createReminder = async (reminderData) => {
+    try {
+      await axios.post('/reminders', {
+        ...reminderData,
+        baby_id: currentBaby.id
+      });
+      toast.success('Reminder created successfully!');
+      fetchReminders();
+      setShowReminderForm(false);
+    } catch (error) {
+      toast.error('Failed to create reminder');
+    }
+  };
+
+  const toggleReminder = async (reminderId, enabled) => {
+    try {
+      await axios.patch(`/reminders/${reminderId}`, { enabled });
+      toast.success(enabled ? 'Reminder enabled' : 'Reminder disabled');
+      fetchReminders();
+    } catch (error) {
+      toast.error('Failed to update reminder');
+    }
+  };
+
+  const deleteReminder = async (reminderId) => {
+    try {
+      await axios.delete(`/reminders/${reminderId}`);
+      toast.success('Reminder deleted');
+      fetchReminders();
+    } catch (error) {
+      toast.error('Failed to delete reminder');
+    }
+  };
+
   if (!currentBaby) {
     return (
       <div className="min-h-screen flex items-center justify-center">
