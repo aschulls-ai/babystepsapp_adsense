@@ -283,6 +283,7 @@ function App() {
                       <BabyProfile 
                         currentBaby={currentBaby}
                         onAddBaby={addBaby}
+                        onUpdateBaby={updateBaby}
                       />
                     } 
                   />
