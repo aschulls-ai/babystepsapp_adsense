@@ -135,10 +135,17 @@ const TrackingPage = ({ currentBaby }) => {
 
   const createReminder = async (reminderData) => {
     try {
-      await axios.post('/reminders', {
-        ...reminderData,
-        baby_id: currentBaby.id
-      });
+      const backendData = {
+        baby_id: currentBaby.id,
+        title: reminderData.title,
+        reminder_type: reminderData.type,
+        next_due: reminderData.next_notification,
+        interval_hours: reminderData.frequency === 'daily' ? 24 : 
+                       reminderData.frequency === 'weekly' ? 168 :
+                       reminderData.frequency === 'monthly' ? 720 : null
+      };
+      
+      await axios.post('/reminders', backendData);
       toast.success('Reminder created successfully!');
       fetchReminders();
       setShowReminderForm(false);
