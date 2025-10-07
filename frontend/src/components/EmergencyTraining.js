@@ -16,6 +16,7 @@ import {
   Hand,
   Users
 } from 'lucide-react';
+import PageAd from './ads/PageAd';
 
 const EmergencyTraining = ({ currentBaby }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
