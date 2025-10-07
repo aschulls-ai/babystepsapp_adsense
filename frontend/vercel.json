@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://babysteps-app.preview.emergentagent.com/api/$1"
+      "destination": "https://babysteps-app-1.preview.emergentagent.com/api/$1"
     },
     {
       "source": "/(.*)",

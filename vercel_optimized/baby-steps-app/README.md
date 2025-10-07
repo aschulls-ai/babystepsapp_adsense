@@ -36,7 +36,7 @@ A comprehensive parenting companion app with baby tracking, nutrition guidance, 
 
 ### Required Environment Variables:
 ```
-REACT_APP_BACKEND_URL=https://babysteps-app.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://babysteps-app-1.preview.emergentagent.com
 REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053
 ```
 
