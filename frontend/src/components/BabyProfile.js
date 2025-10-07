@@ -122,6 +122,15 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                   </div>
                 </div>
               </div>
+              <div>
+                <Button
+                  onClick={startEdit}
+                  variant="outline"
+                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 hover:border-white/40"
+                >
+                  Edit Profile
+                </Button>
+              </div>
             </div>
           </div>
 
