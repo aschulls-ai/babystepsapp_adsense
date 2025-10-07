@@ -15,6 +15,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { toast } from 'sonner';
+import PageAd from './ads/PageAd';
 
 const MealPlanner = ({ currentBaby }) => {
   const [mealPlans, setMealPlans] = useState([]);
