@@ -143,7 +143,7 @@ const Research = () => {
             
             <CardContent className="flex-1 flex flex-col p-0">
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto px-6 pb-4">
+              <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 pb-4">
                 {messages.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-center">
                     <div className="max-w-md">
