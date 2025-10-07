@@ -276,6 +276,18 @@ const TrackingPage = ({ currentBaby }) => {
           break;
         case 'pumping':
           endpoint = '/pumping';
+          // Transform leftBreast and rightBreast into total amount for backend
+          if (data.leftBreast !== undefined && data.rightBreast !== undefined) {
+            payload.amount = (data.leftBreast || 0) + (data.rightBreast || 0);
+            delete payload.leftBreast;
+            delete payload.rightBreast;
+          }
+          // Ensure duration is set (from timer or default)
+          if (!payload.duration) {
+            payload.duration = data.duration || 0;
+          }
+          // Remove frontend-specific fields
+          delete payload.isCompleting;
           successMessage = 'Pumping session logged!';
           break;
         case 'measurements':
