@@ -19,14 +19,13 @@ import {
 
 const EmergencyTraining = ({ currentBaby }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
-  const [trainingContent, setTrainingContent] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const emergencyTopics = [
     {
       id: 'choking',
       title: 'Choking Response',
-      description: 'Learn how to help a choking infant',
+      description: 'Learn how to help a choking infant or toddler',
       icon: <AlertTriangle className="w-8 h-8 text-red-600" />,
       urgency: 'critical',
       ageRestricted: false
@@ -40,35 +39,18 @@ const EmergencyTraining = ({ currentBaby }) => {
       ageRestricted: false
     },
     {
-      id: 'general',
-      title: 'General Emergency Response',
-      description: 'Basic emergency assessment and response',
+      id: 'assessment',
+      title: 'Emergency Assessment',
+      description: 'How to assess and respond to emergencies',
       icon: <ShieldAlert className="w-8 h-8 text-red-600" />,
       urgency: 'high',
       ageRestricted: false
     }
   ];
 
-  const handleTopicSelect = async (topic) => {
+  const handleTopicSelect = (topic) => {
     setSelectedTopic(topic);
-    setLoading(true);
-
-    try {
-      const babyAgeMonths = currentBaby ? 
-        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : null;
-
-      const response = await axios.post('/emergency/training', {
-        emergency_type: topic.id,
-        baby_age_months: babyAgeMonths
-      });
-
-      setTrainingContent(response.data);
-    } catch (error) {
-      toast.error('Failed to load emergency training content');
-      setTrainingContent(null);
-    } finally {
-      setLoading(false);
-    }
+    setCurrentSlide(0);
   };
 
   const babyAgeMonths = currentBaby ? 
