@@ -176,44 +176,73 @@ const TrackingPage = ({ currentBaby }) => {
   };
 
   const handleQuickAction = (type) => {
-    const quickActions = {
-      feeding: () => {
-        // Quick log with default values
-        axios.post('/feedings', {
-          baby_id: currentBaby.id,
-          type: 'bottle',
-          amount: 4, // default amount
-          timestamp: new Date().toISOString()
-        }).then(() => {
-          toast.success('Quick feeding logged!');
-          fetchRecentActivities();
-        }).catch(() => toast.error('Failed to log feeding'));
-      },
-      diaper: () => {
-        axios.post('/diapers', {
-          baby_id: currentBaby.id,
-          type: 'wet',
-          timestamp: new Date().toISOString()
-        }).then(() => {
-          toast.success('Diaper change logged!');
-          fetchRecentActivities();
-        }).catch(() => toast.error('Failed to log diaper change'));
-      },
-      sleep: () => {
-        axios.post('/sleep', {
-          baby_id: currentBaby.id,
-          start_time: new Date().toISOString()
-        }).then(() => {
-          toast.success('Sleep session started!');
-          fetchRecentActivities();
-        }).catch(() => toast.error('Failed to start sleep session'));
-      },
-      pumping: () => setActiveTab('pumping'),
-      measurements: () => setActiveTab('measurements'),
-      milestones: () => setActiveTab('milestones')
+    const defaultData = {
+      feeding: { type: 'bottle', amount: 4 },
+      diaper: { type: 'wet' },
+      sleep: { duration: 60 },
+      pumping: { amount: 3, duration: 15 },
+      measurements: { weight: '', height: '' },
+      milestones: { title: '', category: 'physical' }
     };
+
+    setQuickActionModal({
+      show: true,
+      type: type,
+      data: defaultData[type] || {}
+    });
+  };
+
+  const handleQuickSubmit = async (data) => {
+    const { type } = quickActionModal;
     
-    quickActions[type]();
+    try {
+      const payload = {
+        baby_id: currentBaby.id,
+        timestamp: new Date().toISOString(),
+        ...data
+      };
+
+      let endpoint = '';
+      let successMessage = '';
+
+      switch (type) {
+        case 'feeding':
+          endpoint = '/feedings';
+          successMessage = 'Feeding logged successfully!';
+          break;
+        case 'diaper':
+          endpoint = '/diapers';
+          successMessage = 'Diaper change logged!';
+          break;
+        case 'sleep':
+          endpoint = '/sleep';
+          payload.start_time = new Date().toISOString();
+          delete payload.timestamp;
+          successMessage = 'Sleep session started!';
+          break;
+        case 'pumping':
+          endpoint = '/pumping';
+          successMessage = 'Pumping session logged!';
+          break;
+        case 'measurements':
+          endpoint = '/measurements';
+          successMessage = 'Measurements recorded!';
+          break;
+        case 'milestones':
+          endpoint = '/milestones';
+          payload.achieved_date = new Date().toISOString();
+          successMessage = 'Milestone recorded!';
+          break;
+      }
+
+      await axios.post(endpoint, payload);
+      toast.success(successMessage);
+      fetchRecentActivities();
+      setQuickActionModal({ show: false, type: null, data: {} });
+      
+    } catch (error) {
+      toast.error(`Failed to log ${type}`);
+    }
   };
 
   if (!currentBaby) {
