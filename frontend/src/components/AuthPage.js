@@ -161,6 +161,21 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
                       data-testid="login-password-input"
                     />
                   </div>
+                  
+                  {/* Remember Me Checkbox */}
+                  <div className="flex items-center space-x-2">
+                    <input
+                      id="rememberMe"
+                      type="checkbox"
+                      checked={loginData.rememberMe}
+                      onChange={(e) => setLoginData({...loginData, rememberMe: e.target.checked})}
+                      className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                    />
+                    <Label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer">
+                      Remember me on this device
+                    </Label>
+                  </div>
+
                   <Button
                     type="submit"
                     disabled={loading}
