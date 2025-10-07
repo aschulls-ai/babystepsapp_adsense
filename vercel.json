@@ -16,6 +16,18 @@
   ],
   "routes": [
     {
+      "src": "/api/food/(.*)",
+      "dest": "/frontend/api/food/$1"
+    },
+    {
+      "src": "/api/meal/(.*)",
+      "dest": "/frontend/api/meal/$1"
+    },
+    {
+      "src": "/api/emergency/(.*)",
+      "dest": "/frontend/api/emergency/$1"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/frontend/api/$1"
     },
