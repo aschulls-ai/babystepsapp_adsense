@@ -354,6 +354,7 @@ const TrackingPage = ({ currentBaby }) => {
       await axios.post(endpoint, payload);
       toast.success(successMessage);
       fetchRecentActivities();
+      fetchAllActivities(); // Refresh comprehensive activity list
       
       // Reset active timers if completing a timer-based action
       if (data.isCompleting) {
