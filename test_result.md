@@ -196,8 +196,7 @@
 ## test_plan:
   current_focus:
     - "Enhanced tracking activities with timer functionality and new user registration"
-  stuck_tasks:
-    - "Login functionality - critical authentication issue"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
