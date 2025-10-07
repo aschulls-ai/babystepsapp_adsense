@@ -7,6 +7,7 @@ import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { mobileService } from './services/MobileService';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import './App.css';
 
 // Components
