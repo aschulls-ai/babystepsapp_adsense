@@ -116,8 +116,8 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
     );
   }
 
-  const currentAge = currentBaby?.birthDate 
-    ? Math.floor((new Date() - new Date(currentBaby.birthDate)) / (1000 * 60 * 60 * 24 * 30))
+  const currentAge = currentBaby?.birth_date 
+    ? Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44))
     : 0;
 
   const quickActions = [
