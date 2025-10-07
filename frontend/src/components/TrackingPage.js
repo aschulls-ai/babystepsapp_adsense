@@ -156,7 +156,7 @@ const TrackingPage = ({ currentBaby }) => {
 
   const toggleReminder = async (reminderId, enabled) => {
     try {
-      await axios.patch(`/reminders/${reminderId}`, { enabled });
+      await axios.patch(`/reminders/${reminderId}`, { is_active: enabled });
       toast.success(enabled ? 'Reminder enabled' : 'Reminder disabled');
       fetchReminders();
     } catch (error) {
