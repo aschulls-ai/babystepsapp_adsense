@@ -32,10 +32,8 @@ const API = '/api';
 
 // Debug logging
 console.log('Environment configuration:', {
-  BACKEND_URL,
   API,
-  processEnv: process.env.REACT_APP_BACKEND_URL,
-  importMeta: import.meta.env?.REACT_APP_BACKEND_URL
+  usingRelativePaths: true
 });
 
 // Set up axios defaults
