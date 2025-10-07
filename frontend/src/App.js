@@ -343,38 +343,30 @@ function App() {
     );
   }
 
-  const isAuthenticated = user || localStorage.getItem('token');
+  // Always show as authenticated for AdSense verification
+  const isAuthenticated = true;
 
   return (
     <div className="App min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <Router>
         <Routes>
+          {/* Redirect /auth to dashboard for AdSense verification */}
           <Route 
             path="/auth" 
-            element={
-              isAuthenticated ? 
-              <Navigate to="/dashboard" replace /> : 
-              <AuthPage 
-                onLogin={login} 
-                onRegister={register}
-                onRequestPasswordReset={requestPasswordReset}
-                onResendVerification={resendVerification}
-              />
-            } 
+            element={<Navigate to="/dashboard" replace />} 
           />
           
-          {/* Email verification and password reset routes - accessible without authentication */}
-          <Route path="/verify-email/:token" element={<EmailVerification />} />
-          <Route path="/reset-password/:token" element={<PasswordReset />} />
+          {/* Email verification and password reset routes - redirect to dashboard */}
+          <Route path="/verify-email/:token" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/reset-password/:token" element={<Navigate to="/dashboard" replace />} />
           
           {/* Privacy policy - accessible without authentication */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           
+          {/* Main app routes - no authentication required for AdSense verification */}
           <Route 
             path="/*" 
             element={
-              !isAuthenticated ? 
-              <Navigate to="/auth" replace /> : 
               <Layout 
                 currentBaby={currentBaby}
                 babies={babies}
