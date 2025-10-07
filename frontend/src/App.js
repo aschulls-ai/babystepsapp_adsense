@@ -345,6 +345,9 @@ function App() {
         
         {/* Add padding to prevent content overlap with bottom banner */}
         {user && <div className="h-16 md:h-20" />}
+        
+        {/* Vercel Speed Insights for performance monitoring */}
+        <SpeedInsights />
       </Router>
     </div>
   );
