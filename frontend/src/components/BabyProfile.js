@@ -361,6 +361,9 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
           </CardContent>
         </Card>
       )}
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
