@@ -281,6 +281,85 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
           </CardContent>
         </Card>
       )}
+
+      {/* Edit Baby Form */}
+      {showEditForm && (
+        <Card className="glass-strong border-0">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold font-display text-gray-900">
+              Edit {currentBaby?.name}'s Profile
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleEdit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Baby Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="edit-name" className="text-sm font-medium text-gray-700">
+                    Baby's Name *
+                  </Label>
+                  <Input
+                    id="edit-name"
+                    type="text"
+                    value={editData.name}
+                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                    placeholder="Enter baby's name"
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                  />
+                </div>
+
+                {/* Birth Date */}
+                <div className="space-y-2">
+                  <Label htmlFor="edit-birth-date" className="text-sm font-medium text-gray-700">
+                    Birth Date *
+                  </Label>
+                  <Popover open={showEditDatePicker} onOpenChange={setShowEditDatePicker}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200 justify-start text-left font-normal"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {editData.birth_date ? format(editData.birth_date, 'MMMM dd, yyyy') : 'Pick a date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={editData.birth_date}
+                        onSelect={(date) => {
+                          setEditData({ ...editData, birth_date: date });
+                          setShowEditDatePicker(false);
+                        }}
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                <Button
+                  type="submit"
+                  className="flex-1 sm:flex-none bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Update Profile
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowEditForm(false)}
+                  className="flex-1 sm:flex-none px-6 py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
