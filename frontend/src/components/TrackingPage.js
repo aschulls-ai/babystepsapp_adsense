@@ -43,6 +43,10 @@ const TrackingPage = ({ currentBaby }) => {
     sleep: { active: false, startTime: null, elapsed: 0 },
     pumping: { active: false, startTime: null, elapsed: 0 }
   });
+  const [allActivities, setAllActivities] = useState([]);
+  const [activityFilter, setActivityFilter] = useState('all');
+  const [activitySortBy, setActivitySortBy] = useState('timestamp');
+  const [activitySortOrder, setActivitySortOrder] = useState('desc');
 
   useEffect(() => {
     if (currentBaby) {
