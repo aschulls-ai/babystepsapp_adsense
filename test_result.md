@@ -198,7 +198,9 @@
 
 ## test_plan:
   current_focus:
-    - "Activity History repositioning and renaming testing completed"
+    - "Meal Planner search bar API endpoint fix"
+    - "AI assistant text overflow fix"
+    - "AdSense expansion to all pages"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
