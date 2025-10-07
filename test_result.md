@@ -198,7 +198,7 @@
 
 ## test_plan:
   current_focus:
-    - "Comprehensive activity log feature testing completed"
+    - "Activity History repositioning and renaming testing completed"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
