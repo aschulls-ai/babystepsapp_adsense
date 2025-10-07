@@ -14,6 +14,7 @@ import {
   Baby
 } from 'lucide-react';
 import { toast } from 'sonner';
+import PageAd from './ads/PageAd';
 
 const FoodResearch = ({ currentBaby }) => {
   const [query, setQuery] = useState('');
