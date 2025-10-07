@@ -145,9 +145,9 @@ function App() {
     try {
       const response = await axios.post('/auth/register', { name, email, password });
       
-      // Registration now requires email verification
-      toast.success('Account created! Please check your email for verification link.');
-      return { success: true, requiresVerification: true, email };
+      // Registration successful - user can login immediately
+      toast.success('Account created successfully! You can now log in.');
+      return { success: true, requiresVerification: false, email };
     } catch (error) {
       console.error('Registration error:', error);
       if (error.code === 'ERR_NETWORK') {
