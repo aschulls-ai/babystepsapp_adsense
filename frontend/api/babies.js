@@ -7,12 +7,15 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    // Mock baby data
+    // Mock baby data - 18 months old for realistic demo
+    const eighteenMonthsAgo = new Date();
+    eighteenMonthsAgo.setMonth(eighteenMonthsAgo.getMonth() - 18);
+    
     const babies = [
       {
         id: '1',
         name: 'Emma Johnson',
-        birth_date: '2024-03-15',
+        birth_date: eighteenMonthsAgo.toISOString().split('T')[0], // 18 months ago
         gender: 'female',
         birth_weight: 7.2,
         birth_length: 20.5
