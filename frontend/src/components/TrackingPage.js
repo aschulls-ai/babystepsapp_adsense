@@ -1861,4 +1861,147 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
   );
 };
 
+// Activity History List Component
+const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBaby }) => {
+  // Filter activities
+  const filteredActivities = activities.filter(activity => {
+    if (filter === 'all') return true;
+    return activity.activity_type === filter;
+  });
+
+  // Sort activities
+  const sortedActivities = [...filteredActivities].sort((a, b) => {
+    if (sortBy === 'timestamp') {
+      const aTime = new Date(a.timestamp || a.start_time || a.achieved_date);
+      const bTime = new Date(b.timestamp || b.start_time || b.achieved_date);
+      return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
+    } else if (sortBy === 'type') {
+      const aType = a.display_type;
+      const bType = b.display_type;
+      return sortOrder === 'desc' ? bType.localeCompare(aType) : aType.localeCompare(bType);
+    }
+    return 0;
+  });
+
+  if (sortedActivities.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <Activity className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+        <h3 className="text-lg font-medium text-gray-500 mb-2">No Activities Found</h3>
+        <p className="text-gray-400">
+          {filter === 'all' 
+            ? `Start logging ${currentBaby?.name || 'your baby'}'s activities to see them here.`
+            : `No ${filter} activities recorded yet.`
+          }
+        </p>
+      </div>
+    );
+  }
+
+  const getActivityIcon = (type) => {
+    const icons = {
+      feeding: Milk,
+      diaper: Droplet,
+      sleep: Moon,
+      pumping: Zap,
+      measurements: Scale,
+      milestones: Trophy
+    };
+    return icons[type] || Activity;
+  };
+
+  const getActivityColor = (type) => {
+    const colors = {
+      feeding: 'bg-blue-100 text-blue-700 border-blue-200',
+      diaper: 'bg-green-100 text-green-700 border-green-200',
+      sleep: 'bg-purple-100 text-purple-700 border-purple-200',
+      pumping: 'bg-pink-100 text-pink-700 border-pink-200',
+      measurements: 'bg-orange-100 text-orange-700 border-orange-200',
+      milestones: 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    };
+    return colors[type] || 'bg-gray-100 text-gray-700 border-gray-200';
+  };
+
+  const formatActivityDetails = (activity) => {
+    const type = activity.activity_type;
+    switch (type) {
+      case 'feeding':
+        return activity.amount ? `${activity.amount} oz` : activity.duration ? `${activity.duration} min` : activity.type;
+      case 'diaper':
+        return activity.type?.charAt(0).toUpperCase() + activity.type?.slice(1) || 'Changed';
+      case 'sleep':
+        return activity.duration ? `${activity.duration} min` : 'Sleep session';
+      case 'pumping':
+        const total = (activity.left_breast || 0) + (activity.right_breast || 0);
+        return total > 0 ? `${total} oz total` : activity.duration ? `${activity.duration} min` : 'Pumping session';
+      case 'measurements':
+        const parts = [];
+        if (activity.weight) parts.push(`${activity.weight} lbs`);
+        if (activity.height) parts.push(`${activity.height} in`);
+        return parts.length > 0 ? parts.join(', ') : 'Measured';
+      case 'milestones':
+        return activity.title || activity.milestone || 'Milestone achieved';
+      default:
+        return 'Activity logged';
+    }
+  };
+
+  const getActivityTimestamp = (activity) => {
+    return activity.timestamp || activity.start_time || activity.achieved_date;
+  };
+
+  return (
+    <div className="space-y-3 max-h-96 overflow-y-auto">
+      <div className="text-sm text-gray-500 mb-4">
+        Showing {sortedActivities.length} {filter === 'all' ? 'activities' : `${filter} entries`}
+      </div>
+      
+      {sortedActivities.map((activity, index) => {
+        const Icon = getActivityIcon(activity.activity_type);
+        const timestamp = getActivityTimestamp(activity);
+        const date = new Date(timestamp);
+        
+        return (
+          <div key={`${activity.activity_type}-${activity.id || index}`} 
+               className="flex items-start gap-3 p-3 bg-white rounded-lg border hover:shadow-sm transition-shadow">
+            {/* Activity Icon */}
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activity.activity_type)}`}>
+              <Icon className="w-4 h-4" />
+            </div>
+            
+            {/* Activity Details */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900 text-sm">
+                    {activity.display_type}
+                  </h4>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {formatActivityDetails(activity)}
+                  </p>
+                  {activity.notes && (
+                    <p className="text-xs text-gray-500 mt-1 italic">
+                      "{activity.notes}"
+                    </p>
+                  )}
+                </div>
+                
+                {/* Timestamp */}
+                <div className="text-right">
+                  <div className="text-xs font-medium text-gray-500">
+                    {format(date, 'MMM d')}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {format(date, 'h:mm a')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export default TrackingPage;
