@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { mobileService } from './services/MobileService';
 import './App.css';
 
