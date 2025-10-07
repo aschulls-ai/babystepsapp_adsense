@@ -117,7 +117,7 @@ const TrackingPage = ({ currentBaby }) => {
   const showNotification = (reminder) => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification(`Baby Steps - ${reminder.title}`, {
-        body: `Time for ${currentBaby.name}'s ${reminder.type}`,
+        body: `Time for ${currentBaby.name}'s ${reminder.reminder_type}`,
         icon: '/favicon.ico',
         tag: `reminder-${reminder.id}`
       });
