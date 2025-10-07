@@ -1266,29 +1266,32 @@ const ReminderList = ({ reminders, onToggle, onDelete }) => {
   return (
     <div className="space-y-2">
       {reminders.map((reminder) => {
-        const nextTime = new Date(reminder.next_notification);
+        const nextTime = new Date(reminder.next_due);
+        const frequency = reminder.interval_hours === 24 ? 'daily' : 
+                         reminder.interval_hours === 168 ? 'weekly' :
+                         reminder.interval_hours === 720 ? 'monthly' : 'custom';
         return (
           <div key={reminder.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h4 className="font-medium text-gray-800 text-sm">{reminder.title}</h4>
                 <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
-                  {reminder.type}
+                  {reminder.reminder_type}
                 </span>
               </div>
               <p className="text-xs text-gray-600 mt-1">
-                Next: {format(nextTime, 'MMM d, h:mm a')} ({reminder.frequency})
+                Next: {format(nextTime, 'MMM d, h:mm a')} ({frequency})
               </p>
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => onToggle(reminder.id, !reminder.enabled)}
+                onClick={() => onToggle(reminder.id, !reminder.is_active)}
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                  reminder.enabled 
+                  reminder.is_active 
                     ? 'bg-green-100 text-green-600 hover:bg-green-200' 
                     : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                 }`}
-                title={reminder.enabled ? 'Disable' : 'Enable'}
+                title={reminder.is_active ? 'Disable' : 'Enable'}
               >
                 <Bell className="w-4 h-4" />
               </button>
