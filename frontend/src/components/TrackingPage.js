@@ -500,6 +500,61 @@ const TrackingPage = ({ currentBaby }) => {
           </Card>
         </div>
 
+        {/* Activity History Section */}
+        <div className="mt-8">
+          <Card className="glass-strong border-0">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-gray-800">
+                  <Activity className="w-5 h-5 text-indigo-500" />
+                  Activity History
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Select value={activityFilter} onValueChange={setActivityFilter}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Activities</SelectItem>
+                      <SelectItem value="feeding">Feeding</SelectItem>
+                      <SelectItem value="diaper">Diaper</SelectItem>
+                      <SelectItem value="sleep">Sleep</SelectItem>
+                      <SelectItem value="pumping">Pumping</SelectItem>
+                      <SelectItem value="measurements">Growth</SelectItem>
+                      <SelectItem value="milestones">Milestones</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={activitySortBy} onValueChange={setActivitySortBy}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="timestamp">By Time</SelectItem>
+                      <SelectItem value="type">By Type</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActivitySortOrder(activitySortOrder === 'desc' ? 'asc' : 'desc')}
+                  >
+                    {activitySortOrder === 'desc' ? '↓' : '↑'}
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ActivityHistoryList 
+                activities={allActivities}
+                filter={activityFilter}
+                sortBy={activitySortBy}
+                sortOrder={activitySortOrder}
+                currentBaby={currentBaby}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="space-y-6">
           {/* Reminders Section */}
           <Card className="glass border-0">
