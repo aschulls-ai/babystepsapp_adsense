@@ -1,6 +1,5 @@
 // Vercel API Route - Login
-// Access the global users array
-global.users = global.users || [];
+import { findUser } from '../utils/storage.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,9 +18,9 @@ export default async function handler(req, res) {
   }
 
   // Check registered users
-  const user = global.users.find(user => user.email === email && user.password === password);
+  const user = findUser(email);
   
-  if (user) {
+  if (user && user.password === password) {
     // Generate a simple JWT-like token
     const token = Buffer.from(JSON.stringify({ 
       email: user.email, 
