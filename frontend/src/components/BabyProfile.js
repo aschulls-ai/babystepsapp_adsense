@@ -9,13 +9,19 @@ import { Baby, Calendar as CalendarIcon, Plus, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
-const BabyProfile = ({ currentBaby, onAddBaby }) => {
+const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
   const [showAddForm, setShowAddForm] = useState(!currentBaby);
+  const [showEditForm, setShowEditForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     birth_date: new Date()
   });
+  const [editData, setEditData] = useState({
+    name: currentBaby?.name || '',
+    birth_date: currentBaby?.birth_date ? new Date(currentBaby.birth_date) : new Date()
+  });
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showEditDatePicker, setShowEditDatePicker] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
