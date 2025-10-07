@@ -560,6 +560,9 @@ const FormulaComparison = ({ currentBaby }) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
