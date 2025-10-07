@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Baby, ShieldCheck, Heart, Utensils, Activity, ChefHat } from 'lucide-react';
+import InContentAd from './ads/InContentAd';
 
 const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerification }) => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
