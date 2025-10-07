@@ -513,11 +513,16 @@ class BabyStepsAPITester:
         
         # Test core functionality if we have auth
         if self.auth_token:
-            print("\n🍼 TESTING CORE FUNCTIONALITY:")
+            print("\n🍼 TESTING MEAL PLANNER SEARCH FUNCTIONALITY (MAIN FOCUS):")
+            print("=" * 80)
+            self.test_meal_planner_search_endpoint()
+            self.test_honey_safety_query()
+            self.test_meal_ideas_query()
+            self.test_age_customization()
+            
+            print("\n🔬 ADDITIONAL BACKEND TESTS:")
             print("=" * 80)
             self.test_food_research_endpoint()
-            self.test_unified_meal_search()
-            self.test_food_safety_search()
             self.test_ai_integration()
         
         print("=" * 80)
