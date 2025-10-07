@@ -499,62 +499,63 @@ const TrackingPage = ({ currentBaby }) => {
             </CardContent>
           </Card>
         </div>
+      </div>
 
-        {/* Activity History Section */}
-        <div className="mt-8">
-          <Card className="glass-strong border-0">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-gray-800">
-                  <Activity className="w-5 h-5 text-indigo-500" />
-                  Activity History
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                  <Select value={activityFilter} onValueChange={setActivityFilter}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Activities</SelectItem>
-                      <SelectItem value="feeding">Feeding</SelectItem>
-                      <SelectItem value="diaper">Diaper</SelectItem>
-                      <SelectItem value="sleep">Sleep</SelectItem>
-                      <SelectItem value="pumping">Pumping</SelectItem>
-                      <SelectItem value="measurements">Growth</SelectItem>
-                      <SelectItem value="milestones">Milestones</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={activitySortBy} onValueChange={setActivitySortBy}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="timestamp">By Time</SelectItem>
-                      <SelectItem value="type">By Type</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setActivitySortOrder(activitySortOrder === 'desc' ? 'asc' : 'desc')}
-                  >
-                    {activitySortOrder === 'desc' ? '↓' : '↑'}
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ActivityHistoryList 
-                activities={allActivities}
-                filter={activityFilter}
-                sortBy={activitySortBy}
-                sortOrder={activitySortOrder}
-                currentBaby={currentBaby}
-              />
-            </CardContent>
-          </Card>
-        </div>
+      {/* Activity History Section - Full Width */}
+      <Card className="glass-strong border-0">
+        <CardHeader>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <CardTitle className="flex items-center gap-2 text-gray-800">
+              <Activity className="w-5 h-5 text-indigo-500" />
+              Activity History
+            </CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Select value={activityFilter} onValueChange={setActivityFilter}>
+                <SelectTrigger className="w-full sm:w-36">
+                  <SelectValue placeholder="Filter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Activities</SelectItem>
+                  <SelectItem value="feeding">Feeding</SelectItem>
+                  <SelectItem value="diaper">Diaper</SelectItem>
+                  <SelectItem value="sleep">Sleep</SelectItem>
+                  <SelectItem value="pumping">Pumping</SelectItem>
+                  <SelectItem value="measurements">Growth</SelectItem>
+                  <SelectItem value="milestones">Milestones</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={`${activitySortBy}-${activitySortOrder}`} onValueChange={(value) => {
+                const [sortBy, sortOrder] = value.split('-');
+                setActivitySortBy(sortBy);
+                setActivitySortOrder(sortOrder);
+              }}>
+                <SelectTrigger className="w-full sm:w-36">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="timestamp-desc">Newest First</SelectItem>
+                  <SelectItem value="timestamp-asc">Oldest First</SelectItem>
+                  <SelectItem value="type-asc">By Type A-Z</SelectItem>
+                  <SelectItem value="type-desc">By Type Z-A</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <ActivityHistoryList 
+            activities={allActivities}
+            filter={activityFilter}
+            sortBy={activitySortBy}
+            sortOrder={activitySortOrder}
+            currentBaby={currentBaby}
+          />
+        </CardContent>
+      </Card>
 
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div></div> {/* Empty space for layout balance */}
+        
         <div className="space-y-6">
           {/* Reminders Section */}
           <Card className="glass border-0">
