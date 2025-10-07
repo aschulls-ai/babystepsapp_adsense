@@ -137,20 +137,20 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
       iconColor: 'text-green-500'
     },
     {
+      title: 'Formula Comparison',
+      description: 'Compare baby formulas',
+      icon: Heart,
+      link: '/formula-comparison',
+      color: 'bg-pink-500 hover:bg-pink-600',
+      iconColor: 'text-pink-500'
+    },
+    {
       title: 'Baby Profile',
       description: 'Update info & milestones',
       icon: Baby,
       link: '/baby-profile',
       color: 'bg-purple-500 hover:bg-purple-600',
       iconColor: 'text-purple-500'
-    },
-    {
-      title: 'Research Hub',
-      description: 'Get parenting guidance',
-      icon: BookOpen,
-      link: '/research',
-      color: 'bg-orange-500 hover:bg-orange-600',
-      iconColor: 'text-orange-500'
     }
   ];
 
