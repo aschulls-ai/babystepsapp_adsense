@@ -180,11 +180,51 @@ const TrackingPage = ({ currentBaby }) => {
   };
 
   const handleQuickAction = (type) => {
+    // Handle timer-based actions differently
+    if (type === 'sleep') {
+      if (activeTimers.sleep.active) {
+        // Stop sleep timer and show completion modal
+        const elapsed = Math.floor((Date.now() - activeTimers.sleep.startTime) / 1000 / 60); // minutes
+        setQuickActionModal({
+          show: true,
+          type: 'sleep',
+          data: { duration: elapsed, isCompleting: true }
+        });
+      } else {
+        // Start sleep timer
+        setActiveTimers(prev => ({
+          ...prev,
+          sleep: { active: true, startTime: Date.now(), elapsed: 0 }
+        }));
+        toast.success('Sleep timer started!');
+      }
+      return;
+    }
+
+    if (type === 'pumping') {
+      if (activeTimers.pumping.active) {
+        // Stop pumping timer and show completion modal
+        const elapsed = Math.floor((Date.now() - activeTimers.pumping.startTime) / 1000 / 60); // minutes
+        setQuickActionModal({
+          show: true,
+          type: 'pumping',
+          data: { duration: elapsed, leftBreast: 0, rightBreast: 0, isCompleting: true }
+        });
+      } else {
+        // Start pumping timer
+        setActiveTimers(prev => ({
+          ...prev,
+          pumping: { active: true, startTime: Date.now(), elapsed: 0 }
+        }));
+        toast.success('Pumping timer started!');
+      }
+      return;
+    }
+
+    // Handle non-timer actions
     const defaultData = {
       feeding: { type: 'bottle', amount: 4 },
       diaper: { type: 'wet' },
-      sleep: { duration: 60 },
-      pumping: { amount: 3, duration: 15 },
       measurements: { weight: '', height: '' },
       milestones: { title: '', category: 'physical' }
     };
