@@ -412,53 +412,58 @@ const TrackingPage = ({ currentBaby }) => {
       </div>
 
       {/* Quick Action Buttons */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-        <QuickActionButton 
-          icon={Baby2} 
-          label="Quick Feed" 
-          color="blue"
-          onClick={() => handleQuickAction('feeding')}
-        />
-        <QuickActionButton 
-          icon={Droplet} 
-          label="Diaper Change" 
-          color="green"
-          onClick={() => handleQuickAction('diaper')}
-        />
-        <TimerQuickActionButton 
-          icon={activeTimers.sleep.active ? Square : Moon}
-          label={activeTimers.sleep.active ? "Stop Sleep" : "Start Sleep"}
-          color="purple"
-          isActive={activeTimers.sleep.active}
-          timer={activeTimers.sleep}
-          onClick={() => handleQuickAction('sleep')}
-        />
-        <TimerQuickActionButton 
-          icon={activeTimers.pumping.active ? Square : Zap}
-          label={activeTimers.pumping.active ? "Stop Pump" : "Start Pump"}
-          color="pink"
-          isActive={activeTimers.pumping.active}
-          timer={activeTimers.pumping}
-          onClick={() => handleQuickAction('pumping')}
-        />
-        <QuickActionButton 
-          icon={Scale} 
-          label="Measure" 
-          color="orange"
-          onClick={() => handleQuickAction('measurements')}
-        />
-        <QuickActionButton 
-          icon={Trophy} 
-          label="Milestone" 
-          color="yellow"
-          onClick={() => handleQuickAction('milestones')}
-        />
-      </div>
+      <Card className="glass border-0 bg-gradient-to-r from-blue-50 to-green-50">
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <Play className="w-5 h-5 text-blue-600" />
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <QuickActionButton 
+              icon={Baby2} 
+              label="Quick Feed" 
+              color="blue"
+              onClick={() => handleQuickAction('feeding')}
+            />
+            <QuickActionButton 
+              icon={Droplet} 
+              label="Diaper Change" 
+              color="green"
+              onClick={() => handleQuickAction('diaper')}
+            />
+            <TimerQuickActionButton 
+              icon={activeTimers.sleep.active ? Square : Moon}
+              label={activeTimers.sleep.active ? "Stop Sleep" : "Start Sleep"}
+              color="purple"
+              isActive={activeTimers.sleep.active}
+              timer={activeTimers.sleep}
+              onClick={() => handleQuickAction('sleep')}
+            />
+            <TimerQuickActionButton 
+              icon={activeTimers.pumping.active ? Square : Zap}
+              label={activeTimers.pumping.active ? "Stop Pump" : "Start Pump"}
+              color="pink"
+              isActive={activeTimers.pumping.active}
+              timer={activeTimers.pumping}
+              onClick={() => handleQuickAction('pumping')}
+            />
+            <QuickActionButton 
+              icon={Scale} 
+              label="Measure" 
+              color="orange"
+              onClick={() => handleQuickAction('measurements')}
+            />
+            <QuickActionButton 
+              icon={Trophy} 
+              label="Milestone" 
+              color="yellow"
+              onClick={() => handleQuickAction('milestones')}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Page Ad */}
-      <PageAd />
-
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-4 gap-6">
         {/* Tracking Forms */}
         <div className="lg:col-span-2">
           <Card className="glass-strong border-0">
