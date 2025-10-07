@@ -18,7 +18,7 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onLogin(loginData.email, loginData.password);
+    await onLogin(loginData.email, loginData.password, loginData.rememberMe);
     setLoading(false);
   };
 
