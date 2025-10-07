@@ -405,6 +405,17 @@
         -agent: "main"
         -comment: "✅ ADSENSE EXPANSION COMPLETE: Created new PageAd component and integrated it into all 8 main pages: Dashboard, BabyProfile, TrackingPage, FoodResearch, FormulaComparison, EmergencyTraining, MealPlanner, and Research. PageAd component supports different positions (top/bottom/sidebar) and includes transparency labels and disclaimers. All ads are small, unobtrusive, and positioned to not interfere with user experience."
 
+  - task: "Dashboard age calculation bug fix"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/Dashboard.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        -working: true
+        -agent: "main"
+        -comment: "✅ DASHBOARD AGE CALCULATION FIXED: Corrected age calculation discrepancy between Dashboard and BabyProfile components. Fixed two issues: 1) Field name mismatch - Dashboard was using 'birthDate' while other components use 'birth_date' 2) Calculation method - Dashboard was using /30 while BabyProfile uses /30.44 (more accurate). Now all components use consistent calculation method for baby age display."
   - task: "Comprehensive backend testing for three completed fixes"
     implemented: true
     working: true
