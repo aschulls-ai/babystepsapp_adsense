@@ -159,7 +159,7 @@ const Research = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-4 py-4">
+                  <div className="space-y-4 py-4 min-w-0">
                     {messages.map((message) => (
                       <MessageBubble key={message.id} message={message} />
                     ))}
