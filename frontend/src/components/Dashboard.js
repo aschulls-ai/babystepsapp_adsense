@@ -332,6 +332,9 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
