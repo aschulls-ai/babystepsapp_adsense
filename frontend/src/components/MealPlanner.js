@@ -509,6 +509,9 @@ const MealPlanner = ({ currentBaby }) => {
           </Card>
         </div>
       </div>
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
