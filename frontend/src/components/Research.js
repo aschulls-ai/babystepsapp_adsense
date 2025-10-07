@@ -17,6 +17,7 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
+import PageAd from './ads/PageAd';
 
 const Research = () => {
   const [messages, setMessages] = useState([]);
