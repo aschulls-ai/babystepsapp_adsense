@@ -35,6 +35,10 @@ const TrackingPage = ({ currentBaby }) => {
   const [showReminderForm, setShowReminderForm] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState('default');
   const [quickActionModal, setQuickActionModal] = useState({ show: false, type: null, data: {} });
+  const [activeTimers, setActiveTimers] = useState({
+    sleep: { active: false, startTime: null, elapsed: 0 },
+    pumping: { active: false, startTime: null, elapsed: 0 }
+  });
 
   useEffect(() => {
     if (currentBaby) {
