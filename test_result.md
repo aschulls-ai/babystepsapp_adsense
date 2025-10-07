@@ -367,9 +367,21 @@
         -agent: "testing"
         -comment: "✅ BABY PROFILE UPDATE FUNCTIONALITY COMPREHENSIVE TESTING COMPLETE: All baby profile update features working perfectly after previous backend fix. DETAILED TEST RESULTS: 1) NAVIGATION & ACCESS: ✅ Successfully accessed Baby Profile page at /baby-profile, existing baby profile 'Emma Updated Test Profile' displayed correctly 2) EDIT FUNCTIONALITY: ✅ Edit Profile button opens edit modal correctly, form fields populated with current data (name and birth date) 3) NAME UPDATE: ✅ Successfully changed baby name from 'Emma Updated Test Profile' to 'Emma Smith', form accepts input correctly 4) DATE PICKER: ✅ Birth date picker button functional, calendar popup opens (minor: date selection had timeout but core functionality works) 5) UPDATE PROCESS: ✅ Update Profile button processes changes successfully, API integration working (PUT /api/babies endpoint) 6) SUCCESS FEEDBACK: ✅ Multiple success toasts appear: 'Baby profile updated successfully!' and 'Emma Smith's profile updated successfully!' 7) VERIFICATION: ✅ Updated information displays correctly - baby name changed to 'Emma Smith' in profile display and sidebar 8) NO API ERRORS: ✅ No 422 errors or network issues detected during update process. All requested baby profile update functionality is working perfectly - users can successfully modify baby information without encountering the previous 'Failed to update baby profile' errors."
 
+  - task: "Meal Planner search bar fix"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/MealPlanner.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: false
+        -agent: "main"
+        -comment: "✅ MEAL PLANNER API ENDPOINT FIXED: Corrected API endpoint from '/meal/search' to '/api/meal/search' to match the Vercel API route structure. The search bar was failing because the frontend was calling the wrong endpoint path."
+
 ## agent_communication:
-    -agent: "testing"
-    -message: "🎉 ACTIVITY HISTORY REPOSITIONING AND RENAMING TESTING COMPLETED SUCCESSFULLY: All requested changes have been successfully implemented and tested. COMPREHENSIVE TEST RESULTS: ✅ LOGIN & NAVIGATION: Successfully logged in with test@babysteps.com/TestPassword123 and navigated to Track Activities page (/tracking) ✅ LAYOUT POSITIONING: Activity History section is correctly positioned BELOW the main tracking form tabs (Quick Actions at y=132, Main tabs at y=269, Activity History below), spans full width (85% of viewport, not confined to sidebar) ✅ TITLE VERIFICATION: Section title correctly renamed to 'Activity History' (not 'Complete Activity History') ✅ DROPDOWN FUNCTIONALITY: Both filter dropdown ('All Activities', 'Feeding', etc.) and sort dropdown ('Newest First', 'Oldest First', etc.) working perfectly in new position with 7 total dropdown elements found ✅ CONTENT FLOW: Professional visual flow confirmed - Quick Action buttons at top → Main tracking forms in middle → Activity History section below → Sidebar with reminders on right ✅ RESPONSIVE DESIGN: Layout works correctly on desktop (1920x1080), tablet (768x1024), and mobile (390x844) views ✅ ACTIVITY DISPLAY: Found 39 activity items displaying with proper timestamps, icons, and details. All repositioning and renaming requirements successfully implemented and functional."
+    -agent: "main"
+    -message: "✅ MEAL PLANNER SEARCH BAR API ENDPOINT FIXED: Corrected the API endpoint path in MealPlanner.js from '/meal/search' to '/api/meal/search' to match the Vercel API route. This should resolve the 'failed' error message when users try to search for meal ideas and food safety information. Ready for backend testing to confirm the fix is working."
     -agent: "testing"
     -message: "🎉 REMEMBER ME & BABY PROFILE UPDATE TESTING COMPLETE: Successfully verified both requested features are working perfectly. COMPREHENSIVE TEST RESULTS: ✅ REMEMBER ME FUNCTIONALITY: Checkbox visible with correct text 'Remember me on this device', login with Remember Me shows success message 'You will stay signed in on this device', persistence works across page reloads and navigation (localStorage properly stores token with 30-day expiration), normal login without Remember Me works with different success message. ✅ BABY PROFILE UPDATE FIX: Edit Profile functionality working perfectly, name changes from 'Emma Updated Test Profile' to 'Emma Smith' successful, success toasts appear ('Baby profile updated successfully!'), updated information displays correctly, no 422 API errors detected, PUT /api/babies endpoint working correctly. Both features meet all requirements and are fully functional."
     -agent: "testing"
