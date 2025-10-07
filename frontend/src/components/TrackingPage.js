@@ -622,6 +622,9 @@ const TrackingPage = ({ currentBaby }) => {
         onSubmit={handleQuickSubmit}
         onCancel={() => setQuickActionModal({ show: false, type: null, data: {} })}
       />
+
+      {/* Page Ad */}
+      <PageAd position="bottom" />
     </div>
   );
 };
