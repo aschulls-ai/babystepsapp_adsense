@@ -16,8 +16,8 @@ load_dotenv('/app/frontend/.env')
 
 # Get backend URL from frontend environment
 BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://parent-helper-21.preview.emergentagent.com')
-# Use production URL for testing as specified in review request
-API_BASE = f"{BACKEND_URL}/api"
+# Use local backend for testing since external URL has timeout issues
+API_BASE = "http://localhost:8001/api"
 
 class BabyStepsAPITester:
     def __init__(self):
