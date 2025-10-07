@@ -19,6 +19,7 @@ import {
   Clock
 } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
+import PageAd from './ads/PageAd';
 
 const FormulaComparison = ({ currentBaby }) => {
   const [searchTerm, setSearchTerm] = useState('');
