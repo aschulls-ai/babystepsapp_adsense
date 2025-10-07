@@ -244,6 +244,12 @@ const TrackingPage = ({ currentBaby }) => {
     const { type } = quickActionModal;
     
     try {
+      // Ensure we have a baby selected
+      if (!currentBaby || !currentBaby.id) {
+        toast.error('Please select a baby profile first');
+        return;
+      }
+
       const payload = {
         baby_id: currentBaby.id,
         timestamp: new Date().toISOString(),
