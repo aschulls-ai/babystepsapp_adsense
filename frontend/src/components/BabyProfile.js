@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Baby, Calendar as CalendarIcon, Plus, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import PageAd from './ads/PageAd';
 
 const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
   const [showAddForm, setShowAddForm] = useState(!currentBaby);
