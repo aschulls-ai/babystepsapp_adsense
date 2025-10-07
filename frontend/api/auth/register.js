@@ -1,6 +1,5 @@
 // Vercel API Route - Register
-// Simple in-memory user storage (use database in production)
-global.users = global.users || [];
+import { getUsers, addUser, findUser } from '../utils/storage.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   // Check if user already exists
-  const existingUser = global.users.find(user => user.email === email);
+  const existingUser = findUser(email);
   if (existingUser) {
     return res.status(400).json({ detail: 'User already exists' });
   }
@@ -28,11 +27,15 @@ export default async function handler(req, res) {
     created_at: new Date().toISOString()
   };
 
-  global.users.push(newUser);
-
-  res.status(201).json({ 
-    message: 'User created successfully',
-    email: email,
-    name: name
-  });
+  const success = addUser(newUser);
+  
+  if (success) {
+    res.status(201).json({ 
+      message: 'User created successfully',
+      email: email,
+      name: name
+    });
+  } else {
+    res.status(500).json({ detail: 'Failed to create user' });
+  }
 }
