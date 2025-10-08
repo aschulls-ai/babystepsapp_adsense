@@ -84,3 +84,24 @@ code {
     @apply bg-background text-foreground;
     }
 }
+
+/* Glass effect components with dark mode support */
+@layer components {
+  .glass {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-gray-700/20 shadow-lg;
+  }
+  
+  .glass-strong {
+    @apply bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg border border-white/30 dark:border-gray-700/30 shadow-xl;
+  }
+  
+  /* Ensure smooth transitions for theme switching */
+  * {
+    @apply transition-colors duration-200 ease-in-out;
+  }
+  
+  /* Page background gradients with dark mode */
+  .page-gradient {
+    @apply bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
+  }
+}
