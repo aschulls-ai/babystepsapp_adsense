@@ -279,7 +279,7 @@ function App() {
 
   const addBaby = async (babyData) => {
     try {
-      const response = await axios.post('/babies', babyData);
+      const response = await axios.post('/api/babies', babyData);
       const newBaby = response.data;
       setBabies([...babies, newBaby]);
       if (!currentBaby) {
