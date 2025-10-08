@@ -448,11 +448,11 @@ function App() {
         </Routes>
         <Toaster position="top-right" />
         
-        {/* Bottom Banner Ad - Show when authenticated */}
-        {isAuthenticated && <BottomBannerAd />}
+        {/* Bottom Banner Ad - Only show when user is logged in */}
+        {user && <BottomBannerAd />}
         
         {/* Add padding to prevent content overlap with bottom banner */}
-        {isAuthenticated && <div className="h-16 md:h-20" />}
+        {user && <div className="h-16 md:h-20" />}
         
         {/* Vercel Speed Insights for performance monitoring */}
         <SpeedInsights />
