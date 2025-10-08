@@ -88,8 +88,9 @@ jobs:
         path: |
           frontend/ios/App/Pods
           ~/.cocoapods
-        key: ${{ runner.os }}-cocoapods-${{ hashFiles('frontend/ios/App/Podfile.lock') }}
+        key: ${{ runner.os }}-ios-cocoapods-${{ hashFiles('frontend/ios/App/Podfile.lock') }}
         restore-keys: |
+          ${{ runner.os }}-ios-cocoapods-
           ${{ runner.os }}-cocoapods-
       
     - name: Add iOS platform (if not exists)
