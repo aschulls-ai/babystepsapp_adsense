@@ -72,8 +72,8 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
 
           {/* Baby Selector */}
           {babies.length > 0 && (
-            <div className="p-4 border-b border-green-100 bg-green-50/50">
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
+            <div className="p-4 border-b border-green-100 dark:border-gray-700 bg-green-50/50 dark:bg-gray-800/50">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                 Select Baby
               </label>
               <Select
