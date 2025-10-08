@@ -106,8 +106,20 @@ function App() {
         // Set up axios headers
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
-        // Fetch user data
-        await fetchBabies();
+        // Use mock data instead of fetching from API for AdSense verification
+        setCurrentBaby({
+          id: 'demo-baby-001',
+          name: 'Emma Johnson',
+          birth_date: '2024-12-15', // Demo birth date as requested
+          gender: 'girl'
+        });
+        
+        setBabies([{
+          id: 'demo-baby-001',
+          name: 'Emma Johnson', 
+          birth_date: '2024-12-15', // Demo birth date as requested
+          gender: 'girl'
+        }]);
         
         // Set user state
         setUser({ 
@@ -116,7 +128,7 @@ function App() {
           rememberMe: true
         });
         
-        console.log('✅ Auto-login successful as demo user');
+        console.log('✅ Auto-login successful as demo user with mock baby data');
       }
     } catch (error) {
       // Suppress 401 errors since we expect them in demo mode
