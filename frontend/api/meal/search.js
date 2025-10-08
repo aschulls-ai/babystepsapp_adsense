@@ -176,15 +176,50 @@ export default async function handler(req, res) {
   else if (queryLower.includes('dinner') || queryLower.includes('evening')) mealType = 'dinner';
   else if (queryLower.includes('snack')) mealType = 'snack';
 
-  const suggestions = mealSuggestions[mealType][ageGroup] || mealSuggestions['lunch'][ageGroup];
+  const recipes = mealRecipes[mealType]?.[ageGroup] || mealRecipes['lunch']?.[ageGroup] || [];
 
-  const response = `Here are some ${mealType} ideas for your ${baby_age_months} month old baby:\n\n` +
-    suggestions.map((item, index) => `${index + 1}. ${item}`).join('\n') +
-    `\n\n**Age-Appropriate Notes for ${baby_age_months} months:**\n` +
-    (baby_age_months < 6 ? '- Focus on single-ingredient purees\n- Introduce one new food at a time\n- Watch for allergic reactions' :
-     baby_age_months < 9 ? '- Foods should be soft and mashable\n- Cut foods smaller than your baby\'s thumbnail\n- Encourage self-feeding with finger foods' :
-     baby_age_months < 12 ? '- Continue offering variety\n- Foods can be chunkier but still soft\n- Always supervise during meals' :
-     '- Can eat most family foods with modifications\n- Continue to cut foods appropriately\n- Encourage trying new flavors and textures');
+  if (recipes.length === 0) {
+    // Fallback for age groups without detailed recipes
+    const basicSuggestions = [
+      'Age-appropriate soft foods',
+      'Properly sized portions',
+      'Safe temperature foods'
+    ];
+    return res.status(200).json({ 
+      results: `Here are some ${mealType} ideas for your ${baby_age_months} month old baby:\n\n` +
+        basicSuggestions.map((item, index) => `${index + 1}. ${item}`).join('\n')
+    });
+  }
+
+  let response = `# ${mealType.charAt(0).toUpperCase() + mealType.slice(1)} Recipes for ${baby_age_months} Month Old\n\n`;
+  
+  recipes.forEach((recipe, index) => {
+    response += `## ${index + 1}. ${recipe.name}\n\n`;
+    
+    response += `**Ingredients:**\n`;
+    recipe.ingredients.forEach(ingredient => {
+      response += `• ${ingredient}\n`;
+    });
+    
+    response += `\n**Instructions:**\n`;
+    recipe.steps.forEach((step, stepIndex) => {
+      response += `${stepIndex + 1}. ${step}\n`;
+    });
+    
+    response += `\n**Safety Notes:** ${recipe.safety}\n`;
+    response += `**Servings:** ${recipe.servings}\n\n`;
+    response += `---\n\n`;
+  });
+
+  response += `## Age-Appropriate Guidelines for ${baby_age_months} months:\n\n`;
+  response += (baby_age_months < 6 ? 
+    '• Focus on single-ingredient purees\n• Introduce one new food at a time\n• Watch for allergic reactions\n• No honey, salt, or sugar' :
+    baby_age_months < 9 ? 
+    '• Foods should be soft and mashable\n• Cut foods smaller than baby\'s thumbnail\n• Encourage self-feeding with finger foods\n• Continue breastfeeding or formula' :
+    baby_age_months < 12 ? 
+    '• Continue offering variety\n• Foods can be chunkier but still soft\n• Always supervise during meals\n• Introduce cup drinking' :
+    '• Can eat most family foods with modifications\n• Continue to cut foods appropriately\n• Encourage trying new flavors and textures\n• Transition to whole milk at 12 months'
+  );
 
   res.status(200).json({ 
     results: response
