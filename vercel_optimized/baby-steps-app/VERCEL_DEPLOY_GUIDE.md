@@ -15,7 +15,7 @@ Complete step-by-step guide to deploy your Baby Steps app to Vercel and start ea
 
 3. **Configure Environment Variables**:
    ```
-   REACT_APP_BACKEND_URL=https://parent-helper-21.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://babysteps-parent.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053
    ```
 
@@ -79,7 +79,7 @@ git push -u origin main
 
    **Variable 1:**
    - **Name**: `REACT_APP_BACKEND_URL`
-   - **Value**: `https://parent-helper-21.preview.emergentagent.com`
+   - **Value**: `https://babysteps-parent.preview.emergentagent.com`
    - **Environments**: Production, Preview, Development ✅
 
    **Variable 2:**

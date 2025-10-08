@@ -131,7 +131,7 @@ git push -u origin main
 ### **2. Environment Variables (CRITICAL)**
 Add these in Vercel dashboard:
 ```
-REACT_APP_BACKEND_URL=https://parent-helper-21.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://babysteps-parent.preview.emergentagent.com
 REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053
 ```
 

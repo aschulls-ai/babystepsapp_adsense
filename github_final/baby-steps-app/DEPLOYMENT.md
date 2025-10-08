@@ -33,7 +33,7 @@ Complete guide to deploy your Baby Steps parenting app and start earning with Ad
 
 3. **Environment Variables** (Critical!)
    ```
-   REACT_APP_BACKEND_URL=https://parent-helper-21.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://babysteps-parent.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053
    ```
 
