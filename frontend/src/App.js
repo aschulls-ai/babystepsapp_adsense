@@ -161,7 +161,7 @@ function App() {
 
   const fetchBabies = async () => {
     try {
-      const response = await axios.get('/babies');
+      const response = await axios.get('/api/babies');
       setBabies(response.data);
       if (response.data.length > 0 && !currentBaby) {
         setCurrentBaby(response.data[0]);
