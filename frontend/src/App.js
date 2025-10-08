@@ -29,7 +29,7 @@ import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
 // Backend URL Configuration
-const API = process.env.REACT_APP_API_URL || '/api';
+const API = process.env.REACT_APP_BACKEND_URL || '/api';
 
 // Debug logging
 console.log('Environment configuration:', {
