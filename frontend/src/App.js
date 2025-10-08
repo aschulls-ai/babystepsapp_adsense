@@ -120,123 +120,41 @@ function App() {
   };
 
   const checkAuthState = async () => {
-    // Auto-login as sample user for AdSense verification
-    try {
-      console.log('🎭 Auto-logging in as sample user for AdSense verification...');
-      
-      const sampleUserLogin = await axios.post('/auth/login', {
-        email: 'demo@babysteps.com',
-        password: 'DemoPassword123'
-      });
+    const token = localStorage.getItem('token');
+    const rememberMe = localStorage.getItem('rememberMe') === 'true';
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
 
-      if (sampleUserLogin.data.access_token) {
-        const token = sampleUserLogin.data.access_token;
-        localStorage.setItem('token', token);
-        localStorage.setItem('rememberMe', 'true');
-        localStorage.setItem('rememberedEmail', 'demo@babysteps.com');
-        
-        // Set up axios headers
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
-        // Use mock data instead of fetching from API for AdSense verification
-        setCurrentBaby({
-          id: 'demo-baby-001',
-          name: 'Emma Johnson',
-          birth_date: '2024-12-15', // Demo birth date as requested
-          gender: 'girl'
-        });
-        
-        setBabies([{
-          id: 'demo-baby-001',
-          name: 'Emma Johnson', 
-          birth_date: '2024-12-15', // Demo birth date as requested
-          gender: 'girl'
-        }]);
-        
-        // Set user state
-        setUser({ 
-          authenticated: true, 
-          email: 'demo@babysteps.com',
-          rememberMe: true
-        });
-        
-        console.log('✅ Auto-login successful as demo user with mock baby data');
+    if (token) {
+      // Check if token is expired for remembered sessions
+      if (rememberMe && tokenExpiration) {
+        const now = new Date().getTime();
+        if (now > parseInt(tokenExpiration)) {
+          // Token expired, clear remembered session
+          logout();
+          setLoading(false);
+          return;
+        }
       }
-    } catch (error) {
-      // Suppress 401 errors since we expect them in demo mode
-      if (error.response?.status !== 401) {
-        console.log('⚠️ Auto-login failed, trying fallback sample user...');
-      }
-      
-      // Fallback: try the existing test user
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       try {
-        const fallbackLogin = await axios.post('/auth/login', {
-          email: 'test@babysteps.com',
-          password: 'TestPassword123'
-        });
-
-        if (fallbackLogin.data.access_token) {
-          const token = fallbackLogin.data.access_token;
-          localStorage.setItem('token', token);
-          localStorage.setItem('rememberMe', 'true');
-          localStorage.setItem('rememberedEmail', 'test@babysteps.com');
-          
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
-          // Use mock data instead of fetching from API for AdSense verification
-          setCurrentBaby({
-            id: 'demo-baby-001',
-            name: 'Emma Johnson',
-            birth_date: '2024-12-15', // Demo birth date as requested
-            gender: 'girl'
-          });
-          
-          setBabies([{
-            id: 'demo-baby-001',
-            name: 'Emma Johnson', 
-            birth_date: '2024-12-15', // Demo birth date as requested
-            gender: 'girl'
-          }]);
-          
-          setUser({ 
-            authenticated: true, 
-            email: 'test@babysteps.com',
-            rememberMe: true
-          });
-          
-          console.log('✅ Fallback auto-login successful with mock baby data');
-        }
-      } catch (fallbackError) {
-        // Only log non-auth errors to reduce console noise
-        if (fallbackError.response?.status !== 401) {
-          console.error('❌ Both auto-login attempts failed:', fallbackError);
-        }
-        // Create mock user state for AdSense verification even if backend fails
+        await fetchBabies();
+        // Set user object with remembered email if available
         setUser({ 
           authenticated: true, 
-          email: 'demo@babysteps.com',
-          rememberMe: true
+          email: rememberedEmail,
+          rememberMe: rememberMe
         });
         
-        // Create mock baby data for display
-        setCurrentBaby({
-          id: 'demo-baby-001',
-          name: 'Emma Johnson',
-          birth_date: '2024-12-15', // Demo birth date as requested
-          gender: 'girl'
-        });
-        
-        setBabies([{
-          id: 'demo-baby-001',
-          name: 'Emma Johnson', 
-          birth_date: '2024-12-15', // Demo birth date as requested
-          gender: 'girl'
-        }]);
-        
-        console.log('🎭 Using mock data for AdSense verification');
+        if (rememberMe && rememberedEmail) {
+          console.log('Auto-logged in with remembered credentials');
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        logout();
       }
     }
-    
     setLoading(false);
   };
 
