@@ -214,7 +214,7 @@ function App() {
 
   const register = async (name, email, password) => {
     try {
-      const response = await axios.post('/auth/register', { name, email, password });
+      const response = await axios.post('/api/auth/register', { name, email, password });
       
       // Registration successful - user can login immediately
       toast.success('Account created successfully! You can now log in.');
