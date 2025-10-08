@@ -46,7 +46,8 @@ export default async function handler(req, res) {
       id: '1', // In a real app, this would come from the URL parameter
       name: babyData.name || 'Emma Johnson',
       birth_date: babyData.birth_date || eighteenMonthsAgo.toISOString().split('T')[0],
-      gender: babyData.gender || 'female',
+      gender: babyData.gender || 'girl',
+      profilePicture: babyData.profilePicture || null,
       birth_weight: babyData.birth_weight || 7.2,
       birth_length: babyData.birth_length || 20.5,
       ...babyData // Include any additional fields
