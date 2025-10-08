@@ -104,11 +104,11 @@ jobs:
           echo "⚠️  Using temporary upload key - add ANDROID_KEYSTORE_BASE64 secret for consistency"
         fi
         
-        # Configure signing in gradle.properties
-        echo "UPLOAD_STORE_FILE=upload.keystore" >> ../gradle.properties
-        echo "UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD || 'upload2024' }}" >> ../gradle.properties
-        echo "UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS || 'upload' }}" >> ../gradle.properties
-        echo "UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD || 'upload2024' }}" >> ../gradle.properties
+        # Configure signing in gradle.properties (matches build.gradle expectations)
+        echo "RELEASE_STORE_FILE=upload.keystore" >> ../gradle.properties
+        echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD || 'upload2024' }}" >> ../gradle.properties
+        echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS || 'upload' }}" >> ../gradle.properties
+        echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD || 'upload2024' }}" >> ../gradle.properties
         
         echo "✅ Upload key configured for AAB signing"
         
