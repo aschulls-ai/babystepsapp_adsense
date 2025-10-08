@@ -262,6 +262,50 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                       </PopoverContent>
                     </Popover>
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="gender" className="text-sm font-medium text-gray-700">
+                      Gender
+                    </Label>
+                    <Select 
+                      value={formData.gender} 
+                      onValueChange={(value) => setFormData({...formData, gender: value})}
+                    >
+                      <SelectTrigger className="w-full px-4 py-3 h-auto border-2 border-gray-200 rounded-xl hover:border-green-400 focus:border-green-400 focus:ring-2 focus:ring-green-100">
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="boy">Boy</SelectItem>
+                        <SelectItem value="girl">Girl</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-picture" className="text-sm font-medium text-gray-700">
+                      Profile Picture
+                    </Label>
+                    <div className="flex items-center gap-4">
+                      {formData.profilePicture && (
+                        <img 
+                          src={formData.profilePicture} 
+                          alt="Baby profile preview"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <Input
+                          id="profile-picture"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, false)}
+                          className="w-full px-4 py-2 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Upload a photo (max 5MB)</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Safety Information */}
