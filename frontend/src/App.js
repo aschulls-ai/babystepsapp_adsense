@@ -326,8 +326,7 @@ function App() {
     );
   }
 
-  // Always show as authenticated for AdSense verification
-  const isAuthenticated = true;
+  const isAuthenticated = user?.authenticated;
 
   return (
     <div className="App min-h-screen page-gradient">
