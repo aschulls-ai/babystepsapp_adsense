@@ -84,7 +84,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
                 }}
               >
                 <SelectTrigger 
-                  className="w-full bg-white border-green-200"
+                  className="w-full bg-white dark:bg-gray-800 border-green-200 dark:border-gray-600 dark:text-white"
                   data-testid="baby-selector"
                 >
                   <SelectValue placeholder="Select a baby">
