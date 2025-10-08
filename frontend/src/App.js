@@ -139,21 +139,24 @@ function App() {
       }
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      // Set user object first to avoid redirect
+      setUser({ 
+        authenticated: true, 
+        email: rememberedEmail,
+        rememberMe: rememberMe
+      });
+      
       try {
         await fetchBabies();
-        // Set user object with remembered email if available
-        setUser({ 
-          authenticated: true, 
-          email: rememberedEmail,
-          rememberMe: rememberMe
-        });
-        
         if (rememberMe && rememberedEmail) {
           console.log('Auto-logged in with remembered credentials');
         }
       } catch (error) {
-        console.error('Auth check failed:', error);
-        logout();
+        console.error('Failed to fetch babies on auth check:', error);
+        // Don't logout immediately - babies fetch might fail for other reasons
+        // Just log the error and continue with authenticated state
+        console.log('Continuing with authenticated state despite babies fetch failure');
       }
     }
     setLoading(false);
