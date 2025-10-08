@@ -18,14 +18,11 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    // Get individual baby - use realistic birth date (18 months ago)
-    const eighteenMonthsAgo = new Date();
-    eighteenMonthsAgo.setMonth(eighteenMonthsAgo.getMonth() - 18);
-    
+    // Get individual baby - demo birth date
     const baby = {
       id: id,
       name: 'Emma Johnson',
-      birth_date: eighteenMonthsAgo.toISOString().split('T')[0],
+      birth_date: '2023-12-15', // Demo birth date as requested
       gender: 'girl',
       profilePicture: null,
       birth_weight: 7.2,
