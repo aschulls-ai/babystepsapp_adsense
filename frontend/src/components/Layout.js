@@ -37,14 +37,14 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
   const isActive = (href) => location.pathname === href;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
       {/* Mobile menu button - Made bigger for better usability */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           variant="outline"
           size="lg"
-          className="bg-white/90 backdrop-blur-sm border-green-200 w-14 h-14 p-0 shadow-lg"
+          className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-green-200 dark:border-gray-600 w-14 h-14 p-0 shadow-lg dark:text-white"
           data-testid="mobile-menu-toggle"
         >
           {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
