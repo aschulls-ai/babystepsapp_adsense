@@ -350,6 +350,18 @@ const MealPlanner = ({ currentBaby }) => {
             </Card>
           )}
 
+          {/* Error Display */}
+          {error && (
+            <Card className="glass-strong border-0 border-l-4 border-l-red-500">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 text-red-500">⚠️</div>
+                  <p className="text-red-700 font-medium">{error}</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Add Custom Meal Form */}
           {showAddForm && (
             <Card className="glass-strong border-0">
