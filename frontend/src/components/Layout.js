@@ -87,7 +87,14 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
                   className="w-full bg-white border-green-200"
                   data-testid="baby-selector"
                 >
-                  <SelectValue placeholder="Select a baby" />
+                  <SelectValue placeholder="Select a baby">
+                    {currentBaby ? (
+                      <div className="flex items-center gap-2">
+                        <Baby className="w-4 h-4 text-green-500" />
+                        {currentBaby.name}
+                      </div>
+                    ) : null}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {babies.map((baby) => (
