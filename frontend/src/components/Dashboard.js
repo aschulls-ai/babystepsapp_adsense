@@ -258,11 +258,11 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {stats.map((stat, index) => (
-          <Card key={index} className="hover:shadow-md transition-shadow">
+          <Card key={index} className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600">
             <CardContent className="p-4 text-center">
               <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
-              <p className="text-sm text-gray-600">{stat.label}</p>
-              <p className="text-lg font-semibold text-gray-900">{stat.value}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+              <p className="text-lg font-semibold text-gray-900 dark:text-white">{stat.value}</p>
             </CardContent>
           </Card>
         ))}
