@@ -132,11 +132,19 @@ jobs:
       run: |
         echo "Syncing Capacitor for iOS..."
         
-        # Ensure capacitor.config.ts exists
-        if [ ! -f "capacitor.config.ts" ] && [ ! -f "capacitor.config.js" ]; then
-          echo "❌ capacitor.config.ts/js not found"
+        # Ensure capacitor config exists
+        if [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.ts" ] && [ ! -f "capacitor.config.js" ]; then
+          echo "❌ Capacitor config not found"
           echo "Available files:"
           ls -la
+          exit 1
+        fi
+        
+        echo "✅ Found capacitor config file"
+        
+        # Ensure build directory exists
+        if [ ! -d "build" ]; then
+          echo "❌ Build directory not found. Make sure 'yarn build' completed successfully"
           exit 1
         fi
         
