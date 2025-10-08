@@ -119,7 +119,10 @@ function App() {
         console.log('✅ Auto-login successful as demo user');
       }
     } catch (error) {
-      console.log('⚠️ Auto-login failed, trying fallback sample user...');
+      // Suppress 401 errors since we expect them in demo mode
+      if (error.response?.status !== 401) {
+        console.log('⚠️ Auto-login failed, trying fallback sample user...');
+      }
       
       // Fallback: try the existing test user
       try {
@@ -146,7 +149,10 @@ function App() {
           console.log('✅ Fallback auto-login successful');
         }
       } catch (fallbackError) {
-        console.error('❌ Both auto-login attempts failed:', fallbackError);
+        // Only log non-auth errors to reduce console noise
+        if (fallbackError.response?.status !== 401) {
+          console.error('❌ Both auto-login attempts failed:', fallbackError);
+        }
         // Create mock user state for AdSense verification even if backend fails
         setUser({ 
           authenticated: true, 
