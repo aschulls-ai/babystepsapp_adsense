@@ -116,16 +116,24 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Missing Secrets:**${{ steps.validate-keystore.outputs.missing_list }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 🔧 How to Fix" >> $GITHUB_STEP_SUMMARY
+        echo "### 🚀 Quick Fix" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "1. **Run the keystore setup workflow:**" >> $GITHUB_STEP_SUMMARY
-        echo "   - Go to Actions → Setup Android Keystore → Run workflow" >> $GITHUB_STEP_SUMMARY
+        echo "**[Click here to run the Keystore Setup Workflow](../../actions/workflows/setup-android-keystore.yml)**" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "2. **Or manually add the secrets:**" >> $GITHUB_STEP_SUMMARY
-        echo "   - Go to Settings → Secrets and Variables → Actions" >> $GITHUB_STEP_SUMMARY
-        echo "   - Add: ANDROID_KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD" >> $GITHUB_STEP_SUMMARY
+        echo "### 🔧 Manual Steps" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "3. **Then re-run this workflow**" >> $GITHUB_STEP_SUMMARY
+        echo "1. **Automated Setup (Recommended):**" >> $GITHUB_STEP_SUMMARY
+        echo "   - Go to Actions → \"Setup Android Keystore\" → Run workflow" >> $GITHUB_STEP_SUMMARY
+        echo "   - Download the setup instructions artifact" >> $GITHUB_STEP_SUMMARY
+        echo "   - Add the 4 secrets to GitHub repository settings" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "2. **Manual Setup:**" >> $GITHUB_STEP_SUMMARY
+        echo "   - Run \`./scripts/setup-android-keystore.sh\` locally" >> $GITHUB_STEP_SUMMARY
+        echo "   - Add secrets to Settings → Secrets and Variables → Actions" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "3. **Re-run this workflow** after adding secrets" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📖 **Full Documentation**: [ANDROID_KEYSTORE_SETUP.md](../../../blob/main/ANDROID_KEYSTORE_SETUP.md)" >> $GITHUB_STEP_SUMMARY
         
         echo "❌ Build cannot continue without keystore secrets"
         exit 1
