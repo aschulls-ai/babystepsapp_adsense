@@ -134,7 +134,7 @@ const Research = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Chat Interface */}
         <div className="lg:col-span-2">
-          <Card className="glass-strong border-0 h-[600px] flex flex-col">
+          <Card className="glass-strong border-0 h-[600px] flex flex-col bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Bot className="w-5 h-5 text-rose-500" />
