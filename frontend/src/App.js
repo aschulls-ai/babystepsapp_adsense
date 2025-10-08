@@ -333,41 +333,40 @@ function App() {
     <div className="App min-h-screen page-gradient">
       <Router>
         <Routes>
-          {/* Authentication routes */}
           <Route 
             path="/auth" 
             element={
               isAuthenticated ? 
-                <Navigate to="/dashboard" replace /> : 
-                <AuthPage 
-                  onLogin={login} 
-                  onRegister={register}
-                  onResendVerification={resendVerification}
-                  onRequestPasswordReset={requestPasswordReset}
-                />
+              <Navigate to="/dashboard" replace /> : 
+              <AuthPage 
+                onLogin={login} 
+                onRegister={register}
+                onRequestPasswordReset={requestPasswordReset}
+                onResendVerification={resendVerification}
+              />
             } 
           />
           
-          {/* Email verification and password reset routes */}
+          {/* Email verification and password reset routes - accessible without authentication */}
           <Route path="/verify-email/:token" element={<EmailVerification />} />
-          <Route path="/reset-password/:token" element={<PasswordReset onResetPassword={resetPassword} />} />
+          <Route path="/reset-password/:token" element={<PasswordReset />} />
           
           {/* Privacy policy - accessible without authentication */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           
-          {/* Protected routes - require authentication */}
           <Route 
             path="/*" 
             element={
-              isAuthenticated ? (
-                <Layout 
-                  currentBaby={currentBaby}
-                  babies={babies}
-                  onSwitchBaby={setCurrentBaby}
-                  onLogout={logout}
-                  darkMode={darkMode}
-                  onToggleDarkMode={toggleDarkMode}
-                >
+              !isAuthenticated ? 
+              <Navigate to="/auth" replace /> : 
+              <Layout 
+                currentBaby={currentBaby}
+                babies={babies}
+                onSwitchBaby={setCurrentBaby}
+                onLogout={logout}
+                darkMode={darkMode}
+                onToggleDarkMode={toggleDarkMode}
+              >
                   <Routes>
                     <Route 
                       path="/dashboard" 
