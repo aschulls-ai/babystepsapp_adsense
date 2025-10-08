@@ -443,9 +443,6 @@ function App() {
                     />
                   </Routes>
                 </Layout>
-              ) : (
-                <Navigate to="/auth" replace />
-              )
             } 
           />
         </Routes>
