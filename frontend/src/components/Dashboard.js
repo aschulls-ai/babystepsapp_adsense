@@ -270,13 +270,13 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
 
       {/* Quick Actions */}
       <div className="mb-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action, index) => (
             <Link key={index} to={action.link} className="block">
-              <Card className="hover:shadow-lg transition-all duration-200 hover:scale-105 cursor-pointer group">
+              <Card className="hover:shadow-lg transition-all duration-200 hover:scale-105 cursor-pointer group bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600">
                 <CardContent className="p-6 text-center">
-                  <div className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-white transition-colors`}>
+                  <div className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center group-hover:bg-white dark:group-hover:bg-gray-600 transition-colors`}>
                     <action.icon className={`h-6 w-6 ${action.iconColor}`} />
                   </div>
                   <h4 className="font-semibold text-gray-900 mb-2">{action.title}</h4>
