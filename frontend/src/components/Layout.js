@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
+const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout, darkMode, onToggleDarkMode }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
