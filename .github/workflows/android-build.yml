@@ -318,11 +318,18 @@ jobs:
       
     - name: 📊 Build Summary
       run: |
-        echo "## 📱 Baby Steps Android Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "## 🎉 Android Build Completed Successfully!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Version:** v${{ needs.build.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Build Number:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "### 📱 Build Information" >> $GITHUB_STEP_SUMMARY
+        echo "- **App Version**: ${{ needs.build.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build Type**: ${{ inputs.build_type || 'bundle' }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🔐 Signing Information" >> $GITHUB_STEP_SUMMARY
+        echo "- **Signing Method**: Google Play App Signing (Recommended)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Upload Type**: Debug-signed AAB (Google will re-sign automatically)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Security**: Google manages production signing keys" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📦 Artifacts Generated:" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ Android App Bundle (.aab) - Ready for Google Play Console" >> $GITHUB_STEP_SUMMARY
