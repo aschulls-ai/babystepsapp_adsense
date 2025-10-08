@@ -80,8 +80,17 @@ jobs:
       working-directory: frontend/android/app
       run: |
         echo "Setting up keystore for AAB signing..."
-        # Generate release keystore if not exists
-        if [ ! -f "release.keystore" ]; then
+        
+        # Check if keystore is provided via GitHub Secrets
+        if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+          echo "Using keystore from GitHub Secrets..."
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          echo "Keystore decoded from secrets"
+        else
+          echo "No keystore found in secrets. Using temporary keystore for development..."
+          echo "⚠️  WARNING: This will create a new signing key - not suitable for production updates!"
+          
+          # Generate temporary keystore (same parameters each time for consistency)
           keytool -genkeypair -v \
             -keystore release.keystore \
             -alias babysteps \
@@ -91,14 +100,17 @@ jobs:
             -storepass babysteps2024 \
             -keypass babysteps2024 \
             -dname "CN=Baby Steps,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
-          echo "Release keystore generated"
+          echo "Temporary keystore generated"
+          
+          # Show fingerprint for reference
+          keytool -list -v -keystore release.keystore -alias babysteps -storepass babysteps2024 | grep SHA1
         fi
         
         # Configure signing in gradle.properties
         echo "RELEASE_STORE_FILE=release.keystore" >> ../gradle.properties
-        echo "RELEASE_STORE_PASSWORD=babysteps2024" >> ../gradle.properties
-        echo "RELEASE_KEY_ALIAS=babysteps" >> ../gradle.properties
-        echo "RELEASE_KEY_PASSWORD=babysteps2024" >> ../gradle.properties
+        echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD || 'babysteps2024' }}" >> ../gradle.properties
+        echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS || 'babysteps' }}" >> ../gradle.properties
+        echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD || 'babysteps2024' }}" >> ../gradle.properties
         
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
