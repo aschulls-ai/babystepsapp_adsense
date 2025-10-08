@@ -437,6 +437,8 @@ function App() {
                 babies={babies}
                 onSwitchBaby={setCurrentBaby}
                 onLogout={logout}
+                darkMode={darkMode}
+                onToggleDarkMode={toggleDarkMode}
               >
                 <Routes>
                   <Route 
