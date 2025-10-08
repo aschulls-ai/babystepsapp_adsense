@@ -234,7 +234,7 @@ function App() {
 
   const resendVerification = async (email) => {
     try {
-      await axios.post('/auth/resend-verification', { email });
+      await axios.post('/api/auth/resend-verification', { email });
       toast.success('Verification email sent! Please check your inbox.');
       return true;
     } catch (error) {
