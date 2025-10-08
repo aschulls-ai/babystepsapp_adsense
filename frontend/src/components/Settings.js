@@ -18,8 +18,7 @@ import { Label } from './ui/label';
 import { Switch } from './ui/switch';
 import { toast } from 'sonner';
 
-const Settings = ({ onLogout }) => {
-  const [darkMode, setDarkMode] = useState(false);
+const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [editingAccount, setEditingAccount] = useState(false);
   const [editingProfile, setEditingProfile] = useState(false);
