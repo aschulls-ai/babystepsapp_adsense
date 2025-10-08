@@ -16,7 +16,8 @@ export default async function handler(req, res) {
         id: '1',
         name: 'Emma Johnson',
         birth_date: eighteenMonthsAgo.toISOString().split('T')[0], // 18 months ago
-        gender: 'female',
+        gender: 'girl',
+        profilePicture: null,
         birth_weight: 7.2,
         birth_length: 20.5
       }
