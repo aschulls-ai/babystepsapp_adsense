@@ -30,13 +30,14 @@ jobs:
         node-version: '18'
         
     - name: Cache yarn dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           frontend/node_modules
           ~/.yarn/cache
-        key: ${{ runner.os }}-yarn-${{ hashFiles('frontend/yarn.lock') }}
+        key: ${{ runner.os }}-ios-yarn-${{ hashFiles('frontend/yarn.lock') }}
         restore-keys: |
+          ${{ runner.os }}-ios-yarn-
           ${{ runner.os }}-yarn-
         
     - name: Install dependencies
