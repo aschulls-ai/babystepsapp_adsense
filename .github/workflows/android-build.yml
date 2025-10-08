@@ -76,15 +76,41 @@ jobs:
         echo "Installing additional SDK platforms..."
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
         
-    - name: 📱 Using Google Play App Signing
+    - name: 🔐 Setup Upload Key for Google Play
+      working-directory: frontend/android/app
       run: |
-        echo "🎉 Using Google Play App Signing - No manual keystore required!"
+        echo "Setting up upload key for Google Play App Signing..."
         echo ""
-        echo "✅ Google manages signing automatically"
-        echo "✅ Just need to build and upload AAB file"
-        echo "✅ No keystore secrets needed"
+        echo "ℹ️  With Google Play App Signing:"
+        echo "   - Upload Key: Signs the AAB we upload (required)"
+        echo "   - App Signing Key: Managed by Google for final distribution"
         echo ""
-        echo "Building debug-signed AAB for Google Play upload..."
+        
+        # Generate upload keystore if not exists from secrets
+        if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+          echo "✅ Using keystore from GitHub Secrets"
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload.keystore
+        else
+          echo "🔧 Generating upload keystore (temporary for this build)"
+          keytool -genkeypair -v \
+            -keystore upload.keystore \
+            -alias upload \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass upload2024 \
+            -keypass upload2024 \
+            -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
+          echo "⚠️  Using temporary upload key - add ANDROID_KEYSTORE_BASE64 secret for consistency"
+        fi
+        
+        # Configure signing in gradle.properties
+        echo "UPLOAD_STORE_FILE=upload.keystore" >> ../gradle.properties
+        echo "UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD || 'upload2024' }}" >> ../gradle.properties
+        echo "UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS || 'upload' }}" >> ../gradle.properties
+        echo "UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD || 'upload2024' }}" >> ../gradle.properties
+        
+        echo "✅ Upload key configured for AAB signing"
         
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
