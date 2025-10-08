@@ -138,7 +138,21 @@ function App() {
           localStorage.setItem('rememberedEmail', 'test@babysteps.com');
           
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          await fetchBabies();
+          
+          // Use mock data instead of fetching from API for AdSense verification
+          setCurrentBaby({
+            id: 'demo-baby-001',
+            name: 'Emma Johnson',
+            birth_date: '2024-12-15', // Demo birth date as requested
+            gender: 'girl'
+          });
+          
+          setBabies([{
+            id: 'demo-baby-001',
+            name: 'Emma Johnson', 
+            birth_date: '2024-12-15', // Demo birth date as requested
+            gender: 'girl'
+          }]);
           
           setUser({ 
             authenticated: true, 
@@ -146,7 +160,7 @@ function App() {
             rememberMe: true
           });
           
-          console.log('✅ Fallback auto-login successful');
+          console.log('✅ Fallback auto-login successful with mock baby data');
         }
       } catch (fallbackError) {
         // Only log non-auth errors to reduce console noise
