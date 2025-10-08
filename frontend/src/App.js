@@ -256,7 +256,7 @@ function App() {
 
   const resetPassword = async (token, newPassword) => {
     try {
-      await axios.post('/auth/reset-password', { token, new_password: newPassword });
+      await axios.post('/api/auth/reset-password', { token, new_password: newPassword });
       toast.success('Password reset successful! You can now log in.');
       return true;
     } catch (error) {
