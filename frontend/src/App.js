@@ -45,6 +45,38 @@ function App() {
   const [currentBaby, setCurrentBaby] = useState(null);
   const [babies, setBabies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Initialize theme on app start
+  useEffect(() => {
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark';
+    setDarkMode(isDark);
+    
+    // Apply theme to document
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  // Theme toggle function
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    
+    // Save preference
+    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+    
+    // Apply theme
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   useEffect(() => {
     const initializeApp = async () => {
