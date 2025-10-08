@@ -296,8 +296,8 @@ const MessageBubble = ({ message }) => {
       <div className={`flex-1 max-w-[calc(100%-3rem)] min-w-0 ${isBot ? '' : 'text-right'}`}>
         <div className={`px-4 py-3 rounded-lg max-w-full overflow-hidden ${
           isBot 
-            ? 'bg-gray-100 text-gray-900' 
-            : 'bg-blue-500 text-white'
+            ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100' 
+            : 'bg-blue-500 dark:bg-blue-600 text-white'
         }`}>
           <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
           {message.sources && message.sources.length > 0 && (
