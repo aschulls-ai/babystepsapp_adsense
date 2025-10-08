@@ -64,12 +64,20 @@ generate_keystore() {
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             print_warning "Keeping existing keystore"
-            return 0
+            
+            # Verify existing keystore works
+            if keytool -list -keystore "$KEYSTORE_FILE" -alias "$KEY_ALIAS" -storepass "$STORE_PASSWORD" > /dev/null 2>&1; then
+                print_success "Existing keystore verified and will be used"
+                return 0
+            else
+                print_warning "Existing keystore appears corrupted. Will regenerate..."
+            fi
         fi
         rm "$KEYSTORE_FILE"
     fi
     
-    keytool -genkeypair -v \
+    # Generate keystore with error handling
+    if keytool -genkeypair -v \
       -keystore "$KEYSTORE_FILE" \
       -alias "$KEY_ALIAS" \
       -keyalg RSA \
@@ -77,9 +85,34 @@ generate_keystore() {
       -validity $VALIDITY_DAYS \
       -storepass "$STORE_PASSWORD" \
       -keypass "$KEY_PASSWORD" \
-      -dname "CN=Baby Steps,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
-    
-    print_success "Keystore generated: $KEYSTORE_FILE"
+      -dname "CN=Baby Steps,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"; then
+      print_success "Keystore generated: $KEYSTORE_FILE"
+    else
+      print_error "Failed to generate keystore with standard alias"
+      
+      # Try with unique alias if standard fails
+      TIMESTAMP=$(date +%s)
+      UNIQUE_ALIAS="${KEY_ALIAS}_${TIMESTAMP}"
+      print_status "Trying with unique alias: $UNIQUE_ALIAS"
+      
+      if keytool -genkeypair -v \
+        -keystore "$KEYSTORE_FILE" \
+        -alias "$UNIQUE_ALIAS" \
+        -keyalg RSA \
+        -keysize 2048 \
+        -validity $VALIDITY_DAYS \
+        -storepass "$STORE_PASSWORD" \
+        -keypass "$KEY_PASSWORD" \
+        -dname "CN=Baby Steps,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"; then
+        
+        KEY_ALIAS="$UNIQUE_ALIAS"
+        print_success "Keystore generated with unique alias: $KEYSTORE_FILE"
+        print_warning "Note: Key alias changed to '$KEY_ALIAS'"
+      else
+        print_error "Failed to generate keystore. Please check Java installation."
+        exit 1
+      fi
+    fi
 }
 
 # Show keystore details
