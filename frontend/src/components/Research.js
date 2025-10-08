@@ -135,16 +135,16 @@ const Research = () => {
         {/* Chat Interface */}
         <div className="lg:col-span-2">
           <Card className="glass-strong border-0 h-[600px] flex flex-col">
-            <CardHeader>
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Bot className="w-5 h-5 text-rose-500" />
                 AI Parenting Assistant
               </CardTitle>
             </CardHeader>
             
-            <CardContent className="flex-1 flex flex-col p-0">
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 pb-4">
+            <CardContent className="flex-1 flex flex-col p-0 min-h-0">
+              {/* Messages Container - Fixed Height with Scroll */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 pb-2 min-h-0">
                 {messages.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-center">
                     <div className="max-w-md">
