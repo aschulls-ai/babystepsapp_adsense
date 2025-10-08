@@ -31,6 +31,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
     { name: 'Emergency Training', href: '/emergency-training', icon: ShieldAlert },
     { name: 'Meal Planner', href: '/meal-planner', icon: ChefHat },
     { name: 'Research & Tips', href: '/research', icon: BookOpen },
+    { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
   const isActive = (href) => location.pathname === href;
