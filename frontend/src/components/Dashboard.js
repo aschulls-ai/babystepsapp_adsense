@@ -241,13 +241,13 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {getMilestonesForAge(currentAge).map((milestone, index) => (
                 <div key={index} className="flex items-start space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                  <p className="text-sm text-gray-700">{milestone}</p>
+                  <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">{milestone}</p>
                 </div>
               ))}
             </div>
             {getMilestonesForAge(currentAge).length === 0 && (
-              <p className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
                 Keep tracking! Milestones will appear as your baby grows.
               </p>
             )}
