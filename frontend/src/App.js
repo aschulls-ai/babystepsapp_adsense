@@ -295,7 +295,7 @@ function App() {
 
   const updateBaby = async (babyData) => {
     try {
-      const response = await axios.put(`/babies/${currentBaby.id}`, babyData);
+      const response = await axios.put(`/api/babies/${currentBaby.id}`, babyData);
       const updatedBaby = response.data;
       
       // Update babies array
