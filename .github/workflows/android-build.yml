@@ -111,9 +111,20 @@ jobs:
         echo "Installing dependencies..."
         yarn install --frozen-lockfile --network-timeout 300000
         
+    - name: 🔧 Configure Production Environment
+      working-directory: frontend
+      run: |
+        echo "Configuring production environment..."
+        echo "REACT_APP_BACKEND_URL=https://babystepsapp.app/api" > .env.production
+        echo "REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053" >> .env.production
+        echo "GENERATE_SOURCEMAP=false" >> .env.production
+        echo "CI=false" >> .env.production
+
     - name: 🔧 Build React App
       working-directory: frontend
       env:
+        REACT_APP_BACKEND_URL: https://babystepsapp.app/api
+        REACT_APP_ADSENSE_CLIENT_ID: ca-pub-1934622676928053
         GENERATE_SOURCEMAP: false
         CI: false
       run: |
