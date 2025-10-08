@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Test the Baby Steps backend authentication to verify that email verification is now optional for login. Users should be able to login immediately after registration without verifying their email first."
+## user_problem_statement: "Frontend login UI issue: While backend authentication works perfectly, there appears to be a frontend login form issue preventing full UI testing. Investigation and fix required for login form to work correctly."
 
 ## backend:
   - task: "API endpoints functionality"
