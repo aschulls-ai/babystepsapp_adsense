@@ -455,7 +455,7 @@ function App() {
         {isAuthenticated && <BottomBannerAd />}
         
         {/* Add padding to prevent content overlap with bottom banner */}
-        <div className="h-16 md:h-20" />
+        {isAuthenticated && <div className="h-16 md:h-20" />}
         
         {/* Vercel Speed Insights for performance monitoring */}
         <SpeedInsights />
