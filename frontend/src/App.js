@@ -439,6 +439,10 @@ function App() {
                     element={<Research />} 
                   />
                   <Route 
+                    path="/settings" 
+                    element={<Settings onLogout={logout} />} 
+                  />
+                  <Route 
                     path="/" 
                     element={<Navigate to="/dashboard" replace />} 
                   />
