@@ -332,107 +332,120 @@ function App() {
     <div className="App min-h-screen page-gradient">
       <Router>
         <Routes>
-          {/* Redirect /auth to dashboard for AdSense verification */}
+          {/* Authentication routes */}
           <Route 
             path="/auth" 
-            element={<Navigate to="/dashboard" replace />} 
+            element={
+              isAuthenticated ? 
+                <Navigate to="/dashboard" replace /> : 
+                <AuthPage 
+                  onLogin={login} 
+                  onRegister={register}
+                  onResendVerification={resendVerification}
+                  onRequestPasswordReset={requestPasswordReset}
+                />
+            } 
           />
           
-          {/* Email verification and password reset routes - redirect to dashboard */}
-          <Route path="/verify-email/:token" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/reset-password/:token" element={<Navigate to="/dashboard" replace />} />
+          {/* Email verification and password reset routes */}
+          <Route path="/verify-email/:token" element={<EmailVerification />} />
+          <Route path="/reset-password/:token" element={<PasswordReset onResetPassword={resetPassword} />} />
           
           {/* Privacy policy - accessible without authentication */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           
-          {/* Main app routes - no authentication required for AdSense verification */}
+          {/* Protected routes - require authentication */}
           <Route 
             path="/*" 
             element={
-              <Layout 
-                currentBaby={currentBaby}
-                babies={babies}
-                onSwitchBaby={setCurrentBaby}
-                onLogout={logout}
-                darkMode={darkMode}
-                onToggleDarkMode={toggleDarkMode}
-              >
-                <Routes>
-                  <Route 
-                    path="/dashboard" 
-                    element={
-                      <Dashboard 
-                        currentBaby={currentBaby}
-                        onAddBaby={addBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/baby-profile" 
-                    element={
-                      <BabyProfile 
-                        currentBaby={currentBaby}
-                        onAddBaby={addBaby}
-                        onUpdateBaby={updateBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/tracking" 
-                    element={
-                      <TrackingPage 
-                        currentBaby={currentBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/food-research" 
-                    element={
-                      <FoodResearch 
-                        currentBaby={currentBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/formula-comparison" 
-                    element={
-                      <FormulaComparison 
-                        currentBaby={currentBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/emergency-training" 
-                    element={<EmergencyTraining currentBaby={currentBaby} />} 
-                  />
-                  <Route 
-                    path="/meal-planner" 
-                    element={
-                      <MealPlanner 
-                        currentBaby={currentBaby}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/research" 
-                    element={<Research />} 
-                  />
-                  <Route 
-                    path="/settings" 
-                    element={
-                      <Settings 
-                        onLogout={logout} 
-                        darkMode={darkMode}
-                        onToggleDarkMode={toggleDarkMode}
-                      />
-                    } 
-                  />
-                  <Route 
-                    path="/" 
-                    element={<Navigate to="/dashboard" replace />} 
-                  />
-                </Routes>
-              </Layout>
+              isAuthenticated ? (
+                <Layout 
+                  currentBaby={currentBaby}
+                  babies={babies}
+                  onSwitchBaby={setCurrentBaby}
+                  onLogout={logout}
+                  darkMode={darkMode}
+                  onToggleDarkMode={toggleDarkMode}
+                >
+                  <Routes>
+                    <Route 
+                      path="/dashboard" 
+                      element={
+                        <Dashboard 
+                          currentBaby={currentBaby}
+                          onAddBaby={addBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/baby-profile" 
+                      element={
+                        <BabyProfile 
+                          currentBaby={currentBaby}
+                          onAddBaby={addBaby}
+                          onUpdateBaby={updateBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/tracking" 
+                      element={
+                        <TrackingPage 
+                          currentBaby={currentBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/food-research" 
+                      element={
+                        <FoodResearch 
+                          currentBaby={currentBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/formula-comparison" 
+                      element={
+                        <FormulaComparison 
+                          currentBaby={currentBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/emergency-training" 
+                      element={<EmergencyTraining currentBaby={currentBaby} />} 
+                    />
+                    <Route 
+                      path="/meal-planner" 
+                      element={
+                        <MealPlanner 
+                          currentBaby={currentBaby}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/research" 
+                      element={<Research />} 
+                    />
+                    <Route 
+                      path="/settings" 
+                      element={
+                        <Settings 
+                          onLogout={logout} 
+                          darkMode={darkMode}
+                          onToggleDarkMode={toggleDarkMode}
+                        />
+                      } 
+                    />
+                    <Route 
+                      path="/" 
+                      element={<Navigate to="/dashboard" replace />} 
+                    />
+                  </Routes>
+                </Layout>
+              ) : (
+                <Navigate to="/auth" replace />
+              )
             } 
           />
         </Routes>
