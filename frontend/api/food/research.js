@@ -81,27 +81,29 @@ export default async function handler(req, res) {
   };
 
   // Find relevant response
-  let response = '';
+  let responseData = null;
   const questionLower = question.toLowerCase();
   
-  for (const [keyword, answer] of Object.entries(mockResponses)) {
+  // Check for specific food keywords
+  for (const [keyword, data] of Object.entries(mockResponses)) {
     if (questionLower.includes(keyword)) {
-      response = answer;
+      responseData = data;
       break;
     }
   }
 
   // Default response if no match found
-  if (!response) {
-    response = `Based on your question about "${question}", I recommend consulting with your pediatrician for personalized advice. For babies around ${baby_age_months || 6} months old, focus on introducing single ingredient foods one at a time, watching for allergic reactions, and ensuring foods are properly prepared for their age and developmental stage.`;
+  if (!responseData) {
+    responseData = {
+      answer: `**CONSULT PEDIATRICIAN** for personalized guidance about "${question}"\n\n**General guidelines for ${baby_age_months || 6} month old babies:**\n• Focus on introducing single ingredient foods one at a time\n• Watch carefully for allergic reactions\n• Ensure foods are properly prepared for age and developmental stage\n• Always supervise during meals\n• Cut foods appropriately to prevent choking\n\n**Safety reminders:**\n• Introduce new foods gradually\n• Wait 3-5 days between new foods\n• Trust your instincts - if something seems wrong, contact your pediatrician`,
+      safety_level: 'consult_doctor',
+      age_recommendation: 'Consult pediatrician for guidance',
+      sources: ['General pediatric guidelines', 'AAP food safety recommendations', 'WHO infant feeding guidelines']
+    };
   }
 
-  // Add general safety reminder
-  response += '\n\n**Safety Reminder**: Always supervise your baby during meals, cut foods appropriately to prevent choking, and introduce new foods gradually while watching for allergic reactions.';
+  // Add general safety reminder to all responses
+  responseData.answer += '\n\n**⚠️ Important Safety Reminder:**\nThis information is for educational purposes only. Always consult your pediatrician before introducing new foods, especially if your baby has allergies or medical conditions. Every baby develops at their own pace.';
 
-  res.status(200).json({ 
-    answer: response,
-    safety_level: 'consult_pediatrician',
-    sources: ['General pediatric guidelines', 'Food safety recommendations']
-  });
+  res.status(200).json(responseData);
 }
