@@ -40,18 +40,6 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
   });
 
   useEffect(() => {
-    // Load saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    const isDark = savedTheme === 'dark';
-    setDarkMode(isDark);
-    
-    // Apply theme to document
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
     // Load user data
     loadUserData();
   }, []);
