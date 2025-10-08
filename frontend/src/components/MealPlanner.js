@@ -75,19 +75,43 @@ const MealPlanner = ({ currentBaby }) => {
     if (!query.trim()) return;
 
     setLoading(true);
+    setError('');
     try {
       const babyAgeMonths = currentBaby ? 
-        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : null;
+        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 12; // Default to 12 months if no current baby
 
-      const response = await axios.post('/api/meal/search', {
+      console.log('Meal search request:', { query, babyAgeMonths });
+      
+      const response = await axios.post('/meal/search', {
         query: query,
         baby_age_months: babyAgeMonths
       });
 
-      setSearchResults(response.data);
+      console.log('Meal search response:', response.data);
+
+      if (response.data && response.data.results) {
+        setSearchResults(response.data.results);
+        setError('');
+      } else {
+        setError('No results found. Please try a different search.');
+      }
       setSearchQuery('');
     } catch (error) {
-      toast.error('Failed to search meals and food safety info');
+      console.error('Meal search error:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      if (error.response?.status === 404) {
+        setError('Meal search service is temporarily unavailable. Please try again later.');
+      } else if (error.response?.status === 401) {
+        setError('Authentication required. Please refresh the page and try again.');
+      } else {
+        setError(`Search failed: ${error.message || 'Unknown error occurred'}`);
+      }
     } finally {
       setLoading(false);
     }
