@@ -37,7 +37,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
   const isActive = (href) => location.pathname === href;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
+    <div className="min-h-screen page-gradient">
       {/* Mobile menu button - Made bigger for better usability */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Button
