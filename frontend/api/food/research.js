@@ -4,10 +4,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ detail: 'Method not allowed' });
   }
 
-  // Simple auth check
+  // Simple auth check - Accept demo tokens
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) {
     return res.status(401).json({ detail: 'Not authenticated' });
+  }
+
+  // Validate demo tokens (base64 encoded JSON)
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf8');
+    const tokenData = JSON.parse(decoded);
+    
+    // Check if token is valid (demo tokens or test tokens)
+    if (!tokenData.email || (!tokenData.email.includes('demo@babysteps.com') && !tokenData.email.includes('test@babysteps.com'))) {
+      return res.status(401).json({ detail: 'Invalid token' });
+    }
+  } catch (error) {
+    console.error('Token validation error:', error);
+    return res.status(401).json({ detail: 'Invalid token format' });
   }
 
   const { question, baby_age_months } = req.body;
