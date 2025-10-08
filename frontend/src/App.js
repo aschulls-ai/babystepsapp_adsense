@@ -21,6 +21,7 @@ import FormulaComparison from './components/FormulaComparison';
 import EmergencyTraining from './components/EmergencyTraining';
 import MealPlanner from './components/MealPlanner';
 import Research from './components/Research';
+import Settings from './components/Settings';
 import EmailVerification from './components/EmailVerification';
 import PasswordReset from './components/PasswordReset';
 import PrivacyPolicy from './components/PrivacyPolicy';
