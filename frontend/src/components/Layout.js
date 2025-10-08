@@ -60,12 +60,12 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl border-r border-green-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-green-100 dark:border-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-center h-16 px-6 border-b border-green-100 bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+          <div className="flex items-center justify-center h-16 px-6 border-b border-green-100 dark:border-gray-700 bg-gradient-to-r from-green-500 to-emerald-500 dark:from-green-600 dark:to-emerald-600 text-white">
             <Utensils className="w-6 h-6 mr-2" />
             <h1 className="text-xl font-bold font-display">Baby Steps</h1>
           </div>
