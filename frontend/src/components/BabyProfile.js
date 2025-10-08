@@ -61,6 +61,27 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
     }
   };
 
+  const handleImageUpload = (e, isEdit = false) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imageData = event.target.result;
+        if (isEdit) {
+          setEditData(prev => ({ ...prev, profilePicture: imageData }));
+        } else {
+          setFormData(prev => ({ ...prev, profilePicture: imageData }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const startEdit = () => {
     setEditData({
       name: currentBaby?.name || '',
