@@ -293,13 +293,13 @@ const MessageBubble = ({ message }) => {
         {isBot ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
       </div>
       
-      <div className={`flex-1 max-w-[calc(100%-3rem)] ${isBot ? '' : 'text-right'}`}>
-        <div className={`inline-block px-4 py-3 rounded-lg w-full max-w-full ${
+      <div className={`flex-1 max-w-[calc(100%-3rem)] min-w-0 ${isBot ? '' : 'text-right'}`}>
+        <div className={`px-4 py-3 rounded-lg max-w-full overflow-hidden ${
           isBot 
             ? 'bg-gray-100 text-gray-900' 
             : 'bg-blue-500 text-white'
         }`}>
-          <p className="whitespace-pre-wrap break-words word-wrap break-all hyphens-auto">{message.content}</p>
+          <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
           {message.sources && message.sources.length > 0 && (
             <div className="mt-2 pt-2 border-t border-gray-200">
               <p className="text-xs text-gray-500">Sources: {message.sources.join(', ')}</p>
