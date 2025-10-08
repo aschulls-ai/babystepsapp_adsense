@@ -46,10 +46,13 @@ jobs:
     - name: Configure environment for production
       working-directory: ./frontend
       run: |
+        echo "Configuring production environment..."
         echo "REACT_APP_BACKEND_URL=https://babystepsapp.app/api" > .env.production
         echo "REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053" >> .env.production
         echo "GENERATE_SOURCEMAP=false" >> .env.production
+        echo "CI=false" >> .env.production
         cp .env.production .env.local
+        echo "Environment configured for iOS build"
       
     - name: Build React app
       working-directory: ./frontend
