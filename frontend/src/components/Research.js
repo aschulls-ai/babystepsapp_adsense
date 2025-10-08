@@ -151,10 +151,10 @@ const Research = () => {
                       <div className="w-20 h-20 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Lightbulb className="w-10 h-10 text-white" />
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                         Ask me anything about baby care!
                       </h3>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">
                         I can help with feeding, sleep, development, health concerns, and more.
                       </p>
                     </div>
