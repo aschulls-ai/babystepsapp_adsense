@@ -62,14 +62,33 @@ export default async function handler(req, res) {
     'teething': 'Teething typically begins around 6 months but can start earlier or later. Signs include drooling, wanting to chew on things, irritability, and slightly raised temperature. Offer teething toys, cold washcloths, or discuss pain relief options with your doctor.'
   };
 
-  // Find the most relevant response
+  // Enhanced keyword matching for better responses
   let response = '';
   const questionLower = question.toLowerCase();
   
-  for (const [keyword, answer] of Object.entries(mockResponses)) {
-    if (questionLower.includes(keyword)) {
-      response = answer;
-      break;
+  // Food safety specific matching
+  if (questionLower.includes('strawberr')) {
+    response = mockResponses.strawberries;
+  } else if (questionLower.includes('honey')) {
+    response = mockResponses.honey;
+  } else if (questionLower.includes('egg')) {
+    response = mockResponses.eggs;
+  } else if (questionLower.includes('avocado')) {
+    response = mockResponses.avocado;
+  } else if (questionLower.includes('water') || questionLower.includes('drink')) {
+    response = mockResponses.water;
+  } else if (questionLower.includes('peanut butter') || questionLower.includes('peanut')) {
+    response = mockResponses['peanut butter'];
+  } else if (questionLower.includes('safe') && (questionLower.includes('baby') || questionLower.includes('infant'))) {
+    // General food safety response
+    response = '**CONSULT PEDIATRICIAN**\n\nFood safety is very important for babies. Here are general guidelines:\n\n• **6 months:** Start with single-ingredient purees\n• **Avoid until 12 months:** Honey, whole nuts, large chunks of food\n• **Always supervise:** Watch for choking and allergic reactions\n• **Proper preparation:** Cook foods thoroughly, check temperatures\n• **Gradual introduction:** One new food at a time\n\n**Common safe foods for 9+ months:** Well-cooked pasta, soft fruits, steamed vegetables, ground meats, cheese, yogurt\n\n**Safety Reminder:** Always cut foods appropriately, supervise meals, and consult your pediatrician about introducing new foods.\n\n*Sources: AAP feeding guidelines, FDA food safety recommendations*';
+  } else {
+    // General topic matching
+    for (const [keyword, answer] of Object.entries(mockResponses)) {
+      if (questionLower.includes(keyword)) {
+        response = answer;
+        break;
+      }
     }
   }
 
