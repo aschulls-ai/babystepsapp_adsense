@@ -174,7 +174,7 @@ function App() {
 
   const login = async (email, password, rememberMe = false) => {
     try {
-      const response = await axios.post('/auth/login', { email, password });
+      const response = await axios.post('/api/auth/login', { email, password });
       const { access_token } = response.data;
       
       localStorage.setItem('token', access_token);
