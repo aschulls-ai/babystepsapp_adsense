@@ -28,21 +28,24 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+        cache: 'yarn'
+        cache-dependency-path: frontend/yarn.lock
         
     - name: Install dependencies
       working-directory: ./frontend
-      run: npm ci
+      run: yarn install --frozen-lockfile
+      
+    - name: Configure environment for production
+      working-directory: ./frontend
+      run: |
+        echo "REACT_APP_BACKEND_URL=https://babystepsapp.app/api" > .env.production
+        echo "REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053" >> .env.production
+        echo "GENERATE_SOURCEMAP=false" >> .env.production
+        cp .env.production .env.local
       
     - name: Build React app
       working-directory: ./frontend
-      run: |
-        if [ "${{ github.event.inputs.build_type }}" = "production" ]; then
-          npm run build
-        else
-          npm run build
-        fi
+      run: yarn build
         
     - name: Setup iOS development environment
       run: |
