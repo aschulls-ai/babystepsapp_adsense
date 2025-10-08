@@ -149,13 +149,27 @@ jobs:
         echo "Syncing Capacitor..."
         npx cap sync android
         
-    - name: 🔧 Update Android Version
+    - name: 📱 Update Version Code and Get App Version
+      id: version_update
       working-directory: frontend/android
       run: |
-        # Update version in build.gradle
+        # Auto-increment version code based on GitHub run number
+        NEW_VERSION_CODE=$((25 + ${{ github.run_number }}))
+        
+        # Update build.gradle with new version code
         sed -i "s/versionName \".*\"/versionName \"${{ steps.version.outputs.version }}\"/" app/build.gradle
-        sed -i "s/versionCode .*/versionCode ${{ github.run_number }}/" app/build.gradle
-        echo "Updated to version ${{ steps.version.outputs.version }} (code: ${{ github.run_number }})"
+        sed -i "s/versionCode [0-9]*/versionCode $NEW_VERSION_CODE/" app/build.gradle
+        
+        # Get updated version info
+        VERSION_NAME=$(grep 'versionName' app/build.gradle | sed 's/.*versionName "\([^"]*\)".*/\1/')
+        VERSION_CODE=$(grep 'versionCode' app/build.gradle | sed 's/.*versionCode \([0-9]*\).*/\1/')
+        
+        echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+        echo "version=$VERSION_NAME-$VERSION_CODE" >> $GITHUB_OUTPUT
+        
+        echo "🔢 Updated Version Code: $VERSION_CODE"
+        echo "📱 App Version: $VERSION_NAME ($VERSION_CODE)"
         
     - name: 🔐 Fix Gradle Wrapper
       working-directory: frontend/android
