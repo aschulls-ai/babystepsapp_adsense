@@ -93,6 +93,26 @@ jobs:
           ${{ runner.os }}-ios-cocoapods-
           ${{ runner.os }}-cocoapods-
       
+    - name: Install Capacitor Dependencies
+      working-directory: ./frontend
+      run: |
+        echo "Installing Capacitor dependencies..."
+        
+        # Install Capacitor CLI globally for npx usage
+        yarn global add @capacitor/cli
+        
+        # Install Capacitor iOS platform
+        if ! yarn list @capacitor/ios > /dev/null 2>&1; then
+          echo "Installing @capacitor/ios..."
+          yarn add @capacitor/ios
+        else
+          echo "✅ @capacitor/ios already installed"
+        fi
+        
+        # Verify Capacitor installation
+        npx cap --version
+        echo "✅ Capacitor CLI ready"
+        
     - name: Add iOS platform (if not exists)
       working-directory: ./frontend
       run: |
