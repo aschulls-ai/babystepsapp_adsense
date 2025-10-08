@@ -36,13 +36,10 @@ export default async function handler(req, res) {
     console.log('Updating baby with data:', babyData);
     
     // Return the updated baby data (merge with existing data)
-    const eighteenMonthsAgo = new Date();
-    eighteenMonthsAgo.setMonth(eighteenMonthsAgo.getMonth() - 18);
-    
     const updatedBaby = {
       id: '1', // In a real app, this would come from the URL parameter
       name: babyData.name || 'Emma Johnson',
-      birth_date: babyData.birth_date || eighteenMonthsAgo.toISOString().split('T')[0],
+      birth_date: babyData.birth_date || '2023-12-15', // Demo birth date as requested
       gender: babyData.gender || 'girl',
       profilePicture: babyData.profilePicture || null,
       birth_weight: babyData.birth_weight || 7.2,
