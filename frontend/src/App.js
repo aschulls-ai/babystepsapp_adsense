@@ -451,8 +451,8 @@ function App() {
         </Routes>
         <Toaster position="top-right" />
         
-        {/* Bottom Banner Ad - Always show for AdSense verification */}
-        <BottomBannerAd />
+        {/* Bottom Banner Ad - Show when authenticated */}
+        {isAuthenticated && <BottomBannerAd />}
         
         {/* Add padding to prevent content overlap with bottom banner */}
         <div className="h-16 md:h-20" />
