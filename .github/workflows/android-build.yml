@@ -76,92 +76,15 @@ jobs:
         echo "Installing additional SDK platforms..."
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"
         
-    - name: 🔍 Validate Keystore Secrets
-      id: validate-keystore
+    - name: 📱 Using Google Play App Signing
       run: |
-        echo "Validating keystore configuration..."
-        
-        # Check all required secrets
-        MISSING_SECRETS=""
-        
-        if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
-          MISSING_SECRETS="$MISSING_SECRETS ANDROID_KEYSTORE_BASE64"
-        fi
-        
-        if [ -z "${{ secrets.KEYSTORE_PASSWORD }}" ]; then
-          MISSING_SECRETS="$MISSING_SECRETS KEYSTORE_PASSWORD"
-        fi
-        
-        if [ -z "${{ secrets.KEY_ALIAS }}" ]; then
-          MISSING_SECRETS="$MISSING_SECRETS KEY_ALIAS"
-        fi
-        
-        if [ -z "${{ secrets.KEY_PASSWORD }}" ]; then
-          MISSING_SECRETS="$MISSING_SECRETS KEY_PASSWORD"
-        fi
-        
-        if [ -n "$MISSING_SECRETS" ]; then
-          echo "❌ Missing required secrets:$MISSING_SECRETS"
-          echo "missing_secrets=true" >> $GITHUB_OUTPUT
-          echo "missing_list=$MISSING_SECRETS" >> $GITHUB_OUTPUT
-        else
-          echo "✅ All keystore secrets are configured"
-          echo "missing_secrets=false" >> $GITHUB_OUTPUT
-        fi
-
-    - name: 🚨 Handle Missing Secrets
-      if: steps.validate-keystore.outputs.missing_secrets == 'true'
-      run: |
-        echo "## ❌ Android Build Failed - Missing Keystore Secrets" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Missing Secrets:**${{ steps.validate-keystore.outputs.missing_list }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 🚀 Quick Fix" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**[Click here to run the Keystore Setup Workflow](../../actions/workflows/setup-android-keystore.yml)**" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 🔧 Manual Steps" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "1. **Automated Setup (Recommended):**" >> $GITHUB_STEP_SUMMARY
-        echo "   - Go to Actions → \"Setup Android Keystore\" → Run workflow" >> $GITHUB_STEP_SUMMARY
-        echo "   - Download the setup instructions artifact" >> $GITHUB_STEP_SUMMARY
-        echo "   - Add the 4 secrets to GitHub repository settings" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "2. **Manual Setup:**" >> $GITHUB_STEP_SUMMARY
-        echo "   - Run \`./scripts/setup-android-keystore.sh\` locally" >> $GITHUB_STEP_SUMMARY
-        echo "   - Add secrets to Settings → Secrets and Variables → Actions" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "3. **Re-run this workflow** after adding secrets" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "📖 **Full Documentation**: [ANDROID_KEYSTORE_SETUP.md](../../../blob/main/ANDROID_KEYSTORE_SETUP.md)" >> $GITHUB_STEP_SUMMARY
-        
-        echo "❌ Build cannot continue without keystore secrets"
-        exit 1
-
-    - name: 🔐 Setup Keystore for Signing
-      working-directory: frontend/android/app
-      run: |
-        echo "Setting up keystore for AAB signing..."
-        
-        # Decode keystore from secrets
-        echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-        echo "✅ Keystore decoded from GitHub Secrets"
-        
-        # Verify keystore integrity
-        keytool -list -keystore release.keystore -storepass "${{ secrets.KEYSTORE_PASSWORD }}" -alias "${{ secrets.KEY_ALIAS }}" > /dev/null
-        echo "✅ Keystore integrity verified"
-        
-        # Show keystore fingerprint for verification
-        echo "🔑 Keystore SHA1 Fingerprint:"
-        keytool -list -v -keystore release.keystore -alias "${{ secrets.KEY_ALIAS }}" -storepass "${{ secrets.KEYSTORE_PASSWORD }}" | grep SHA1
-        
-        # Configure signing in gradle.properties
-        echo "RELEASE_STORE_FILE=release.keystore" >> ../gradle.properties
-        echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> ../gradle.properties
-        echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> ../gradle.properties
-        echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> ../gradle.properties
-        
-        echo "✅ Keystore configuration completed"
+        echo "🎉 Using Google Play App Signing - No manual keystore required!"
+        echo ""
+        echo "✅ Google manages signing automatically"
+        echo "✅ Just need to build and upload AAB file"
+        echo "✅ No keystore secrets needed"
+        echo ""
+        echo "Building debug-signed AAB for Google Play upload..."
         
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
