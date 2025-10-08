@@ -160,22 +160,18 @@ function App() {
           rememberMe: true
         });
         
-        // Create mock baby data for display - 18 months old
-        const eighteenMonthsAgo = new Date();
-        eighteenMonthsAgo.setMonth(eighteenMonthsAgo.getMonth() - 18);
-        const birthDate = eighteenMonthsAgo.toISOString().split('T')[0];
-        
+        // Create mock baby data for display
         setCurrentBaby({
           id: 'demo-baby-001',
           name: 'Emma Johnson',
-          birth_date: birthDate,
+          birth_date: '2023-12-15', // Demo birth date as requested
           gender: 'girl'
         });
         
         setBabies([{
           id: 'demo-baby-001',
           name: 'Emma Johnson', 
-          birth_date: birthDate,
+          birth_date: '2023-12-15', // Demo birth date as requested
           gender: 'girl'
         }]);
         
