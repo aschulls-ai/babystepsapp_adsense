@@ -40,9 +40,21 @@ jobs:
           ${{ runner.os }}-ios-yarn-
           ${{ runner.os }}-yarn-
         
+    - name: Verify project structure
+      run: |
+        echo "Checking project structure..."
+        ls -la
+        echo "Frontend directory contents:"
+        ls -la frontend/
+        echo "Checking for yarn.lock:"
+        test -f frontend/yarn.lock && echo "✅ yarn.lock found" || echo "❌ yarn.lock missing"
+        
     - name: Install dependencies
       working-directory: ./frontend
-      run: yarn install --frozen-lockfile
+      run: |
+        echo "Installing frontend dependencies..."
+        yarn install --frozen-lockfile --network-timeout 300000
+        echo "Dependencies installed successfully"
       
     - name: Configure environment for production
       working-directory: ./frontend
