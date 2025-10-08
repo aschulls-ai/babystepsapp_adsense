@@ -109,7 +109,10 @@ jobs:
       
     - name: Install iOS dependencies
       working-directory: ./frontend/ios/App
-      run: pod install
+      run: |
+        echo "Installing iOS CocoaPods dependencies..."
+        pod install --repo-update
+        echo "iOS dependencies installed successfully"
       
     - name: Build iOS app
       working-directory: ./frontend
