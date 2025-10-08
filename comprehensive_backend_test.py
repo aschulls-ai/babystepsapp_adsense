@@ -25,9 +25,9 @@ class ComprehensiveBackendTester:
         self.session.timeout = 60  # Longer timeout for AI endpoints
         self.auth_token = None
         # Test credentials
-        self.test_email = "sarah.johnson@example.com"
-        self.test_password = "SecurePass123"
-        self.test_name = "Sarah Johnson"
+        self.test_email = "test@babysteps.com"
+        self.test_password = "TestPassword123"
+        self.test_name = "Test User"
         self.baby_id = None
         self.results = {
             'passed': 0,
