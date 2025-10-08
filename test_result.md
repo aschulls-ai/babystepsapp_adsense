@@ -198,13 +198,10 @@
 
 ## test_plan:
   current_focus:
-    - "Baby profile enhancements"
-    - "Meal planner enhanced recipes"
-  stuck_tasks:
-    - "Baby profile enhancements"
-    - "Meal planner enhanced recipes"
+    - "Review request verification completed"
+  stuck_tasks: []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
   - task: "Activity History repositioning and renaming"
     implemented: true
