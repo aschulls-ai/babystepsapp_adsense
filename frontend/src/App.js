@@ -174,11 +174,18 @@ function App() {
 
   const login = async (email, password, rememberMe = false) => {
     try {
+      console.log('🚀 Login attempt started for:', email);
       const response = await axios.post('/api/auth/login', { email, password });
+      console.log('✅ Login response received:', response.status);
+      
       const { access_token } = response.data;
+      console.log('🔑 Access token received, length:', access_token ? access_token.length : 0);
       
       localStorage.setItem('token', access_token);
+      console.log('💾 Token saved to localStorage');
+      
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      console.log('🔐 Authorization header set');
       
       // Handle remember me functionality
       if (rememberMe) {
@@ -196,8 +203,12 @@ function App() {
       }
       
       // Set user state to trigger re-render
-      setUser({ email });
+      setUser({ email, authenticated: true });
+      console.log('👤 User state updated');
+      
       await fetchBabies();
+      console.log('🍼 Babies fetched successfully');
+      
       return true;
     } catch (error) {
       console.error('Login error:', error);
