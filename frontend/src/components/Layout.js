@@ -138,9 +138,9 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
           </nav>
 
           {/* Disclaimer */}
-          <div className="p-4 border-t border-green-100 bg-yellow-50">
-            <div className="text-xs text-gray-600">
-              <p className="font-medium text-gray-800 mb-1">⚠️ Important Notice</p>
+          <div className="p-4 border-t border-green-100 dark:border-gray-700 bg-yellow-50 dark:bg-yellow-900/30">
+            <div className="text-xs text-gray-600 dark:text-gray-300">
+              <p className="font-medium text-gray-800 dark:text-yellow-200 mb-1">⚠️ Important Notice</p>
               <p>This app provides educational content only. Always consult your pediatrician for medical advice.</p>
             </div>
           </div>
