@@ -62,21 +62,9 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
     }
   };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    
-    // Save preference
-    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-    
-    // Apply theme
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    toast.success(`Switched to ${newDarkMode ? 'dark' : 'light'} mode`);
+  const handleToggleDarkMode = () => {
+    onToggleDarkMode();
+    toast.success(`Switched to ${!darkMode ? 'dark' : 'light'} mode`);
   };
 
   const handleAccountUpdate = async (e) => {
