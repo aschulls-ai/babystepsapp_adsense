@@ -202,10 +202,10 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
 
       {/* Welcome Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Hello! Welcome back to Baby Steps
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Caring for {currentBaby?.name || 'your little one'} • {currentAge} months old
         </p>
       </div>
