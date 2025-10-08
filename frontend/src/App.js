@@ -502,7 +502,13 @@ function App() {
                   />
                   <Route 
                     path="/settings" 
-                    element={<Settings onLogout={logout} />} 
+                    element={
+                      <Settings 
+                        onLogout={logout} 
+                        darkMode={darkMode}
+                        onToggleDarkMode={toggleDarkMode}
+                      />
+                    } 
                   />
                   <Route 
                     path="/" 
