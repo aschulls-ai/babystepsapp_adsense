@@ -51,13 +51,36 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
     
     try {
       if (onUpdateBaby) {
-        await onUpdateBaby(editData);
+        console.log('Updating baby with data:', editData);
+        
+        // Prepare data for API call
+        const updateData = {
+          ...editData,
+          birth_date: editData.birth_date instanceof Date 
+            ? editData.birth_date.toISOString().split('T')[0] 
+            : editData.birth_date
+        };
+        
+        await onUpdateBaby(updateData);
         setShowEditForm(false);
         toast.success('Baby profile updated successfully!');
       }
     } catch (error) {
       console.error('Failed to update baby:', error);
-      toast.error('Failed to update baby profile');
+      console.error('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      if (error.response?.status === 401) {
+        toast.error('Authentication required. Please refresh the page and try again.');
+      } else if (error.response?.status === 404) {
+        toast.error('Baby profile not found. Please refresh the page.');
+      } else {
+        toast.error(`Failed to update baby profile: ${error.message || 'Unknown error'}`);
+      }
     }
   };
 
