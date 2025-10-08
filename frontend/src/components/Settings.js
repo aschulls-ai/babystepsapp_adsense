@@ -135,7 +135,7 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
               </div>
               <Switch 
                 checked={darkMode} 
-                onCheckedChange={toggleDarkMode}
+                onCheckedChange={handleToggleDarkMode}
               />
             </div>
           </CardContent>
