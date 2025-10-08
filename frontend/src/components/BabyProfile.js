@@ -85,7 +85,9 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
   const startEdit = () => {
     setEditData({
       name: currentBaby?.name || '',
-      birth_date: currentBaby?.birth_date ? new Date(currentBaby.birth_date) : new Date()
+      birth_date: currentBaby?.birth_date ? new Date(currentBaby.birth_date) : new Date(),
+      gender: currentBaby?.gender || '',
+      profilePicture: currentBaby?.profilePicture || null
     });
     setShowEditForm(true);
   };
