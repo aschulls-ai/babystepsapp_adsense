@@ -349,7 +349,7 @@ function App() {
           
           {/* Email verification and password reset routes - accessible without authentication */}
           <Route path="/verify-email/:token" element={<EmailVerification />} />
-          <Route path="/reset-password/:token" element={<PasswordReset />} />
+          <Route path="/reset-password/:token" element={<PasswordReset onResetPassword={resetPassword} />} />
           
           {/* Privacy policy - accessible without authentication */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
