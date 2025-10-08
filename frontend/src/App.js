@@ -245,7 +245,7 @@ function App() {
 
   const requestPasswordReset = async (email) => {
     try {
-      await axios.post('/auth/request-password-reset', { email });
+      await axios.post('/api/auth/request-password-reset', { email });
       toast.success('Password reset link sent! Please check your email.');
       return true;
     } catch (error) {
