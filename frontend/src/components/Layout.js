@@ -13,7 +13,8 @@ import {
   LogOut, 
   Menu,
   X,
-  Utensils
+  Utensils,
+  Settings
 } from 'lucide-react';
 import { useState } from 'react';
 
