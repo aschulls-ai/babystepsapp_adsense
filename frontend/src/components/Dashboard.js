@@ -211,16 +211,16 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
       </div>
 
       {/* Baby Info Card */}
-      <Card className="mb-8 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+      <Card className="mb-8 bg-gradient-to-r from-green-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 border-green-200 dark:border-gray-600">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                <Baby className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
+                <Baby className="h-8 w-8 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900">{currentBaby?.name}</h2>
-                <p className="text-gray-600">
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">{currentBaby?.name}</h2>
+                <p className="text-gray-600 dark:text-gray-300">
                   Born {currentBaby?.birth_date ? new Date(currentBaby.birth_date).toLocaleDateString() : 'Date not set'}
                 </p>
               </div>
