@@ -35,7 +35,7 @@ const API = process.env.REACT_APP_BACKEND_URL || '/api';
 console.log('Environment configuration:', {
   API,
   environment: process.env.REACT_APP_ENVIRONMENT || 'development',
-  usingProductionAPI: !!process.env.REACT_APP_API_URL
+  usingProductionAPI: !!process.env.REACT_APP_BACKEND_URL
 });
 
 // Set up axios defaults
