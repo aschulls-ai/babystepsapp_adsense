@@ -78,7 +78,7 @@ const MealPlanner = ({ currentBaby }) => {
       const babyAgeMonths = currentBaby ? 
         Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : null;
 
-      const response = await axios.post('/meal/search', {
+      const response = await axios.post('/api/meal/search', {
         query: query,
         baby_age_months: babyAgeMonths
       });
