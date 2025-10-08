@@ -82,7 +82,7 @@ const MealPlanner = ({ currentBaby }) => {
 
       console.log('Meal search request:', { query, babyAgeMonths });
       
-      const response = await axios.post('/meal/search', {
+      const response = await axios.post('/meals/search', {
         query: query,
         baby_age_months: babyAgeMonths
       });
