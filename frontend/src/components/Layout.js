@@ -138,18 +138,6 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-green-100">
-            <Button
-              onClick={onLogout}
-              variant="outline"
-              className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50"
-              data-testid="logout-btn"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
-          </div>
         </div>
       </div>
 
