@@ -182,9 +182,38 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
       </div>
 
       <style jsx>{`
+        .nav-link {
+          @apply flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 hover:bg-green-100 hover:text-green-700;
+        }
+        
+        .dark .nav-link {
+          @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+        }
+        
+        .nav-link.active {
+          @apply bg-green-500 text-white shadow-md;
+        }
+        
+        .dark .nav-link.active {
+          @apply bg-green-600 text-white;
+        }
+        
+        .emergency-nav-link {
+          @apply flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-700 rounded-lg transition-all duration-200 hover:bg-red-100 hover:text-red-800 animate-pulse;
+        }
+        
+        .dark .emergency-nav-link {
+          @apply text-red-400 hover:bg-red-900/30 hover:text-red-300;
+        }
+        
         .emergency-nav-link:hover {
           background: rgba(239, 68, 68, 0.1) !important;
           color: #ef4444 !important;
+        }
+        
+        .dark .emergency-nav-link:hover {
+          background: rgba(239, 68, 68, 0.2) !important;
+          color: #fca5a5 !important;
         }
       `}</style>
     </div>
