@@ -35,8 +35,9 @@ jobs:
         path: |
           frontend/node_modules
           ~/.yarn/cache
-        key: ${{ runner.os }}-ios-yarn-${{ hashFiles('frontend/yarn.lock') }}
+        key: ${{ runner.os }}-ios-node20-yarn-${{ hashFiles('frontend/yarn.lock') }}
         restore-keys: |
+          ${{ runner.os }}-ios-node20-yarn-
           ${{ runner.os }}-ios-yarn-
           ${{ runner.os }}-yarn-
         
