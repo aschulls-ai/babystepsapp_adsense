@@ -164,14 +164,14 @@ function App() {
         setCurrentBaby({
           id: 'demo-baby-001',
           name: 'Emma Johnson',
-          birth_date: '2023-12-15', // Demo birth date as requested
+          birth_date: '2024-12-15', // Demo birth date as requested
           gender: 'girl'
         });
         
         setBabies([{
           id: 'demo-baby-001',
           name: 'Emma Johnson', 
-          birth_date: '2023-12-15', // Demo birth date as requested
+          birth_date: '2024-12-15', // Demo birth date as requested
           gender: 'girl'
         }]);
         
