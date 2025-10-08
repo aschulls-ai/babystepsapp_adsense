@@ -156,22 +156,22 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout }) => {
           </div>
           
           {/* Footer */}
-          <footer className="max-w-7xl mx-auto px-4 lg:px-8 py-6 border-t border-gray-200 mt-12">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+          <footer className="max-w-7xl mx-auto px-4 lg:px-8 py-6 border-t border-gray-200 dark:border-gray-700 mt-12">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
               <div>
                 <p>&copy; 2025 Baby Steps. All rights reserved.</p>
               </div>
               <div className="flex items-center gap-4">
                 <Link 
                   to="/privacy-policy" 
-                  className="text-blue-600 hover:text-blue-800 underline"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                 >
                   Privacy Policy
                 </Link>
                 <span>•</span>
                 <a 
                   href="mailto:support@babysteps.app" 
-                  className="text-blue-600 hover:text-blue-800 underline"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
                 >
                   Contact Support
                 </a>
