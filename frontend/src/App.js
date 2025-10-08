@@ -380,7 +380,7 @@ function App() {
   const isAuthenticated = true;
 
   return (
-    <div className="App min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors">
+    <div className="App min-h-screen page-gradient">
       <Router>
         <Routes>
           {/* Redirect /auth to dashboard for AdSense verification */}
