@@ -263,7 +263,7 @@ jobs:
       with:
         name: baby-steps-SIGNED-app-bundle-v${{ steps.version.outputs.version }}-GOOGLE-PLAY-READY
         path: |
-          frontend/android/app/build/outputs/bundle/debug/*.aab
+          frontend/android/app/build/outputs/bundle/release/*.aab
           frontend/android/app/build/outputs/mapping/release/
           frontend/android/app/release.keystore
         retention-days: 365
