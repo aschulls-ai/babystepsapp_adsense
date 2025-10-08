@@ -37,7 +37,9 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
       setShowAddForm(false);
       setFormData({
         name: '',
-        birth_date: new Date()
+        birth_date: new Date(),
+        gender: '',
+        profilePicture: null
       });
     } catch (error) {
       console.error('Failed to add baby:', error);
