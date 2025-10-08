@@ -327,7 +327,7 @@ function App() {
     );
   }
 
-  const isAuthenticated = user?.authenticated;
+  const isAuthenticated = user || localStorage.getItem('token');
 
   return (
     <div className="App min-h-screen page-gradient">
