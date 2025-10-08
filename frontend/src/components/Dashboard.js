@@ -279,8 +279,8 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
                   <div className={`w-12 h-12 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center group-hover:bg-white dark:group-hover:bg-gray-600 transition-colors`}>
                     <action.icon className={`h-6 w-6 ${action.iconColor}`} />
                   </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">{action.title}</h4>
-                  <p className="text-sm text-gray-600">{action.description}</p>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{action.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{action.description}</p>
                 </CardContent>
               </Card>
             </Link>
