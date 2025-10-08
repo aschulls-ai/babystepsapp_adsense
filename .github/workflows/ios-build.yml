@@ -81,8 +81,13 @@ jobs:
     - name: Add iOS platform (if not exists)
       working-directory: ./frontend
       run: |
+        echo "Checking for iOS platform..."
         if [ ! -d "ios" ]; then
+          echo "iOS platform not found. Adding iOS platform..."
           npx cap add ios
+          echo "iOS platform added successfully"
+        else
+          echo "✅ iOS platform already exists"
         fi
         
     - name: Sync Capacitor
