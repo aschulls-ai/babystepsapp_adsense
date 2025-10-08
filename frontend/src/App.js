@@ -28,13 +28,14 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
-// Backend URL Configuration - Use relative paths for Vercel API routes
-const API = '/api';
+// Backend URL Configuration
+const API = process.env.REACT_APP_API_URL || '/api';
 
 // Debug logging
 console.log('Environment configuration:', {
   API,
-  usingRelativePaths: true
+  environment: process.env.REACT_APP_ENVIRONMENT || 'development',
+  usingProductionAPI: !!process.env.REACT_APP_API_URL
 });
 
 // Set up axios defaults
