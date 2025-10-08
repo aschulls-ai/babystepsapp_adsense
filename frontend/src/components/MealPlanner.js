@@ -23,6 +23,7 @@ const MealPlanner = ({ currentBaby }) => {
   const [searchResults, setSearchResults] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     meal_name: '',
     ingredients: [''],
