@@ -183,8 +183,8 @@ const Research = () => {
                 )}
               </div>
 
-              {/* Input Form */}
-              <div className="border-t border-gray-200 p-6">
+              {/* Input Form - Fixed at Bottom */}
+              <div className="flex-shrink-0 border-t border-gray-200 p-6 bg-white">
                 <form onSubmit={handleSubmit} className="flex gap-3">
                   <Input
                     value={inputValue}
