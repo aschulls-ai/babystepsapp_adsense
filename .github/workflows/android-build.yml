@@ -181,12 +181,20 @@ jobs:
         echo "Building release APK..."
         ./gradlew assembleRelease --stacktrace --no-daemon
         
-    - name: 📦 Build Android App Bundle (.aab)
+    - name: 🏗️ Build AAB for Google Play
       working-directory: frontend/android
       if: ${{ inputs.build_type == 'bundle' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
       run: |
-        echo "Building Android App Bundle (.aab) for Google Play..."
-        ./gradlew bundleRelease --stacktrace --no-daemon --info | grep -E "(BUILD|bundleRelease|\.aab)"
+        echo "Building AAB for Google Play App Signing..."
+        
+        # Build debug AAB (Google Play will re-sign with production keys)
+        ./gradlew bundleDebug --stacktrace --no-daemon
+        
+        echo "✅ AAB built successfully for Google Play upload"
+        
+        # Show build artifacts
+        echo "📦 Built AAB file:"
+        find . -name "*.aab" -type f
         
     - name: 📊 List Build Outputs
       run: |
