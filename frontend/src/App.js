@@ -54,6 +54,76 @@ console.log('Environment configuration:', {
   usingProductionAPI: !!process.env.REACT_APP_BACKEND_URL
 });
 
+// Alternative HTTP client for Android compatibility
+const androidFetch = async (url, options = {}) => {
+  console.log('📱 Android-specific fetch:', { url, options });
+  
+  // Method 1: Native fetch with Android-specific headers
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 11; SM-G973F) AppleWebKit/537.36',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        ...options.headers
+      },
+      mode: 'cors',
+      credentials: 'omit'
+    });
+    
+    console.log('📱 Android fetch success:', response.status);
+    return response;
+  } catch (fetchError) {
+    console.log('📱 Android fetch failed, trying XMLHttpRequest:', fetchError);
+    
+    // Method 2: XMLHttpRequest with Promise wrapper
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const method = options.method || 'GET';
+      
+      xhr.open(method, url, true);
+      xhr.timeout = 30000;
+      
+      // Set headers
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('User-Agent', 'BabyStepsApp/1.0 Android');
+      xhr.setRequestHeader('Cache-Control', 'no-cache');
+      
+      xhr.onload = function() {
+        console.log('📱 XHR success:', xhr.status, xhr.statusText);
+        resolve({
+          ok: xhr.status >= 200 && xhr.status < 300,
+          status: xhr.status,
+          statusText: xhr.statusText,
+          json: () => Promise.resolve(JSON.parse(xhr.responseText || '{}')),
+          text: () => Promise.resolve(xhr.responseText)
+        });
+      };
+      
+      xhr.onerror = function() {
+        console.log('📱 XHR error:', xhr.statusText);
+        reject(new Error(`XHR Error: ${xhr.statusText || 'Network Error'}`));
+      };
+      
+      xhr.ontimeout = function() {
+        console.log('📱 XHR timeout');
+        reject(new Error('Request timeout'));
+      };
+      
+      if (options.body) {
+        xhr.send(options.body);
+      } else {
+        xhr.send();
+      }
+    });
+  }
+};
+
 // Enhanced connection test function
 const testConnection = async () => {
   console.log('🧪 Testing server connection...', { API, navigator_online: navigator.onLine });
