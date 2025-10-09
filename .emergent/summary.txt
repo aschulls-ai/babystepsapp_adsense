@@ -1,66 +1,49 @@
 <analysis>
-The AI engineer's trajectory details extensive development on the Baby Steps application. Initial efforts focused on addressing mobile build issues and integrating Google AdSense. Subsequent work included simplifying the dashboard, adding baby profile editing, and introducing a formula comparison feature. Key tasks completed involved adding AI response time notices to various search components (FoodResearch, FormulaComparison, MealPlanner, Research), incorporating Kendamil formulas, developing an interactive Emergency Training slideshow, and fixing a missing backend PUT endpoint for baby profile updates. The engineer also integrated Vercel Speed Insights, added an AdSense banner to the login page, and implemented a robust reminder system with quick action buttons on the Tracking page. Crucially, Vercel deployment issues were resolved by migrating the backend to Vercel API routes. The last active phase involved fixing new user registration, search bar functionality on Vercel, and enhancing quick action buttons with timers and custom icons. The current activity is debugging multiple reported bugs, specifically addressing the meal planner search bar and potentially the baby profile editor.
+The trajectory details the AI engineer's work on the Baby Steps app, primarily focusing on fixing critical mobile build and connectivity issues. Initial efforts addressed frontend login UI discrepancies by correcting environment variable names ( to ) and API endpoint prefixes ( to ,  to ). This resolved core authentication and dashboard loading problems. Subsequently, the engineer tackled GitHub Actions build failures for iOS and Android. iOS build errors, related to Node.js version incompatibility and Capacitor dependencies, were fixed by upgrading Node.js to version 20 and adding  to . Android build issues, including signing key mismatches and version code conflicts, led to a complex keystore management saga, eventually simplified by recommending Google Play App Signing and updating version codes. The major recurring challenge was Android app connectivity to a remote server. After extensive debugging of network security, CORS, and Manifest settings, and despite confirming the Render server was healthy, a complete offline mode with local account creation and direct AI integration was planned as a backup. The current focus remains on resolving Android's persistent server connectivity.
 </analysis>
 
 <product_requirements>
-The Baby Steps app serves as a comprehensive parenting tool for baby tracking (measurements, milestones, feeding, sleep), nutrition/safety guidance (AI-powered food research, emergency training), and includes user authentication. Recent updates focused on converting the web app to a native Android app via Capacitor, integrating Google AdSense for monetization, simplifying the dashboard, enabling full baby profile editing, displaying current milestones, and implementing a detailed baby formula comparison feature (including Kendamil formulas). The app also provides AI response time notices in search features, an interactive emergency training slideshow with original infant/toddler content, a persistent login remember me option, and an enhanced tracking activities page with simplified buttons, customizable quick actions (e.g., timed naps, pumping with left/right breast milk amounts), and a robust reminder system with notifications. A comprehensive activity log with filtering and sorting was added, and the app is designed for native Vercel deployment using API routes.
+The Baby Steps application aims to be a comprehensive parenting tool. Key features include baby tracking, nutrition/safety guidance, and user authentication. Recent development directives emphasized mobile conversion (Capacitor), Google AdSense monetization, a streamlined dashboard, full baby profile editing (including gender and profile picture), and detailed formula comparison. AI features for food research and meal planning require comprehensive, step-by-step information. The app also needs an interactive emergency training slideshow, persistent login, enhanced tracking with customizable quick actions and a robust reminder system, and a sortable activity log. User requests specifically included a Settings menu with light/dark mode, account information, and a rebalanced, professional Track Activities page. The application must be ready for native Vercel deployment and AdSense verification. The ongoing implementation has successfully addressed frontend login, session persistence, and initial Android/iOS build issues, and has an upcoming robust offline mode.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack**: React (frontend), FastAPI (backend), MongoDB (database).
--   **UI/UX**: Shadcn UI, Tailwind CSS, ,  (initial).
--   **Authentication**: JWT, bcrypt, email verification, UUIDs,  for persistence.
--   **AI**: .
--   **Mobile**: Capacitor, Gradle, Android SDK, .
--   **CI/CD**: GitHub Actions.
--   **Monetization**: Google AdSense.
--   **Deployment**: Vercel (frontend and API routes for backend logic).
--   **Performance**: .
+-   **Full-stack Development**: React (frontend), FastAPI (backend), MongoDB (database).
+-   **Mobile Development**: Capacitor for Android/iOS builds, GitHub Actions for CI/CD.
+-   **Deployment**: Vercel (frontend and API routes), Render (public demo server).
+-   **Authentication**: JWT-based.
+-   **UI/UX**: Dark mode, responsive design.
+-   **AI Integration**:  for research and meal planning.
+-   **Android Specifics**: Network security policies, manifest permissions, version codes, Google Play App Signing, keystore management.
 </key_technical_concepts>
 
 <code_architecture>
-The application uses a React frontend, a FastAPI backend, and a MongoDB database, with Capacitor for mobile conversion. The recent Vercel deployment strategy involves serverless API routes within the React frontend for backend logic.
+The application utilizes a React frontend, a FastAPI backend, and a MongoDB database. For Vercel deployment, backend logic is increasingly shifted to serverless Node.js API routes within the  directory.
 
 
 
--   **/app/backend/server.py**: Login endpoint allows login without email verification. Modified to add PUT/DELETE endpoints for , and a PUT endpoint for  for profile updates. Also includes models and endpoints for various tracking activities and AI research.
--   **/app/frontend/src/App.js**: Consolidated Axios configuration, integrated AdSense and Vercel Speed Insights. Contains , , ,  functions, and defines application routes. Modified to handle  and API error handling.
--   **/app/frontend/src/components/AuthPage.js**: Handles user login, registration, and password reset. Modified to include a Remember Me checkbox for persistent login and integrated  at the bottom.
--   **/app/frontend/src/components/Dashboard.js**: Simplified dashboard with quick shortcuts and current milestones.
--   **/app/frontend/src/components/BabyProfile.js**: Allows full editing of baby profiles. Changes made for date handling and to call the correct API endpoint.
--   **/app/frontend/src/components/TrackingPage.js**: Core component for tracking activities. Heavily refactored to include simplified quick action buttons with customizable modals (e.g., , ), a comprehensive reminder system, and a sortable Activity History log. Icons for quick actions were updated.
--   **/app/frontend/src/components/Research.js**: AI chat interface. Modified to include AI response time notice and  import.
--   **/app/frontend/src/components/FoodResearch.js**: AI-powered food research. Modified to include AI response time notice.
--   **/app/frontend/src/components/MealPlanner.js**: Meal planning interface. Modified to include AI response time notice.
--   **/app/frontend/src/components/EmergencyTraining.js**: Converted into an interactive slideshow with original diagrams and step-by-step emergency procedures for infants/toddlers.
--   **/app/frontend/src/components/Layout.js**: Main navigation layout. Includes Formula Comparison in the menu and a  button (which was already present).
--   **/app/frontend/src/components/FormulaComparison.js**: New component for baby formula comparison. Modified to include AI response time notice and Kendamil formulas.
--   **/app/frontend/src/components/ads/\***: Components for displaying Google AdSense ads. , , ,  were modified to fix  attribute.  was created for the login page.
--   **/app/frontend/.env**: Added ,  (later set to 0), , .  was later emptied for Vercel native deployment.
--   **/app/frontend/public/index.html**: Integrated Google AdSense script.
--   **/app/vercel.json**: Configuration for Vercel deployment, updated to include Vercel API routes.
--   **/app/frontend/api/\***: New directory for Vercel native API routes. These Node.js files (e.g., , , ) act as serverless functions, proxying or replicating backend logic directly on Vercel to resolve cross-origin issues. Includes local in-memory storage simulation for user data persistence across ephemeral function calls.
--   **/app/.env.production**: New environment variable file for production settings.
--   **/app/VERCEL_DEPLOYMENT_FIX.md**: New documentation for Vercel deployment fixes.
--   **/app/VERCEL_NATIVE_DEPLOYMENT.md**: New documentation for Vercel native API routes deployment.
--   **/app/VERCEL_FIXES_COMPLETE.md**: Documentation summarizing Vercel fixes.
+-   **/app/frontend/src/App.js**: Central for global state, auth, and routing. Modified to fix  to , update API prefixes for auth and babies endpoints, fix session persistence (correctly saving token, robust ), and integrate offline mode logic.
+-   **/app/frontend/src/components/AuthPage.js**: Login/signup UI. Modified to reflect API prefix changes.
+-   **/app/frontend/package.json**: Updated to add  and  for offline mode.
+-   **/app/frontend/.env.production**:  corrected to .
+-   **/app/frontend/android/app/build.gradle**: Updated  to  and configured  for release builds.
+-   **/app/frontend/android/app/src/main/AndroidManifest.xml**: Modified  to  and added aggressive network permissions.
+-   **/app/frontend/android/app/src/main/res/xml/network_security_config.xml**: Simplified and made more permissive for  domain.
+-   **/app/frontend/capacitor.config.json**: Configured for local build () instead of , and added debug settings.
+-   **/app/frontend/src/offlineMode.js (new)**, **/app/frontend/src/offlineStorage.js (new)**, **/app/frontend/src/mockData.js (new)**: New files for implementing a comprehensive offline mode with local account creation and data management.
+-   **/app/public-server/**: (New directory and files) Contains a minimal FastAPI demo server (, , , , , , , ) designed for public deployment on services like Render to act as a temporary backend.
+-   **GitHub Workflows ()**:  fixed for Node.js 20, Capacitor dependencies, and caching.  modified to remove complex keystore generation, simplify for Google Play App Signing (using  with upload key), and auto-increment version codes. Temporary keystore-related workflows were created and then removed or simplified.
 </code_architecture>
 
 <pending_tasks>
--   **Meal Planner Search Bar Fix**: Address the failed error message when using the meal planner search bar.
--   **Research & Tips AI Assistant Text Overflow**: Fix the issue where conversation text in the AI assistant box goes off-screen, making it look unprofessional.
--   **AdSense Expansion**: Add small AdSense boxes to other pages where they won't interfere with the user experience.
+-   **Complete Offline Mode Implementation**: Finish integrating the  with all features (AI components connecting to the internet as a backup).
+-   **Network Connectivity Debugging**: Further investigate and resolve the persistent Android app connectivity issues to the backend server, beyond the currently applied fixes.
+-   **Notification Permission Crash Rework**: Address the crash related to notifications properly, potentially by re-enabling them carefully or confirming the current disabling is robust.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary, the AI engineer was addressing multiple user-reported bugs. The first bug was that the baby profile editor will not save any updates. The engineer investigated this, confirming the  function in  and the  in  were correct, but found a potential date formatting issue in the  Vercel API route, which was then fixed to handle date objects correctly.
-
-The engineer then moved on to the second reported bug: The meal planner search bar does not work, an error message of failed. The engineer identified the root cause as a mismatch in the API endpoint being called by the frontend () versus the actual Vercel API route that was created (). The engineer has just started to implement the fix for this issue by correcting the endpoint path.
-
-The trajectory ends at the point of fixing the meal planner search bar error.
+Immediately before this summary request, the AI engineer was deep-diving into the persistent network connectivity issues affecting the Android app, despite the Render server being confirmed as live and functional. The user reported that DevTools were not working for diagnostics. As a primary countermeasure and backup, the engineer initiated the implementation of a comprehensive offline mode that allows users to create accounts and use most app functionalities locally, with AI components designed to connect directly to the internet. This was a direct response to the user's explicit request to have a backup for server connectivity. Concurrently, the engineer also began investigating a new critical bug: the Android app crashes upon granting notification permissions. The focus shifted to addressing both issues, with initial steps taken to analyze and modify Android Manifest and network security configurations for better connectivity and to disable notification-related features to prevent crashes.
 </current_work>
 
 <optional_next_step>
-Correct the API endpoint path in  to .
+Complete the integration of the comprehensive offline mode for the Android app, ensuring all functionalities, especially AI components, work as intended.
 </optional_next_step>
-
