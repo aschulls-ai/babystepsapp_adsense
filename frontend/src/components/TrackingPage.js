@@ -174,8 +174,23 @@ const TrackingPage = ({ currentBaby }) => {
                        reminderData.frequency === 'monthly' ? 720 : null
       };
       
-      await axios.post('/reminders', backendData);
-      toast.success('Reminder created successfully!');
+      // Use standalone offline API for reminders
+      const offlineReminder = {
+        id: Date.now().toString(),
+        title: reminderData.title,
+        type: reminderData.type,
+        frequency: reminderData.frequency,
+        time: reminderData.time,
+        enabled: reminderData.enabled,
+        created_at: new Date().toISOString()
+      };
+      
+      // Store reminder locally
+      const existingReminders = JSON.parse(localStorage.getItem('babysteps_reminders') || '[]');
+      existingReminders.push(offlineReminder);
+      localStorage.setItem('babysteps_reminders', JSON.stringify(existingReminders));
+      
+      toast.success('💾 Reminder saved to device!');
       fetchReminders();
       setShowReminderForm(false);
     } catch (error) {
