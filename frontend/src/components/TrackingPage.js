@@ -155,7 +155,14 @@ const TrackingPage = ({ currentBaby }) => {
 
   const markReminderAsNotified = async (reminderId) => {
     try {
-      await axios.patch(`/reminders/${reminderId}/notified`);
+      // Update reminder in local storage
+      const storedReminders = JSON.parse(localStorage.getItem('babysteps_reminders') || '[]');
+      const updatedReminders = storedReminders.map(reminder => 
+        reminder.id === reminderId 
+          ? { ...reminder, lastNotified: new Date().toISOString() }
+          : reminder
+      );
+      localStorage.setItem('babysteps_reminders', JSON.stringify(updatedReminders));
       fetchReminders(); // Refresh reminders
     } catch (error) {
       console.error('Failed to mark reminder as notified:', error);
