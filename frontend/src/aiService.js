@@ -133,23 +133,38 @@ class AIService {
     
     if (context.type === 'food_research') {
       if (lowerQuery.includes('honey')) {
-        return "⚠️ AVOID: Honey should not be given to babies under 12 months due to risk of botulism. Honey can contain Clostridium botulinum spores that can cause infant botulism, a serious condition. Wait until after baby's first birthday when their immune system is stronger. For sweetening foods, try mashed fruits like banana or apple puree instead.";
+        return "⚠️ **AVOID: Honey (Under 12 Months)**\n\nHoney should not be given to babies under 12 months due to risk of botulism. Honey can contain Clostridium botulinum spores that can cause infant botulism, a serious condition.\n\n**Safe alternatives:**\n• Mashed banana for sweetening\n• Apple puree\n• Date paste (after 6 months)\n\n**When to introduce:** After baby's first birthday when their immune system is stronger.";
       }
       if (lowerQuery.includes('egg')) {
-        return "✅ SAFE: Eggs can be introduced around 6 months as one of baby's first foods. Start with well-cooked eggs (scrambled, hard-boiled) as finger foods. Eggs are a great source of protein and choline for brain development. Watch for any allergic reactions when first introducing.";
+        return "✅ **SAFE: Eggs (6+ Months)**\n\nEggs can be introduced around 6 months as one of baby's first foods.\n\n**How to serve:**\n• Well-cooked scrambled eggs\n• Hard-boiled egg pieces\n• Egg muffins or frittatas\n\n**Benefits:** Excellent source of protein and choline for brain development.\n\n**Safety:** Watch for allergic reactions when first introducing.";
       }
+      if (lowerQuery.includes('nuts') || lowerQuery.includes('peanut')) {
+        return "⚠️ **CAUTION: Nuts and Peanuts**\n\n**Whole nuts:** AVOID until 4+ years (choking hazard)\n**Nut butters:** Safe after 6 months when thinned\n**Peanut introduction:** Early introduction (4-6 months) may reduce allergy risk\n\n**Safe ways to serve:**\n• Thin nut butter spread\n• Ground nuts mixed into foods\n• Peanut powder in purees";
+      }
+      // Generic food research response
+      return `🍼 **Food Safety Information for "${query}"**\n\nFor specific guidance on this food item, I recommend:\n\n1. **Check with pediatrician** for personalized advice\n2. **Follow AAP guidelines** for food introduction\n3. **Watch for allergic reactions** when introducing new foods\n4. **Ensure appropriate texture** for baby's age\n\n**General food safety:**\n• Introduce one new food at a time\n• Wait 3-5 days between new foods\n• Start with small amounts\n• Always supervise feeding time`;
     }
     
     if (context.type === 'meal_planning') {
       if (lowerQuery.includes('breakfast')) {
-        return "🥣 Healthy breakfast ideas for babies:\n\n• Oatmeal with mashed banana\n• Scrambled eggs (soft texture)\n• Avocado toast (cut into strips)\n• Greek yogurt with fruit puree\n• Sweet potato pancakes (baby-led weaning)\n• Cereal with breast milk or formula\n\nAlways ensure foods are appropriate for baby's age and cut to prevent choking.";
+        return "🌅 **Healthy Breakfast Ideas for Babies**\n\n**6-8 months:**\n• Oatmeal with mashed banana\n• Avocado strips\n• Sweet potato wedges\n• Baby cereal with breast milk/formula\n\n**8-12 months:**\n• Scrambled eggs (soft texture)\n• Toast strips with thin nut butter\n• Greek yogurt with fruit\n• Mini pancakes or muffins\n\n**12+ months:**\n• Whole grain cereal\n• Fruit and veggie smoothies\n• French toast strips\n• Overnight oats\n\n**Safety tips:** Always cut foods to prevent choking, supervise eating, and ensure age-appropriate textures.";
       }
+      if (lowerQuery.includes('lunch') || lowerQuery.includes('dinner')) {
+        return "🍽️ **Nutritious Meal Ideas**\n\n**Protein sources:**\n• Well-cooked chicken strips\n• Soft fish pieces (no bones)\n• Beans and lentils\n• Tofu cubes\n\n**Vegetables:**\n• Steamed broccoli florets\n• Roasted sweet potato\n• Soft-cooked carrots\n• Mashed peas\n\n**Grains:**\n• Soft pasta shapes\n• Rice (appropriate texture)\n• Quinoa\n• Soft bread pieces\n\n**Combination meals:**\n• Mini meatballs with vegetables\n• Soft pasta with sauce\n• Rice and bean bowls\n• Veggie-packed muffins";
+      }
+      // Generic meal planning response  
+      return `🍽️ **Meal Planning for "${query}"**\n\n**Age-appropriate considerations:**\n• **6-8 months:** Purees and soft finger foods\n• **8-12 months:** More texture, self-feeding\n• **12+ months:** Family foods, modified textures\n\n**Balanced meal components:**\n1. **Protein:** Meat, fish, beans, eggs\n2. **Vegetables:** Various colors and textures\n3. **Grains:** Whole grains when appropriate\n4. **Healthy fats:** Avocado, olive oil\n\n**Preparation tips:**\n• Steam or roast vegetables until soft\n• Cut foods to appropriate sizes\n• Avoid added salt and sugar\n• Introduce variety gradually`;
     }
     
     if (context.type === 'parenting_research') {
       if (lowerQuery.includes('sleep')) {
-        return "😴 Healthy sleep guidelines for babies:\n\n• Newborn (0-3 months): 14-17 hours total\n• Infant (4-11 months): 12-15 hours total\n• Create consistent bedtime routine\n• Safe sleep: back sleeping, firm mattress\n• Room sharing (not bed sharing) recommended\n• Watch for sleep cues (yawning, rubbing eyes)\n\nConsult pediatrician for persistent sleep issues.";
+        return "😴 **Healthy Sleep Guidelines for Babies**\n\n**Sleep needs by age:**\n• **Newborn (0-3 months):** 14-17 hours total\n• **Infant (4-11 months):** 12-15 hours total\n• **Toddler (12-24 months):** 11-14 hours total\n\n**Safe sleep practices:**\n• Back sleeping position\n• Firm mattress\n• No loose bedding or toys\n• Room sharing (not bed sharing)\n\n**Sleep routine tips:**\n• Consistent bedtime routine\n• Watch for sleep cues\n• Dark, quiet environment\n• Appropriate room temperature\n\n**When to consult pediatrician:**\n• Persistent sleep issues\n• Sudden changes in sleep patterns\n• Safety concerns";
       }
+      if (lowerQuery.includes('cry') || lowerQuery.includes('fussy')) {
+        return "😢 **Understanding Baby Crying**\n\n**Common reasons babies cry:**\n• Hunger\n• Tired/overstimulated\n• Dirty diaper\n• Need for comfort\n• Gas or digestive discomfort\n• Too hot or cold\n\n**Soothing techniques:**\n• Swaddling\n• Gentle rocking or bouncing\n• White noise\n• Skin-to-skin contact\n• Pacifier\n• Change of environment\n\n**When to seek help:**\n• Crying for 3+ hours daily\n• High-pitched or unusual crying\n• Signs of illness\n• Parent feeling overwhelmed";
+      }
+      // Generic parenting research response
+      return `👶 **Parenting Guidance for "${query}"**\n\n**Remember:**\n• Every baby is different\n• Trust your instincts\n• Don't hesitate to ask for help\n• Consult your pediatrician for concerns\n\n**Helpful resources:**\n• American Academy of Pediatrics (AAP)\n• Your child's pediatrician\n• Local parenting groups\n• Evidence-based parenting websites\n\n**Important note:** This information is for educational purposes only. Always consult healthcare professionals for personalized medical advice.`;
     }
     
     return this.getFallbackResponse(query, context);
