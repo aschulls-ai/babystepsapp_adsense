@@ -434,13 +434,20 @@ function App() {
   const login = async (email, password, rememberMe = false) => {
     // In standalone mode, always use local authentication first
     console.log('🔐 Attempting login in standalone mode...');
+    console.log('📧 Login credentials:', { email, password: password ? '***' : 'empty' });
     
     try {
       // Use local authentication (standalone mode)
+      console.log('🏠 Calling offlineAPI.login...');
       const response = await offlineAPI.login(email, password);
+      console.log('✅ Login response received:', response);
+      
       const { access_token, user: userData } = response.data;
+      console.log('👤 User data from login:', userData);
+      console.log('🔑 Access token:', access_token);
       
       localStorage.setItem('token', access_token);
+      console.log('💾 Token saved to localStorage');
       
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');
@@ -453,13 +460,18 @@ function App() {
       }
       
       // Set the complete user object from the response
-      setUser({ 
+      const userToSet = { 
         ...userData, 
         email: userData.email, 
         authenticated: true, 
         offline: false // All features work in standalone mode
-      });
+      };
+      console.log('👤 Setting user state to:', userToSet);
+      setUser(userToSet);
+      
+      console.log('👶 Fetching babies after successful login...');
       await fetchBabies();
+      console.log('✅ Login process completed successfully');
       return true;
     } catch (error) {
       console.error('❌ Standalone login failed:', error);
