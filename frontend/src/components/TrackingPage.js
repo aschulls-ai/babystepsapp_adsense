@@ -923,7 +923,8 @@ const SleepForm = ({ babyId, onSuccess }) => {
       });
       onSuccess();
     } catch (error) {
-      toast.error('Failed to log sleep session');
+      console.error('❌ Sleep form error:', error);
+      toast.error(`Failed to log sleep session: ${error.message}`);
     } finally {
       setLoading(false);
     }
