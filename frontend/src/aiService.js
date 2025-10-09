@@ -161,35 +161,29 @@ class AIService {
     console.log(`🔬 Researching food safety: "${foodItem}" for ${babyAgeMonths}-month-old baby`);
     
     try {
-      // Call backend API endpoint
-      const response = await fetch(`${this.backendUrl}/food/research`, {
-        method: 'POST',
-        headers: this.getAuthHeaders(),
-        body: JSON.stringify({
-          question: foodItem,
-          baby_age_months: babyAgeMonths
-        })
+      const prompt = `Is "${foodItem}" safe for a ${babyAgeMonths}-month-old baby? Please provide:
+      1. Safety assessment (safe/caution/avoid)
+      2. Recommended age for introduction
+      3. Preparation tips
+      4. Potential risks or allergies
+      5. Nutritional benefits
+      
+      Keep the response practical and parent-friendly.`;
+
+      const response = await this.query(prompt, { 
+        type: 'food_research',
+        foodItem,
+        babyAgeMonths 
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Food research response received from backend:', data);
-        
-        // Save to AI history
-        this.saveToHistory(foodItem, data.answer, 'food_research');
-        
-        return {
-          answer: data.answer,
-          safety_level: data.safety_level,
-          age_recommendation: `${babyAgeMonths}+ months`,
-          sources: data.sources || ['AI-Powered Pediatric Nutrition Assessment']
-        };
-      } else {
-        console.log('⚠️ Backend food research failed, using fallback');
-        throw new Error('Backend API error');
-      }
+      return {
+        answer: response,
+        safety_level: this.extractSafetyLevel(response),
+        age_recommendation: `${babyAgeMonths}+ months`,
+        sources: ['AI-Powered Pediatric Nutrition Assessment via Phone Internet']
+      };
     } catch (error) {
-      console.log('🔄 AI research failed, using comprehensive fallback');
+      console.log('🔄 Using comprehensive fallback response');
       
       // Always provide a helpful response, never show network error
       const fallbackResponse = this.getFallbackResponse(foodItem, { 
