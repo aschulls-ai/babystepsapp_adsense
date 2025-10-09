@@ -607,15 +607,44 @@ async def meal_search(request: dict, current_user_email: str = Depends(get_curre
     
     return {"results": meals, "query": query, "age_months": age_months}
 
-# General research endpoint
+# AI-powered general research endpoint
 @app.post("/api/research")
 async def research(request: dict, current_user_email: str = Depends(get_current_user)):
-    query = request.get("query", "")
+    query = request.get("query", request.get("question", ""))
     
+    print(f"📚 Research request: {query}")
+    
+    # Try AI-powered response if available
+    if AI_AVAILABLE and EMERGENT_LLM_KEY:
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"research_{uuid.uuid4()}",
+                system_message="You are a helpful parenting and child development expert. Provide evidence-based, practical advice for parents. Always remind users to consult healthcare professionals for medical concerns."
+            ).with_model("openai", "gpt-4o-mini")
+            
+            user_message = UserMessage(text=f"Parent question: {query}. Please provide helpful, evidence-based information while reminding them to consult healthcare professionals for medical advice.")
+            
+            response = await chat.send_message(user_message)
+            
+            return {
+                "answer": response,
+                "query": query,
+                "timestamp": datetime.utcnow().isoformat(),
+                "sources": ["AI-Powered Parenting Expert", "Evidence-Based Guidelines"],
+                "ai_powered": True
+            }
+            
+        except Exception as e:
+            print(f"❌ AI research failed: {e}")
+            # Fall through to fallback
+    
+    # Fallback response
     return {
-        "response": f"Here's some general parenting information about: {query}. For specific medical advice, please consult your pediatrician.",
+        "answer": f"Here's some general parenting information about: {query}. For specific medical advice, please consult your pediatrician. This is a demo response - full AI functionality requires proper setup.",
         "query": query,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
+        "sources": ["Demo Mode"]
     }
 
 if __name__ == "__main__":
