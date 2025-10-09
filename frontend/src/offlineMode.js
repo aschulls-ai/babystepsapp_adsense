@@ -100,9 +100,7 @@ export const initializeOfflineMode = () => {
       }
     ];
     
-    demoActivities.forEach(activity => {
-      activities[activity.id] = activity;
-    });
+    activities[demoUserId] = demoActivities; // Store activities by user ID
     saveOfflineData('activities', activities);
     
     console.log('✅ Offline demo data initialized');
