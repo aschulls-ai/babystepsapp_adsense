@@ -18,8 +18,14 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onLogin(loginData.email, loginData.password, loginData.rememberMe);
-    setLoading(false);
+    try {
+      await onLogin(loginData.email, loginData.password, loginData.rememberMe);
+    } catch (error) {
+      console.error('Login error:', error);
+      // Error handling is done in App.js login function via toast
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRegister = async (e) => {
