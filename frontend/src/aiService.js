@@ -24,14 +24,13 @@ class AIService {
   // Generic AI query method
   async query(prompt, context = {}) {
     try {
-      if (!this.isAvailable || !navigator.onLine) {
+      if (!navigator.onLine) {
+        console.log('📵 No internet connection - using fallback response');
         return this.getFallbackResponse(prompt, context);
       }
 
       console.log('🔍 AI Query:', prompt);
-
-      // Use direct API call to OpenAI through Emergent LLM key
-      console.log('🔗 Making direct AI API call...');
+      console.log('🔗 Making direct AI API call to OpenAI...');
       
       const requestBody = {
         model: 'gpt-4o-mini',
@@ -49,9 +48,12 @@ class AIService {
         temperature: 0.7
       };
 
+      console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
+
       // Try direct OpenAI API call with Emergent key
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
@@ -59,20 +61,31 @@ class AIService {
         body: JSON.stringify(requestBody)
       });
 
+      console.log('📥 API Response Status:', response.status, response.statusText);
+
       if (response.ok) {
         const data = await response.json();
-        const aiResponse = data.choices[0].message.content;
+        console.log('📦 API Response Data:', data);
         
-        // Save to AI history
-        this.saveToHistory(prompt, aiResponse, context.type);
-        
-        console.log('✅ AI response received');
-        return aiResponse;
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+          const aiResponse = data.choices[0].message.content;
+          
+          // Save to AI history
+          this.saveToHistory(prompt, aiResponse, context.type);
+          
+          console.log('✅ Real AI response received from OpenAI API');
+          return aiResponse;
+        } else {
+          throw new Error('Invalid response format from AI API');
+        }
       } else {
-        throw new Error(`AI API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('🚫 AI API Error Response:', errorText);
+        throw new Error(`AI API error: ${response.status} - ${errorText}`);
       }
     } catch (error) {
-      console.error('❌ AI query failed:', error);
+      console.error('❌ AI query failed:', error.message);
+      console.log('🔄 Using enhanced fallback response due to AI error');
       return this.getFallbackResponse(prompt, context);
     }
   }
