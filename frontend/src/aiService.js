@@ -20,73 +20,13 @@ class AIService {
     console.log('✅ AI service initialized - Ready for direct queries');
   }
 
-  // Generic AI query method
-  async query(prompt, context = {}) {
-    try {
-      if (!navigator.onLine) {
-        console.log('📵 No internet connection - using fallback response');
-        return this.getFallbackResponse(prompt, context);
-      }
-
-      console.log('🔍 AI Query:', prompt);
-      console.log('🔗 Making direct AI API call to OpenAI...');
-      
-      const requestBody = {
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: this.getSystemPrompt(context.type || 'general')
-          },
-          {
-            role: 'user', 
-            content: prompt
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.7
-      };
-
-      console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
-
-      // Try direct OpenAI API call with Emergent key
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      console.log('📥 API Response Status:', response.status, response.statusText);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('📦 API Response Data:', data);
-        
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-          const aiResponse = data.choices[0].message.content;
-          
-          // Save to AI history
-          this.saveToHistory(prompt, aiResponse, context.type);
-          
-          console.log('✅ Real AI response received from OpenAI API');
-          return aiResponse;
-        } else {
-          throw new Error('Invalid response format from AI API');
-        }
-      } else {
-        const errorText = await response.text();
-        console.error('🚫 AI API Error Response:', errorText);
-        throw new Error(`AI API error: ${response.status} - ${errorText}`);
-      }
-    } catch (error) {
-      console.error('❌ AI query failed:', error.message);
-      console.log('🔄 Using enhanced fallback response due to AI error');
-      return this.getFallbackResponse(prompt, context);
-    }
+  // Get authentication headers
+  getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
   }
 
   // Food safety research - ALWAYS returns helpful response
