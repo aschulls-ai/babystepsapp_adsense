@@ -261,12 +261,17 @@ function App() {
     };
     
     const initializeApp = async () => {
+      console.log('🚀 Initializing Baby Steps standalone app...');
+      
+      // Initialize standalone mode as primary
+      initializeStandaloneMode();
+      
       // Initialize mobile features if running on native platform
       if (Capacitor.isNativePlatform()) {
         await initializeMobileApp();
       }
       
-      // Initialize offline mode first
+      // Initialize offline mode
       initializeOfflineMode();
       
       // Check internet connectivity
@@ -291,6 +296,8 @@ function App() {
           }
         });
       }
+      
+      console.log('✅ Baby Steps standalone app initialized successfully');
     };
     
     initializeApp();
