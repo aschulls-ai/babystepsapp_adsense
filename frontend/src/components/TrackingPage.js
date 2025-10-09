@@ -1398,7 +1398,7 @@ const QuickActionButton = ({ icon: Icon, label, color, onClick, testId }) => {
 };
 
 // Timer Quick Action Button Component with live timer display
-const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onClick }) => {
+const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onClick, testId }) => {
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
