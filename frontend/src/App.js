@@ -417,7 +417,7 @@ function App() {
     try {
       // Use local authentication (standalone mode)
       const response = await offlineAPI.login(email, password);
-      const { access_token } = response.data;
+      const { access_token, user: userData } = response.data;
       
       localStorage.setItem('token', access_token);
       
@@ -431,7 +431,13 @@ function App() {
         toast.success('Welcome to Baby Steps!');
       }
       
-      setUser({ email, authenticated: true, offline: false }); // Set offline false since all features work
+      // Set the complete user object from the response
+      setUser({ 
+        ...userData, 
+        email: userData.email, 
+        authenticated: true, 
+        offline: false // All features work in standalone mode
+      });
       await fetchBabies();
       return true;
     } catch (error) {
