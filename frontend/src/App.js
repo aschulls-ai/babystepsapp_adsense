@@ -405,9 +405,13 @@ function App() {
   };
 
   const login = async (email, password, rememberMe = false) => {
-    // Check if we should use offline mode
-    if (shouldUseOfflineMode()) {
-      console.log('🏠 Using offline mode for login');
+    // Always reset offline mode before attempting login to give online mode a chance
+    console.log('🔄 Resetting offline mode before login attempt');
+    resetOfflineMode();
+    
+    // Check if we should use offline mode (after reset, should be false unless manually forced)
+    if (shouldUseOfflineMode() && localStorage.getItem('babysteps_force_offline') === 'true') {
+      console.log('🏠 Using offline mode for login (manually forced)');
       try {
         const response = await offlineAPI.login(email, password);
         const { access_token } = response.data;
@@ -447,6 +451,14 @@ function App() {
         body: JSON.stringify({ email, password })
       });
       
+      console.log('📡 Login response status:', response.status, response.statusText);
+      
+      // Handle authentication errors (don't switch to offline mode)
+      if (response.status === 401 || response.status === 403) {
+        toast.error('Invalid email or password. Please check your credentials.');
+        throw new Error('Invalid credentials');
+      }
+      
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
@@ -458,13 +470,12 @@ function App() {
       localStorage.setItem('token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       
-      // Handle remember me functionality
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');
         localStorage.setItem('rememberedEmail', email);
-        const expirationTime = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-        localStorage.setItem('tokenExpiration', expirationTime.toString());
-        toast.success('Welcome back!');
+        const expirationTime = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+        localStorage.setItem('tokenExpiration', expirationTime.toISOString());
+        toast.success('Welcome back! You will stay signed in on this device.');
       } else {
         localStorage.removeItem('rememberMe');
         localStorage.removeItem('rememberedEmail');
@@ -478,13 +489,28 @@ function App() {
     } catch (error) {
       console.error('❌ Online login failed:', error);
       
-      // Automatically switch to offline mode if server connection fails
-      if (error.code === 'NETWORK_ERROR' || 
-          error.message.includes('Network Error') || 
-          error.code === 'ECONNABORTED' ||
-          !navigator.onLine) {
+      // Only switch to offline mode for genuine network connectivity issues
+      const isNetworkError = (
+        error.message.includes('TypeError: Failed to fetch') ||
+        error.message.includes('Network Error') ||
+        error.message.includes('ERR_NETWORK') ||
+        error.message.includes('ERR_CONNECTION_REFUSED') ||
+        error.message.includes('timeout') ||
+        error.code === 'NETWORK_ERROR' ||
+        error.code === 'ECONNABORTED' ||
+        !navigator.onLine
+      );
+      
+      const isServerError = error.message.includes('HTTP 5'); // 500, 502, 503, 504 errors
+      
+      if (isNetworkError || isServerError) {
+        console.log('🏠 Genuine network/server issue detected, trying offline mode...', {
+          error: error.message,
+          isNetworkError,
+          isServerError,
+          onlineStatus: navigator.onLine
+        });
         
-        console.log('🏠 Server connection failed, switching to offline mode...');
         enableOfflineMode();
         
         try {
@@ -500,7 +526,7 @@ function App() {
           } else {
             localStorage.removeItem('rememberMe');
             localStorage.removeItem('rememberedEmail');
-            toast.success('Welcome to Baby Steps! (Offline mode - no server connection)');
+            toast.success('Welcome to Baby Steps! (Offline mode - server unavailable)');
           }
           
           setUser({ email, authenticated: true, offline: true });
@@ -512,11 +538,15 @@ function App() {
           toast.error('Login failed: ' + (offlineError.message || 'Invalid credentials'));
           throw offlineError;
         }
-      } else if (error.response?.status === 401) {
-        toast.error('Invalid email or password.');
-        throw error;
       } else {
-        toast.error('Login failed. Please try again.');
+        // For authentication errors or other non-network issues, don't switch to offline mode
+        console.log('🚫 Not a network issue, staying in online mode:', error.message);
+        
+        if (error.message.includes('Invalid credentials') || error.message.includes('401')) {
+          toast.error('Invalid email or password. Please check your credentials.');
+        } else {
+          toast.error('Login failed. Please try again or check your connection.');
+        }
         throw error;
       }
     }
