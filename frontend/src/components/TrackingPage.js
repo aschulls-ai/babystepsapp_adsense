@@ -644,8 +644,17 @@ const FeedingForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      await axios.post('/feedings', data);
-      toast.success('Feeding logged successfully!');
+      // Use standalone offline API
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'feeding',
+        feeding_type: formData.type,
+        amount: formData.amount || null,
+        duration: formData.duration || null,
+        notes: formData.notes || null,
+        timestamp: formData.timestamp.toISOString()
+      });
+      toast.success('💾 Feeding saved to device!');
       setFormData({
         type: 'bottle',
         amount: '',
