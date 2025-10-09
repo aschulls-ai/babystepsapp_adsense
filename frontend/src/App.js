@@ -413,7 +413,7 @@ function App() {
     
     // Check if we should use offline mode
     if (shouldUseOfflineMode()) {
-      console.log('🏠 Using offline mode for login (manually forced)');
+      console.log('🏠 Using offline mode for login');
       try {
         const response = await offlineAPI.login(email, password);
         const { access_token } = response.data;
