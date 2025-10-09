@@ -250,6 +250,29 @@ function App() {
       
       // Initialize offline mode first
       initializeOfflineMode();
+      
+      // Check internet connectivity
+      console.log('🌐 Network status:', {
+        online: navigator.onLine,
+        connection: navigator.connection?.effectiveType || 'unknown',
+        userAgent: navigator.userAgent
+      });
+      
+      // Add network state listeners
+      const handleOnline = () => {
+        console.log('🌐 Network: ONLINE');
+        toast.info('Back online! Reconnecting to server...');
+      };
+      
+      const handleOffline = () => {
+        console.log('🌐 Network: OFFLINE');
+        toast.warning('Network connection lost. Using offline mode.');
+        enableOfflineMode();
+      };
+      
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+      
       await checkAuthState();
       
       // Run API tests in development/debugging mode
