@@ -514,32 +514,96 @@ async def food_research(request: dict, current_user_email: str = Depends(get_cur
         "sources": ["Pediatric Guidelines"]
     }
 
-# Meal planner endpoint (simplified)
+# AI-powered meal planner endpoint
 @app.post("/api/meals/search")
 async def meal_search(request: dict, current_user_email: str = Depends(get_current_user)):
     query = request.get("query", "")
-    age_months = request.get("age_months", 6)
+    age_months = request.get("baby_age_months", request.get("age_months", 6))
     
-    meals = [
-        {
-            "name": "Mashed Banana",
-            "ingredients": ["1 ripe banana"],
-            "instructions": ["Mash banana with fork until smooth", "Serve at room temperature"],
-            "age_appropriate": "6+ months"
-        },
-        {
-            "name": "Sweet Potato Puree", 
-            "ingredients": ["1 sweet potato", "Water"],
-            "instructions": ["Steam sweet potato until soft", "Mash with water to desired consistency"],
-            "age_appropriate": "6+ months"
-        },
-        {
-            "name": "Avocado Mash",
-            "ingredients": ["1/2 ripe avocado"],
-            "instructions": ["Mash avocado until smooth", "Serve immediately"],
-            "age_appropriate": "6+ months"
-        }
-    ]
+    print(f"🍽️ Meal search request: {query} (baby age: {age_months} months)")
+    
+    # Try AI-powered response if available
+    if AI_AVAILABLE and EMERGENT_LLM_KEY:
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"meal_search_{uuid.uuid4()}",
+                system_message=f"You are a pediatric nutrition expert. Provide age-appropriate meal ideas with detailed recipes, ingredients, instructions, and safety tips for a {age_months}-month-old baby. Focus on nutrition, safety, and development-appropriate textures."
+            ).with_model("openai", "gpt-4o-mini")
+            
+            user_message = UserMessage(text=f"Provide meal ideas for: '{query}' suitable for a {age_months}-month-old baby. Include 3-5 recipe suggestions with ingredients, step-by-step instructions, age appropriateness, prep time, and safety tips.")
+            
+            response = await chat.send_message(user_message)
+            
+            # For now, return the AI response in a simple format
+            # In a production app, you'd parse this into structured meal objects
+            return {
+                "results": [{
+                    "name": "AI-Generated Meal Ideas",
+                    "description": response,
+                    "age_appropriate": f"{age_months}+ months",
+                    "source": "AI-Powered Nutrition Expert"
+                }],
+                "query": query,
+                "age_months": age_months,
+                "ai_powered": True
+            }
+            
+        except Exception as e:
+            print(f"❌ AI meal search failed: {e}")
+            # Fall through to fallback responses
+    
+    # Fallback meal suggestions
+    if age_months >= 6:
+        meals = [
+            {
+                "name": "Mashed Banana",
+                "ingredients": ["1 ripe banana"],
+                "instructions": ["Mash banana with fork until smooth", "Ensure no lumps for younger babies", "Serve at room temperature"],
+                "age_appropriate": "6+ months",
+                "prep_time": "2 minutes",
+                "safety_tips": ["Always test temperature", "Supervise eating", "Watch for choking"]
+            },
+            {
+                "name": "Sweet Potato Puree", 
+                "ingredients": ["1 sweet potato", "Water or breast milk"],
+                "instructions": ["Steam sweet potato until very soft (15-20 min)", "Mash with liquid to desired consistency", "Cool before serving"],
+                "age_appropriate": "6+ months",
+                "prep_time": "25 minutes", 
+                "safety_tips": ["Check temperature", "Start with thin consistency", "No added salt or sugar"]
+            },
+            {
+                "name": "Avocado Mash",
+                "ingredients": ["1/2 ripe avocado"],
+                "instructions": ["Mash avocado until smooth", "Add breast milk if needed for consistency", "Serve immediately"],
+                "age_appropriate": "6+ months",
+                "prep_time": "1 minute",
+                "safety_tips": ["Use very ripe avocado", "Serve fresh", "Watch for allergies"]
+            }
+        ]
+    else:
+        meals = [
+            {
+                "name": "Breast Milk or Formula",
+                "ingredients": ["Breast milk or appropriate infant formula"],
+                "instructions": ["Follow feeding schedule as recommended by pediatrician"],
+                "age_appropriate": "0+ months",
+                "prep_time": "As needed",
+                "safety_tips": ["Consult pediatrician for feeding schedule", "No solid foods before 6 months"]
+            }
+        ]
+    
+    if age_months >= 8:
+        meals.extend([
+            {
+                "name": "Soft Scrambled Eggs",
+                "ingredients": ["1 egg", "1 tbsp milk", "Small amount of butter"],
+                "instructions": ["Whisk egg with milk", "Cook on very low heat, stirring constantly", "Ensure very soft texture", "Cool before serving"],
+                "age_appropriate": "8+ months",
+                "prep_time": "5 minutes",
+                "safety_tips": ["Cook thoroughly", "Cool to room temperature", "Watch for egg allergies", "Cut into small pieces"]
+            }
+        ])
     
     return {"results": meals, "query": query, "age_months": age_months}
 
