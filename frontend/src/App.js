@@ -222,8 +222,38 @@ function App() {
   };
 
   const login = async (email, password, rememberMe = false) => {
+    // Check if we should use offline mode
+    if (shouldUseOfflineMode()) {
+      console.log('🏠 Using offline mode for login');
+      try {
+        const response = await offlineAPI.login(email, password);
+        const { access_token } = response.data;
+        
+        localStorage.setItem('token', access_token);
+        
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('rememberedEmail', email);
+          toast.success('Welcome back! (Offline mode)');
+        } else {
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberedEmail');
+          toast.success('Welcome to Baby Steps! (Offline mode)');
+        }
+        
+        setUser({ email, authenticated: true, offline: true });
+        await fetchBabies();
+        return true;
+      } catch (error) {
+        console.error('Offline login failed:', error);
+        toast.error(error.message || 'Login failed');
+        throw error;
+      }
+    }
+
+    // Try online login first
     try {
-      console.log('🔐 Attempting login...', { email, apiBase: API });
+      console.log('🔐 Attempting online login...', { email, apiBase: API });
       
       const response = await axios.post('/api/auth/login', { 
         email, 
@@ -235,7 +265,7 @@ function App() {
         }
       });
       
-      console.log('✅ Login response:', response.status);
+      console.log('✅ Online login successful:', response.status);
       const { access_token } = response.data;
       
       localStorage.setItem('token', access_token);
@@ -245,10 +275,9 @@ function App() {
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');
         localStorage.setItem('rememberedEmail', email);
-        // Set longer expiration for remembered sessions (30 days)
         const expirationTime = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
         localStorage.setItem('tokenExpiration', expirationTime.toString());
-        toast.success('Welcome back! You will stay signed in on this device.');
+        toast.success('Welcome back!');
       } else {
         localStorage.removeItem('rememberMe');
         localStorage.removeItem('rememberedEmail');
@@ -256,9 +285,7 @@ function App() {
         toast.success('Welcome to Baby Steps!');
       }
       
-      // Set user state to trigger re-render
-      setUser({ email, authenticated: true });
-      
+      setUser({ email, authenticated: true, offline: false });
       await fetchBabies();
       return true;
     } catch (error) {
