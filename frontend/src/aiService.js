@@ -3,7 +3,7 @@
 
 class AIService {
   constructor() {
-    // In standalone mode, use local backend for AI functionality
+    // Use local backend for AI functionality in standalone mode
     this.backendUrl = 'http://localhost:8001/api';
     this.isAvailable = true;
     this.initializeService();
