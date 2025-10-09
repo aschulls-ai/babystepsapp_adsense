@@ -81,51 +81,18 @@ const MealPlanner = ({ currentBaby }) => {
       const babyAgeMonths = currentBaby ? 
         Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 12;
 
-      // Check if we should use offline mode
-      if (shouldUseOfflineMode()) {
-        console.log('🏠 Using offline mode for meal planning');
-        const response = await offlineAPI.mealSearch(query, babyAgeMonths);
-        if (response.data && response.data.results) {
-          setSearchResults(response.data.results);
-          setError('');
-          toast.success('Meal ideas found (offline mode)');
-        } else {
-          setError('No results found. Please try a different search.');
-        }
-        setSearchQuery('');
-        return;
+      // Always use standalone mode with AI integration
+      console.log('🍽️ Using standalone mode with AI for meal planning');
+      const response = await offlineAPI.mealSearch(query, babyAgeMonths);
+      
+      if (response.data && response.data.results) {
+        setSearchResults(response.data.results);
+        setError('');
+        toast.success('Meal ideas found');
+      } else {
+        setError('No results found. Please try a different search.');
       }
-
-      // Try online mode first
-      try {
-        console.log('Meal search request:', { query, babyAgeMonths });
-        
-        const response = await axios.post('/api/meals/search', {
-          query: query,
-          baby_age_months: babyAgeMonths
-        });
-
-        console.log('Meal search response:', response.data);
-
-        if (response.data && response.data.results) {
-          setSearchResults(response.data.results);
-          setError('');
-        } else {
-          setError('No results found. Please try a different search.');
-        }
-        setSearchQuery('');
-      } catch (onlineError) {
-        console.log('⚠️ Online meal search failed, trying offline mode...');
-        const response = await offlineAPI.mealSearch(query, babyAgeMonths);
-        if (response.data && response.data.results) {
-          setSearchResults(response.data.results);
-          setError('');
-          toast.success('Meal ideas found (using offline mode due to connection issues)');
-        } else {
-          setError('No results found. Please try a different search.');
-        }
-        setSearchQuery('');
-      }
+      setSearchQuery('');
     } catch (error) {
       console.error('Meal search error:', error);
       setError(`Search failed: ${error.message || 'Unable to search for meals'}`);
