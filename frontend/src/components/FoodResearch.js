@@ -56,36 +56,16 @@ const FoodResearch = ({ currentBaby }) => {
       const babyAgeMonths = currentBaby ? 
         Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 6;
 
-      // Check if we should use offline mode
-      if (shouldUseOfflineMode()) {
-        console.log('🏠 Using offline mode for food research');
-        const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
-        setResults(response.data);
-        setQuery('');
-        toast.success('Food research completed (offline mode)');
-        return;
-      }
-
-      // Try online mode first
-      try {
-        const response = await axios.post('/api/food/research', {
-          question: searchQuery,
-          baby_age_months: babyAgeMonths
-        });
-
-        setResults(response.data);
-        setQuery('');
-        
-        // Refresh safety history
-        if (currentBaby) {
-          fetchSafetyHistory();
-        }
-      } catch (onlineError) {
-        console.log('⚠️ Online food research failed, trying offline mode...');
-        const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
-        setResults(response.data);
-        setQuery('');
-        toast.success('Food research completed (using offline mode due to connection issues)');
+      // Always use standalone/offline mode for better reliability
+      console.log('🔬 Using standalone mode with AI integration for food research');
+      const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
+      setResults(response.data);
+      setQuery('');
+      toast.success('Food research completed');
+      
+      // Refresh safety history
+      if (currentBaby) {
+        fetchSafetyHistory();
       }
     } catch (error) {
       console.error('Food research failed:', error);
