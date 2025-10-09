@@ -95,44 +95,19 @@ const TrackingPage = ({ currentBaby }) => {
 
   const fetchAllActivities = async () => {
     if (!currentBaby) return;
-    
-    const endpoints = {
-      feeding: '/feedings',
-      diaper: '/diapers',
-      sleep: '/sleep',
-      pumping: '/pumping',
-      measurements: '/measurements',
-      milestones: '/milestones'
-    };
 
     try {
-      const allActivityPromises = Object.entries(endpoints).map(async ([type, endpoint]) => {
-        try {
-          const response = await axios.get(endpoint, {
-            params: { baby_id: currentBaby.id }
-          });
-          return response.data.map(activity => ({
-            ...activity,
-            activity_type: type,
-            display_type: type.charAt(0).toUpperCase() + type.slice(1)
-          }));
-        } catch (error) {
-          console.error(`Failed to fetch ${type} activities:`, error);
-          return [];
-        }
-      });
-
-      const results = await Promise.all(allActivityPromises);
-      const flattenedActivities = results.flat();
+      // Use offline API to get all activities for this baby
+      const response = await offlineAPI.getActivities(currentBaby.id);
       
-      // Sort by timestamp (newest first by default)
-      const sortedActivities = flattenedActivities.sort((a, b) => {
-        const aTime = new Date(a.timestamp || a.start_time || a.achieved_date);
-        const bTime = new Date(b.timestamp || b.start_time || b.achieved_date);
-        return bTime - aTime;
-      });
-
-      setAllActivities(sortedActivities);
+      // Add display type for each activity
+      const activitiesWithDisplayType = response.data.map(activity => ({
+        ...activity,
+        activity_type: activity.type,
+        display_type: activity.type.charAt(0).toUpperCase() + activity.type.slice(1)
+      }));
+      
+      setAllActivities(activitiesWithDisplayType);
     } catch (error) {
       console.error('Failed to fetch all activities:', error);
     }
