@@ -287,6 +287,19 @@ function App() {
     };
     
     initializeApp();
+    
+    // Cleanup function to remove event listeners
+    return () => {
+      window.removeEventListener('online', () => {
+        console.log('🌐 Network: ONLINE');
+        toast.info('Back online! Reconnecting to server...');
+      });
+      window.removeEventListener('offline', () => {
+        console.log('🌐 Network: OFFLINE');
+        toast.warning('Network connection lost. Using offline mode.');
+        enableOfflineMode();
+      });
+    };
   }, []);
 
   const initializeMobileApp = async () => {
