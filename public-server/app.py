@@ -251,30 +251,50 @@ async def login(request: LoginRequest, http_request):
     print(f"User-Agent: {http_request.headers.get('user-agent', 'unknown')}")
     print(f"Email: {request.email}")
     
-    user = users_db.get(request.email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT id, email, name, password FROM users WHERE email = ?", (request.email,))
+    user = cursor.fetchone()
+    conn.close()
+    
     if not user or user["password"] != request.password:
         print(f"Invalid login for {request.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     access_token = create_access_token(data={"sub": request.email})
-    print(f"Successful login for {request.email}")
+    print(f"✅ Successful login for {request.email}")
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/api/auth/register") 
 async def register(request: RegisterRequest):
-    if request.email in users_db:
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Check if email already exists
+    cursor.execute("SELECT id FROM users WHERE email = ?", (request.email,))
+    if cursor.fetchone():
+        conn.close()
         raise HTTPException(status_code=400, detail="Email already registered")
     
     user_id = str(uuid.uuid4())
-    users_db[request.email] = {
-        "id": user_id,
-        "email": request.email,
-        "name": request.name,
-        "password": request.password
-    }
-    
-    access_token = create_access_token(data={"sub": request.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    try:
+        cursor.execute("""
+            INSERT INTO users (id, email, name, password)
+            VALUES (?, ?, ?, ?)
+        """, (user_id, request.email, request.name, request.password))
+        
+        conn.commit()
+        conn.close()
+        
+        access_token = create_access_token(data={"sub": request.email})
+        print(f"✅ New user registered: {request.email}")
+        return {"access_token": access_token, "token_type": "bearer"}
+        
+    except Exception as e:
+        conn.close()
+        print(f"❌ Registration failed for {request.email}: {e}")
+        raise HTTPException(status_code=500, detail="Registration failed")
 
 # User endpoints
 @app.get("/api/user/profile")
