@@ -14,6 +14,21 @@ import json
 from datetime import datetime, timezone, timedelta
 from jose import JWTError, jwt
 import os
+import sqlite3
+import asyncio
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Try to import AI functionality
+try:
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+    AI_AVAILABLE = True
+    print("✅ AI integration available")
+except ImportError:
+    AI_AVAILABLE = False
+    print("⚠️ AI integration not available")
 
 # Configuration
 SECRET_KEY = "demo-baby-steps-secret-key-2025"
