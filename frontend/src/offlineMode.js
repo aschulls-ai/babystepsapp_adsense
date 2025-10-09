@@ -497,10 +497,10 @@ export const offlineAPI = {
           saveOfflineData('activities', activities);
 
           // Update baby statistics
-          offlineAPI.updateBabyStats(activityData.baby_id, newActivity);
+          this.updateBabyStats(activityData.baby_id, newActivity);
 
           // Check for milestone triggers
-          offlineAPI.checkMilestoneTriggers(activityData.baby_id, newActivity);
+          this.checkMilestoneTriggers(activityData.baby_id, newActivity);
 
           console.log('✅ Activity logged successfully:', activityData.type);
           resolve({ data: newActivity });
