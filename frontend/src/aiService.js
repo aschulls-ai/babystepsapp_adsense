@@ -30,28 +30,33 @@ class AIService {
 
       console.log('🔍 AI Query:', prompt);
 
-      // Use fetch to make direct API call to OpenAI via Emergent
+      // Use direct API call to OpenAI through Emergent LLM key
+      console.log('🔗 Making direct AI API call...');
+      
+      const requestBody = {
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: this.getSystemPrompt(context.type || 'general')
+          },
+          {
+            role: 'user', 
+            content: prompt
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      };
+
+      // Try direct OpenAI API call with Emergent key
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: this.getSystemPrompt(context.type || 'general')
-            },
-            {
-              role: 'user', 
-              content: prompt
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.7
-        })
+        body: JSON.stringify(requestBody)
       });
 
       if (response.ok) {
