@@ -28,7 +28,19 @@ try:
     print("✅ AI integration available")
 except ImportError:
     AI_AVAILABLE = False
-    print("⚠️ AI integration not available")
+    print("⚠️ AI integration not available - using fallback responses")
+    # Create mock classes for deployment without emergentintegrations
+    class LlmChat:
+        def __init__(self, *args, **kwargs):
+            pass
+        def with_model(self, *args, **kwargs):
+            return self
+        async def send_message(self, message):
+            return "AI service temporarily unavailable. Please try again later."
+    
+    class UserMessage:
+        def __init__(self, text):
+            self.text = text
 
 # Configuration
 SECRET_KEY = os.getenv("SECRET_KEY", "demo-baby-steps-secret-key-2025")
