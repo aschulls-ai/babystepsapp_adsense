@@ -216,7 +216,7 @@
   stuck_tasks: 
     - "Activity Tracking Quick Actions - Missing UI Components"
     - "AI Integration - Search Input Fields Not Found"
-    - "Baby Profile Data Binding Issues"
+    - "Baby Profile Data Binding Issues - CRITICAL: App.js fetchBabies() or currentBaby state management failing"
   test_all: false
   test_priority: "high_first"
 
