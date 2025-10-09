@@ -246,10 +246,10 @@ export const offlineAPI = {
   getBabies: async () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const currentUserId = localStorage.getItem('babysteps_current_user');
         const babies = getOfflineData('babies', {});
         
-        const userBabies = Object.values(babies).filter(baby => baby.user_id === currentUser.id);
+        const userBabies = Object.values(babies).filter(baby => baby.user_id === currentUserId);
         
         resolve({
           data: userBabies
