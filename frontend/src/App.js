@@ -210,6 +210,17 @@ function App() {
 
   const fetchBabies = async () => {
     try {
+      if (shouldUseOfflineMode()) {
+        console.log('🏠 Fetching babies from offline storage');
+        const response = await offlineAPI.getBabies();
+        setBabies(response.data);
+        if (response.data.length > 0 && !currentBaby) {
+          setCurrentBaby(response.data[0]);
+        }
+        return;
+      }
+
+      // Try online fetch
       const response = await axios.get('/api/babies');
       setBabies(response.data);
       if (response.data.length > 0 && !currentBaby) {
@@ -217,7 +228,24 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to fetch babies:', error);
-      throw error;
+      
+      // If online fetch fails and not already in offline mode, try offline
+      if (!shouldUseOfflineMode()) {
+        try {
+          console.log('🏠 Online fetch failed, trying offline mode...');
+          enableOfflineMode();
+          const offlineResponse = await offlineAPI.getBabies();
+          setBabies(offlineResponse.data);
+          if (offlineResponse.data.length > 0 && !currentBaby) {
+            setCurrentBaby(offlineResponse.data[0]);
+          }
+        } catch (offlineError) {
+          console.error('Offline fetch also failed:', offlineError);
+          throw error; // Throw original error to maintain existing behavior
+        }
+      } else {
+        throw error;
+      }
     }
   };
 
