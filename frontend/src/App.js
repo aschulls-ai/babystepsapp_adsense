@@ -242,6 +242,18 @@ function App() {
   };
 
   useEffect(() => {
+    // Define network event handlers
+    const handleOnline = () => {
+      console.log('🌐 Network: ONLINE');
+      toast.info('Back online! Reconnecting to server...');
+    };
+    
+    const handleOffline = () => {
+      console.log('🌐 Network: OFFLINE');
+      toast.warning('Network connection lost. Using offline mode.');
+      enableOfflineMode();
+    };
+    
     const initializeApp = async () => {
       // Initialize mobile features if running on native platform
       if (Capacitor.isNativePlatform()) {
@@ -259,17 +271,6 @@ function App() {
       });
       
       // Add network state listeners
-      const handleOnline = () => {
-        console.log('🌐 Network: ONLINE');
-        toast.info('Back online! Reconnecting to server...');
-      };
-      
-      const handleOffline = () => {
-        console.log('🌐 Network: OFFLINE');
-        toast.warning('Network connection lost. Using offline mode.');
-        enableOfflineMode();
-      };
-      
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', handleOffline);
       
@@ -290,15 +291,8 @@ function App() {
     
     // Cleanup function to remove event listeners
     return () => {
-      window.removeEventListener('online', () => {
-        console.log('🌐 Network: ONLINE');
-        toast.info('Back online! Reconnecting to server...');
-      });
-      window.removeEventListener('offline', () => {
-        console.log('🌐 Network: OFFLINE');
-        toast.warning('Network connection lost. Using offline mode.');
-        enableOfflineMode();
-      });
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
