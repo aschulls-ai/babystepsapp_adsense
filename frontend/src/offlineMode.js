@@ -425,45 +425,260 @@ export const offlineAPI = {
     });
   },
 
-  // Activities
-  getActivities: async () => {
-    return new Promise((resolve) => {
+  // Enhanced activity tracking with comprehensive logging
+  logActivity: async (activityData) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
-        const activities = getOfflineData('activities', {});
-        
-        const userActivities = Object.values(activities)
-          .filter(activity => activity.user_id === currentUser.id)
-          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-        resolve({
-          data: userActivities
-        });
-      }, 300);
+        try {
+          const currentUserId = localStorage.getItem('babysteps_current_user');
+          
+          if (!currentUserId) {
+            reject(new Error('No authenticated user found'));
+            return;
+          }
+
+          // Validation
+          if (!activityData.type) {
+            reject(new Error('Activity type is required'));
+            return;
+          }
+
+          if (!activityData.baby_id) {
+            reject(new Error('Baby ID is required'));
+            return;
+          }
+
+          const activityId = uuidv4();
+          const now = new Date().toISOString();
+          
+          // Create comprehensive activity record
+          const newActivity = {
+            id: activityId,
+            type: activityData.type,
+            baby_id: activityData.baby_id,
+            user_id: currentUserId,
+            timestamp: activityData.timestamp || now,
+            createdAt: now,
+            
+            // Core activity data
+            notes: activityData.notes || '',
+            duration: activityData.duration || null,
+            amount: activityData.amount || null,
+            unit: activityData.unit || null,
+            
+            // Enhanced tracking data
+            details: {
+              mood: activityData.mood || null,
+              temperature: activityData.temperature || null,
+              medication: activityData.medication || null,
+              location: activityData.location || 'home',
+              weather: activityData.weather || null,
+              photos: activityData.photos || [],
+              tags: activityData.tags || []
+            },
+            
+            // Type-specific data
+            type_data: offlineAPI.getTypeSpecificData(activityData.type, activityData),
+            
+            // Metadata
+            metadata: {
+              app_version: '1.0.0',
+              device: navigator.userAgent || 'unknown',
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            }
+          };
+
+          // Save activity
+          const activities = getOfflineData('activities', {});
+          if (!activities[currentUserId]) {
+            activities[currentUserId] = [];
+          }
+          activities[currentUserId].push(newActivity);
+          saveOfflineData('activities', activities);
+
+          // Update baby statistics
+          offlineAPI.updateBabyStats(activityData.baby_id, newActivity);
+
+          // Check for milestone triggers
+          offlineAPI.checkMilestoneTriggers(activityData.baby_id, newActivity);
+
+          console.log('✅ Activity logged successfully:', activityData.type);
+          resolve({ data: newActivity });
+        } catch (error) {
+          reject(error);
+        }
+      }, 200);
     });
   },
 
-  createActivity: async (activityData) => {
+  // Get type-specific data structure
+  getTypeSpecificData: (type, activityData) => {
+    const typeData = {};
+    
+    switch (type) {
+      case 'feeding':
+        typeData.method = activityData.feeding_method || 'bottle';
+        typeData.breast_side = activityData.breast_side || null;
+        typeData.formula_type = activityData.formula_type || null;
+        typeData.solid_food = activityData.solid_food || null;
+        break;
+        
+      case 'sleep':
+        typeData.sleep_type = activityData.sleep_type || 'nap';
+        typeData.sleep_quality = activityData.sleep_quality || null;
+        typeData.sleep_location = activityData.sleep_location || 'crib';
+        break;
+        
+      case 'diaper':
+        typeData.diaper_type = activityData.diaper_type || 'wet';
+        typeData.color = activityData.color || null;
+        typeData.consistency = activityData.consistency || null;
+        break;
+        
+      case 'growth':
+        typeData.measurement_type = activityData.measurement_type || 'weight';
+        typeData.value = activityData.value || null;
+        typeData.percentile = activityData.percentile || null;
+        break;
+        
+      case 'milestone':
+        typeData.milestone_category = activityData.milestone_category || 'motor';
+        typeData.milestone_name = activityData.milestone_name || '';
+        break;
+        
+      case 'medical':
+        typeData.appointment_type = activityData.appointment_type || 'checkup';
+        typeData.provider = activityData.provider || null;
+        typeData.diagnosis = activityData.diagnosis || null;
+        typeData.treatment = activityData.treatment || null;
+        break;
+    }
+    
+    return typeData;
+  },
+
+  // Update baby statistics after activity logging
+  updateBabyStats: (babyId, activity) => {
+    try {
+      const currentUserId = localStorage.getItem('babysteps_current_user');
+      const babies = getOfflineData('babies', {});
+      
+      if (babies[currentUserId]) {
+        const babyIndex = babies[currentUserId].findIndex(baby => baby.id === babyId);
+        if (babyIndex !== -1) {
+          babies[currentUserId][babyIndex].stats.total_activities += 1;
+          babies[currentUserId][babyIndex].stats.last_activity = activity.timestamp;
+          babies[currentUserId][babyIndex].updatedAt = new Date().toISOString();
+          
+          saveOfflineData('babies', babies);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to update baby stats:', error);
+    }
+  },
+
+  // Check for milestone triggers
+  checkMilestoneTriggers: (babyId, activity) => {
+    try {
+      // This would contain logic to automatically detect milestones
+      // based on activities (e.g., first solid food, first sleep through night)
+      if (activity.type === 'milestone') {
+        const milestones = getOfflineData('milestones', {});
+        if (milestones[babyId] && activity.type_data.milestone_name) {
+          // Mark milestone as achieved
+          // Implementation would depend on milestone structure
+          console.log('🎉 Milestone achieved:', activity.type_data.milestone_name);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check milestones:', error);
+    }
+  },
+
+  // Enhanced activity retrieval with filtering and sorting
+  getActivities: async (babyId = null, filters = {}) => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
-        const activities = getOfflineData('activities', {});
-        
-        const newActivity = {
-          id: uuidv4(),
-          ...activityData,
-          user_id: currentUser.id,
-          timestamp: new Date().toISOString()
-        };
-        
-        activities[newActivity.id] = newActivity;
-        saveOfflineData('activities', activities);
-        
-        resolve({
-          data: newActivity
-        });
-      }, 300);
+        try {
+          const currentUserId = localStorage.getItem('babysteps_current_user');
+          const activities = getOfflineData('activities', {});
+          
+          let userActivities = activities[currentUserId] || [];
+          
+          // Filter by baby ID
+          if (babyId) {
+            userActivities = userActivities.filter(activity => activity.baby_id === babyId);
+          }
+          
+          // Apply additional filters
+          if (filters.type) {
+            userActivities = userActivities.filter(activity => activity.type === filters.type);
+          }
+          
+          if (filters.startDate) {
+            userActivities = userActivities.filter(activity => 
+              new Date(activity.timestamp) >= new Date(filters.startDate)
+            );
+          }
+          
+          if (filters.endDate) {
+            userActivities = userActivities.filter(activity => 
+              new Date(activity.timestamp) <= new Date(filters.endDate)
+            );
+          }
+          
+          // Sort by timestamp (newest first)
+          userActivities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          
+          // Limit results if specified
+          if (filters.limit) {
+            userActivities = userActivities.slice(0, filters.limit);
+          }
+          
+          resolve({ data: userActivities });
+        } catch (error) {
+          resolve({ data: [] });
+        }
+      }, 200);
     });
+  },
+
+  // Get activity statistics
+  getActivityStats: async (babyId, period = 'week') => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        try {
+          const activities = offlineAPI.getActivities(babyId);
+          
+          // Calculate statistics based on period
+          const stats = {
+            total_activities: activities.data.length,
+            by_type: {},
+            by_day: {},
+            trends: {}
+          };
+          
+          activities.data.forEach(activity => {
+            // Count by type
+            stats.by_type[activity.type] = (stats.by_type[activity.type] || 0) + 1;
+            
+            // Count by day
+            const day = activity.timestamp.split('T')[0];
+            stats.by_day[day] = (stats.by_day[day] || 0) + 1;
+          });
+          
+          resolve({ data: stats });
+        } catch (error) {
+          resolve({ data: null });
+        }
+      }, 100);
+    });
+  },
+
+  // Legacy createActivity function for backward compatibility
+  createActivity: async (activityData) => {
+    return offlineAPI.logActivity(activityData);
   },
 
   // Food research (with direct AI integration via device internet)
