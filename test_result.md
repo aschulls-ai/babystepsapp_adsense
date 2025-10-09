@@ -212,9 +212,9 @@
 
 ## test_plan:
   current_focus:
-    - "Complete Baby Steps app functionality testing with backend deployment issues"
+    - "Activity Tracking Data Persistence in Standalone Mode"
   stuck_tasks: 
-    - "Enhanced Render backend server functionality testing completed"
+    - "Activity Tracking Data Persistence in Standalone Mode"
   test_all: false
   test_priority: "high_first"
 
