@@ -212,7 +212,7 @@
 
 ## test_plan:
   current_focus:
-    - "AI integration functionality with emergentintegrations"
+    - "Complete Standalone App Validation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
