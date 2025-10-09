@@ -299,7 +299,13 @@ async def register(request: RegisterRequest):
 # User endpoints
 @app.get("/api/user/profile")
 async def get_profile(current_user_email: str = Depends(get_current_user)):
-    user = users_db.get(current_user_email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT id, email, name FROM users WHERE email = ?", (current_user_email,))
+    user = cursor.fetchone()
+    conn.close()
+    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
