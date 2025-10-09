@@ -507,16 +507,21 @@ function App() {
 
   const addBaby = async (babyData) => {
     try {
-      const response = await axios.post('/api/babies', babyData);
+      // Use offline API for standalone mode
+      console.log('👶 Creating baby in standalone mode:', babyData);
+      const response = await offlineAPI.createBaby(babyData);
       const newBaby = response.data;
+      
       setBabies([...babies, newBaby]);
       if (!currentBaby) {
         setCurrentBaby(newBaby);
       }
-      toast.success(`${newBaby.name}'s profile created successfully!`);
+      toast.success(`${newBaby.name}'s profile created successfully! (Saved to device)`);
+      console.log('✅ Baby created and state updated:', newBaby.name);
       return newBaby;
     } catch (error) {
-      toast.error('Failed to add baby profile');
+      console.error('❌ Failed to add baby profile:', error);
+      toast.error('Failed to add baby profile: ' + (error.message || 'Unknown error'));
       throw error;
     }
   };
