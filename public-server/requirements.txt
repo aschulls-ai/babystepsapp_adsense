@@ -3,3 +3,5 @@ uvicorn[standard]==0.24.0
 python-jose[cryptography]==3.3.0
 pydantic==2.11.0
 python-multipart==0.0.6
+python-dotenv==1.1.1
+emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/
