@@ -498,7 +498,7 @@ export const offlineAPI = {
             },
             
             // Type-specific data
-            type_data: this.getTypeSpecificData(activityData.type, activityData),
+            type_data: offlineAPI.getTypeSpecificData(activityData.type, activityData),
             
             // Metadata
             metadata: {
