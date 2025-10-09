@@ -439,37 +439,74 @@ async def update_baby(baby_id: str, request: BabyCreateRequest, current_user_ema
 # Activity endpoints
 @app.get("/api/activities")
 async def get_activities(current_user_email: str = Depends(get_current_user)):
-    user = users_db.get(current_user_email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get user
+    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
+    user = cursor.fetchone()
     if not user:
+        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
-    user_activities = activities_db.get(user["id"], [])
-    return user_activities
+    # Get user's activities
+    cursor.execute("""
+        SELECT id, type, notes, baby_id, user_id, timestamp 
+        FROM activities 
+        WHERE user_id = ? 
+        ORDER BY timestamp DESC
+    """, (user["id"],))
+    activities = cursor.fetchall()
+    conn.close()
+    
+    return [dict(activity) for activity in activities]
 
 @app.post("/api/activities")
 async def create_activity(request: ActivityRequest, current_user_email: str = Depends(get_current_user)):
-    user = users_db.get(current_user_email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get user
+    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
+    user = cursor.fetchone()
     if not user:
+        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     # Verify baby belongs to user
-    baby = babies_db.get(request.baby_id)
-    if not baby or baby["user_id"] != user["id"]:
+    cursor.execute("SELECT id FROM babies WHERE id = ? AND user_id = ?", (request.baby_id, user["id"]))
+    if not cursor.fetchone():
+        conn.close()
         raise HTTPException(status_code=404, detail="Baby not found")
     
-    activity = {
-        "id": str(uuid.uuid4()),
-        "type": request.type,
-        "notes": request.notes,
-        "baby_id": request.baby_id,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
-    }
+    activity_id = str(uuid.uuid4())
+    timestamp = datetime.utcnow().isoformat() + "Z"
     
-    if user["id"] not in activities_db:
-        activities_db[user["id"]] = []
-    
-    activities_db[user["id"]].append(activity)
-    return activity
+    try:
+        cursor.execute("""
+            INSERT INTO activities (id, type, notes, baby_id, user_id, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (activity_id, request.type, request.notes, request.baby_id, user["id"], timestamp))
+        
+        conn.commit()
+        conn.close()
+        
+        activity = {
+            "id": activity_id,
+            "type": request.type,
+            "notes": request.notes,
+            "baby_id": request.baby_id,
+            "user_id": user["id"],
+            "timestamp": timestamp
+        }
+        
+        print(f"✅ Activity created: {request.type}")
+        return activity
+        
+    except Exception as e:
+        conn.close()
+        print(f"❌ Activity creation failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create activity")
 
 # AI-powered food research endpoint
 @app.post("/api/food/research")
