@@ -440,24 +440,64 @@ async def create_activity(request: ActivityRequest, current_user_email: str = De
     activities_db[user["id"]].append(activity)
     return activity
 
-# Food research endpoint (simplified)
+# AI-powered food research endpoint
 @app.post("/api/food/research")
 async def food_research(request: dict, current_user_email: str = Depends(get_current_user)):
-    query = request.get("query", "")
+    query = request.get("query", request.get("question", ""))
+    baby_age_months = request.get("baby_age_months", 6)
     
-    # Simple mock responses for common queries
+    print(f"🔬 Food research request: {query} (baby age: {baby_age_months} months)")
+    
+    # Try AI-powered response if available
+    if AI_AVAILABLE and EMERGENT_LLM_KEY:
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"food_research_{uuid.uuid4()}",
+                system_message=f"You are a pediatric nutrition expert. Provide safe, evidence-based food safety information for a {baby_age_months}-month-old baby. Include safety level (safe/caution/avoid), age recommendations, and trusted sources."
+            ).with_model("openai", "gpt-4o-mini")
+            
+            user_message = UserMessage(text=f"Is '{query}' safe for a {baby_age_months}-month-old baby? Provide detailed safety information including when it can be introduced, preparation tips, and potential risks.")
+            
+            response = await chat.send_message(user_message)
+            
+            # Parse AI response and format it
+            return {
+                "answer": response,
+                "safety_level": "ai_assessed",
+                "age_recommendation": f"Based on {baby_age_months} months old",
+                "sources": ["AI-Powered Pediatric Nutrition Assessment", "Evidence-Based Guidelines"]
+            }
+            
+        except Exception as e:
+            print(f"❌ AI food research failed: {e}")
+            # Fall through to fallback responses
+    
+    # Fallback responses for common queries
     responses = {
         "honey": {
-            "answer": "Honey should NOT be given to babies under 12 months old due to the risk of infant botulism.",
+            "answer": "🚫 Honey should NOT be given to babies under 12 months old due to the risk of infant botulism. Botulism spores can be found in honey and can cause serious illness in infants whose immune systems aren't fully developed.",
             "safety_level": "avoid",
-            "age_recommendation": "12+ months",
-            "sources": ["American Academy of Pediatrics"]
+            "age_recommendation": "12+ months only",
+            "sources": ["American Academy of Pediatrics", "CDC Guidelines"]
         },
         "strawberries": {
-            "answer": "Fresh strawberries can be introduced around 6 months old when baby starts solids.",
+            "answer": "🍓 Fresh strawberries can be introduced around 6 months when baby starts solids. Cut into small, age-appropriate pieces to prevent choking. Start with small amounts and watch for allergic reactions.",
             "safety_level": "safe",
             "age_recommendation": "6+ months", 
-            "sources": ["Pediatric Guidelines"]
+            "sources": ["Pediatric Nutrition Guidelines", "AAP Feeding Guidelines"]
+        },
+        "nuts": {
+            "answer": "🥜 Whole nuts are a choking hazard for babies. Nut butters can be introduced around 6 months but should be thinned with water or breast milk. Watch carefully for allergic reactions.",
+            "safety_level": "caution",
+            "age_recommendation": "6+ months (as nut butter only)",
+            "sources": ["Food Allergy Research Guidelines"]
+        },
+        "eggs": {
+            "answer": "🥚 Eggs can be introduced around 6 months old. Start with well-cooked eggs to reduce allergy risk. Scrambled, hard-boiled, or as part of other foods are good options.",
+            "safety_level": "safe",
+            "age_recommendation": "6+ months",
+            "sources": ["AAP Guidelines", "Food Allergy Prevention Guidelines"]
         }
     }
     
@@ -468,7 +508,7 @@ async def food_research(request: dict, current_user_email: str = Depends(get_cur
     
     # Default response
     return {
-        "answer": f"For safety information about '{query}', please consult your pediatrician.",
+        "answer": f"For safety information about '{query}' for a {baby_age_months}-month-old baby, please consult your pediatrician for personalized advice.",
         "safety_level": "consult_doctor",
         "age_recommendation": "Ask your doctor",
         "sources": ["Pediatric Guidelines"]
