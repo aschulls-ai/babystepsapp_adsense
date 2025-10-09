@@ -358,7 +358,7 @@ export const offlineAPI = {
     // Initialize milestones
     const milestones = getOfflineData('milestones', {});
     if (!milestones[babyId]) {
-      milestones[babyId] = offlineAPI.getDefaultMilestones();
+      milestones[babyId] = this.getDefaultMilestones();
       saveOfflineData('milestones', milestones);
     }
 
