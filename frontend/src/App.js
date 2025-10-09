@@ -415,7 +415,8 @@ function App() {
       }
       
       console.log('✅ Online login successful:', response.status);
-      const { access_token } = response.data;
+      const responseData = await response.json();
+      const { access_token } = responseData;
       
       localStorage.setItem('token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
