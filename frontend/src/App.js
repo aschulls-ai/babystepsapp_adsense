@@ -28,6 +28,15 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
+// Import offline mode
+import { 
+  shouldUseOfflineMode, 
+  enableOfflineMode, 
+  initializeOfflineMode, 
+  offlineAPI,
+  isOfflineMode 
+} from './offlineMode';
+
 // Backend URL Configuration
 const API = process.env.REACT_APP_BACKEND_URL || '/api';
 
