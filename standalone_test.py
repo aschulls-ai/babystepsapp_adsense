@@ -399,13 +399,32 @@ class StandaloneModeAPITester:
         print(f"👤 Demo credentials: {self.demo_email}")
         print("=" * 80)
         
-        # 1. Backend API Testing
-        print("\n🔧 1. BACKEND API TESTING:")
+        # 1. Basic Backend Health Check
+        print("\n🔧 1. BACKEND HEALTH CHECK:")
         print("=" * 80)
         
         print("🏥 Testing /api/health endpoint...")
         if not self.test_backend_health_check():
             print("❌ Backend health check failed - may affect other tests")
+            return self.results
+        
+        # 2. Authentication Testing (must be done first)
+        print("\n🔐 2. AUTHENTICATION TESTING:")
+        print("=" * 80)
+        
+        print("🔑 Testing demo credentials login (demo@babysteps.com / demo123)...")
+        demo_login_success = self.test_demo_credentials_login()
+        
+        if not demo_login_success:
+            print("❌ Demo login failed - cannot test authenticated features")
+            return self.results
+        
+        print("🔐 Testing authentication endpoints...")
+        self.test_authentication_endpoints()
+        
+        # 3. Backend API Testing (with authentication)
+        print("\n🔧 3. BACKEND API TESTING (Authenticated):")
+        print("=" * 80)
         
         print("🍯 Testing /api/food/research endpoint with emergentintegrations...")
         self.test_food_research_endpoint()
@@ -416,27 +435,18 @@ class StandaloneModeAPITester:
         print("🔬 Testing /api/research endpoint...")
         self.test_research_endpoint()
         
-        print("🔐 Testing authentication endpoints...")
-        self.test_authentication_endpoints()
-        
-        # 2. Standalone Mode Testing
-        print("\n🏠 2. STANDALONE MODE TESTING:")
+        # 4. Standalone Mode Testing
+        print("\n🏠 4. STANDALONE MODE TESTING:")
         print("=" * 80)
         
-        print("🔑 Testing demo credentials login (demo@babysteps.com / demo123)...")
-        demo_login_success = self.test_demo_credentials_login()
+        print("👶 Testing baby profile creation and local storage...")
+        self.test_baby_profile_creation_and_storage()
         
-        if demo_login_success:
-            print("👶 Testing baby profile creation and local storage...")
-            self.test_baby_profile_creation_and_storage()
-            
-            print("📊 Testing activity tracking and localStorage persistence...")
-            self.test_activity_tracking_persistence()
-        else:
-            print("❌ Demo login failed - cannot test authenticated features")
+        print("📊 Testing activity tracking and localStorage persistence...")
+        self.test_activity_tracking_persistence()
         
-        # 3. Integration Testing
-        print("\n🔗 3. INTEGRATION TESTING:")
+        # 5. Integration Testing
+        print("\n🔗 5. INTEGRATION TESTING:")
         print("=" * 80)
         
         print("🌐 Testing frontend-backend connection...")
