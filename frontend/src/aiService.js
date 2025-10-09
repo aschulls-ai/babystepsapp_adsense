@@ -135,33 +135,54 @@ class AIService {
     }
   }
 
-  // Meal planning
+  // Meal planning - ALWAYS returns helpful meal ideas
   async generateMealPlan(query, ageMonths = 6, restrictions = []) {
-    const prompt = `Create meal ideas for: "${query}" suitable for a ${ageMonths}-month-old baby.
-    ${restrictions.length > 0 ? `Dietary restrictions: ${restrictions.join(', ')}` : ''}
+    console.log(`🍽️ Generating meal plan: "${query}" for ${ageMonths}-month-old baby`);
     
-    Please provide:
-    1. 3-5 specific meal suggestions
-    2. Ingredients for each meal
-    3. Step-by-step preparation instructions
-    4. Age appropriateness and safety tips
-    5. Estimated preparation time
-    
-    Focus on nutrition, safety, and development-appropriate textures.`;
+    try {
+      const prompt = `Create meal ideas for: "${query}" suitable for a ${ageMonths}-month-old baby.
+      ${restrictions.length > 0 ? `Dietary restrictions: ${restrictions.join(', ')}` : ''}
+      
+      Please provide:
+      1. 3-5 specific meal suggestions
+      2. Ingredients for each meal
+      3. Step-by-step preparation instructions
+      4. Age appropriateness and safety tips
+      5. Estimated preparation time
+      
+      Focus on nutrition, safety, and development-appropriate textures.`;
 
-    const response = await this.query(prompt, {
-      type: 'meal_planning',
-      query,
-      ageMonths,
-      restrictions
-    });
+      const response = await this.query(prompt, {
+        type: 'meal_planning',
+        query,
+        ageMonths,
+        restrictions
+      });
 
-    return {
-      results: this.parseMealResponse(response),
-      query,
-      age_months: ageMonths,
-      ai_powered: true
-    };
+      return {
+        results: this.parseMealResponse(response),
+        query,
+        age_months: ageMonths,
+        ai_powered: true
+      };
+    } catch (error) {
+      console.log('🔄 Meal planning failed, using comprehensive fallback');
+      
+      // Always provide helpful meal suggestions, never show network error
+      const fallbackResponse = this.getFallbackResponse(query, { 
+        type: 'meal_planning', 
+        query, 
+        ageMonths 
+      });
+      
+      return {
+        results: this.parseMealResponse(fallbackResponse),
+        query,
+        age_months: ageMonths,
+        ai_powered: false,
+        source: 'Comprehensive Meal Database'
+      };
+    }
   }
 
   // General parenting research
