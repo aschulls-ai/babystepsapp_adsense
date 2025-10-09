@@ -3,8 +3,8 @@
 
 class AIService {
   constructor() {
-    // Use local backend for AI functionality in standalone mode
-    this.backendUrl = 'http://localhost:8001/api';
+    // Use configured backend URL for AI functionality  
+    this.backendUrl = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001') + '/api';
     this.isAvailable = true;
     this.initializeService();
   }
