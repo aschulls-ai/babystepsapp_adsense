@@ -608,7 +608,12 @@ const TrackingPage = ({ currentBaby }) => {
                     setActivitySortOrder(sortOrder);
                   }}>
                     <SelectTrigger className="w-full sm:w-40 bg-white border-gray-200">
-                      <SelectValue placeholder="Sort by" />
+                      <SelectValue placeholder="Sort by">
+                        {activitySortBy === 'timestamp' && activitySortOrder === 'desc' && 'Newest First'}
+                        {activitySortBy === 'timestamp' && activitySortOrder === 'asc' && 'Oldest First'}
+                        {activitySortBy === 'type' && activitySortOrder === 'asc' && 'By Type A-Z'}
+                        {activitySortBy === 'type' && activitySortOrder === 'desc' && 'By Type Z-A'}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="timestamp-desc">Newest First</SelectItem>
