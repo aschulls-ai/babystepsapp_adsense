@@ -411,14 +411,10 @@ function App() {
   };
 
   const login = async (email, password, rememberMe = false) => {
-    // Only reset offline mode if not manually forced
-    if (localStorage.getItem('babysteps_force_offline') !== 'true') {
-      console.log('🔄 Resetting offline mode before login attempt');
-      resetOfflineMode();
-    }
+    // In standalone mode, always use local authentication first
+    console.log('🔐 Attempting login in standalone mode...');
     
-    // Check if we should use offline mode
-    if (shouldUseOfflineMode()) {
+    try {
       console.log('🏠 Using offline mode for login');
       try {
         const response = await offlineAPI.login(email, password);
