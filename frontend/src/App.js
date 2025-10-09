@@ -309,6 +309,15 @@ function App() {
     };
   }, []);
 
+  // Load babies when user is authenticated
+  useEffect(() => {
+    const isAuthenticated = user || localStorage.getItem('token');
+    if (isAuthenticated && !currentBaby && babies.length === 0) {
+      console.log('🔄 User authenticated but no babies loaded, fetching...');
+      fetchBabies();
+    }
+  }, [user, currentBaby, babies.length]);
+
   const initializeMobileApp = async () => {
     try {
       // Set status bar style
