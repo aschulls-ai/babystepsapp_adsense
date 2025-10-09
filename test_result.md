@@ -212,7 +212,7 @@
 
 ## test_plan:
   current_focus:
-    - "Comprehensive standalone Baby Steps app functionality"
+    - "AI integration functionality with emergentintegrations"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
