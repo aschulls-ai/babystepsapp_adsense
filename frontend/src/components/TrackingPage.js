@@ -975,8 +975,16 @@ const PumpingForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      await axios.post('/pumping', data);
-      toast.success('Pumping session logged successfully!');
+      // Use standalone offline API
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'pumping',
+        amount: formData.amount || null,
+        duration: formData.duration || null,
+        notes: formData.notes || null,
+        timestamp: formData.timestamp.toISOString()
+      });
+      toast.success('💾 Pumping session saved to device!');
       setFormData({
         amount: '',
         duration: '',
