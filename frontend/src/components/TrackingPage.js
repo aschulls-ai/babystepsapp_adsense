@@ -1086,8 +1086,18 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      await axios.post('/measurements', data);
-      toast.success('Measurements logged successfully!');
+      // Use standalone offline API
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'measurement',
+        weight: formData.weight || null,
+        height: formData.height || null,
+        head_circumference: formData.head_circumference || null,
+        temperature: formData.temperature || null,
+        notes: formData.notes || null,
+        timestamp: formData.timestamp.toISOString()
+      });
+      toast.success('💾 Measurements saved to device!');
       setFormData({
         weight: '',
         height: '',
