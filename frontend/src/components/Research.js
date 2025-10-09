@@ -73,25 +73,10 @@ const Research = () => {
     setLoading(true);
 
     try {
-      let response;
-      
-      // Check if we should use offline mode
-      if (shouldUseOfflineMode()) {
-        console.log('🏠 Using offline mode for research');
-        response = await offlineAPI.research(userMessage.content);
-        toast.info('Research completed (offline mode)');
-      } else {
-        // Try online mode first
-        try {
-          response = await axios.post('/api/research', {
-            question: userMessage.content
-          });
-        } catch (onlineError) {
-          console.log('⚠️ Online research failed, trying offline mode...');
-          response = await offlineAPI.research(userMessage.content);
-          toast.info('Research completed (using offline mode due to connection issues)');
-        }
-      }
+      // Always use standalone mode with AI integration
+      console.log('📚 Using standalone mode with AI for research');
+      const response = await offlineAPI.research(userMessage.content);
+      toast.info('Research completed');
 
       const botMessage = {
         id: Date.now() + 1,
