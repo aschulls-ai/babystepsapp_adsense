@@ -47,10 +47,16 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onRequestPasswordReset(resetEmail);
-    setLoading(false);
-    setShowPasswordReset(false);
-    setResetEmail('');
+    try {
+      await onRequestPasswordReset(resetEmail);
+      setShowPasswordReset(false);
+      setResetEmail('');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      // Error handling is done in App.js function via toast
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleResendVerification = async () => {
