@@ -249,8 +249,10 @@ export const offlineAPI = {
         const currentUserId = localStorage.getItem('babysteps_current_user');
         const babies = getOfflineData('babies', {});
         
-        const userBabies = Object.values(babies).filter(baby => baby.user_id === currentUserId);
+        // Babies are stored as babies[userId] = [array of babies]
+        const userBabies = babies[currentUserId] || [];
         
+        console.log('👶 Retrieved babies for user:', currentUserId, userBabies);
         resolve({
           data: userBabies
         });
