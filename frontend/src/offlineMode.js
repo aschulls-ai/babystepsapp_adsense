@@ -406,21 +406,41 @@ export const offlineAPI = {
   updateBaby: async (babyId, updates) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const currentUserId = localStorage.getItem('babysteps_current_user');
-        const babies = getOfflineData('babies', {});
-        
-        const baby = babies[babyId];
-        if (!baby || baby.user_id !== currentUserId) {
-          reject(new Error('Baby not found'));
-          return;
+        try {
+          const currentUserId = localStorage.getItem('babysteps_current_user');
+          
+          if (!currentUserId) {
+            reject(new Error('No authenticated user found'));
+            return;
+          }
+
+          const babies = getOfflineData('babies', {});
+          const userBabies = babies[currentUserId] || [];
+          
+          const babyIndex = userBabies.findIndex(baby => baby.id === babyId);
+          if (babyIndex === -1) {
+            reject(new Error('Baby not found'));
+            return;
+          }
+          
+          // Update the baby in the array
+          userBabies[babyIndex] = { 
+            ...userBabies[babyIndex], 
+            ...updates,
+            updatedAt: new Date().toISOString()
+          };
+          
+          // Save the updated babies array
+          babies[currentUserId] = userBabies;
+          saveOfflineData('babies', babies);
+          
+          console.log('✅ Baby updated successfully:', userBabies[babyIndex].name);
+          resolve({
+            data: userBabies[babyIndex]
+          });
+        } catch (error) {
+          reject(error);
         }
-        
-        babies[babyId] = { ...baby, ...updates };
-        saveOfflineData('babies', babies);
-        
-        resolve({
-          data: babies[babyId]
-        });
       }, 300);
     });
   },
