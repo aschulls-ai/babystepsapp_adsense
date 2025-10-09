@@ -423,12 +423,14 @@ const TrackingPage = ({ currentBaby }) => {
               icon={Baby2} 
               label="Quick Feed" 
               color="blue"
+              testId="quick-action-feed"
               onClick={() => handleQuickAction('feeding')}
             />
             <QuickActionButton 
               icon={Droplet} 
               label="Diaper Change" 
               color="green"
+              testId="quick-action-diaper"
               onClick={() => handleQuickAction('diaper')}
             />
             <TimerQuickActionButton 
@@ -437,6 +439,7 @@ const TrackingPage = ({ currentBaby }) => {
               color="purple"
               isActive={activeTimers.sleep.active}
               timer={activeTimers.sleep}
+              testId="quick-action-sleep"
               onClick={() => handleQuickAction('sleep')}
             />
             <TimerQuickActionButton 
@@ -445,18 +448,21 @@ const TrackingPage = ({ currentBaby }) => {
               color="pink"
               isActive={activeTimers.pumping.active}
               timer={activeTimers.pumping}
+              testId="quick-action-pump"
               onClick={() => handleQuickAction('pumping')}
             />
             <QuickActionButton 
               icon={Scale} 
               label="Measure" 
               color="orange"
+              testId="quick-action-measure"
               onClick={() => handleQuickAction('measurements')}
             />
             <QuickActionButton 
               icon={Trophy} 
               label="Milestone" 
               color="yellow"
+              testId="quick-action-milestone"
               onClick={() => handleQuickAction('milestones')}
             />
           </div>
