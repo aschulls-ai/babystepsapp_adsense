@@ -35,13 +35,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS middleware
+# CORS middleware - Enhanced for mobile apps
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for demo
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Accept",
+        "Accept-Language",
+        "Content-Language",
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "User-Agent",
+        "Cache-Control"
+    ],
+    expose_headers=["*"]
 )
 
 # Pydantic Models
