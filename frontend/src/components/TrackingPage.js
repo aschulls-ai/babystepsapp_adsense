@@ -1431,6 +1431,7 @@ const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onC
   return (
     <button
       onClick={onClick}
+      data-testid={testId || `timer-action-${label.toLowerCase().replace(' ', '-')}`}
       className={`${colorClasses[color]} p-4 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-md flex flex-col items-center gap-2 text-center`}
     >
       <Icon className="w-6 h-6" />
