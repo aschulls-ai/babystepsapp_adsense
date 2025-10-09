@@ -401,15 +401,18 @@ function App() {
     try {
       console.log('🔐 Attempting online login...', { email, apiBase: API });
       
-      const response = await axios.post('/api/auth/login', { 
-        email, 
-        password 
-      }, {
-        timeout: 10000,
+      // Try Android-specific HTTP client first
+      const response = await androidFetch(`${API}/api/auth/login`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ email, password })
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       
       console.log('✅ Online login successful:', response.status);
       const { access_token } = response.data;
