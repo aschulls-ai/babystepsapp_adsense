@@ -212,9 +212,8 @@
 
 ## test_plan:
   current_focus:
-    - "Activity Tracking Data Persistence in Standalone Mode"
-  stuck_tasks: 
-    - "Activity Tracking Data Persistence in Standalone Mode"
+    - "Comprehensive standalone Baby Steps app functionality"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
