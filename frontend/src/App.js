@@ -132,6 +132,8 @@ function App() {
         await initializeMobileApp();
       }
       
+      // Initialize offline mode first
+      initializeOfflineMode();
       await checkAuthState();
       
       // Run API tests in development/debugging mode
