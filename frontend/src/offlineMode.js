@@ -111,31 +111,52 @@ export const initializeOfflineMode = () => {
 // Offline API simulation
 export const offlineAPI = {
   // Authentication
+  // Enhanced user login with improved validation and tracking
   login: async (email, password) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const users = getOfflineData('users', {});
-        const user = users[email];
-        
-        if (!user || user.password !== password) {
-          reject(new Error('Invalid credentials'));
-          return;
-        }
-        
-        const token = `offline_token_${user.id}_${Date.now()}`;
-        localStorage.setItem('babysteps_current_user', JSON.stringify({
-          id: user.id,
-          email: user.email,
-          name: user.name
-        }));
-        
-        resolve({
-          data: {
-            access_token: token,
-            token_type: 'bearer'
+        try {
+          // Input validation
+          if (!email || !password) {
+            reject(new Error('Email and password are required'));
+            return;
           }
-        });
-      }, 500); // Simulate network delay
+
+          const users = getOfflineData('users', {});
+          const emailKey = email.toLowerCase().trim();
+          const user = users[emailKey];
+          
+          if (!user || user.password !== password) {
+            reject(new Error('Invalid email or password'));
+            return;
+          }
+          
+          // Update last login time
+          user.lastLoginAt = new Date().toISOString();
+          users[emailKey] = user;
+          saveOfflineData('users', users);
+          
+          // Set current user (just the ID for consistency with registration)
+          localStorage.setItem('babysteps_current_user', user.id);
+          
+          // Generate access token
+          const token = `standalone_token_${user.id}_${Date.now()}`;
+          
+          console.log('✅ User logged in successfully in standalone mode:', emailKey);
+          resolve({
+            data: {
+              access_token: token,
+              user: {
+                id: user.id,
+                email: user.email,
+                name: user.name
+              }
+            }
+          });
+        } catch (error) {
+          reject(error);
+        }
+      }, 300); // Faster response for standalone app
     });
   },
 
