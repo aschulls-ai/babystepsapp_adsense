@@ -339,32 +339,17 @@ export const offlineAPI = {
     }
   },
 
-  // Meal planning (with real AI integration)
+  // Meal planning (with direct AI integration via device internet)
   mealSearch: async (query, ageMonths = 6) => {
     try {
-      console.log('🍽️ Offline mode: Using real AI for meal planning:', query);
+      console.log('🍽️ Standalone mode: Using direct AI for meal planning:', query);
       
-      // Make direct API call to backend AI service
-      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/meals/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-          baby_age_months: ageMonths
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ AI meal planning successful');
-        return { data };
-      } else {
-        throw new Error('AI service unavailable');
-      }
+      // Use direct AI service via device internet connection
+      const response = await aiService.generateMealPlan(query, ageMonths);
+      console.log('✅ Direct AI meal planning successful');
+      return { data: response };
     } catch (error) {
-      console.log('⚠️ AI service failed, using fallback meal suggestions');
+      console.log('⚠️ Direct AI failed, using enhanced fallback meal suggestions');
       
       // Fallback to mock responses if AI fails
       return new Promise((resolve) => {
