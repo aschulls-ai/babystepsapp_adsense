@@ -1375,7 +1375,7 @@ const RecentActivityList = ({ activities, type }) => {
 };
 
 // Quick Action Button Component
-const QuickActionButton = ({ icon: Icon, label, color, onClick }) => {
+const QuickActionButton = ({ icon: Icon, label, color, onClick, testId }) => {
   const colorClasses = {
     blue: 'bg-blue-100 text-blue-700 hover:bg-blue-200',
     green: 'bg-green-100 text-green-700 hover:bg-green-200',
@@ -1388,6 +1388,7 @@ const QuickActionButton = ({ icon: Icon, label, color, onClick }) => {
   return (
     <button
       onClick={onClick}
+      data-testid={testId || `quick-action-${label.toLowerCase().replace(' ', '-')}`}
       className={`${colorClasses[color]} p-4 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-md flex flex-col items-center gap-2 text-center`}
     >
       <Icon className="w-6 h-6" />
