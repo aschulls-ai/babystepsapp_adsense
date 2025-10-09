@@ -4,7 +4,7 @@
 class AIService {
   constructor() {
     this.apiKey = 'sk-emergent-41bA272B05dA9709c3'; // Emergent LLM key
-    this.baseUrl = 'https://api.emergent.com'; // Emergent API endpoint
+    this.baseUrl = 'https://api.openai.com/v1'; // Direct OpenAI API
     this.isAvailable = true;
     this.initializeService();
   }
