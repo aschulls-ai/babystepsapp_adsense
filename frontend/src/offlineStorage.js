@@ -1,6 +1,71 @@
 // Complete offline storage system for Baby Steps
 import { v4 as uuidv4 } from 'uuid';
 
+// Comprehensive offline storage system - PRIMARY data management
+class OfflineStorage {
+  constructor() {
+    this.initializeStorage();
+  }
+
+  initializeStorage() {
+    console.log('🏠 Initializing comprehensive local storage system...');
+    
+    // Initialize all required data structures if they don't exist
+    if (!localStorage.getItem('babysteps_users')) {
+      localStorage.setItem('babysteps_users', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_babies')) {
+      localStorage.setItem('babysteps_babies', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_activities')) {
+      localStorage.setItem('babysteps_activities', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_settings')) {
+      localStorage.setItem('babysteps_settings', JSON.stringify({
+        theme: 'light',
+        notifications: true,
+        reminders: true,
+        measurementUnit: 'imperial',
+        language: 'en'
+      }));
+    }
+    
+    // New comprehensive data structures
+    if (!localStorage.getItem('babysteps_milestones')) {
+      localStorage.setItem('babysteps_milestones', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_growth_data')) {
+      localStorage.setItem('babysteps_growth_data', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_photos')) {
+      localStorage.setItem('babysteps_photos', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_reminders')) {
+      localStorage.setItem('babysteps_reminders', JSON.stringify({}));
+    }
+    
+    if (!localStorage.getItem('babysteps_ai_history')) {
+      localStorage.setItem('babysteps_ai_history', JSON.stringify({}));
+    }
+    
+    // App configuration
+    if (!localStorage.getItem('babysteps_app_mode')) {
+      localStorage.setItem('babysteps_app_mode', 'standalone'); // Default to standalone mode
+    }
+    
+    console.log('✅ Local storage initialized - Standalone app ready');
+  }
+}
+
+// Initialize the storage system
+const offlineStorageInstance = new OfflineStorage();
+
 const STORAGE_KEYS = {
   USERS: 'babysteps_users',
   CURRENT_USER: 'babysteps_current_user',
