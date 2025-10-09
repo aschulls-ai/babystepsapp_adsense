@@ -79,40 +79,56 @@ const MealPlanner = ({ currentBaby }) => {
     setError('');
     try {
       const babyAgeMonths = currentBaby ? 
-        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 12; // Default to 12 months if no current baby
+        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 12;
 
-      console.log('Meal search request:', { query, babyAgeMonths });
-      
-      const response = await axios.post('/meals/search', {
-        query: query,
-        baby_age_months: babyAgeMonths
-      });
-
-      console.log('Meal search response:', response.data);
-
-      if (response.data && response.data.results) {
-        setSearchResults(response.data.results);
-        setError('');
-      } else {
-        setError('No results found. Please try a different search.');
+      // Check if we should use offline mode
+      if (shouldUseOfflineMode()) {
+        console.log('🏠 Using offline mode for meal planning');
+        const response = await offlineAPI.mealSearch(query, babyAgeMonths);
+        if (response.data && response.data.results) {
+          setSearchResults(response.data.results);
+          setError('');
+          toast.success('Meal ideas found (offline mode)');
+        } else {
+          setError('No results found. Please try a different search.');
+        }
+        setSearchQuery('');
+        return;
       }
-      setSearchQuery('');
+
+      // Try online mode first
+      try {
+        console.log('Meal search request:', { query, babyAgeMonths });
+        
+        const response = await axios.post('/api/meals/search', {
+          query: query,
+          baby_age_months: babyAgeMonths
+        });
+
+        console.log('Meal search response:', response.data);
+
+        if (response.data && response.data.results) {
+          setSearchResults(response.data.results);
+          setError('');
+        } else {
+          setError('No results found. Please try a different search.');
+        }
+        setSearchQuery('');
+      } catch (onlineError) {
+        console.log('⚠️ Online meal search failed, trying offline mode...');
+        const response = await offlineAPI.mealSearch(query, babyAgeMonths);
+        if (response.data && response.data.results) {
+          setSearchResults(response.data.results);
+          setError('');
+          toast.success('Meal ideas found (using offline mode due to connection issues)');
+        } else {
+          setError('No results found. Please try a different search.');
+        }
+        setSearchQuery('');
+      }
     } catch (error) {
       console.error('Meal search error:', error);
-      console.error('Error details:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message
-      });
-      
-      if (error.response?.status === 404) {
-        setError('Meal search service is temporarily unavailable. Please try again later.');
-      } else if (error.response?.status === 401) {
-        setError('Authentication required. Please refresh the page and try again.');
-      } else {
-        setError(`Search failed: ${error.message || 'Unknown error occurred'}`);
-      }
+      setError(`Search failed: ${error.message || 'Unable to search for meals'}`);
     } finally {
       setLoading(false);
     }
