@@ -44,12 +44,13 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Notifications disabled to prevent crashes -->
+    <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> -->
     
-    <!-- Push Notifications -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!-- Push Notifications disabled -->
+    <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" /> -->
 </manifest>
