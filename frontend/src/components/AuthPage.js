@@ -137,6 +137,7 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
                     </Label>
                     <Input
                       id="login-email"
+                      name="email"
                       type="email"
                       placeholder="Enter your email"
                       value={loginData.email}
