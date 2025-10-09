@@ -31,6 +31,8 @@
   "android": {
     "allowMixedContent": true,
     "captureInput": true,
-    "webContentsDebuggingEnabled": false
+    "webContentsDebuggingEnabled": true,
+    "useCleartextTraffic": true,
+    "appendUserAgent": "BabySteps-Android"
   }
 }
