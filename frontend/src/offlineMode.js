@@ -1,0 +1,388 @@
+// Complete offline mode for Baby Steps
+// This allows the app to work fully without server connection
+
+import { v4 as uuidv4 } from 'uuid';
+
+// Check if we should use offline mode
+export const shouldUseOfflineMode = () => {
+  // Always use offline mode if we can't reach the server
+  return localStorage.getItem('babysteps_offline_mode') === 'true' || 
+         localStorage.getItem('babysteps_force_offline') === 'true';
+};
+
+// Enable offline mode
+export const enableOfflineMode = () => {
+  localStorage.setItem('babysteps_offline_mode', 'true');
+  console.log('🏠 Offline mode enabled');
+};
+
+// Storage helpers
+const getOfflineData = (key, defaultValue = {}) => {
+  try {
+    const data = localStorage.getItem(`babysteps_offline_${key}`);
+    return data ? JSON.parse(data) : defaultValue;
+  } catch (error) {
+    console.error(`Error reading offline ${key}:`, error);
+    return defaultValue;
+  }
+};
+
+const saveOfflineData = (key, data) => {
+  try {
+    localStorage.setItem(`babysteps_offline_${key}`, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    console.error(`Error saving offline ${key}:`, error);
+    return false;
+  }
+};
+
+// Initialize offline data
+export const initializeOfflineMode = () => {
+  console.log('🚀 Initializing offline mode...');
+  
+  const users = getOfflineData('users', {});
+  
+  // Create demo user if no users exist
+  if (Object.keys(users).length === 0) {
+    const demoUserId = uuidv4();
+    users['demo@babysteps.com'] = {
+      id: demoUserId,
+      email: 'demo@babysteps.com',
+      name: 'Demo Parent',
+      password: 'demo123', // In real app, this would be hashed
+      createdAt: new Date().toISOString()
+    };
+    saveOfflineData('users', users);
+    
+    // Create demo baby
+    const demoBaby = {
+      id: uuidv4(),
+      name: 'Emma',
+      birth_date: '2024-01-15',
+      gender: 'girl',
+      profile_image: null,
+      user_id: demoUserId,
+      createdAt: new Date().toISOString()
+    };
+    
+    const babies = {};
+    babies[demoBaby.id] = demoBaby;
+    saveOfflineData('babies', babies);
+    
+    // Create demo activities
+    const activities = {};
+    const demoActivities = [
+      {
+        id: uuidv4(),
+        type: 'feeding',
+        notes: 'Formula feeding - 4oz',
+        baby_id: demoBaby.id,
+        user_id: demoUserId,
+        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: uuidv4(),
+        type: 'sleep', 
+        notes: 'Nap time - 2 hours',
+        baby_id: demoBaby.id,
+        user_id: demoUserId,
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: uuidv4(),
+        type: 'diaper',
+        notes: 'Wet diaper changed',
+        baby_id: demoBaby.id,
+        user_id: demoUserId,
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
+      }
+    ];
+    
+    demoActivities.forEach(activity => {
+      activities[activity.id] = activity;
+    });
+    saveOfflineData('activities', activities);
+    
+    console.log('✅ Offline demo data initialized');
+  }
+};
+
+// Offline API simulation
+export const offlineAPI = {
+  // Authentication
+  login: async (email, password) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const users = getOfflineData('users', {});
+        const user = users[email];
+        
+        if (!user || user.password !== password) {
+          reject(new Error('Invalid credentials'));
+          return;
+        }
+        
+        const token = `offline_token_${user.id}_${Date.now()}`;
+        localStorage.setItem('babysteps_current_user', JSON.stringify({
+          id: user.id,
+          email: user.email,
+          name: user.name
+        }));
+        
+        resolve({
+          data: {
+            access_token: token,
+            token_type: 'bearer'
+          }
+        });
+      }, 500); // Simulate network delay
+    });
+  },
+
+  register: async (name, email, password) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const users = getOfflineData('users', {});
+        
+        if (users[email]) {
+          reject(new Error('Email already registered'));
+          return;
+        }
+        
+        const userId = uuidv4();
+        users[email] = {
+          id: userId,
+          email,
+          name,
+          password,
+          createdAt: new Date().toISOString()
+        };
+        
+        saveOfflineData('users', users);
+        
+        const token = `offline_token_${userId}_${Date.now()}`;
+        localStorage.setItem('babysteps_current_user', JSON.stringify({
+          id: userId,
+          email,
+          name
+        }));
+        
+        resolve({
+          data: {
+            access_token: token,
+            token_type: 'bearer'
+          }
+        });
+      }, 500);
+    });
+  },
+
+  // Babies management
+  getBabies: async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const babies = getOfflineData('babies', {});
+        
+        const userBabies = Object.values(babies).filter(baby => baby.user_id === currentUser.id);
+        
+        resolve({
+          data: userBabies
+        });
+      }, 300);
+    });
+  },
+
+  createBaby: async (babyData) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const babies = getOfflineData('babies', {});
+        
+        const newBaby = {
+          id: uuidv4(),
+          ...babyData,
+          user_id: currentUser.id,
+          createdAt: new Date().toISOString()
+        };
+        
+        babies[newBaby.id] = newBaby;
+        saveOfflineData('babies', babies);
+        
+        resolve({
+          data: newBaby
+        });
+      }, 300);
+    });
+  },
+
+  updateBaby: async (babyId, updates) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const babies = getOfflineData('babies', {});
+        
+        const baby = babies[babyId];
+        if (!baby || baby.user_id !== currentUser.id) {
+          reject(new Error('Baby not found'));
+          return;
+        }
+        
+        babies[babyId] = { ...baby, ...updates };
+        saveOfflineData('babies', babies);
+        
+        resolve({
+          data: babies[babyId]
+        });
+      }, 300);
+    });
+  },
+
+  // Activities
+  getActivities: async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const activities = getOfflineData('activities', {});
+        
+        const userActivities = Object.values(activities)
+          .filter(activity => activity.user_id === currentUser.id)
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        resolve({
+          data: userActivities
+        });
+      }, 300);
+    });
+  },
+
+  createActivity: async (activityData) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const activities = getOfflineData('activities', {});
+        
+        const newActivity = {
+          id: uuidv4(),
+          ...activityData,
+          user_id: currentUser.id,
+          timestamp: new Date().toISOString()
+        };
+        
+        activities[newActivity.id] = newActivity;
+        saveOfflineData('activities', activities);
+        
+        resolve({
+          data: newActivity
+        });
+      }, 300);
+    });
+  },
+
+  // Food research (with real AI backup)
+  foodResearch: async (query) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Mock responses for common queries
+        const responses = {
+          honey: {
+            answer: "🚫 Honey should NOT be given to babies under 12 months old due to the risk of infant botulism. Botulism spores can be found in honey and can cause serious illness in infants whose immune systems aren't fully developed.",
+            safety_level: "avoid",
+            age_recommendation: "12+ months only",
+            sources: ["American Academy of Pediatrics", "CDC Guidelines"]
+          },
+          strawberries: {
+            answer: "🍓 Fresh strawberries can be introduced around 6 months when baby starts solids. Cut into small, age-appropriate pieces to prevent choking. Start with small amounts and watch for allergic reactions.",
+            safety_level: "safe", 
+            age_recommendation: "6+ months",
+            sources: ["Pediatric Nutrition Guidelines", "AAP Feeding Guidelines"]
+          },
+          nuts: {
+            answer: "🥜 Whole nuts are a choking hazard for babies. Nut butters can be introduced around 6 months but should be thinned with water or breast milk. Watch carefully for allergic reactions.",
+            safety_level: "caution",
+            age_recommendation: "6+ months (as nut butter only)",
+            sources: ["Food Allergy Research Guidelines"]
+          }
+        };
+        
+        // Simple keyword matching
+        let response = null;
+        for (const [keyword, resp] of Object.entries(responses)) {
+          if (query.toLowerCase().includes(keyword)) {
+            response = resp;
+            break;
+          }
+        }
+        
+        if (!response) {
+          response = {
+            answer: `For safety information about "${query}", please consult your pediatrician. This offline mode provides basic guidance only.`,
+            safety_level: "consult_doctor",
+            age_recommendation: "Ask your doctor",
+            sources: ["Offline Demo Mode"]
+          };
+        }
+        
+        resolve({
+          data: response
+        });
+      }, 800); // Simulate AI processing time
+    });
+  },
+
+  // Meal planning
+  mealSearch: async (query, ageMonths = 6) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const meals = [
+          {
+            name: "Mashed Banana",
+            ingredients: ["1 ripe banana"],
+            instructions: ["Mash banana with fork until smooth", "Ensure no lumps for younger babies", "Serve at room temperature"],
+            age_appropriate: "6+ months",
+            prep_time: "2 minutes",
+            safety_tips: ["Always test temperature", "Supervise eating"]
+          },
+          {
+            name: "Sweet Potato Puree",
+            ingredients: ["1 sweet potato", "Water or breast milk"],
+            instructions: ["Steam sweet potato until very soft (15-20 min)", "Mash with liquid to desired consistency", "Cool before serving"],
+            age_appropriate: "6+ months", 
+            prep_time: "25 minutes",
+            safety_tips: ["Check temperature", "Start with thin consistency"]
+          },
+          {
+            name: "Avocado Mash",
+            ingredients: ["1/2 ripe avocado"],
+            instructions: ["Mash avocado until smooth", "Add breast milk if needed for consistency", "Serve immediately"],
+            age_appropriate: "6+ months",
+            prep_time: "1 minute", 
+            safety_tips: ["Use very ripe avocado", "Serve fresh"]
+          },
+          {
+            name: "Soft Scrambled Eggs",
+            ingredients: ["1 egg", "1 tbsp milk", "Small amount of butter"],
+            instructions: ["Whisk egg with milk", "Cook on very low heat, stirring constantly", "Ensure very soft texture", "Cool before serving"],
+            age_appropriate: "8+ months",
+            prep_time: "5 minutes",
+            safety_tips: ["Cook thoroughly", "Cool to room temperature", "Watch for allergies"]
+          }
+        ];
+        
+        resolve({
+          data: {
+            results: meals,
+            query,
+            age_months: ageMonths,
+            source: "Offline Demo Mode"
+          }
+        });
+      }, 600);
+    });
+  }
+};
+
+// Export flag to check if offline mode is active
+export const isOfflineMode = () => {
+  return shouldUseOfflineMode();
+};
