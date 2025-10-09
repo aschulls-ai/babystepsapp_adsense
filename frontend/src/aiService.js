@@ -257,31 +257,26 @@ class AIService {
     console.log(`📚 Researching parenting question: "${question}"`);
     
     try {
-      // Call backend API endpoint
-      const response = await fetch(`${this.backendUrl}/research`, {
-        method: 'POST',
-        headers: this.getAuthHeaders(),
-        body: JSON.stringify({
-          question: question
-        })
+      const prompt = `Parent question: "${question}"
+      
+      Please provide helpful, evidence-based parenting advice. Include:
+      1. Direct answer to the question
+      2. Practical tips and suggestions  
+      3. Age-appropriate considerations if relevant
+      4. When to consult healthcare professionals
+      
+      Keep the response supportive and practical for parents.`;
+
+      const response = await this.query(prompt, {
+        type: 'parenting_research',
+        question
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Research response received from backend:', data);
-        
-        // Save to AI history
-        this.saveToHistory(question, data.answer, 'parenting_research');
-        
-        return {
-          answer: data.answer,
-          sources: data.sources || ['AI-Powered Parenting Expert'],
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        console.log('⚠️ Backend research failed, using fallback');
-        throw new Error('Backend API error');
-      }
+      return {
+        answer: response,
+        sources: ['AI-Powered Parenting Expert via Phone Internet'],
+        timestamp: new Date().toISOString()
+      };
     } catch (error) {
       console.log('🔄 Research failed, using comprehensive fallback');
       
