@@ -374,9 +374,13 @@ function App() {
       if (shouldUseOfflineMode()) {
         console.log('🏠 Fetching babies from offline storage');
         const response = await offlineAPI.getBabies();
+        console.log('👶 Babies response:', response);
         setBabies(response.data);
-        if (response.data.length > 0 && !currentBaby) {
+        if (response.data && response.data.length > 0) {
+          console.log('✅ Setting current baby:', response.data[0]);
           setCurrentBaby(response.data[0]);
+        } else {
+          console.log('⚠️ No babies found in response');
         }
         return;
       }
