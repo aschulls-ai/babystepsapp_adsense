@@ -897,6 +897,15 @@ const SleepForm = ({ babyId, onSuccess }) => {
       };
 
       // Use standalone offline API
+      console.log('🛌 Logging sleep activity:', {
+        baby_id: babyId,
+        type: 'sleep',
+        start_time: formData.start_time.toISOString(),
+        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null,
+        quality: formData.quality || null,
+        notes: formData.notes || null
+      });
+      
       await offlineAPI.logActivity({
         baby_id: babyId,
         type: 'sleep',
