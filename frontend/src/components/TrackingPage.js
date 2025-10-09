@@ -1188,8 +1188,17 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
         notes: formData.notes || null
       };
 
-      await axios.post('/milestones', data);
-      toast.success('Milestone logged successfully!');
+      // Use standalone offline API
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'milestone',
+        title: formData.title,
+        description: formData.description || null,
+        category: formData.category,
+        achieved_date: formData.achieved_date.toISOString(),
+        notes: formData.notes || null
+      });
+      toast.success('💾 Milestone saved to device!');
       setFormData({
         title: '',
         description: '',
