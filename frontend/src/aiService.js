@@ -180,47 +180,19 @@ class AIService {
     }
   }
 
-  // Emergency information
+  // Emergency information - uses general research endpoint
   async getEmergencyInfo(situation) {
-    const prompt = `Emergency parenting situation: "${situation}"
+    console.log(`🚨 Getting emergency info for: "${situation}"`);
     
-    IMPORTANT: This is for informational purposes only. For actual emergencies, call emergency services immediately.
+    const question = `Emergency parenting situation: ${situation}. IMPORTANT: This is for informational purposes only. For actual emergencies, call emergency services immediately. Please provide immediate steps, warning signs, and when to seek medical help.`;
     
-    Please provide:
-    1. Immediate steps to take
-    2. Signs that require immediate medical attention
-    3. When to call emergency services vs. consulting a doctor
-    4. Basic first aid if applicable
+    const response = await this.research(question);
     
-    Emphasize the importance of professional medical help for emergencies.`;
-
-    const response = await this.query(prompt, {
-      type: 'emergency_info',
-      situation
-    });
-
     return {
-      answer: response,
+      answer: response.answer,
       disclaimer: 'FOR INFORMATIONAL PURPOSES ONLY. CALL EMERGENCY SERVICES FOR ACTUAL EMERGENCIES.',
       sources: ['AI Emergency Information - Not Medical Advice']
     };
-  }
-
-  // System prompts for different AI contexts
-  getSystemPrompt(type) {
-    const prompts = {
-      food_research: 'You are a pediatric nutrition expert providing evidence-based food safety information for babies and toddlers. Always prioritize safety and provide age-appropriate guidance.',
-      
-      meal_planning: 'You are a pediatric nutrition specialist creating safe, nutritious meal plans for babies and toddlers. Focus on age-appropriate textures, balanced nutrition, and safety.',
-      
-      parenting_research: 'You are a helpful parenting expert providing evidence-based advice for new parents. Be supportive, practical, and always recommend consulting healthcare professionals for medical concerns.',
-      
-      emergency_info: 'You are providing emergency information for parents. ALWAYS emphasize calling emergency services for actual emergencies. Provide informational guidance only, not medical advice.',
-      
-      general: 'You are a knowledgeable baby and parenting assistant providing helpful, accurate information to parents. Always prioritize safety and recommend professional medical advice when appropriate.'
-    };
-
-    return prompts[type] || prompts.general;
   }
 
   // Extract safety level from AI response
