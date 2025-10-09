@@ -402,29 +402,17 @@ export const offlineAPI = {
     }
   },
 
-  // General research (with real AI integration)
+  // General research (with direct AI integration via device internet)
   research: async (query) => {
     try {
-      console.log('📚 Offline mode: Using real AI for research:', query);
+      console.log('📚 Standalone mode: Using direct AI for research:', query);
       
-      // Make direct API call to backend AI service  
-      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/research', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ AI research successful');
-        return { data };
-      } else {
-        throw new Error('AI service unavailable');
-      }
+      // Use direct AI service via device internet connection
+      const response = await aiService.research(query);
+      console.log('✅ Direct AI research successful');
+      return { data: response };
     } catch (error) {
-      console.log('⚠️ AI service failed, using fallback response');
+      console.log('⚠️ Direct AI failed, using enhanced fallback response');
       
       // Fallback response if AI fails
       return new Promise((resolve) => {
