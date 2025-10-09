@@ -3,6 +3,8 @@
   "appName": "Baby Steps",
   "webDir": "build",
   "server": {
+    "url": "https://baby-steps-demo-api.onrender.com",
+    "cleartext": false,
     "androidScheme": "https"
   },
   "plugins": {
