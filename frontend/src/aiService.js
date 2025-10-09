@@ -273,21 +273,110 @@ class AIService {
     return meals;
   }
 
-  // Fallback responses when AI is unavailable
+  // Enhanced fallback responses when AI is unavailable
   getFallbackResponse(prompt, context = {}) {
-    console.log('🔄 Using fallback AI response');
+    console.log('🔄 Using enhanced fallback AI response for:', context.type);
     
-    const fallbacks = {
-      food_research: `I'm unable to access live AI services right now. For food safety information about "${prompt}", please consult your pediatrician or refer to trusted pediatric nutrition resources like the American Academy of Pediatrics guidelines.`,
-      
-      meal_planning: `I'm unable to access live AI services right now. For meal planning ideas, consider age-appropriate options like mashed fruits and vegetables for babies 6+ months. Always consult your pediatrician for specific dietary guidance.`,
-      
-      parenting_research: `I'm unable to access live AI services right now. For parenting questions, please consult your pediatrician, local parenting resources, or trusted parenting websites like the American Academy of Pediatrics.`,
-      
-      general: `I'm unable to access live AI services right now. For important parenting and baby care questions, please consult your healthcare provider for personalized advice.`
-    };
+    const lowerPrompt = prompt.toLowerCase();
     
-    return fallbacks[context.type] || fallbacks.general;
+    // Enhanced food research fallbacks
+    if (context.type === 'food_research') {
+      if (lowerPrompt.includes('honey')) {
+        return `🚫 HONEY: Never give honey to babies under 12 months old due to botulism risk. Honey contains spores that can cause serious illness in infants whose immune systems aren't fully developed. Wait until after their first birthday.
+        
+📋 Safety Level: AVOID until 12+ months
+🎂 Age Recommendation: 12+ months only
+📚 Source: American Academy of Pediatrics, CDC Guidelines`;
+      }
+      
+      if (lowerPrompt.includes('avocado')) {
+        return `✅ AVOCADO: Safe and excellent first food for babies! Rich in healthy fats crucial for brain development.
+        
+🥑 Preparation: Mash ripe avocado until smooth, serve at room temperature
+📋 Safety Level: SAFE for babies 6+ months
+🎂 Age Recommendation: 6+ months (great first food)
+💡 Tips: Choose very ripe avocados, serve fresh, watch for any allergic reactions`;
+      }
+      
+      if (lowerPrompt.includes('egg')) {
+        return `🥚 EGGS: Safe to introduce around 6 months. Actually recommended early to prevent allergies!
+        
+🍳 Preparation: Start with well-cooked scrambled eggs or hard-boiled egg yolk
+📋 Safety Level: SAFE with proper cooking
+🎂 Age Recommendation: 6+ months
+💡 Tips: Fully cook to reduce salmonella risk, start with small amounts`;
+      }
+      
+      return `🔬 FOOD RESEARCH: For safety information about "${prompt}", here are general guidelines:
+      
+• Most foods can be introduced around 6 months when baby starts solids
+• Avoid honey, whole nuts, choking hazards until appropriate age
+• Watch for allergic reactions with new foods
+• Always consult your pediatrician for specific guidance
+      
+📚 AI service temporarily unavailable - consult pediatric nutrition resources`;
+    }
+    
+    // Enhanced meal planning fallbacks
+    if (context.type === 'meal_planning') {
+      return `🍽️ MEAL IDEAS for "${prompt}":
+      
+👶 6+ months:
+• Mashed banana or avocado
+• Sweet potato puree
+• Iron-fortified baby cereal mixed with breast milk/formula
+• Steamed and mashed carrots
+
+👶 8+ months:
+• Soft scrambled eggs
+• Small pieces of soft fruit
+• Well-cooked pasta shapes
+• Shredded chicken or fish
+
+👶 12+ months:
+• Most family foods (avoid choking hazards)
+• Whole milk products
+• Honey (now safe)
+
+💡 Always supervise eating and cut food into appropriate sizes
+📚 AI service temporarily unavailable - consult pediatric nutrition guides`;
+    }
+    
+    // Enhanced general research fallbacks
+    if (context.type === 'parenting_research') {
+      if (lowerPrompt.includes('sleep')) {
+        return `😴 SLEEP GUIDANCE: Every baby is different, but here are general guidelines:
+        
+• Newborns: 14-17 hours per day (including naps)
+• 3-6 months: 12-15 hours (longer stretches at night)
+• 6-12 months: 12-14 hours (2-3 naps)
+
+💡 Safe sleep practices: Back to sleep, firm mattress, no loose bedding
+📚 For persistent sleep issues, consult your pediatrician`;
+      }
+      
+      return `👶 PARENTING GUIDANCE for "${prompt}":
+      
+• Trust your instincts as a parent
+• Every baby develops at their own pace  
+• When in doubt, consult your pediatrician
+• Join local parent groups for support
+• Remember that phases pass - this too shall pass!
+      
+📚 AI service temporarily unavailable - consider consulting trusted parenting resources like AAP guidelines`;
+    }
+    
+    return `🤖 AI Service Temporarily Unavailable
+
+I'm currently unable to connect to live AI services to provide real-time research for "${prompt}". 
+
+📚 For reliable information, please consult:
+• Your pediatrician for medical questions
+• American Academy of Pediatrics (AAP) guidelines
+• Trusted parenting websites and books
+• Local parent support groups
+
+💡 Try your question again later when internet connectivity improves.`;
   }
 
   // Save AI interactions to local history
