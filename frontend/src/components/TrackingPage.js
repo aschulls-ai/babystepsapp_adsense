@@ -767,8 +767,15 @@ const DiaperForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      await axios.post('/diapers', data);
-      toast.success('Diaper change logged successfully!');
+      // Use standalone offline API
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'diaper',
+        diaper_type: formData.type,
+        notes: formData.notes || null,
+        timestamp: formData.timestamp.toISOString()
+      });
+      toast.success('💾 Diaper change saved to device!');
       setFormData({
         type: 'wet',
         notes: '',
