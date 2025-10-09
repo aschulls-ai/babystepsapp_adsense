@@ -3,8 +3,9 @@
 
 class AIService {
   constructor() {
-    // Use configured backend URL for AI functionality  
-    this.backendUrl = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001') + '/api';
+    // Standalone app - use phone's internet for direct AI calls
+    this.apiKey = 'sk-emergent-41bA272B05dA9709c3'; // Emergent LLM key
+    this.baseUrl = 'https://api.openai.com/v1'; // Direct API calls via phone internet
     this.isAvailable = true;
     this.initializeService();
   }
