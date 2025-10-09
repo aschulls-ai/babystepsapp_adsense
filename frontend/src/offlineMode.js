@@ -258,28 +258,150 @@ export const offlineAPI = {
     });
   },
 
+  // Enhanced baby management with comprehensive customization
   createBaby: async (babyData) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
-        const babies = getOfflineData('babies', {});
-        
-        const newBaby = {
-          id: uuidv4(),
-          ...babyData,
-          user_id: currentUser.id,
-          createdAt: new Date().toISOString()
-        };
-        
-        babies[newBaby.id] = newBaby;
-        saveOfflineData('babies', babies);
-        
-        resolve({
-          data: newBaby
-        });
+        try {
+          const currentUserId = localStorage.getItem('babysteps_current_user');
+          
+          if (!currentUserId) {
+            reject(new Error('No authenticated user found'));
+            return;
+          }
+
+          // Comprehensive validation
+          if (!babyData.name || babyData.name.trim().length < 1) {
+            reject(new Error('Baby name is required'));
+            return;
+          }
+
+          if (!babyData.birth_date) {
+            reject(new Error('Birth date is required'));
+            return;
+          }
+
+          const babyId = uuidv4();
+          const now = new Date().toISOString();
+          
+          // Create comprehensive baby profile
+          const newBaby = {
+            id: babyId,
+            name: babyData.name.trim(),
+            birth_date: babyData.birth_date,
+            gender: babyData.gender || 'not_specified',
+            profile_image: babyData.profile_image || null,
+            user_id: currentUserId,
+            createdAt: now,
+            updatedAt: now,
+            
+            // Enhanced profile data
+            details: {
+              birth_time: babyData.birth_time || null,
+              birth_weight: babyData.birth_weight || null,
+              birth_length: babyData.birth_length || null,
+              blood_type: babyData.blood_type || null,
+              allergies: babyData.allergies || [],
+              medical_conditions: babyData.medical_conditions || [],
+              pediatrician: babyData.pediatrician || null,
+              insurance_info: babyData.insurance_info || null
+            },
+            
+            // Customization options
+            preferences: {
+              feeding_schedule: babyData.feeding_schedule || 'flexible',
+              sleep_routine: babyData.sleep_routine || 'flexible',
+              measurement_unit: babyData.measurement_unit || 'imperial',
+              temperature_unit: babyData.temperature_unit || 'fahrenheit'
+            },
+            
+            // Tracking settings
+            tracking: {
+              growth_tracking: true,
+              milestone_tracking: true,
+              feeding_tracking: true,
+              sleep_tracking: true,
+              diaper_tracking: true,
+              mood_tracking: false,
+              photo_timeline: true
+            },
+            
+            // Statistics
+            stats: {
+              total_activities: 0,
+              last_activity: null,
+              milestones_reached: 0
+            }
+          };
+
+          const babies = getOfflineData('babies', {});
+          if (!babies[currentUserId]) {
+            babies[currentUserId] = [];
+          }
+          babies[currentUserId].push(newBaby);
+          saveOfflineData('babies', babies);
+
+          // Initialize related data structures
+          offlineAPI.initializeBabyData(babyId, currentUserId);
+
+          console.log('✅ Baby profile created successfully:', newBaby.name);
+          resolve({ data: newBaby });
+        } catch (error) {
+          reject(error);
+        }
       }, 300);
     });
   },
+
+  // Initialize related data for new baby
+  initializeBabyData: (babyId, userId) => {
+    // Initialize milestones
+    const milestones = getOfflineData('milestones', {});
+    if (!milestones[babyId]) {
+      milestones[babyId] = offlineAPI.getDefaultMilestones();
+      saveOfflineData('milestones', milestones);
+    }
+
+    // Initialize growth data
+    const growthData = getOfflineData('growth_data', {});
+    if (!growthData[babyId]) {
+      growthData[babyId] = [];
+      saveOfflineData('growth_data', growthData);
+    }
+
+    // Initialize photo timeline
+    const photos = getOfflineData('photos', {});
+    if (!photos[babyId]) {
+      photos[babyId] = [];
+      saveOfflineData('photos', photos);
+    }
+
+    console.log('✅ Baby data structures initialized for', babyId);
+  },
+
+  // Get default milestones template
+  getDefaultMilestones: () => ({
+    motor_skills: [
+      { name: 'Holds head up', expected_age_months: 2, achieved: false, date_achieved: null },
+      { name: 'Rolls over', expected_age_months: 4, achieved: false, date_achieved: null },
+      { name: 'Sits without support', expected_age_months: 6, achieved: false, date_achieved: null },
+      { name: 'Crawls', expected_age_months: 8, achieved: false, date_achieved: null },
+      { name: 'Walks independently', expected_age_months: 12, achieved: false, date_achieved: null }
+    ],
+    social_skills: [
+      { name: 'First smile', expected_age_months: 2, achieved: false, date_achieved: null },
+      { name: 'Laughs', expected_age_months: 4, achieved: false, date_achieved: null },
+      { name: 'Responds to name', expected_age_months: 6, achieved: false, date_achieved: null },
+      { name: 'Plays peek-a-boo', expected_age_months: 8, achieved: false, date_achieved: null },
+      { name: 'Waves bye-bye', expected_age_months: 10, achieved: false, date_achieved: null }
+    ],
+    communication: [
+      { name: 'Coos and babbles', expected_age_months: 3, achieved: false, date_achieved: null },
+      { name: 'Says "mama" or "dada"', expected_age_months: 8, achieved: false, date_achieved: null },
+      { name: 'First word', expected_age_months: 12, achieved: false, date_achieved: null },
+      { name: 'Follows simple instructions', expected_age_months: 12, achieved: false, date_achieved: null }
+    ]
+  }),
 
   updateBaby: async (babyId, updates) => {
     return new Promise((resolve, reject) => {
