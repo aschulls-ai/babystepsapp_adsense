@@ -405,12 +405,14 @@ function App() {
   };
 
   const login = async (email, password, rememberMe = false) => {
-    // Always reset offline mode before attempting login to give online mode a chance
-    console.log('🔄 Resetting offline mode before login attempt');
-    resetOfflineMode();
+    // Only reset offline mode if not manually forced
+    if (localStorage.getItem('babysteps_force_offline') !== 'true') {
+      console.log('🔄 Resetting offline mode before login attempt');
+      resetOfflineMode();
+    }
     
-    // Check if we should use offline mode (after reset, should be false unless manually forced)
-    if (shouldUseOfflineMode() && localStorage.getItem('babysteps_force_offline') === 'true') {
+    // Check if we should use offline mode
+    if (shouldUseOfflineMode()) {
       console.log('🏠 Using offline mode for login (manually forced)');
       try {
         const response = await offlineAPI.login(email, password);
