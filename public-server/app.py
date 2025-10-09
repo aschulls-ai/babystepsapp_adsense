@@ -376,34 +376,65 @@ async def create_baby(request: BabyCreateRequest, current_user_email: str = Depe
 
 @app.get("/api/babies/{baby_id}")
 async def get_baby(baby_id: str, current_user_email: str = Depends(get_current_user)):
-    user = users_db.get(current_user_email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get user
+    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
+    user = cursor.fetchone()
     if not user:
+        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
-    baby = babies_db.get(baby_id)
-    if not baby or baby["user_id"] != user["id"]:
+    # Get baby
+    cursor.execute("SELECT id, name, birth_date, gender, profile_image, user_id FROM babies WHERE id = ? AND user_id = ?", (baby_id, user["id"]))
+    baby = cursor.fetchone()
+    conn.close()
+    
+    if not baby:
         raise HTTPException(status_code=404, detail="Baby not found")
     
-    return Baby(**baby)
+    return Baby(**dict(baby))
 
 @app.put("/api/babies/{baby_id}")
 async def update_baby(baby_id: str, request: BabyCreateRequest, current_user_email: str = Depends(get_current_user)):
-    user = users_db.get(current_user_email)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Get user
+    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
+    user = cursor.fetchone()
     if not user:
+        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
-    baby = babies_db.get(baby_id)
-    if not baby or baby["user_id"] != user["id"]:
+    # Check if baby exists and belongs to user
+    cursor.execute("SELECT id FROM babies WHERE id = ? AND user_id = ?", (baby_id, user["id"]))
+    if not cursor.fetchone():
+        conn.close()
         raise HTTPException(status_code=404, detail="Baby not found")
     
-    # Update baby data
-    baby.update({
-        "name": request.name,
-        "birth_date": request.birth_date,
-        "gender": request.gender
-    })
-    
-    return Baby(**baby)
+    # Update baby
+    try:
+        cursor.execute("""
+            UPDATE babies SET name = ?, birth_date = ?, gender = ?
+            WHERE id = ? AND user_id = ?
+        """, (request.name, request.birth_date, request.gender, baby_id, user["id"]))
+        
+        conn.commit()
+        
+        # Get updated baby
+        cursor.execute("SELECT id, name, birth_date, gender, profile_image, user_id FROM babies WHERE id = ?", (baby_id,))
+        baby = cursor.fetchone()
+        conn.close()
+        
+        print(f"✅ Baby updated: {request.name}")
+        return Baby(**dict(baby))
+        
+    except Exception as e:
+        conn.close()
+        print(f"❌ Baby update failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update baby")
 
 # Activity endpoints
 @app.get("/api/activities")
