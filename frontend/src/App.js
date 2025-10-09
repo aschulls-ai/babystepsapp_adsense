@@ -289,15 +289,49 @@ function App() {
       await fetchBabies();
       return true;
     } catch (error) {
-      console.error('Login error:', error);
-      if (error.code === 'ERR_NETWORK') {
-        toast.error('Unable to connect to server. Please check your internet connection.');
-      } else if (error.response?.status === 404) {
-        toast.error('Login service not available. Please try again later.');
+      console.error('❌ Online login failed:', error);
+      
+      // Automatically switch to offline mode if server connection fails
+      if (error.code === 'NETWORK_ERROR' || 
+          error.message.includes('Network Error') || 
+          error.code === 'ECONNABORTED' ||
+          !navigator.onLine) {
+        
+        console.log('🏠 Server connection failed, switching to offline mode...');
+        enableOfflineMode();
+        
+        try {
+          const response = await offlineAPI.login(email, password);
+          const { access_token } = response.data;
+          
+          localStorage.setItem('token', access_token);
+          
+          if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('rememberedEmail', email);
+            toast.success('Welcome! Using offline mode due to connection issues.');
+          } else {
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('rememberedEmail');
+            toast.success('Welcome to Baby Steps! (Offline mode - no server connection)');
+          }
+          
+          setUser({ email, authenticated: true, offline: true });
+          await fetchBabies();
+          return true;
+          
+        } catch (offlineError) {
+          console.error('Offline login also failed:', offlineError);
+          toast.error('Login failed: ' + (offlineError.message || 'Invalid credentials'));
+          throw offlineError;
+        }
+      } else if (error.response?.status === 401) {
+        toast.error('Invalid email or password.');
+        throw error;
       } else {
-        toast.error(error.response?.data?.detail || 'Login failed');
+        toast.error('Login failed. Please try again.');
+        throw error;
       }
-      return false;
     }
   };
 
