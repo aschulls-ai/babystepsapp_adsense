@@ -406,11 +406,11 @@ export const offlineAPI = {
   updateBaby: async (babyId, updates) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const currentUser = JSON.parse(localStorage.getItem('babysteps_current_user') || '{}');
+        const currentUserId = localStorage.getItem('babysteps_current_user');
         const babies = getOfflineData('babies', {});
         
         const baby = babies[babyId];
-        if (!baby || baby.user_id !== currentUser.id) {
+        if (!baby || baby.user_id !== currentUserId) {
           reject(new Error('Baby not found'));
           return;
         }
