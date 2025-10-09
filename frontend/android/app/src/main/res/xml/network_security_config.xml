@@ -3,6 +3,8 @@
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">babystepsapp.app</domain>
         <domain includeSubdomains="true">vercel.app</domain>
+        <domain includeSubdomains="true">onrender.com</domain>
+        <domain includeSubdomains="true">baby-steps-demo-api.onrender.com</domain>
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">10.0.2.2</domain>
     </domain-config>
