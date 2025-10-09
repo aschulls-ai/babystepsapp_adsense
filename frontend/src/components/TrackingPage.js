@@ -315,8 +315,11 @@ const TrackingPage = ({ currentBaby }) => {
       }
 
       // Use standalone/offline API for logging
-      await offlineAPI.logActivity(payload);
-      toast.success(successMessage + ' (Saved locally)');
+      console.log('📝 Logging activity to device storage:', payload);
+      const result = await offlineAPI.logActivity(payload);
+      console.log('✅ Activity logged successfully:', result);
+      
+      toast.success(successMessage + ' (Saved to device)');
       
       fetchRecentActivities();
       fetchAllActivities(); // Refresh comprehensive activity list
@@ -332,7 +335,8 @@ const TrackingPage = ({ currentBaby }) => {
       setQuickActionModal({ show: false, type: null, data: {} });
       
     } catch (error) {
-      toast.error(`Failed to log ${type}`);
+      console.error('❌ Activity logging failed:', error);
+      toast.error(`Failed to log ${type}: ${error.message || 'Unknown error'}`);
     }
   };
 
