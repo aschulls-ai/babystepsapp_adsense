@@ -31,6 +31,13 @@ import BottomBannerAd from './components/ads/BottomBannerAd';
 // Backend URL Configuration
 const API = process.env.REACT_APP_BACKEND_URL || '/api';
 
+// Debug logging for connection issues
+console.log('🔧 App Configuration:', {
+  backendUrl: process.env.REACT_APP_BACKEND_URL,
+  apiBase: API,
+  environment: process.env.NODE_ENV
+});
+
 // Debug logging
 console.log('Environment configuration:', {
   API,
