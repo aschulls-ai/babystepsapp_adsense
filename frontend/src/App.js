@@ -274,6 +274,14 @@ function App() {
       // Initialize offline mode
       initializeOfflineMode();
       
+      // Wait a moment for initialization to complete, then fetch babies
+      setTimeout(() => {
+        if (shouldUseOfflineMode()) {
+          console.log('🔄 Post-initialization: checking for babies...');
+          fetchBabies();
+        }
+      }, 500);
+      
       // Check internet connectivity
       console.log('🌐 Network status:', {
         online: navigator.onLine,
