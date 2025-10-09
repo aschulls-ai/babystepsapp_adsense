@@ -47,6 +47,10 @@ console.log('Environment configuration:', {
 
 // Set up axios defaults
 axios.defaults.baseURL = API;
+axios.defaults.timeout = 15000;
+axios.defaults.headers.common['User-Agent'] = 'BabyStepsApp/1.0 Android';
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 function App() {
   const [user, setUser] = useState(null);
