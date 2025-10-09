@@ -212,8 +212,9 @@
 
 ## test_plan:
   current_focus:
+    - "Complete Baby Steps app functionality testing with backend deployment issues"
+  stuck_tasks: 
     - "Enhanced Render backend server functionality testing completed"
-  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
