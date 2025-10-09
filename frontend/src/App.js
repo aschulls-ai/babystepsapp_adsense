@@ -37,6 +37,13 @@ import {
   isOfflineMode 
 } from './offlineMode';
 
+// Add function to reset offline mode
+const resetOfflineMode = () => {
+  localStorage.removeItem('babysteps_offline_mode');
+  localStorage.removeItem('babysteps_force_offline');
+  console.log('🔄 Offline mode reset - will attempt online connection');
+};
+
 // Backend URL Configuration
 const API = process.env.REACT_APP_BACKEND_URL || '/api';
 
