@@ -43,8 +43,8 @@ const initializeStandaloneMode = () => {
   console.log('🏠 Baby Steps running in standalone mode - all features available');
 };
 
-// Backend URL Configuration
-const API = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001') + '/api';
+// Standalone App - No backend dependency for core functionality
+const API = null; // Standalone mode uses offlineAPI only
 
 // Debug logging for connection issues
 console.log('🔧 App Configuration:', {
