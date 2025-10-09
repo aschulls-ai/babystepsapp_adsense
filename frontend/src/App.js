@@ -184,7 +184,19 @@ function App() {
 
   const login = async (email, password, rememberMe = false) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      console.log('🔐 Attempting login...', { email, apiBase: API });
+      
+      const response = await axios.post('/api/auth/login', { 
+        email, 
+        password 
+      }, {
+        timeout: 10000,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('✅ Login response:', response.status);
       const { access_token } = response.data;
       
       localStorage.setItem('token', access_token);
