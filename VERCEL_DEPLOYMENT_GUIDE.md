@@ -38,7 +38,7 @@
 
 4. **Environment Variables** (Add these in Vercel dashboard)
    ```
-   REACT_APP_BACKEND_URL=https://babysteps-mobile.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://babytrak-dev.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-0000000000000000
    ```
 
