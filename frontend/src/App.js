@@ -44,8 +44,7 @@ const initializeStandaloneMode = () => {
 };
 
 // Backend URL Configuration
-// For standalone mode, use local backend for AI services
-const API = 'http://localhost:8001/api';
+const API = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001') + '/api';
 
 // Debug logging for connection issues
 console.log('🔧 App Configuration:', {
