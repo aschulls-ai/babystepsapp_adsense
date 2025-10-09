@@ -294,19 +294,40 @@ class AIService {
     }
   }
 
-  // Emergency information - uses general research endpoint
+  // Emergency information - uses direct AI query
   async getEmergencyInfo(situation) {
     console.log(`🚨 Getting emergency info for: "${situation}"`);
     
-    const question = `Emergency parenting situation: ${situation}. IMPORTANT: This is for informational purposes only. For actual emergencies, call emergency services immediately. Please provide immediate steps, warning signs, and when to seek medical help.`;
-    
-    const response = await this.research(question);
-    
-    return {
-      answer: response.answer,
-      disclaimer: 'FOR INFORMATIONAL PURPOSES ONLY. CALL EMERGENCY SERVICES FOR ACTUAL EMERGENCIES.',
-      sources: ['AI Emergency Information - Not Medical Advice']
-    };
+    try {
+      const prompt = `Emergency parenting situation: "${situation}"
+      
+      IMPORTANT: This is for informational purposes only. For actual emergencies, call emergency services immediately.
+      
+      Please provide:
+      1. Immediate steps to take
+      2. Signs that require immediate medical attention
+      3. When to call emergency services vs. consulting a doctor
+      4. Basic first aid if applicable
+      
+      Emphasize the importance of professional medical help for emergencies.`;
+
+      const response = await this.query(prompt, {
+        type: 'emergency_info',
+        situation
+      });
+
+      return {
+        answer: response,
+        disclaimer: 'FOR INFORMATIONAL PURPOSES ONLY. CALL EMERGENCY SERVICES FOR ACTUAL EMERGENCIES.',
+        sources: ['AI Emergency Information via Phone Internet - Not Medical Advice']
+      };
+    } catch (error) {
+      return {
+        answer: this.getFallbackResponse(situation, { type: 'emergency_info', situation }),
+        disclaimer: 'FOR INFORMATIONAL PURPOSES ONLY. CALL EMERGENCY SERVICES FOR ACTUAL EMERGENCIES.',
+        sources: ['Emergency Information Database - Not Medical Advice']
+      };
+    }
   }
 
   // Extract safety level from AI response
