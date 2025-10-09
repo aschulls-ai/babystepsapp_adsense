@@ -213,6 +213,7 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
                     </Label>
                     <Input
                       id="register-name"
+                      name="name"
                       type="text"
                       placeholder="Enter your full name"
                       value={registerData.name}
