@@ -54,16 +54,26 @@ console.log('Environment configuration:', {
   usingProductionAPI: !!process.env.REACT_APP_BACKEND_URL
 });
 
-// Connection test function
+// Enhanced connection test function
 const testConnection = async () => {
-  console.log('🧪 Testing server connection...');
+  console.log('🧪 Testing server connection...', { API, navigator_online: navigator.onLine });
+  
+  // Test 1: Basic fetch
   try {
+    console.log('Test 1: Basic fetch to health endpoint');
     const response = await fetch(`${API}/api/health`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-      },
-      timeout: 10000
+        'User-Agent': 'BabyStepsApp/1.0 Android',
+      }
+    });
+    
+    console.log('Fetch response:', {
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      headers: Object.fromEntries(response.headers.entries())
     });
     
     if (response.ok) {
@@ -75,8 +85,36 @@ const testConnection = async () => {
       return { success: false, error: `HTTP ${response.status}` };
     }
   } catch (error) {
-    console.log('❌ Connection test error:', error);
-    return { success: false, error: error.message };
+    console.log('❌ Fetch failed, trying XMLHttpRequest...', error);
+    
+    // Test 2: XMLHttpRequest fallback
+    return new Promise((resolve) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `${API}/api/health`);
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.timeout = 10000;
+      
+      xhr.onload = function() {
+        console.log('XHR Success:', {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          responseText: xhr.responseText.substring(0, 100)
+        });
+        resolve({ success: true, data: { xhr: true, status: xhr.status } });
+      };
+      
+      xhr.onerror = function() {
+        console.log('❌ XHR Error:', xhr.statusText);
+        resolve({ success: false, error: `XHR Error: ${xhr.statusText}` });
+      };
+      
+      xhr.ontimeout = function() {
+        console.log('❌ XHR Timeout');
+        resolve({ success: false, error: 'XHR Timeout' });
+      };
+      
+      xhr.send();
+    });
   }
 };
 
