@@ -279,55 +279,79 @@ export const offlineAPI = {
     });
   },
 
-  // Food research (with real AI backup)
-  foodResearch: async (query) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Mock responses for common queries
-        const responses = {
-          honey: {
-            answer: "🚫 Honey should NOT be given to babies under 12 months old due to the risk of infant botulism. Botulism spores can be found in honey and can cause serious illness in infants whose immune systems aren't fully developed.",
-            safety_level: "avoid",
-            age_recommendation: "12+ months only",
-            sources: ["American Academy of Pediatrics", "CDC Guidelines"]
-          },
-          strawberries: {
-            answer: "🍓 Fresh strawberries can be introduced around 6 months when baby starts solids. Cut into small, age-appropriate pieces to prevent choking. Start with small amounts and watch for allergic reactions.",
-            safety_level: "safe", 
-            age_recommendation: "6+ months",
-            sources: ["Pediatric Nutrition Guidelines", "AAP Feeding Guidelines"]
-          },
-          nuts: {
-            answer: "🥜 Whole nuts are a choking hazard for babies. Nut butters can be introduced around 6 months but should be thinned with water or breast milk. Watch carefully for allergic reactions.",
-            safety_level: "caution",
-            age_recommendation: "6+ months (as nut butter only)",
-            sources: ["Food Allergy Research Guidelines"]
-          }
-        };
-        
-        // Simple keyword matching
-        let response = null;
-        for (const [keyword, resp] of Object.entries(responses)) {
-          if (query.toLowerCase().includes(keyword)) {
-            response = resp;
-            break;
-          }
-        }
-        
-        if (!response) {
-          response = {
-            answer: `For safety information about "${query}", please consult your pediatrician. This offline mode provides basic guidance only.`,
-            safety_level: "consult_doctor",
-            age_recommendation: "Ask your doctor",
-            sources: ["Offline Demo Mode"]
+  // Food research (with real AI integration)
+  foodResearch: async (query, babyAgeMonths = 6) => {
+    try {
+      console.log('🔬 Offline mode: Using real AI for food research:', query);
+      
+      // Make direct API call to backend AI service
+      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/food/research', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          baby_age_months: babyAgeMonths
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ AI food research successful');
+        return { data };
+      } else {
+        throw new Error('AI service unavailable');
+      }
+    } catch (error) {
+      console.log('⚠️ AI service failed, using fallback responses');
+      
+      // Fallback to mock responses if AI fails
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const responses = {
+            honey: {
+              answer: "🚫 Honey should NOT be given to babies under 12 months old due to the risk of infant botulism. Botulism spores can be found in honey and can cause serious illness in infants whose immune systems aren't fully developed.",
+              safety_level: "avoid",
+              age_recommendation: "12+ months only",
+              sources: ["American Academy of Pediatrics", "CDC Guidelines"]
+            },
+            strawberries: {
+              answer: "🍓 Fresh strawberries can be introduced around 6 months when baby starts solids. Cut into small, age-appropriate pieces to prevent choking. Start with small amounts and watch for allergic reactions.",
+              safety_level: "safe", 
+              age_recommendation: "6+ months",
+              sources: ["Pediatric Nutrition Guidelines", "AAP Feeding Guidelines"]
+            },
+            nuts: {
+              answer: "🥜 Whole nuts are a choking hazard for babies. Nut butters can be introduced around 6 months but should be thinned with water or breast milk. Watch carefully for allergic reactions.",
+              safety_level: "caution",
+              age_recommendation: "6+ months (as nut butter only)",
+              sources: ["Food Allergy Research Guidelines"]
+            }
           };
-        }
-        
-        resolve({
-          data: response
-        });
-      }, 800); // Simulate AI processing time
-    });
+          
+          // Simple keyword matching
+          let response = null;
+          for (const [keyword, resp] of Object.entries(responses)) {
+            if (query.toLowerCase().includes(keyword)) {
+              response = resp;
+              break;
+            }
+          }
+          
+          if (!response) {
+            response = {
+              answer: `For safety information about "${query}", please consult your pediatrician. AI service is temporarily unavailable.`,
+              safety_level: "consult_doctor",
+              age_recommendation: "Ask your doctor",
+              sources: ["Offline Mode Fallback"]
+            };
+          }
+          
+          resolve({ data: response });
+        }, 800);
+      });
+    }
   },
 
   // Meal planning
