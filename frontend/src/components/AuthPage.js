@@ -245,6 +245,7 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
                     </Label>
                     <Input
                       id="register-password"
+                      name="password"
                       type="password"
                       placeholder="Create a password"
                       value={registerData.password}
