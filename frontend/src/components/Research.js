@@ -73,9 +73,25 @@ const Research = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/research', {
-        question: userMessage.content
-      });
+      let response;
+      
+      // Check if we should use offline mode
+      if (shouldUseOfflineMode()) {
+        console.log('🏠 Using offline mode for research');
+        response = await offlineAPI.research(userMessage.content);
+        toast.info('Research completed (offline mode)');
+      } else {
+        // Try online mode first
+        try {
+          response = await axios.post('/api/research', {
+            question: userMessage.content
+          });
+        } catch (onlineError) {
+          console.log('⚠️ Online research failed, trying offline mode...');
+          response = await offlineAPI.research(userMessage.content);
+          toast.info('Research completed (using offline mode due to connection issues)');
+        }
+      }
 
       const botMessage = {
         id: Date.now() + 1,
@@ -87,6 +103,7 @@ const Research = () => {
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
+      console.error('Research failed:', error);
       toast.error('Failed to get research answer. Please try again.');
       const errorMessage = {
         id: Date.now() + 1,
