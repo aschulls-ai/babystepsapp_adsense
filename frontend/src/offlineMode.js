@@ -68,7 +68,7 @@ export const initializeOfflineMode = () => {
     };
     
     const babies = {};
-    babies[demoBaby.id] = demoBaby;
+    babies[demoUserId] = [demoBaby]; // Store babies by user ID
     saveOfflineData('babies', babies);
     
     // Create demo activities
