@@ -78,22 +78,15 @@ const TrackingPage = ({ currentBaby }) => {
     if (!currentBaby) return;
     
     try {
-      const endpoints = {
-        feeding: '/feedings',
-        diaper: '/diapers',
-        sleep: '/sleep',
-        pumping: '/pumping',
-        measurements: '/measurements',
-        milestones: '/milestones'
-      };
-
-      const response = await axios.get(endpoints[activeTab], {
-        params: { baby_id: currentBaby.id }
+      // Use offline API to get activities
+      const response = await offlineAPI.getActivities(currentBaby.id, { 
+        type: activeTab,
+        limit: 5 
       });
       
       setRecentActivities(prev => ({
         ...prev,
-        [activeTab]: response.data.slice(0, 5)
+        [activeTab]: response.data
       }));
     } catch (error) {
       console.error('Failed to fetch recent activities:', error);
