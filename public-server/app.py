@@ -31,14 +31,68 @@ except ImportError:
     print("⚠️ AI integration not available")
 
 # Configuration
-SECRET_KEY = "demo-baby-steps-secret-key-2025"
+SECRET_KEY = os.getenv("SECRET_KEY", "demo-baby-steps-secret-key-2025")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 480
+EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
 
-# In-memory data store (for demo purposes)
-users_db = {}
-babies_db = {}
-activities_db = {}
+# Database setup
+DATABASE_PATH = "baby_steps.db"
+
+def init_database():
+    """Initialize SQLite database with tables"""
+    conn = sqlite3.connect(DATABASE_PATH)
+    cursor = conn.cursor()
+    
+    # Users table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            email TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            password TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    
+    # Babies table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS babies (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            birth_date TEXT NOT NULL,
+            gender TEXT,
+            profile_image TEXT,
+            user_id TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    """)
+    
+    # Activities table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS activities (
+            id TEXT PRIMARY KEY,
+            type TEXT NOT NULL,
+            notes TEXT,
+            baby_id TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (baby_id) REFERENCES babies (id),
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    """)
+    
+    conn.commit()
+    conn.close()
+    print("✅ Database initialized")
+
+def get_db_connection():
+    """Get database connection"""
+    conn = sqlite3.connect(DATABASE_PATH)
+    conn.row_factory = sqlite3.Row  # Enable dict-like access to rows
+    return conn
 
 # Security
 security = HTTPBearer()
