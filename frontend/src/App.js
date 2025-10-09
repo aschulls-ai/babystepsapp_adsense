@@ -528,7 +528,9 @@ function App() {
 
   const updateBaby = async (babyData) => {
     try {
-      const response = await axios.put(`/api/babies/${currentBaby.id}`, babyData);
+      // Use offline API for standalone mode
+      console.log('👶 Updating baby in standalone mode:', babyData);
+      const response = await offlineAPI.updateBaby(currentBaby.id, babyData);
       const updatedBaby = response.data;
       
       // Update babies array
@@ -541,7 +543,8 @@ function App() {
         setCurrentBaby(updatedBaby);
       }
       
-      toast.success(`${updatedBaby.name}'s profile updated successfully!`);
+      toast.success(`${updatedBaby.name}'s profile updated successfully! (Saved to device)`);
+      console.log('✅ Baby updated and state updated:', updatedBaby.name);
       return updatedBaby;
     } catch (error) {
       toast.error('Failed to update baby profile');
