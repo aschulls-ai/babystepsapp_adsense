@@ -279,32 +279,17 @@ export const offlineAPI = {
     });
   },
 
-  // Food research (with real AI integration)
+  // Food research (with direct AI integration via device internet)
   foodResearch: async (query, babyAgeMonths = 6) => {
     try {
-      console.log('🔬 Offline mode: Using real AI for food research:', query);
+      console.log('🔬 Standalone mode: Using direct AI for food research:', query);
       
-      // Make direct API call to backend AI service
-      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/food/research', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-          baby_age_months: babyAgeMonths
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ AI food research successful');
-        return { data };
-      } else {
-        throw new Error('AI service unavailable');
-      }
+      // Use direct AI service via device internet connection
+      const response = await aiService.researchFood(query, babyAgeMonths);
+      console.log('✅ Direct AI food research successful');
+      return { data: response };
     } catch (error) {
-      console.log('⚠️ AI service failed, using fallback responses');
+      console.log('⚠️ Direct AI failed, using enhanced fallback responses');
       
       // Fallback to mock responses if AI fails
       return new Promise((resolve) => {
