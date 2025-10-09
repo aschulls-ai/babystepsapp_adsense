@@ -158,11 +158,16 @@ init_demo_data()
 
 # Root endpoint
 @app.get("/")
-async def root():
+async def root(request):
+    # Log request details for debugging
+    print(f"Request from: {request.client.host if request.client else 'unknown'}")
+    print(f"User-Agent: {request.headers.get('user-agent', 'unknown')}")
+    
     return {
         "message": "Baby Steps Demo API",
         "version": "1.0.0",
         "status": "running",
+        "server_time": datetime.utcnow().isoformat(),
         "demo_credentials": {
             "email": "demo@babysteps.com",
             "password": "demo123"
