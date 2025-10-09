@@ -303,32 +303,27 @@ const TrackingPage = ({ currentBaby }) => {
       }
 
       const payload = {
+        type: type,
         baby_id: currentBaby.id,
         timestamp: new Date().toISOString(),
         ...data
       };
 
-      let endpoint = '';
       let successMessage = '';
 
       switch (type) {
         case 'feeding':
-          endpoint = '/feedings';
           successMessage = 'Feeding logged successfully!';
           break;
         case 'diaper':
-          endpoint = '/diapers';
           successMessage = 'Diaper change logged!';
           break;
         case 'sleep':
-          endpoint = '/sleep';
           payload.start_time = new Date().toISOString();
-          delete payload.timestamp;
-          successMessage = 'Sleep session started!';
+          successMessage = 'Sleep session logged!';
           break;
         case 'pumping':
-          endpoint = '/pumping';
-          // Transform leftBreast and rightBreast into total amount for backend
+          // Transform leftBreast and rightBreast into total amount
           if (data.leftBreast !== undefined && data.rightBreast !== undefined) {
             payload.amount = (data.leftBreast || 0) + (data.rightBreast || 0);
             delete payload.leftBreast;
@@ -343,18 +338,18 @@ const TrackingPage = ({ currentBaby }) => {
           successMessage = 'Pumping session logged!';
           break;
         case 'measurements':
-          endpoint = '/measurements';
           successMessage = 'Measurements recorded!';
           break;
         case 'milestones':
-          endpoint = '/milestones';
           payload.achieved_date = new Date().toISOString();
           successMessage = 'Milestone recorded!';
           break;
       }
 
-      await axios.post(endpoint, payload);
-      toast.success(successMessage);
+      // Use standalone/offline API for logging
+      await offlineAPI.logActivity(payload);
+      toast.success(successMessage + ' (Saved locally)');
+      
       fetchRecentActivities();
       fetchAllActivities(); // Refresh comprehensive activity list
       
