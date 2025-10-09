@@ -45,6 +45,32 @@ console.log('Environment configuration:', {
   usingProductionAPI: !!process.env.REACT_APP_BACKEND_URL
 });
 
+// Connection test function
+const testConnection = async () => {
+  console.log('🧪 Testing server connection...');
+  try {
+    const response = await fetch(`${API}/api/health`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      timeout: 10000
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Connection test successful:', data);
+      return { success: true, data };
+    } else {
+      console.log('❌ Connection test failed:', response.status, response.statusText);
+      return { success: false, error: `HTTP ${response.status}` };
+    }
+  } catch (error) {
+    console.log('❌ Connection test error:', error);
+    return { success: false, error: error.message };
+  }
+};
+
 // Set up axios defaults
 axios.defaults.baseURL = API;
 axios.defaults.timeout = 15000;
