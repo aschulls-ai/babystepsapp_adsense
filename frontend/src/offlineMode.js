@@ -354,55 +354,126 @@ export const offlineAPI = {
     }
   },
 
-  // Meal planning
+  // Meal planning (with real AI integration)
   mealSearch: async (query, ageMonths = 6) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const meals = [
-          {
-            name: "Mashed Banana",
-            ingredients: ["1 ripe banana"],
-            instructions: ["Mash banana with fork until smooth", "Ensure no lumps for younger babies", "Serve at room temperature"],
-            age_appropriate: "6+ months",
-            prep_time: "2 minutes",
-            safety_tips: ["Always test temperature", "Supervise eating"]
-          },
-          {
-            name: "Sweet Potato Puree",
-            ingredients: ["1 sweet potato", "Water or breast milk"],
-            instructions: ["Steam sweet potato until very soft (15-20 min)", "Mash with liquid to desired consistency", "Cool before serving"],
-            age_appropriate: "6+ months", 
-            prep_time: "25 minutes",
-            safety_tips: ["Check temperature", "Start with thin consistency"]
-          },
-          {
-            name: "Avocado Mash",
-            ingredients: ["1/2 ripe avocado"],
-            instructions: ["Mash avocado until smooth", "Add breast milk if needed for consistency", "Serve immediately"],
-            age_appropriate: "6+ months",
-            prep_time: "1 minute", 
-            safety_tips: ["Use very ripe avocado", "Serve fresh"]
-          },
-          {
-            name: "Soft Scrambled Eggs",
-            ingredients: ["1 egg", "1 tbsp milk", "Small amount of butter"],
-            instructions: ["Whisk egg with milk", "Cook on very low heat, stirring constantly", "Ensure very soft texture", "Cool before serving"],
-            age_appropriate: "8+ months",
-            prep_time: "5 minutes",
-            safety_tips: ["Cook thoroughly", "Cool to room temperature", "Watch for allergies"]
-          }
-        ];
-        
-        resolve({
-          data: {
-            results: meals,
-            query,
-            age_months: ageMonths,
-            source: "Offline Demo Mode"
-          }
-        });
-      }, 600);
-    });
+    try {
+      console.log('🍽️ Offline mode: Using real AI for meal planning:', query);
+      
+      // Make direct API call to backend AI service
+      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/meals/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          baby_age_months: ageMonths
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ AI meal planning successful');
+        return { data };
+      } else {
+        throw new Error('AI service unavailable');
+      }
+    } catch (error) {
+      console.log('⚠️ AI service failed, using fallback meal suggestions');
+      
+      // Fallback to mock responses if AI fails
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const meals = [
+            {
+              name: "Mashed Banana",
+              ingredients: ["1 ripe banana"],
+              instructions: ["Mash banana with fork until smooth", "Ensure no lumps for younger babies", "Serve at room temperature"],
+              age_appropriate: "6+ months",
+              prep_time: "2 minutes",
+              safety_tips: ["Always test temperature", "Supervise eating"]
+            },
+            {
+              name: "Sweet Potato Puree",
+              ingredients: ["1 sweet potato", "Water or breast milk"],
+              instructions: ["Steam sweet potato until very soft (15-20 min)", "Mash with liquid to desired consistency", "Cool before serving"],
+              age_appropriate: "6+ months", 
+              prep_time: "25 minutes",
+              safety_tips: ["Check temperature", "Start with thin consistency"]
+            },
+            {
+              name: "Avocado Mash",
+              ingredients: ["1/2 ripe avocado"],
+              instructions: ["Mash avocado until smooth", "Add breast milk if needed for consistency", "Serve immediately"],
+              age_appropriate: "6+ months",
+              prep_time: "1 minute", 
+              safety_tips: ["Use very ripe avocado", "Serve fresh"]
+            },
+            {
+              name: "Soft Scrambled Eggs",
+              ingredients: ["1 egg", "1 tbsp milk", "Small amount of butter"],
+              instructions: ["Whisk egg with milk", "Cook on very low heat, stirring constantly", "Ensure very soft texture", "Cool before serving"],
+              age_appropriate: "8+ months",
+              prep_time: "5 minutes",
+              safety_tips: ["Cook thoroughly", "Cool to room temperature", "Watch for allergies"]
+            }
+          ];
+          
+          resolve({
+            data: {
+              results: meals,
+              query,
+              age_months: ageMonths,
+              source: "Offline Mode Fallback"
+            }
+          });
+        }, 600);
+      });
+    }
+  },
+
+  // General research (with real AI integration)
+  research: async (query) => {
+    try {
+      console.log('📚 Offline mode: Using real AI for research:', query);
+      
+      // Make direct API call to backend AI service  
+      const response = await fetch('https://baby-steps-demo-api.onrender.com/api/research', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ AI research successful');
+        return { data };
+      } else {
+        throw new Error('AI service unavailable');
+      }
+    } catch (error) {
+      console.log('⚠️ AI service failed, using fallback response');
+      
+      // Fallback response if AI fails
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            data: {
+              answer: `I'm currently in offline mode with limited AI capabilities. For comprehensive information about "${query}", please try again when you have an internet connection or consult your pediatrician for medical advice.`,
+              source: "Offline Mode - Limited AI",
+              suggestions: [
+                "Check your internet connection",
+                "Try again later",
+                "Consult your pediatrician for medical questions",
+                "Use the app's other features while offline"
+              ]
+            }
+          });
+        }, 500);
+      });
+    }
   }
 };
 
