@@ -1,10 +1,9 @@
-// Direct AI Integration Service for Standalone App
-// Uses device internet connection for AI responses
+// AI Integration Service for Standalone App
+// Uses backend API endpoints that connect to AI services
 
 class AIService {
   constructor() {
-    this.apiKey = 'sk-emergent-41bA272B05dA9709c3'; // Emergent LLM key
-    this.baseUrl = 'https://api.openai.com/v1'; // Direct OpenAI API
+    this.backendUrl = process.env.REACT_APP_BACKEND_URL || '/api';
     this.isAvailable = true;
     this.initializeService();
   }
