@@ -31,11 +31,17 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const result = await onRegister(registerData.name, registerData.email, registerData.password);
-    if (result && result.requiresVerification) {
-      setRegistrationResult(result);
+    try {
+      const result = await onRegister(registerData.name, registerData.email, registerData.password);
+      if (result && result.requiresVerification) {
+        setRegistrationResult(result);
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      // Error handling is done in App.js register function via toast
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handlePasswordReset = async (e) => {
