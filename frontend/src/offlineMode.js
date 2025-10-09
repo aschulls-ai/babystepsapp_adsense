@@ -342,7 +342,7 @@ export const offlineAPI = {
           saveOfflineData('babies', babies);
 
           // Initialize related data structures
-          this.initializeBabyData(babyId, currentUserId);
+          offlineAPI.initializeBabyData(babyId, currentUserId);
 
           console.log('✅ Baby profile created successfully:', newBaby.name);
           resolve({ data: newBaby });
