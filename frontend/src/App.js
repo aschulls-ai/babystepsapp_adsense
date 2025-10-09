@@ -231,6 +231,14 @@ function App() {
     }
   }, []);
 
+  // Load babies when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && !currentBaby && babies.length === 0) {
+      console.log('🔄 User authenticated but no babies loaded, fetching...');
+      fetchBabies();
+    }
+  }, [isAuthenticated, currentBaby, babies.length]);
+
   // Theme toggle function
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
