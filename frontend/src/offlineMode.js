@@ -1,19 +1,19 @@
-// Complete offline mode for Baby Steps
+// Complete Standalone App Mode - Primary Operation Mode
 // This allows the app to work fully without server connection
 
 import { v4 as uuidv4 } from 'uuid';
 
-// Check if we should use offline mode
+// Standalone app mode - this is now the PRIMARY mode
 export const shouldUseOfflineMode = () => {
-  // Always use offline mode if we can't reach the server
-  return localStorage.getItem('babysteps_offline_mode') === 'true' || 
-         localStorage.getItem('babysteps_force_offline') === 'true';
+  // Always use standalone mode as primary - server connection is optional
+  return true;
 };
 
 // Enable offline mode
 export const enableOfflineMode = () => {
+  localStorage.setItem('babysteps_app_mode', 'standalone');
   localStorage.setItem('babysteps_offline_mode', 'true');
-  console.log('🏠 Offline mode enabled');
+  console.log('🏠 Standalone app mode active - All features available locally');
 };
 
 // Storage helpers
