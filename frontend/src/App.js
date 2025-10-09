@@ -556,22 +556,21 @@ function App() {
   };
 
   const register = async (name, email, password) => {
+    console.log('📝 Creating new account in standalone mode...');
+    
     try {
-      const response = await axios.post('/api/auth/register', { name, email, password });
+      const response = await offlineAPI.register(name, email, password);
+      const { access_token } = response.data;
       
-      // Registration successful - user can login immediately
-      toast.success('Account created successfully! You can now log in.');
-      return { success: true, requiresVerification: false, email };
+      localStorage.setItem('token', access_token);
+      
+      toast.success('Welcome to Baby Steps! Account created successfully.');
+      setUser({ email, authenticated: true, offline: false }); // All features work in standalone
+      return true;
     } catch (error) {
-      console.error('Registration error:', error);
-      if (error.code === 'ERR_NETWORK') {
-        toast.error('Unable to connect to server. Please check your internet connection.');
-      } else if (error.response?.status === 404) {
-        toast.error('Registration service not available. Please try again later.');
-      } else {
-        toast.error(error.response?.data?.detail || 'Registration failed');
-      }
-      return { success: false };
+      console.error('❌ Registration failed:', error);
+      toast.error(error.message || 'Registration failed');
+      throw error;
     }
   };
 
