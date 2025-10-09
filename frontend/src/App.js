@@ -28,7 +28,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
-// Import offline mode
+// Import standalone app mode (primary mode)
 import { 
   shouldUseOfflineMode, 
   enableOfflineMode, 
@@ -37,11 +37,10 @@ import {
   isOfflineMode 
 } from './offlineMode';
 
-// Add function to reset offline mode
-const resetOfflineMode = () => {
-  localStorage.removeItem('babysteps_offline_mode');
-  localStorage.removeItem('babysteps_force_offline');
-  console.log('🔄 Offline mode reset - will attempt online connection');
+// Initialize standalone mode on app start
+const initializeStandaloneMode = () => {
+  localStorage.setItem('babysteps_app_mode', 'standalone');
+  console.log('🏠 Baby Steps running in standalone mode - all features available');
 };
 
 // Backend URL Configuration
