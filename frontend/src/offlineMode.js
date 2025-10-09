@@ -139,41 +139,84 @@ export const offlineAPI = {
     });
   },
 
+  // Enhanced user registration with comprehensive validation
   register: async (name, email, password) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const users = getOfflineData('users', {});
-        
-        if (users[email]) {
-          reject(new Error('Email already registered'));
-          return;
-        }
-        
-        const userId = uuidv4();
-        users[email] = {
-          id: userId,
-          email,
-          name,
-          password,
-          createdAt: new Date().toISOString()
-        };
-        
-        saveOfflineData('users', users);
-        
-        const token = `offline_token_${userId}_${Date.now()}`;
-        localStorage.setItem('babysteps_current_user', JSON.stringify({
-          id: userId,
-          email,
-          name
-        }));
-        
-        resolve({
-          data: {
-            access_token: token,
-            token_type: 'bearer'
+        try {
+          // Comprehensive input validation
+          if (!name || name.trim().length < 2) {
+            reject(new Error('Name must be at least 2 characters long'));
+            return;
           }
-        });
-      }, 500);
+          
+          if (!email || !email.includes('@') || !email.includes('.')) {
+            reject(new Error('Please enter a valid email address'));
+            return;
+          }
+          
+          if (!password || password.length < 6) {
+            reject(new Error('Password must be at least 6 characters long'));
+            return;
+          }
+
+          const users = getOfflineData('users', {});
+          
+          // Check if user already exists
+          const emailKey = email.toLowerCase().trim();
+          if (users[emailKey]) {
+            reject(new Error('An account with this email already exists'));
+            return;
+          }
+
+          // Create comprehensive user profile
+          const userId = uuidv4();
+          const now = new Date().toISOString();
+          const newUser = {
+            id: userId,
+            name: name.trim(),
+            email: emailKey,
+            password: password, // In a real app, this should be hashed
+            createdAt: now,
+            lastLoginAt: now,
+            settings: {
+              theme: 'light',
+              notifications: true,
+              reminders: true,
+              measurementUnit: 'imperial',
+              language: 'en',
+              dataBackup: true
+            },
+            profile: {
+              isComplete: false,
+              hasCompletedOnboarding: false
+            }
+          };
+
+          users[emailKey] = newUser;
+          saveOfflineData('users', users);
+          
+          // Set current user
+          localStorage.setItem('babysteps_current_user', userId);
+          
+          // Generate access token
+          const token = `standalone_token_${userId}_${Date.now()}`;
+          
+          console.log('✅ User registered successfully in standalone mode:', emailKey);
+          resolve({
+            data: {
+              access_token: token,
+              user: {
+                id: userId,
+                name: newUser.name,
+                email: newUser.email
+              }
+            }
+          });
+        } catch (error) {
+          reject(error);
+        }
+      }, 300); // Faster response for standalone app
     });
   },
 
