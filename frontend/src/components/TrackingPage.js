@@ -224,11 +224,14 @@ const TrackingPage = ({ currentBaby }) => {
 
   const deleteReminder = async (reminderId) => {
     try {
-      await axios.delete(`/reminders/${reminderId}`);
+      // Remove reminder from local storage
+      const storedReminders = JSON.parse(localStorage.getItem('babysteps_reminders') || '[]');
+      const updatedReminders = storedReminders.filter(reminder => reminder.id !== reminderId);
+      localStorage.setItem('babysteps_reminders', JSON.stringify(updatedReminders));
       toast.success('Reminder deleted');
       fetchReminders();
     } catch (error) {
-      toast.error('Failed to delete reminder');
+      console.error('Failed to delete reminder:', error);
     }
   };
 
