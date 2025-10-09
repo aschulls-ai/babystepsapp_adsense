@@ -117,12 +117,12 @@ const TrackingPage = ({ currentBaby }) => {
     if (!currentBaby) return;
     
     try {
-      const response = await axios.get('/reminders', {
-        params: { baby_id: currentBaby.id }
-      });
-      setReminders(response.data);
+      // Use standalone offline storage for reminders
+      const storedReminders = JSON.parse(localStorage.getItem('babysteps_reminders') || '[]');
+      setReminders(storedReminders);
     } catch (error) {
       console.error('Failed to fetch reminders:', error);
+      setReminders([]);
     }
   };
 
