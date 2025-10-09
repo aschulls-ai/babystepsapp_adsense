@@ -1299,7 +1299,8 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       });
       onSuccess();
     } catch (error) {
-      toast.error('Failed to log milestone');
+      console.error('❌ Milestone form error:', error);
+      toast.error(`Failed to log milestone: ${error.message}`);
     } finally {
       setLoading(false);
     }
