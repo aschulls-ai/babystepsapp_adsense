@@ -359,6 +359,33 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
           </Card>
         )}
 
+        {/* Offline Mode Status */}
+        {localStorage.getItem('babysteps_offline_mode') === 'true' && (
+          <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-orange-700 font-medium">Offline Mode Active</span>
+              </div>
+              <Button
+                onClick={() => {
+                  localStorage.removeItem('babysteps_offline_mode');
+                  localStorage.removeItem('babysteps_force_offline');
+                  window.location.reload();
+                }}
+                variant="outline"
+                size="sm"
+                className="text-orange-600 border-orange-600 hover:bg-orange-100 text-xs px-2 py-1"
+              >
+                Try Online
+              </Button>
+            </div>
+            <p className="text-xs text-orange-600 mt-2">
+              App is working offline. Click "Try Online" to reconnect to server.
+            </p>
+          </div>
+        )}
+
         {/* Small AdSense Space */}
         <div className="mt-8">
           <LoginPageAd className="max-w-xs mx-auto" />
