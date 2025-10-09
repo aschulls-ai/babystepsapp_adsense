@@ -1270,13 +1270,23 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       };
 
       // Use standalone offline API
-      await offlineAPI.logActivity({
+      console.log('🏆 Logging milestone activity:', {
         baby_id: babyId,
         type: 'milestone',
         title: formData.title,
         description: formData.description || null,
         category: formData.category,
         achieved_date: formData.achieved_date.toISOString(),
+        notes: formData.notes || null
+      });
+      
+      await offlineAPI.logActivity({
+        baby_id: babyId,
+        type: 'milestone',
+        title: formData.title,
+        description: formData.description || null,
+        category: formData.category,
+        timestamp: formData.achieved_date.toISOString(), // Use timestamp for consistency
         notes: formData.notes || null
       });
       toast.success('💾 Milestone saved to device!');
