@@ -207,11 +207,18 @@ const TrackingPage = ({ currentBaby }) => {
 
   const toggleReminder = async (reminderId, enabled) => {
     try {
-      await axios.patch(`/reminders/${reminderId}`, { is_active: enabled });
+      // Update reminder in local storage
+      const storedReminders = JSON.parse(localStorage.getItem('babysteps_reminders') || '[]');
+      const updatedReminders = storedReminders.map(reminder => 
+        reminder.id === reminderId 
+          ? { ...reminder, enabled: enabled }
+          : reminder
+      );
+      localStorage.setItem('babysteps_reminders', JSON.stringify(updatedReminders));
       toast.success(enabled ? 'Reminder enabled' : 'Reminder disabled');
       fetchReminders();
     } catch (error) {
-      toast.error('Failed to update reminder');
+      console.error('Failed to toggle reminder:', error);
     }
   };
 
