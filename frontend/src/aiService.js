@@ -90,21 +90,37 @@ class AIService {
       
       // Enhanced search query based on context
       let searchQuery = query;
+      let searchContext = '';
+      
       if (context.type === 'food_research') {
-        searchQuery = `baby food safety "${query}" pediatric nutrition`;
+        searchQuery = `baby food safety "${query}" pediatric nutrition when introduce`;
+        searchContext = 'Food Safety Information';
       } else if (context.type === 'meal_planning') {
-        searchQuery = `baby meal ideas "${query}" recipes infant feeding`;
+        searchQuery = `baby meal ideas "${query}" recipes infant feeding age appropriate`;
+        searchContext = 'Meal Planning Ideas';
       } else if (context.type === 'parenting_research') {
-        searchQuery = `parenting advice "${query}" baby development pediatric`;
+        searchQuery = `parenting advice "${query}" baby development pediatric tips`;
+        searchContext = 'Parenting Guidance';
+      } else {
+        searchQuery = `baby parenting "${query}"`;
+        searchContext = 'General Information';
       }
 
-      // Use a simple Google search API or return curated response
-      const fallbackResponse = this.getCuratedResponse(query, context);
+      // Construct Google search URL for user reference
+      const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       
-      console.log('✅ Google search fallback response generated');
-      this.saveToHistory(query, fallbackResponse, context.type);
+      console.log('🔗 Google search URL:', googleSearchUrl);
       
-      return fallbackResponse;
+      // Get curated response with Google search suggestion
+      const curatedResponse = this.getCuratedResponse(query, context);
+      
+      // Enhanced response with search suggestion
+      const enhancedResponse = `${curatedResponse}\n\n**🔍 For more detailed information:**\nSearch Google for: "${searchQuery}"\n\n*This response combines expert knowledge with search recommendations. Always consult your pediatrician for personalized medical advice.*`;
+      
+      console.log('✅ Google search enhanced response generated');
+      this.saveToHistory(query, enhancedResponse, context.type);
+      
+      return enhancedResponse;
     } catch (error) {
       console.log('📚 Using offline knowledge base');
       return this.getFallbackResponse(query, context);
