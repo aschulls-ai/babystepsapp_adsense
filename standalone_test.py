@@ -136,6 +136,7 @@ class StandaloneModeAPITester:
                     return False
             
             # Test different activity types
+            current_time = datetime.now(timezone.utc).isoformat()
             activities_to_test = [
                 {
                     "endpoint": "feedings",
@@ -143,7 +144,8 @@ class StandaloneModeAPITester:
                         "baby_id": self.baby_id,
                         "type": "bottle",
                         "amount": 4.0,
-                        "notes": "Standalone mode test feeding"
+                        "notes": "Standalone mode test feeding",
+                        "timestamp": current_time
                     }
                 },
                 {
@@ -151,7 +153,8 @@ class StandaloneModeAPITester:
                     "data": {
                         "baby_id": self.baby_id,
                         "type": "wet",
-                        "notes": "Standalone mode test diaper"
+                        "notes": "Standalone mode test diaper",
+                        "timestamp": current_time
                     }
                 },
                 {
