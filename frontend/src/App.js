@@ -615,7 +615,7 @@ function App() {
                       element={
                         <Dashboard 
                           currentBaby={currentBaby}
-                          onAddBaby={addBaby}
+                          onAddBaby={() => window.location.href = '/baby-profile'}
                         />
                       } 
                     />
