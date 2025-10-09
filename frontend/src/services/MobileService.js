@@ -15,7 +15,8 @@ class MobileService {
 
   async initializeServices() {
     if (this.isNative) {
-      await this.setupPushNotifications();
+      // Temporarily disabled push notifications to prevent crashes
+      // await this.setupPushNotifications();
       await this.setupNetworkListener();
       await this.setupAppStateListener();
     }
