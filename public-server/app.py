@@ -177,52 +177,47 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
 # Initialize demo data
 def init_demo_data():
-    # Demo user
-    demo_user_id = "demo-user-123"
-    users_db["demo@babysteps.com"] = {
-        "id": demo_user_id,
-        "email": "demo@babysteps.com",
-        "name": "Demo Parent",
-        "password": "demo123"  # In real app, this would be hashed
-    }
+    """Initialize demo data if not exists"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
     
-    # Demo baby
-    demo_baby_id = "demo-baby-456"
-    babies_db[demo_baby_id] = {
-        "id": demo_baby_id,
-        "name": "Emma",
-        "birth_date": "2024-01-15",
-        "gender": "girl",
-        "profile_image": None,
-        "user_id": demo_user_id
-    }
+    # Check if demo user exists
+    cursor.execute("SELECT id FROM users WHERE email = ?", ("demo@babysteps.com",))
+    if not cursor.fetchone():
+        # Create demo user
+        demo_user_id = "demo-user-123"
+        cursor.execute("""
+            INSERT INTO users (id, email, name, password)
+            VALUES (?, ?, ?, ?)
+        """, (demo_user_id, "demo@babysteps.com", "Demo Parent", "demo123"))
+        
+        # Create demo baby
+        demo_baby_id = "demo-baby-456"
+        cursor.execute("""
+            INSERT INTO babies (id, name, birth_date, gender, user_id)
+            VALUES (?, ?, ?, ?, ?)
+        """, (demo_baby_id, "Emma", "2024-01-15", "girl", demo_user_id))
+        
+        # Create demo activities
+        activities = [
+            ("activity-1", "feeding", "Formula feeding - 4oz", demo_baby_id, demo_user_id, "2025-10-08T10:00:00Z"),
+            ("activity-2", "sleep", "Nap time", demo_baby_id, demo_user_id, "2025-10-08T12:00:00Z"),
+            ("activity-3", "diaper", "Wet diaper changed", demo_baby_id, demo_user_id, "2025-10-08T14:30:00Z")
+        ]
+        
+        for activity in activities:
+            cursor.execute("""
+                INSERT INTO activities (id, type, notes, baby_id, user_id, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, activity)
+        
+        conn.commit()
+        print("✅ Demo data initialized")
     
-    # Demo activities
-    activities_db[demo_user_id] = [
-        {
-            "id": "activity-1",
-            "type": "feeding",
-            "notes": "Formula feeding - 4oz",
-            "baby_id": demo_baby_id,
-            "timestamp": "2025-10-08T10:00:00Z"
-        },
-        {
-            "id": "activity-2", 
-            "type": "sleep",
-            "notes": "Nap time",
-            "baby_id": demo_baby_id,
-            "timestamp": "2025-10-08T12:00:00Z"
-        },
-        {
-            "id": "activity-3",
-            "type": "diaper",
-            "notes": "Wet diaper changed",
-            "baby_id": demo_baby_id,
-            "timestamp": "2025-10-08T14:30:00Z"
-        }
-    ]
+    conn.close()
 
-# Initialize demo data on startup
+# Initialize database and demo data on startup
+init_database()
 init_demo_data()
 
 # Root endpoint
