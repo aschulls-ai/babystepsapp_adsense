@@ -105,7 +105,7 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
               <p className="text-gray-600 mb-6">
                 Get started by adding your baby's information to begin tracking their journey.
               </p>
-              <Button onClick={onAddBaby} className="w-full">
+              <Button onClick={() => window.location.href = '/baby-profile'} className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Baby Profile
               </Button>
