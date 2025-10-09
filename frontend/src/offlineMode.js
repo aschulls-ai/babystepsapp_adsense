@@ -2,7 +2,7 @@
 // This allows the app to work fully without server connection
 
 import { v4 as uuidv4 } from 'uuid';
-import * as aiService from './aiService';
+import aiService from './aiService';
 
 // Standalone app mode - this is now the PRIMARY mode
 export const shouldUseOfflineMode = () => {
