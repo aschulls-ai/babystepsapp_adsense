@@ -415,32 +415,31 @@ function App() {
     console.log('🔐 Attempting login in standalone mode...');
     
     try {
-      console.log('🏠 Using offline mode for login');
-      try {
-        const response = await offlineAPI.login(email, password);
-        const { access_token } = response.data;
-        
-        localStorage.setItem('token', access_token);
-        
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-          localStorage.setItem('rememberedEmail', email);
-          toast.success('Welcome back! (Offline mode)');
-        } else {
-          localStorage.removeItem('rememberMe');
-          localStorage.removeItem('rememberedEmail');
-          toast.success('Welcome to Baby Steps! (Offline mode)');
-        }
-        
-        setUser({ email, authenticated: true, offline: true });
-        await fetchBabies();
-        return true;
-      } catch (error) {
-        console.error('Offline login failed:', error);
-        toast.error(error.message || 'Login failed');
-        throw error;
+      // Use local authentication (standalone mode)
+      const response = await offlineAPI.login(email, password);
+      const { access_token } = response.data;
+      
+      localStorage.setItem('token', access_token);
+      
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('rememberedEmail', email);
+        toast.success('Welcome back to Baby Steps!');
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('rememberedEmail');
+        toast.success('Welcome to Baby Steps!');
       }
+      
+      setUser({ email, authenticated: true, offline: false }); // Set offline false since all features work
+      await fetchBabies();
+      return true;
+    } catch (error) {
+      console.error('❌ Standalone login failed:', error);
+      toast.error(error.message || 'Login failed');
+      throw error;
     }
+  };
 
     // Try online login first
     try {
