@@ -206,34 +206,32 @@ class AIService {
     console.log(`🍽️ Generating meal plan: "${query}" for ${ageMonths}-month-old baby`);
     
     try {
-      // Call backend API endpoint
-      const response = await fetch(`${this.backendUrl}/meals/search`, {
-        method: 'POST',
-        headers: this.getAuthHeaders(),
-        body: JSON.stringify({
-          query: query,
-          baby_age_months: ageMonths,
-          restrictions: restrictions
-        })
+      const prompt = `Create meal ideas for: "${query}" suitable for a ${ageMonths}-month-old baby.
+      ${restrictions.length > 0 ? `Dietary restrictions: ${restrictions.join(', ')}` : ''}
+      
+      Please provide:
+      1. 3-5 specific meal suggestions
+      2. Ingredients for each meal
+      3. Step-by-step preparation instructions
+      4. Age appropriateness and safety tips
+      5. Estimated preparation time
+      
+      Focus on nutrition, safety, and development-appropriate textures.`;
+
+      const response = await this.query(prompt, {
+        type: 'meal_planning',
+        query,
+        ageMonths,
+        restrictions
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Meal plan response received from backend:', data);
-        
-        // Save to AI history
-        this.saveToHistory(query, JSON.stringify(data.results), 'meal_planning');
-        
-        return {
-          results: data.results,
-          query: data.query,
-          age_months: data.age_months,
-          ai_powered: true
-        };
-      } else {
-        console.log('⚠️ Backend meal planning failed, using fallback');
-        throw new Error('Backend API error');
-      }
+      return {
+        results: this.parseMealResponse(response),
+        query,
+        age_months: ageMonths,
+        ai_powered: true,
+        source: 'AI via Phone Internet'
+      };
     } catch (error) {
       console.log('🔄 Meal planning failed, using comprehensive fallback');
       
