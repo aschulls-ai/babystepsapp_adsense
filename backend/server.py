@@ -1184,17 +1184,20 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             elif query_lower in question_lower or question_lower in query_lower:
                 score = 80
             
-            # Keyword matching for food names
+            # Food name matching (REQUIRED for match)
             food_keywords = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese']
+            food_found = False
             for keyword in food_keywords:
                 if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
-                    score += 30
+                    score += 50  # Higher score for food matches
+                    food_found = True
             
-            # Safety-related keyword matching
-            safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
-            for keyword in safety_keywords:
-                if keyword in query_lower and keyword in question_lower:
-                    score += 10
+            # Only add safety keyword points if food was found
+            if food_found:
+                safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
+                for keyword in safety_keywords:
+                    if keyword in query_lower and keyword in question_lower:
+                        score += 10
             
             if score > best_score:
                 best_score = score
