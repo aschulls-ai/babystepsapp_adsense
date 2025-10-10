@@ -35,23 +35,39 @@ const MealPlanner = ({ currentBaby }) => {
     nutrition_notes: ''
   });
 
-  // Meal planning suggestions - focused only on meal ideas and recipes
-  const commonSuggestions = [
-    // Breakfast Ideas
-    'Healthy breakfast ideas for babies',
-    'Easy morning meals for 8 month old',
-    'Quick breakfast recipes for toddlers',
+  // Meal planning suggestions loaded from JSON
+  const [commonSuggestions, setCommonSuggestions] = useState([]);
+
+  // Load random questions from meal_planner.json
+  useEffect(() => {
+    const loadRandomSuggestions = async () => {
+      try {
+        const response = await fetch('/knowledge-base/meal_planner.json');
+        const data = await response.json();
+        
+        // Select random questions (up to 10)
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 10).map(item => item.question);
+        setCommonSuggestions(selected);
+      } catch (error) {
+        console.error('Failed to load meal suggestions:', error);
+        // Fallback to default
+        setCommonSuggestions([
+          'Healthy breakfast ideas for babies',
+          'Easy morning meals for 8 month old',
+          'Quick breakfast recipes for toddlers',
+          'Nutritious lunch ideas for 10 month old',
+          'Easy dinner recipes for babies',
+          'Family meal ideas baby can share',
+          'Healthy snack ideas for toddlers',
+          'Finger foods for baby led weaning',
+          'First birthday party food ideas'
+        ]);
+      }
+    };
     
-    // Lunch & Dinner Ideas  
-    'Nutritious lunch ideas for 10 month old',
-    'Easy dinner recipes for babies',
-    'Family meal ideas baby can share',
-    
-    // Snacks & Special Occasions
-    'Healthy snack ideas for toddlers',
-    'Finger foods for baby led weaning',
-    'First birthday party food ideas'
-  ];
+    loadRandomSuggestions();
+  }, []); // Load once on mount
 
   useEffect(() => {
     if (currentBaby) {
