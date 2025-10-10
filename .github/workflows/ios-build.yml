@@ -156,8 +156,18 @@ jobs:
       working-directory: ./frontend/ios/App
       run: |
         echo "Installing iOS CocoaPods dependencies..."
-        pod install --repo-update
-        echo "iOS dependencies installed successfully"
+        echo "Current directory: $(pwd)"
+        echo "Podfile exists: $(test -f Podfile && echo "✅" || echo "❌")"
+        
+        if [ ! -f Podfile ]; then
+          echo "❌ Podfile not found!"
+          ls -la
+          exit 1
+        fi
+        
+        echo "Installing pods..."
+        pod install --repo-update --verbose
+        echo "✅ iOS dependencies installed successfully"
       
     - name: Build iOS app
       working-directory: ./frontend
