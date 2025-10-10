@@ -213,7 +213,7 @@ const MealPlanner = ({ currentBaby }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-orange-600/80 to-amber-600/80 flex items-center justify-center">
           <div className="text-center text-white">
             <Search className="w-12 h-12 mx-auto mb-3 opacity-90" />
-            <h2 className="text-2xl font-bold mb-2">Smart Meal Search</h2>
+            <h2 className="text-2xl font-bold mb-2">Meal Planning Made Easy</h2>
             <p className="text-orange-100">Ask about any food or get meal ideas instantly</p>
           </div>
         </div>
