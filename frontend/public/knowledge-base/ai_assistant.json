@@ -1,4 +1,4 @@
-{"id":1,"category":"Feeding","age_range":"0–3 months","question":"How often should I feed my newborn?","answer":"Most newborns eat every 2–3 hours (8–12 times daily). Feed on demand when hunger cues appear like rooting or sucking motions."},
+[{"id":1,"category":"Feeding","age_range":"0–3 months","question":"How often should I feed my newborn?","answer":"Most newborns eat every 2–3 hours (8–12 times daily). Feed on demand when hunger cues appear like rooting or sucking motions."},
   {"id":2,"category":"Feeding","age_range":"0–3 months","question":"How can I tell if my baby is getting enough breast milk?","answer":"Look for at least 6 wet diapers per day after day 5, steady weight gain, and contentment after feeds."},
   {"id":3,"category":"Feeding","age_range":"0–3 months","question":"When should I burp my baby?","answer":"Burp after every 2–3 oz of formula or when switching breasts to reduce swallowed air."},
   {"id":4,"category":"Feeding","age_range":"0–6 months","question":"Can I give my baby water?","answer":"No. Under 6 months, use breast milk or formula only; extra water can dilute electrolytes."},
@@ -2054,3 +2054,4 @@
 {"id":2054,"category":"Feeding","age_range":"10–14 months","question":"Can my baby eat oatmeal with fruit pieces?","answer":"Yes, soft diced fruit adds fiber—cool before serving and adjust texture for chewing ability."},
 {"id":2055,"category":"Sleep","age_range":"10–14 months","question":"Why does my baby wake early after loud noises?","answer":"Noise sensitivity increases as awareness grows—white-noise machines can mask sudden sounds."}
 
+]
