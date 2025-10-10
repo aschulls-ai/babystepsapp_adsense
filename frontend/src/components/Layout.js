@@ -38,8 +38,8 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout, darkMod
 
   return (
     <div className="min-h-screen page-gradient">
-      {/* Mobile menu button - Made bigger for better usability */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      {/* Mobile menu button - Positioned to avoid title overlap */}
+      <div className="lg:hidden fixed top-4 right-4 z-50">
         <Button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           variant="outline"
