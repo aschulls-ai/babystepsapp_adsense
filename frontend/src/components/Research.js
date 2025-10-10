@@ -110,7 +110,7 @@ const Research = () => {
     <div className="max-w-4xl mx-auto space-y-6 fade-in">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold font-display text-gray-900 mb-4" data-testid="research-title">
+        <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white mb-4" data-testid="research-title">
           Research & Parenting Tips
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
