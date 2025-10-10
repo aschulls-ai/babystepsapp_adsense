@@ -25,6 +25,8 @@ const Research = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const messagesEndRef = useRef(null);
 
   const quickQuestions = [
