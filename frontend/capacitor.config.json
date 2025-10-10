@@ -31,6 +31,8 @@
     "contentInset": "automatic",
     "scrollEnabled": true,
     "allowsLinkPreview": true,
-    "handleApplicationNotifications": false
+    "handleApplicationNotifications": false,
+    "allowMixedContent": true,
+    "appendUserAgent": "BabySteps-iOS"
   }
 }
