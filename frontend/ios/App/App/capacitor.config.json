@@ -27,6 +27,12 @@
 		"useCleartextTraffic": true,
 		"appendUserAgent": "BabySteps-Android"
 	},
+	"ios": {
+		"contentInset": "automatic",
+		"scrollEnabled": true,
+		"allowsLinkPreview": true,
+		"handleApplicationNotifications": false
+	},
 	"packageClassList": [
 		"AppPlugin",
 		"HapticsPlugin",
