@@ -1204,7 +1204,7 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
                 best_match = food_item
         
         # Return result based on match quality
-        if best_match and best_score >= 30:  # Require minimum match score
+        if best_match and best_score >= 50:  # Require minimum match score with food name
             question_id = best_match.get('id', 'Unknown')
             answer = best_match.get('answer', '')
             category = best_match.get('category', 'General')
