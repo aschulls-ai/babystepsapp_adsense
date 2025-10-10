@@ -327,7 +327,7 @@ const MealPlanner = ({ currentBaby }) => {
                   {searchResults.results && searchResults.results.length > 0 ? (
                     searchResults.results.map((result, index) => (
                       <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg border">
-                        <h3 className="font-semibold text-gray-900 mb-2">{result.title}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{result.title}</h3>
                         <div className="break-words overflow-wrap-anywhere leading-relaxed whitespace-pre-wrap text-gray-800">
                           {result.description}
                         </div>
