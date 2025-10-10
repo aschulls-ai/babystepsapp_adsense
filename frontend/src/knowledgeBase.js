@@ -196,7 +196,7 @@ class KnowledgeBaseService {
     return baseSimilarity;
   }
 
-  // Generate food variations for better matching
+  // Generate comprehensive food variations for better matching
   getFoodVariations(food) {
     const variations = [food];
     
@@ -207,29 +207,51 @@ class KnowledgeBaseService {
       variations.push(food + 's'); // Add 's'
     }
     
-    // Add common food aliases
+    // Comprehensive food aliases and variations
     const aliases = {
       'avocado': ['avocados'],
-      'honey': ['honeys'],
+      'honey': ['honeys', 'sweet', 'sweetener'],
       'egg': ['eggs'],
-      'nut': ['nuts', 'peanut', 'peanuts'],
-      'fish': ['salmon', 'tuna'],
+      'nut': ['nuts', 'peanut', 'peanuts', 'almond', 'almonds', 'walnut', 'walnuts'],
+      'peanut': ['peanuts', 'nut', 'nuts'],
+      'fish': ['salmon', 'tuna', 'cod', 'tilapia', 'seafood'],
+      'shellfish': ['shrimp', 'crab', 'lobster', 'seafood'],
       'strawberry': ['strawberries', 'berry', 'berries'],
+      'berry': ['berries', 'strawberry', 'strawberries', 'blueberry', 'blueberries'],
       'grape': ['grapes'],
       'carrot': ['carrots'],
       'apple': ['apples'],
       'banana': ['bananas'],
-      'peanut': ['peanuts', 'nut', 'nuts'],
-      'shellfish': ['shrimp', 'crab', 'lobster'],
-      'dairy': ['milk', 'cheese', 'yogurt'],
-      'gluten': ['wheat', 'bread']
+      'dairy': ['milk', 'cheese', 'yogurt', 'butter', 'cream'],
+      'milk': ['dairy', 'breast milk', 'formula', 'cow milk'],
+      'cheese': ['dairy', 'cheddar', 'mozzarella'],
+      'gluten': ['wheat', 'bread', 'pasta', 'cereal'],
+      'wheat': ['gluten', 'bread', 'pasta'],
+      'rice': ['grain', 'cereal'],
+      'oat': ['oats', 'oatmeal', 'cereal'],
+      'sweet potato': ['potato', 'sweet potatoes'],
+      'potato': ['potatoes', 'sweet potato'],
+      'meat': ['beef', 'pork', 'chicken', 'turkey'],
+      'chicken': ['meat', 'poultry'],
+      'beef': ['meat'],
+      'pork': ['meat'],
+      'turkey': ['meat', 'poultry'],
+      'bean': ['beans', 'legume', 'legumes'],
+      'pea': ['peas', 'legume', 'legumes'],
+      'corn': ['maize'],
+      'tomato': ['tomatoes'],
+      'citrus': ['orange', 'oranges', 'lemon', 'lemons', 'lime', 'limes'],
+      'orange': ['oranges', 'citrus'],
+      'water': ['drink', 'liquid', 'beverage'],
+      'juice': ['drink', 'liquid', 'beverage']
     };
     
+    // Add direct aliases
     if (aliases[food]) {
       variations.push(...aliases[food]);
     }
     
-    // Find reverse aliases
+    // Find reverse aliases (if 'eggs' is searched, also include 'egg')
     Object.entries(aliases).forEach(([key, values]) => {
       if (values.includes(food)) {
         variations.push(key);
