@@ -1230,9 +1230,13 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
         # Return result with more lenient threshold (accept any reasonable match)
         if best_match and best_score >= 50:  # Lower threshold for better recall
             question_id = best_match.get('id', 'Unknown')
+            matched_question = best_match.get('question', '')
             answer = best_match.get('answer', '')
             category = best_match.get('category', 'General')
             age_range = best_match.get('age_range', 'Consult pediatrician')
+            
+            # Log the match for debugging
+            logging.info(f"Food research match - Query: '{query.question}' -> Matched: '{matched_question}' (ID: {question_id}, Score: {best_score})")
             
             # Extract safety level from answer content
             answer_lower = answer.lower()
