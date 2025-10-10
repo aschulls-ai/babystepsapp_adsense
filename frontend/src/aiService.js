@@ -26,33 +26,56 @@ class AIService {
     console.log('✅ AI service initialized - Ready for knowledge base + AI queries');
   }
 
-  // Real Internet Search using Device Connection
+  // Enhanced Query System: Knowledge Base First, AI Fallback
   async query(prompt, context = {}) {
     try {
-      console.log('🌐 Searching internet for:', prompt);
+      console.log('🔍 Processing query:', prompt);
       
+      // Step 1: Try Knowledge Base first (fastest, most consistent)
+      const kbType = this.getKnowledgeBaseType(context.type);
+      if (kbType && this.knowledgeBase.isReady(kbType)) {
+        console.log(`📚 Searching ${kbType} knowledge base first...`);
+        
+        const kbResult = this.knowledgeBase.searchKnowledgeBase(prompt, kbType, context);
+        if (kbResult && kbResult.similarity >= 0.4) { // Good match threshold
+          console.log(`✅ Knowledge base match found (${Math.round(kbResult.similarity * 100)}%)`);
+          const answer = this.formatKnowledgeBaseAnswer(kbResult, prompt, context);
+          this.saveToHistory(prompt, answer, context.type, 'knowledge_base');
+          return answer;
+        } else {
+          console.log('⚠️ No good knowledge base match, trying AI fallback...');
+        }
+      }
+      
+      // Step 2: Fallback to AI/Internet Search
       if (!navigator.onLine) {
         console.log('📵 No internet connection');
         return this.getOfflineResponse(prompt, context);
       }
 
-      // Perform actual web searches
+      // Perform actual web searches or AI calls
       const searchResults = await this.performRealWebSearch(prompt, context);
       
       if (searchResults && searchResults.length > 100) {
-        console.log('✅ Real search results obtained');
-        this.saveToHistory(prompt, searchResults, context.type);
+        console.log('✅ AI/Internet search results obtained');
+        this.saveToHistory(prompt, searchResults, context.type, 'ai_search');
+        
+        // Optional: Learn from AI response by adding to knowledge base
+        if (this.knowledgeBase.isReady(kbType)) {
+          this.knowledgeBase.addQuestionToKnowledgeBase(kbType, prompt, searchResults, context);
+        }
+        
         return searchResults;
       }
       
-      // If web search fails, use offline fallback
-      console.log('⚠️ Web search failed, using offline response');
+      // Final fallback
+      console.log('⚠️ All search methods failed, using offline response');
       const fallback = this.getOfflineResponse(prompt, context);
-      this.saveToHistory(prompt, fallback, context.type);
+      this.saveToHistory(prompt, fallback, context.type, 'fallback');
       return fallback;
       
     } catch (error) {
-      console.error('❌ Search failed:', error.message);
+      console.error('❌ Query processing failed:', error.message);
       return this.getOfflineResponse(prompt, context);
     }
   }
