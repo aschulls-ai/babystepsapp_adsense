@@ -1,0 +1,37 @@
+[
+  {
+    "id": 201,
+    "category": "Safety",
+    "age_range": "0–12 months",
+    "question": "Is honey safe for babies?",
+    "answer": "No. Honey should never be given to babies under 12 months due to risk of infant botulism, a serious illness caused by bacteria that can be present in honey."
+  },
+  {
+    "id": 202,
+    "category": "Safety",
+    "age_range": "6+ months",
+    "question": "When can babies eat eggs?",
+    "answer": "Eggs can be introduced around 6 months. Cook them thoroughly and start with small amounts to watch for allergic reactions."
+  },
+  {
+    "id": 203,
+    "category": "Safety",
+    "age_range": "6+ months",
+    "question": "Are peanuts safe for babies?",
+    "answer": "Smooth peanut butter can be introduced around 6 months when thinned with breast milk or formula. Never give whole peanuts due to choking risk."
+  },
+  {
+    "id": 204,
+    "category": "Nutrition",
+    "age_range": "6–12 months",
+    "question": "What foods are high in iron for babies?",
+    "answer": "Iron-fortified cereals, pureed meats, lentils, tofu, and iron-rich vegetables like spinach are excellent iron sources for babies."
+  },
+  {
+    "id": 205,
+    "category": "Safety",
+    "age_range": "6+ months",
+    "question": "Can babies eat strawberries?",
+    "answer": "Yes, strawberries can be introduced around 6-8 months. Cut them into small pieces and watch for allergic reactions. Wash thoroughly before serving."
+  }
+]
