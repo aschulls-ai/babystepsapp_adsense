@@ -193,21 +193,9 @@ class MobileService {
   }
 
   async sendTokenToServer(token) {
-    try {
-      const authToken = await this.getItem('token');
-      const baseURL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
-
-      await fetch(`${baseURL}/users/push-token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({ push_token: token })
-      });
-    } catch (error) {
-      console.error('Failed to send push token:', error);
-    }
+    // Disabled for standalone mode - no server sync needed
+    console.log('🏠 Standalone mode: Push token registration skipped (offline mode)');
+    return;
   }
 
   handlePushNotification(notification) {
