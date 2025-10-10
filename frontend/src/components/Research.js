@@ -60,6 +60,93 @@ const Research = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Handle suggestion selection for AI Assistant
+  const handleSelectSuggestion = (selectedQuestion) => {
+    setInputValue(selectedQuestion.question);
+    setShowSuggestions(false);
+    // Automatically search the selected question
+    performResearch(selectedQuestion.question);
+  };
+
+  // Handle input focus/blur for suggestions
+  const handleInputFocus = () => {
+    setInputFocused(true);
+    if (inputValue.length >= 2) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    // Delay hiding suggestions to allow for click selection
+    setTimeout(() => {
+      setInputFocused(false);
+      setShowSuggestions(false);
+    }, 200);
+  };
+
+  // Handle query change with suggestion triggering
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    
+    // Show/hide suggestions based on query length and focus
+    if (newValue.length >= 2 && inputFocused) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  // Separate research function for reusability
+  const performResearch = async (question = inputValue) => {
+    if (!question.trim()) return;
+
+    setShowSuggestions(false);
+    setLoading(true);
+
+    // Add user message immediately
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: question,
+      timestamp: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue(''); // Clear input
+
+    try {
+      const response = await offlineAPI.research(question);
+      
+      // Add AI response
+      const aiMessage = {
+        id: Date.now() + 1,
+        type: 'assistant',
+        content: response.answer,
+        sources: response.sources,
+        timestamp: new Date().toISOString()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+      toast.success('Got your answer!');
+      
+    } catch (error) {
+      console.error('Research error:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'assistant',
+        content: 'Sorry, I encountered an error while researching your question. Please try again.',
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      toast.error('Failed to get research results');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuestionSubmit = async () => {
+    performResearch();
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
