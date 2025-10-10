@@ -36,7 +36,7 @@ class AIService {
       if (kbType && this.knowledgeBase.isReady(kbType)) {
         console.log(`📚 Searching ${kbType} knowledge base first...`);
         
-        const kbResult = this.knowledgeBase.searchKnowledgeBase(prompt, kbType, context);
+        const kbResult = this.knowledgeBase.searchKnowledgeBase(prompt, kbType, {...context, type: context.type});
         if (kbResult && kbResult.similarity >= 0.4) { // Good match threshold
           console.log(`✅ Knowledge base match found (${Math.round(kbResult.similarity * 100)}%)`);
           const answer = this.formatKnowledgeBaseAnswer(kbResult, prompt, context);
