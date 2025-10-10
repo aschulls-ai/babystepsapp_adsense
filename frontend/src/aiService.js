@@ -223,7 +223,7 @@ class AIService {
     if (lowerQuery.includes('honey')) {
       return `**12 months**
 
-Honey is not safe for babies under 12 months due to the risk of infant botulism, a serious illness caused by the bacterium Clostridium botulinum. This bacterium can produce toxins that affect the nervous system and lead to severe health issues. Once a baby turns 12 months old, their immune system is more mature, and honey can be introduced in small amounts as a sweetener. Always consult with a healthcare provider before introducing new foods to your baby's diet.`;
+Honey is not safe for babies under 12 months due to the risk of infant botulism, a serious illness caused by the bacterium Clostridium botulinum. This bacterium can produce toxins that affect the nervous system and lead to severe health issues. Once a baby turns 12 months old, their immune system is more mature, and honey can be introduced in small amounts as a sweetener.`;
     }
 
     if (lowerQuery.includes('peanut')) {
@@ -948,7 +948,7 @@ Every baby develops at their own pace. Focus on providing safe, loving environme
     if (lowerQuery.includes('honey')) {
       return `**12 months**
 
-Honey is not safe for babies under 12 months due to the risk of infant botulism, a serious illness caused by the bacterium Clostridium botulinum. This bacterium can produce toxins that affect the nervous system and lead to severe health issues. Once a baby turns 12 months old, their immune system is more mature, and honey can be introduced in small amounts as a sweetener. Always consult with a healthcare provider before introducing new foods to your baby's diet.`;
+Honey is not safe for babies under 12 months due to the risk of infant botulism, a serious illness caused by the bacterium Clostridium botulinum. This bacterium can produce toxins that affect the nervous system and lead to severe health issues. Once a baby turns 12 months old, their immune system is more mature, and honey can be introduced in small amounts as a sweetener.`;
     }
 
     // For peanut butter queries
