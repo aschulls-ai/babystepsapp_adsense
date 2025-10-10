@@ -171,12 +171,12 @@ class BabyStepsAPITester:
             self.log_result("Immediate Login Without Verification", False, f"Error: {str(e)}")
             return False
 
-    def test_existing_user_login(self):
-        """Test existing user login"""
+    def test_demo_user_login(self):
+        """Test demo user login as specified in review request"""
         try:
             login_data = {
-                "email": self.existing_user_email,
-                "password": self.existing_user_password
+                "email": self.demo_email,
+                "password": self.demo_password
             }
             
             response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
@@ -184,16 +184,19 @@ class BabyStepsAPITester:
             if response.status_code == 200:
                 data = response.json()
                 if 'access_token' in data and data.get('token_type') == 'bearer':
-                    self.log_result("Existing User Login", True, "Existing user login successful")
+                    # Store token for further testing
+                    self.auth_token = data['access_token']
+                    self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
+                    self.log_result("Demo User Login", True, "Demo user login successful")
                     return True
                 else:
-                    self.log_result("Existing User Login", False, f"Invalid response format: {data}")
+                    self.log_result("Demo User Login", False, f"Invalid response format: {data}")
                     return False
             else:
-                self.log_result("Existing User Login", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("Demo User Login", False, f"HTTP {response.status_code}: {response.text}")
                 return False
         except Exception as e:
-            self.log_result("Existing User Login", False, f"Error: {str(e)}")
+            self.log_result("Demo User Login", False, f"Error: {str(e)}")
             return False
     
     def test_baby_profile_creation(self):
