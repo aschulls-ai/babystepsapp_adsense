@@ -1656,14 +1656,14 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
             )
         
         # Get best matches from each source with updated thresholds
-        ai_match = next((m for m in matches if m['source'] == 'ai_assistant' and m['score'] >= 20), None)
-        food_match = next((m for m in matches if m['source'] == 'food_research' and m['score'] >= 40), None)
+        ai_match = next((m for m in matches if m['source'] == 'ai_assistant' and m['score'] >= 15), None)  # Lowered from 20
+        food_match = next((m for m in matches if m['source'] == 'food_research' and m['score'] >= 35), None)  # Lowered from 40
         
         combined_answer = ""
         combined_sources = []
         
         # Combine responses if both are relevant
-        if ai_match and food_match and ai_match['score'] >= 20 and food_match['score'] >= 40:
+        if ai_match and food_match and ai_match['score'] >= 15 and food_match['score'] >= 35:
             # Both are relevant - combine responses
             ai_item = ai_match['item']
             food_item = food_match['item']
