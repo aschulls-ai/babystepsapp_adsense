@@ -1862,9 +1862,6 @@ I'm currently unable to connect to live AI services to provide real-time researc
   formatSingleRecipe(recipe, question, recipeNumber, totalRecipes) {
     let formatted = `# ${recipe.name}\n\n`;
     
-    // Add variety indicator
-    formatted += `*Recipe ${recipeNumber} of ${totalRecipes} available options*\n\n`;
-    
     // Add ingredients
     if (recipe.ingredients && recipe.ingredients.length > 0) {
       formatted += `**Ingredients:**\n`;
@@ -1894,10 +1891,7 @@ I'm currently unable to connect to live AI services to provide real-time researc
       formatted += `**Safety Notes:** ${recipe.safety_notes}\n\n`;
     }
     
-    // Add tip about multiple options
-    formatted += `💡 **Tip:** Search again to get a different recipe option for variety!`;
-    
-    return formatted;
+    return formatted.trim();
   }
 
   // Get knowledge base statistics
