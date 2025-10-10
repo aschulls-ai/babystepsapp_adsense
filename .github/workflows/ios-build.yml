@@ -172,21 +172,35 @@ jobs:
     - name: Build iOS app
       working-directory: ./frontend
       run: |
-        echo "Building iOS app..."
+        echo "🔨 Building iOS app..."
+        
+        # Verify workspace exists
+        if [ ! -f "ios/App/App.xcworkspace" ]; then
+          echo "❌ iOS workspace not found!"
+          echo "Available files in ios/App/:"
+          ls -la ios/App/
+          exit 1
+        fi
         
         # Create build directory
         mkdir -p ios/App/build
         
-        # Try to build without code signing first
+        echo "📱 Starting Xcode build process..."
+        echo "Workspace: ios/App/App.xcworkspace"
+        echo "Scheme: App"
+        echo "Configuration: Release"
+        
+        # Build the app archive
+        set -o pipefail
         xcodebuild -workspace ios/App/App.xcworkspace \
           -scheme App \
           -configuration Release \
           -destination generic/platform=iOS \
           -archivePath ios/App/build/App.xcarchive \
-          CODE_SIGN_IDENTITY="" \
-          CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGNING_ALLOWED=NO \
-          archive || echo "Build may have failed due to code signing - this is expected without proper certificates"
+          -allowProvisioningUpdates \
+          clean archive | tee build.log
+          
+        echo "✅ iOS build completed successfully!"
           
     - name: Export IPA
       working-directory: ./frontend
