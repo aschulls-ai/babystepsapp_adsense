@@ -106,9 +106,10 @@ const MealPlanner = ({ currentBaby }) => {
     if (!query.trim()) return;
     
     setShowSuggestions(false);
-
     setLoading(true);
     setError('');
+    setSearchResults(null); // Clear previous results
+
     try {
       const babyAgeMonths = currentBaby ? 
         Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 12;
