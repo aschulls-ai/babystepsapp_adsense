@@ -586,9 +586,20 @@ export const offlineAPI = {
       if (babies[currentUserId]) {
         const babyIndex = babies[currentUserId].findIndex(baby => baby.id === babyId);
         if (babyIndex !== -1) {
-          babies[currentUserId][babyIndex].stats.total_activities += 1;
-          babies[currentUserId][babyIndex].stats.last_activity = activity.timestamp;
-          babies[currentUserId][babyIndex].updatedAt = new Date().toISOString();
+          const baby = babies[currentUserId][babyIndex];
+          
+          // Ensure stats object exists
+          if (!baby.stats) {
+            baby.stats = {
+              total_activities: 0,
+              last_activity: null,
+              milestones_reached: 0
+            };
+          }
+          
+          baby.stats.total_activities = (baby.stats.total_activities || 0) + 1;
+          baby.stats.last_activity = activity.timestamp;
+          baby.updatedAt = new Date().toISOString();
           
           saveOfflineData('babies', babies);
         }
