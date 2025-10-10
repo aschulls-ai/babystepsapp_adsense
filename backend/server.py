@@ -1450,25 +1450,173 @@ Always be concise and practical."""
 # General Research Routes
 @api_router.post("/research", response_model=ResearchResponse)
 async def ask_research_question(query: ResearchQuery, current_user: User = Depends(get_current_user)):
+    """
+    AI Assistant research using JSON-only knowledge bases
+    Searches both ai_assistant.json (general parenting) and food_research.json (food safety)
+    Combines responses when both are relevant
+    """
     try:
-        chat = LlmChat(
-            api_key=os.environ.get('EMERGENT_LLM_KEY'),
-            session_id=f"research_{current_user.id}",
-            system_message="You are a helpful and knowledgeable parenting assistant specializing in newborn care, infant development, feeding, sleep, and general baby health. Provide accurate, evidence-based information while encouraging parents to consult healthcare providers for medical concerns. Be supportive and understanding of new parent anxieties."
-        ).with_model("openai", "gpt-5")
+        # Load both knowledge base JSON files
+        ai_assistant_path = "/app/frontend/public/knowledge-base/ai_assistant.json"
+        food_research_path = "/app/frontend/public/knowledge-base/food_research.json"
         
-        user_message = UserMessage(text=query.question)
-        response = await chat.send_message(user_message)
+        try:
+            with open(ai_assistant_path, 'r', encoding='utf-8') as file:
+                ai_assistant_kb = json.load(file)
+        except FileNotFoundError:
+            logging.error(f"AI Assistant JSON file not found: {ai_assistant_path}")
+            ai_assistant_kb = []
+        except json.JSONDecodeError as e:
+            logging.error(f"Invalid JSON format in AI Assistant file: {str(e)}")
+            ai_assistant_kb = []
+            
+        try:
+            with open(food_research_path, 'r', encoding='utf-8') as file:
+                food_research_kb = json.load(file)
+        except FileNotFoundError:
+            logging.error(f"Food Research JSON file not found: {food_research_path}")
+            food_research_kb = []
+        except json.JSONDecodeError as e:
+            logging.error(f"Invalid JSON format in Food Research file: {str(e)}")
+            food_research_kb = []
+        
+        # Search for matching questions in both knowledge bases
+        query_lower = query.question.lower()
+        matches = []
+        
+        # Search AI Assistant knowledge base
+        for item in ai_assistant_kb:
+            question_lower = item.get('question', '').lower()
+            answer_lower = item.get('answer', '').lower()
+            
+            score = 0
+            # Exact question match (highest priority)
+            if query_lower == question_lower:
+                score = 100
+            elif query_lower in question_lower or question_lower in query_lower:
+                score = 80
+            
+            # Keyword matching for parenting topics
+            parenting_keywords = ['baby', 'newborn', 'infant', 'feed', 'sleep', 'cry', 'diaper', 'milk', 'development', 'milestone', 'burp']
+            for keyword in parenting_keywords:
+                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
+                    score += 15
+            
+            # Additional scoring for question types
+            question_keywords = ['how', 'when', 'what', 'why', 'should', 'can', 'is', 'are']
+            for keyword in question_keywords:
+                if keyword in query_lower and keyword in question_lower:
+                    score += 5
+            
+            if score > 0:
+                matches.append({
+                    'source': 'ai_assistant',
+                    'item': item,
+                    'score': score
+                })
+        
+        # Search Food Research knowledge base
+        for item in food_research_kb:
+            question_lower = item.get('question', '').lower()
+            answer_lower = item.get('answer', '').lower()
+            
+            score = 0
+            # Exact question match (highest priority)
+            if query_lower == question_lower:
+                score = 100
+            elif query_lower in question_lower or question_lower in query_lower:
+                score = 80
+            
+            # Food name matching (REQUIRED for high relevance)
+            food_keywords = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese', 'food', 'eat', 'safe']
+            food_found = False
+            for keyword in food_keywords:
+                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
+                    score += 30  # Higher score for food matches
+                    food_found = True
+            
+            # Only add safety keyword points if food context was found
+            if food_found or any(word in query_lower for word in ['food', 'eat', 'safe']):
+                safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
+                for keyword in safety_keywords:
+                    if keyword in query_lower and keyword in question_lower:
+                        score += 10
+            
+            if score > 0:
+                matches.append({
+                    'source': 'food_research',
+                    'item': item,
+                    'score': score
+                })
+        
+        # Sort matches by score (highest first)
+        matches.sort(key=lambda x: x['score'], reverse=True)
+        
+        # Determine response strategy based on matches
+        if not matches:
+            # No matches found
+            return ResearchResponse(
+                answer="**Information Not Available**\n\nI don't have specific information about your question in our knowledge base. Our database covers common parenting topics like feeding, sleep, development milestones, and food safety.\n\n**For reliable answers:** Please consult your pediatrician, search reputable parenting websites, or check with healthcare professionals who can provide personalized guidance.",
+                sources=["Knowledge Base - No entry found"]
+            )
+        
+        # Get best matches from each source
+        ai_match = next((m for m in matches if m['source'] == 'ai_assistant' and m['score'] >= 20), None)
+        food_match = next((m for m in matches if m['source'] == 'food_research' and m['score'] >= 30), None)
+        
+        combined_answer = ""
+        combined_sources = []
+        
+        # Combine responses if both are relevant
+        if ai_match and food_match and ai_match['score'] >= 20 and food_match['score'] >= 30:
+            # Both are relevant - combine responses
+            ai_item = ai_match['item']
+            food_item = food_match['item']
+            
+            combined_answer = f"**General Parenting Guidance**\n"
+            combined_answer += f"**{ai_item.get('category', 'General')}** ({ai_item.get('age_range', 'All ages')})\n\n"
+            combined_answer += f"{ai_item.get('answer', '')}\n\n"
+            
+            combined_answer += f"**Food Safety Information**\n"
+            combined_answer += f"**{food_item.get('category', 'Safety')}** ({food_item.get('age_range', 'Consult pediatrician')})\n\n"
+            combined_answer += f"{food_item.get('answer', '')}"
+            
+            combined_sources = [
+                f"AI Assistant Knowledge Base Question ID: {ai_item.get('id', 'Unknown')}",
+                f"Food Safety Knowledge Base Question ID: {food_item.get('id', 'Unknown')}",
+                "Verified Parenting & Food Safety Database"
+            ]
+        
+        elif ai_match and ai_match['score'] >= 20:
+            # Primary AI Assistant match
+            item = ai_match['item']
+            combined_answer = f"**{item.get('category', 'General Parenting')}** ({item.get('age_range', 'All ages')})\n\n{item.get('answer', '')}"
+            combined_sources = [f"AI Assistant Knowledge Base Question ID: {item.get('id', 'Unknown')}", "Verified Parenting Guidelines"]
+            
+        elif food_match and food_match['score'] >= 30:
+            # Primary Food Safety match
+            item = food_match['item']
+            combined_answer = f"**{item.get('category', 'Food Safety')}** ({item.get('age_range', 'Consult pediatrician')})\n\n{item.get('answer', '')}"
+            combined_sources = [f"Food Safety Knowledge Base Question ID: {item.get('id', 'Unknown')}", "Verified Food Safety Database"]
+            
+        else:
+            # Use best available match even if score is lower
+            best_match = matches[0]
+            item = best_match['item']
+            source_name = "AI Assistant" if best_match['source'] == 'ai_assistant' else "Food Safety"
+            combined_answer = f"**{item.get('category', source_name)}** ({item.get('age_range', 'All ages')})\n\n{item.get('answer', '')}"
+            combined_sources = [f"{source_name} Knowledge Base Question ID: {item.get('id', 'Unknown')}", f"Verified {source_name} Database"]
         
         return ResearchResponse(
-            answer=response,
-            sources=["AI-powered parenting assistant", "Evidence-based medical guidelines"]
+            answer=combined_answer,
+            sources=combined_sources
         )
+        
     except Exception as e:
-        logging.error(f"Research query error: {str(e)}")
+        logging.error(f"Research query JSON processing error: {str(e)}")
         return ResearchResponse(
-            answer="I'm sorry, I'm having trouble accessing the research database right now. Please try again later, or consult your pediatrician for specific medical questions.",
-            sources=[]
+            answer="Unable to access parenting database. Please consult your pediatrician for specific questions about baby care, feeding, or development.",
+            sources=["Database Error"]
         )
 
 # Health check
