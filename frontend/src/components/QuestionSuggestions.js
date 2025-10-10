@@ -107,93 +107,138 @@ const QuestionSuggestions = ({
       const queryLower = searchQuery.toLowerCase();
       const smartKeywords = extractSmartKeywords(searchQuery);
       
-      // Advanced scoring system
+      // Advanced scoring system with improved question variation matching
       const scoredQuestions = kb.map(question => {
         let score = 0;
         const questionLower = question.question.toLowerCase();
-        const answerLower = (question.answer || '').toLowerCase();
+        let answerLower = '';
+        
+        // Handle both string and array answers
+        if (typeof question.answer === 'string') {
+          answerLower = question.answer.toLowerCase();
+        } else if (Array.isArray(question.answer)) {
+          // For recipes, search in names and ingredients
+          answerLower = question.answer.map(recipe => 
+            (recipe.name || '') + ' ' + (recipe.ingredients || []).join(' ')
+          ).join(' ').toLowerCase();
+        }
+        
         const categoryLower = (question.category || '').toLowerCase();
         
         // 1. Exact phrase matching (highest priority)
         if (questionLower.includes(queryLower)) {
+          score += 200;
+        }
+        
+        // 2. Question structure variation matching
+        // Match "can my baby eat X" with "can babies eat X" or "is X safe"
+        const normalizedQuery = queryLower
+          .replace(/\b(my|your|our|the)\b/gi, '')
+          .replace(/\bbaby\b/gi, 'babies')
+          .replace(/\bcan\b.*\beat\b/i, 'eat')
+          .replace(/\bis\b.*\bsafe\b/i, 'safe')
+          .trim();
+        
+        const normalizedQuestion = questionLower
+          .replace(/\b(my|your|our|the)\b/gi, '')
+          .replace(/\bbaby\b/gi, 'babies')
+          .replace(/\bcan\b.*\beat\b/i, 'eat')
+          .replace(/\bis\b.*\bsafe\b/i, 'safe')
+          .trim();
+        
+        // Check if normalized versions match
+        if (normalizedQuery.length > 5 && normalizedQuestion.includes(normalizedQuery)) {
           score += 150;
         }
         
-        // 2. Smart keyword matching with different weights
+        // 3. Food name exact matching (critical for food research)
         smartKeywords.forEach(keyword => {
-          // Question title matches (very high weight)
+          // Very high score for exact food name matches in question
+          const foodNamePattern = new RegExp(`\\b${keyword}\\b`, 'i');
+          if (foodNamePattern.test(questionLower)) {
+            score += 100;
+          }
+          
+          // High score for food name in answer
+          if (foodNamePattern.test(answerLower)) {
+            score += 60;
+          }
+          
+          // Category matches
+          if (foodNamePattern.test(categoryLower)) {
+            score += 40;
+          }
+          
+          // General keyword matches
           if (questionLower.includes(keyword)) {
-            score += 50;
-          }
-          
-          // Answer content matches (medium weight)
-          if (answerLower.includes(keyword)) {
-            score += 25;
-          }
-          
-          // Category matches (medium weight)
-          if (categoryLower.includes(keyword)) {
             score += 30;
           }
           
-          // Partial matches (lower weight)
-          if (questionLower.includes(keyword.slice(0, -1)) && keyword.length > 3) {
+          if (answerLower.includes(keyword)) {
             score += 15;
+          }
+          
+          // Partial matches for longer keywords
+          if (keyword.length > 4) {
+            const partial = keyword.slice(0, -2);
+            if (questionLower.includes(partial)) {
+              score += 20;
+            }
           }
         });
         
-        // 3. Question pattern matching
-        const questionPatterns = [
-          /^(is|are|can|when|how|what|why)/i,
-          /(safe|okay|good|bad|avoid)/i,
-          /(baby|babies|infant|child)/i,
-          /(eat|drink|have|give)/i
-        ];
+        // 4. Intent matching - understand what user is asking
+        const intentPatterns = {
+          safety: /\b(safe|safety|okay|ok|dangerous|danger|harm)\b/i,
+          timing: /\b(when|age|old|month|months|start|introduce|begin)\b/i,
+          preparation: /\b(how|prepare|cook|make|recipe|serve)\b/i,
+          general: /\b(can|could|should|may|is|are)\b/i
+        };
         
-        questionPatterns.forEach(pattern => {
+        Object.entries(intentPatterns).forEach(([intent, pattern]) => {
           if (pattern.test(queryLower) && pattern.test(questionLower)) {
+            score += 25;
+          }
+        });
+        
+        // 5. Question word matching
+        const questionWords = ['what', 'when', 'how', 'why', 'can', 'is', 'are', 'should'];
+        questionWords.forEach(word => {
+          if (queryLower.includes(word) && questionLower.includes(word)) {
+            score += 10;
+          }
+        });
+        
+        // 6. Age relevance
+        if (question.age_range && /\b\d+\b/.test(queryLower)) {
+          score += 15;
+        }
+        
+        // 7. Type-specific scoring
+        if (knowledgeBaseType === 'food_research') {
+          // Heavily boost food safety questions that match food items
+          if (/\b(eat|food|feed|safe|allergy)\b/i.test(queryLower) && 
+              /\b(eat|food|feed|safe|allergy)\b/i.test(questionLower)) {
+            score += 30;
+          }
+        } else if (knowledgeBaseType === 'meal_planner') {
+          // Boost recipe/meal questions
+          if (/\b(recipe|meal|breakfast|lunch|dinner|snack|cook)\b/i.test(queryLower)) {
+            score += 30;
+          }
+        } else if (knowledgeBaseType === 'ai_assistant') {
+          // Boost parenting advice questions
+          if (/\b(sleep|cry|feed|develop|milestone|help|problem)\b/i.test(queryLower)) {
             score += 20;
           }
-        });
-        
-        // 4. Age relevance (for questions with age ranges)
-        if (question.age_range) {
-          // Boost questions that mention age-related terms
-          if (queryLower.includes('month') || queryLower.includes('old') || /\d+/.test(queryLower)) {
-            score += 15;
-          }
-        }
-        
-        // 5. Type-specific boosts
-        if (knowledgeBaseType === 'food_research') {
-          // Food safety context boost
-          const safetyTerms = ['safe', 'safety', 'eat', 'food', 'okay', 'can', 'when', 'age'];
-          safetyTerms.forEach(term => {
-            if (queryLower.includes(term) && questionLower.includes(term)) {
-              score += 10;
-            }
-          });
-        } else if (knowledgeBaseType === 'ai_assistant') {
-          // Parenting context boost
-          const parentingTerms = ['sleep', 'feed', 'cry', 'baby', 'help', 'problem', 'why', 'how'];
-          parentingTerms.forEach(term => {
-            if (queryLower.includes(term) && questionLower.includes(term)) {
-              score += 10;
-            }
-          });
-        }
-        
-        // 6. Recency boost for shorter, more specific questions
-        if (questionLower.length < 50 && score > 30) {
-          score += 10;
         }
         
         return { question, score };
       });
 
-      // Filter, sort and return top suggestions
+      // Filter, sort and return top suggestions with lower threshold for better recall
       return scoredQuestions
-        .filter(item => item.score > 20) // Higher minimum threshold
+        .filter(item => item.score > 15) // Lower threshold to catch more variations
         .sort((a, b) => b.score - a.score)
         .slice(0, 6) // Top 6 most relevant
         .map(item => item.question);
