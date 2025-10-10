@@ -1864,6 +1864,7 @@ I'm currently unable to connect to live AI services to provide real-time researc
         prompt,
         response,
         type,
+        source, // Track if answer came from knowledge base, AI, or fallback
         timestamp: new Date().toISOString()
       });
       
