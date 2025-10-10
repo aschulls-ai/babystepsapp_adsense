@@ -51,6 +51,73 @@ const FoodResearch = ({ currentBaby }) => {
     }
   };
 
+  // Handle suggestion selection
+  const handleSelectSuggestion = (selectedQuestion) => {
+    setQuery(selectedQuestion.question);
+    setShowSuggestions(false);
+    // Automatically search the selected question
+    performSearch(selectedQuestion.question);
+  };
+
+  // Handle input focus/blur for suggestions
+  const handleInputFocus = () => {
+    setInputFocused(true);
+    if (query.length >= 2) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    // Delay hiding suggestions to allow for click selection
+    setTimeout(() => {
+      setInputFocused(false);
+      setShowSuggestions(false);
+    }, 200);
+  };
+
+  // Handle query change with suggestion triggering
+  const handleQueryChange = (e) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    
+    // Show/hide suggestions based on query length and focus
+    if (newQuery.length >= 2 && inputFocused) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  // Separate search function for reusability
+  const performSearch = async (searchQuery = query) => {
+    if (!searchQuery.trim()) return;
+
+    setShowSuggestions(false);
+    setIsLoading(true);
+    setResult(null);
+
+    try {
+      const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
+      setResult(response);
+      
+      // Add to search history
+      const newSearch = {
+        id: Date.now(),
+        query: searchQuery,
+        result: response,
+        timestamp: new Date().toISOString()
+      };
+      setSearchHistory(prev => [newSearch, ...prev.slice(0, 4)]);
+      
+      toast.success('Food safety information found!');
+    } catch (error) {
+      console.error('Food research error:', error);
+      toast.error('Failed to get food safety information');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSearch = async (searchQuery = query) => {
     if (!searchQuery.trim()) return;
 
