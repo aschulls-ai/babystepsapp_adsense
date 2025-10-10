@@ -251,7 +251,9 @@ const FoodResearch = ({ currentBaby }) => {
                       </div>
                     </div>
                     <div className="prose prose-sm max-w-none">
-                      <p className="text-gray-800 whitespace-pre-wrap">{results.answer}</p>
+                      <div className="text-gray-800 break-words overflow-wrap-anywhere whitespace-pre-wrap leading-relaxed">
+                        {results.answer}
+                      </div>
                     </div>
                     {results.sources && results.sources.length > 0 && (
                       <div className="mt-3 pt-3 border-t border-gray-200">
