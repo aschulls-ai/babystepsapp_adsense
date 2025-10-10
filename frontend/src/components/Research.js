@@ -329,7 +329,7 @@ const QuickQuestionButton = ({ icon, question, category, onClick }) => (
       </div>
       <div className="flex-1">
         <div className="text-xs text-gray-500 font-medium mb-1">{category}</div>
-        <div className="text-sm text-gray-900 font-medium">{question}</div>
+        <div className="text-sm text-gray-900 dark:text-white font-medium">{question}</div>
       </div>
     </div>
   </button>
