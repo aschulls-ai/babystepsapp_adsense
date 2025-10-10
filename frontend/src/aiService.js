@@ -7,6 +7,7 @@ class AIService {
     this.apiKey = 'sk-emergent-41bA272B05dA9709c3'; // Emergent LLM key
     this.baseUrl = 'https://api.openai.com/v1'; // Direct API calls via phone internet
     this.isAvailable = true;
+    this.searchEngines = ['bing', 'google'];
     this.initializeService();
   }
 
