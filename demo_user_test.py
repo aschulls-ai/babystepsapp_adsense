@@ -10,8 +10,8 @@ from datetime import datetime, timezone
 
 class DemoUserTester:
     def __init__(self):
-        self.frontend_url = "https://babysteps-app-2.preview.emergentagent.com"
-        self.backend_url = "https://babysteps-app-2.preview.emergentagent.com/api"
+        self.frontend_url = "https://parental-copilot.preview.emergentagent.com"
+        self.backend_url = "https://parental-copilot.preview.emergentagent.com/api"
         self.demo_email = "demo@babysteps.com"
         self.demo_password = "demo123"
         self.results = {

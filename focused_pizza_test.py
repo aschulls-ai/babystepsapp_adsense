@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://babysteps-app-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://parental-copilot.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "demo@babysteps.com"
 TEST_USER_PASSWORD = "demo123"
 
