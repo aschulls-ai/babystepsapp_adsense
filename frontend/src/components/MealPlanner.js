@@ -70,8 +70,42 @@ const MealPlanner = ({ currentBaby }) => {
     }
   };
 
+  // Handlers for suggestion dropdown
+  const handleSelectSuggestion = (selectedQuestion) => {
+    setSearchQuery(selectedQuestion.question);
+    setShowSuggestions(false);
+    handleSearch(selectedQuestion.question);
+  };
+
+  const handleInputFocus = () => {
+    setInputFocused(true);
+    if (searchQuery.length >= 2) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    setTimeout(() => {
+      setInputFocused(false);
+      setShowSuggestions(false);
+    }, 200);
+  };
+
+  const handleQueryChange = (e) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    
+    if (newQuery.length >= 2 && inputFocused) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
   const handleSearch = async (query = searchQuery) => {
     if (!query.trim()) return;
+    
+    setShowSuggestions(false);
 
     setLoading(true);
     setError('');
