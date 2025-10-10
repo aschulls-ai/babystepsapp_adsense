@@ -2061,15 +2061,16 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
       </div>
       
       {sortedActivities.map((activity, index) => {
-        const Icon = getActivityIcon(activity.activity_type);
+        const activityType = activity.type || activity.activity_type;
+        const Icon = getActivityIcon(activityType);
         const timestamp = getActivityTimestamp(activity);
         const date = new Date(timestamp);
         
         return (
-          <div key={`${activity.activity_type}-${activity.id || index}`} 
+          <div key={`${activityType}-${activity.id || index}`} 
                className="flex items-start gap-3 p-3 bg-white rounded-lg border hover:shadow-sm transition-shadow">
             {/* Activity Icon */}
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activity.activity_type)}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activityType)}`}>
               <Icon className="w-4 h-4" />
             </div>
             
