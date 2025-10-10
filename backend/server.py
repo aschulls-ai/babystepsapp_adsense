@@ -1484,36 +1484,63 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
         query_lower = query.question.lower()
         matches = []
         
-        # Search AI Assistant knowledge base
-        for item in ai_assistant_kb:
-            question_lower = item.get('question', '').lower()
-            answer_lower = item.get('answer', '').lower()
-            
-            score = 0
-            # Exact question match (highest priority)
-            if query_lower == question_lower:
-                score = 100
-            elif query_lower in question_lower or question_lower in query_lower:
-                score = 80
-            
-            # Keyword matching for parenting topics
-            parenting_keywords = ['baby', 'newborn', 'infant', 'feed', 'sleep', 'cry', 'diaper', 'milk', 'development', 'milestone', 'burp']
-            for keyword in parenting_keywords:
-                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
-                    score += 15
-            
-            # Additional scoring for question types
-            question_keywords = ['how', 'when', 'what', 'why', 'should', 'can', 'is', 'are']
-            for keyword in question_keywords:
-                if keyword in query_lower and keyword in question_lower:
-                    score += 5
-            
-            if score > 0:
-                matches.append({
-                    'source': 'ai_assistant',
-                    'item': item,
-                    'score': score
-                })
+        # Check for clearly unrelated topics (exclude from parenting search)
+        unrelated_keywords = [
+            'smartphone', 'phone', 'computer', 'laptop', 'internet', 'social media', 'facebook', 'instagram',
+            'car', 'driving', 'license', 'work', 'job', 'career', 'money', 'finance', 'investment',
+            'weather', 'sports', 'football', 'basketball', 'politics', 'election', 'government',
+            'cooking', 'recipe', 'restaurant', 'travel', 'vacation', 'hotel', 'movie', 'music',
+            'adult', 'teenager', 'elderly', 'senior', 'college', 'university', 'homework'
+        ]
+        
+        # Check if query is about clearly unrelated topics
+        has_unrelated_content = any(keyword in query_lower for keyword in unrelated_keywords)
+        
+        # Only search AI Assistant knowledge base if query seems baby/parenting related
+        parenting_context_keywords = ['baby', 'babies', 'newborn', 'infant', 'child', 'parenting', 'parent']
+        has_parenting_context = any(keyword in query_lower for keyword in parenting_context_keywords)
+        
+        if not has_unrelated_content and has_parenting_context:
+            # Search AI Assistant knowledge base
+            for item in ai_assistant_kb:
+                question_lower = item.get('question', '').lower()
+                answer_lower = item.get('answer', '').lower()
+                
+                score = 0
+                # Exact question match (highest priority)
+                if query_lower == question_lower:
+                    score = 100
+                elif query_lower in question_lower or question_lower in query_lower:
+                    score = 80
+                
+                # Require both parenting context AND topic match for scoring
+                parenting_keywords = ['baby', 'newborn', 'infant', 'feed', 'feeding', 'sleep', 'sleeping', 'cry', 'crying', 'diaper', 'milk', 'development', 'milestone', 'burp', 'burping']
+                parenting_match_count = 0
+                for keyword in parenting_keywords:
+                    if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
+                        parenting_match_count += 1
+                        score += 20  # Higher points for each parenting match
+                
+                # Require at least one strong parenting keyword match
+                if parenting_match_count > 0:
+                    # Additional points for question structure (but only if parenting context exists)
+                    question_keywords = ['how', 'when', 'what', 'why', 'should', 'can', 'is', 'are']
+                    question_match_count = 0
+                    for keyword in question_keywords:
+                        if keyword in query_lower and keyword in question_lower:
+                            question_match_count += 1
+                    
+                    # Only add question structure points if we have good parenting match
+                    if question_match_count > 0 and parenting_match_count >= 1:
+                        score += min(question_match_count * 3, 10)  # Max 10 points from question structure
+                
+                # Only include matches with meaningful parenting relevance
+                if score >= 20:  # Require minimum threshold
+                    matches.append({
+                        'source': 'ai_assistant',
+                        'item': item,
+                        'score': score
+                    })
         
         # Search Food Research knowledge base
         for item in food_research_kb:
