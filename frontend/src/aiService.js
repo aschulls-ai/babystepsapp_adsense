@@ -220,11 +220,7 @@ class AIService {
   // Generate food safety answers (Bing format)
   generateFoodAnswer(query, lowerQuery, babyAge) {
     // Use the same clean format as extractBingStyleAnswer
-    if (lowerQuery.includes('honey')) {
-      return `**12 months**
-
-Honey is not safe for babies under 12 months due to the risk of infant botulism, a serious illness caused by the bacterium Clostridium botulinum. This bacterium can produce toxins that affect the nervous system and lead to severe health issues. Once a baby turns 12 months old, their immune system is more mature, and honey can be introduced in small amounts as a sweetener.`;
-    }
+    // Honey queries now handled by knowledge base - removed hardcoded response
 
     if (lowerQuery.includes('peanut')) {
       return `**6+ months**
