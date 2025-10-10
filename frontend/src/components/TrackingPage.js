@@ -1967,10 +1967,10 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
 
 // Activity History List Component
 const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBaby }) => {
-  // Filter activities
+  // Filter activities - Fix field name mismatch
   const filteredActivities = activities.filter(activity => {
     if (filter === 'all') return true;
-    return activity.activity_type === filter;
+    return activity.type === filter || activity.activity_type === filter;
   });
 
   // Sort activities
