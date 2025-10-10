@@ -150,7 +150,7 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout, darkMod
 
       {/* Main content */}
       <div className="lg:pl-72">
-        <main className="min-h-screen pt-20 px-4 pb-4 lg:p-8">
+        <main className="min-h-screen pt-16 px-4 pb-4 lg:p-8">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
