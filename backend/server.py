@@ -434,12 +434,12 @@ async def send_verification_email_mock(email: str, verification_token: str):
     """Mock email service - logs instead of sending"""
     verification_url = f"{FRONTEND_URL}/verify-email/{verification_token}"
     
-    print(f"\n🔔 EMAIL VERIFICATION (Mock Service)")
+    print("\n🔔 EMAIL VERIFICATION (Mock Service)")
     print(f"📧 To: {email}")
-    print(f"📝 Subject: Verify Your Email Address")
+    print("📝 Subject: Verify Your Email Address")
     print(f"🔗 Verification URL: {verification_url}")
     print(f"⏰ Expires: {datetime.now(timezone.utc) + timedelta(hours=VERIFICATION_TOKEN_EXPIRE_HOURS)}")
-    print(f"=" * 60)
+    print("=" * 60)
     
     # In production, replace this with actual email sending
     # await send_actual_email(email, verification_url)
@@ -448,12 +448,12 @@ async def send_password_reset_email_mock(email: str, reset_token: str):
     """Mock password reset email service"""
     reset_url = f"{FRONTEND_URL}/reset-password/{reset_token}"
     
-    print(f"\n🔔 PASSWORD RESET (Mock Service)")
+    print("\n🔔 PASSWORD RESET (Mock Service)")
     print(f"📧 To: {email}")
-    print(f"📝 Subject: Password Reset Request")
+    print("📝 Subject: Password Reset Request")
     print(f"🔗 Reset URL: {reset_url}")
     print(f"⏰ Expires: {datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)}")
-    print(f"=" * 60)
+    print("=" * 60)
     
     # In production, replace this with actual email sending
     # await send_actual_email(email, reset_url)
