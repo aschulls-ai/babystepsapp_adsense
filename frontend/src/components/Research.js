@@ -426,7 +426,12 @@ const Research = () => {
 
 // Helper Components
 const MessageBubble = ({ message }) => {
-  const isBot = message.type === 'bot';
+  if (!message || !message.content) {
+    console.error('Invalid message:', message);
+    return null;
+  }
+
+  const isBot = message.type === 'bot' || message.type === 'assistant';
 
   return (
     <div className={`flex items-start gap-3 ${isBot ? '' : 'flex-row-reverse'} w-full`}>
@@ -444,7 +449,7 @@ const MessageBubble = ({ message }) => {
             ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100' 
             : 'bg-blue-500 dark:bg-blue-600 text-white'
         }`}>
-          <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
+          <p className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content || ''}</p>
           {message.sources && message.sources.length > 0 && (
             <div className="mt-2 pt-2 border-t border-gray-200">
               <p className="text-xs text-gray-500">Sources: {message.sources.join(', ')}</p>
