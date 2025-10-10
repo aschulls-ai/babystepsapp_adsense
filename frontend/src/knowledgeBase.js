@@ -354,7 +354,7 @@ class KnowledgeBaseService {
   getCategoryStats(questions) {
     const categories = {};
     questions.forEach(q => {
-      const cat = q.category || 'general';
+      const cat = q.category || 'General';
       categories[cat] = (categories[cat] || 0) + 1;
     });
     return categories;
