@@ -342,7 +342,7 @@ const TipCard = ({ title, content, icon }) => (
         {icon}
       </div>
       <div className="flex-1">
-        <h4 className="font-medium text-gray-900 text-sm mb-1">{title}</h4>
+        <h4 className="font-medium text-gray-900 dark:text-white text-sm mb-1">{title}</h4>
         <p className="text-xs text-gray-600">{content}</p>
       </div>
     </div>
