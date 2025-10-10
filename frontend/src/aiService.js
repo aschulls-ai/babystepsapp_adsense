@@ -1100,17 +1100,17 @@ class AIService {
       
       return {
         results: [{ 
-          title: `Meal Ideas: ${query}`, 
-          description: fallbackResponse,
-          ingredients: [],
-          instructions: [],
+          title: `Search Results: ${query}`, 
+          description: fallbackResponse || `Searching for meal ideas: ${query}. Please ensure internet connection for live web search results.`,
+          ingredients: ['Internet search required for live results'],
+          instructions: ['Enable internet connection for current meal ideas'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'Varies by recipe'
+          prep_time: 'Live web data needed'
         }],
         query,
         age_months: ageMonths,
         ai_powered: false,
-        source: 'Comprehensive Meal Database'
+        source: 'Internet Search Required'
       };
     }
   }
