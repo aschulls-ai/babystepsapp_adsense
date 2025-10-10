@@ -1186,6 +1186,12 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
         # Extract food keywords from query first
         query_food_keywords = [kw for kw in food_keywords if kw in query_lower]
         
+        # CRITICAL: Require at least one food keyword in query for proper matching
+        if not query_food_keywords:
+            logging.warning(f"No food keywords found in query: '{query.question}'")
+            # Try to match general food safety questions
+            query_food_keywords = ['food']  # Default to generic food
+        
         for food_item in food_kb:
             question_lower = food_item.get('question', '').lower()
             answer_lower = food_item.get('answer', '').lower()
@@ -1194,51 +1200,60 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             # Calculate match score
             score = 0
             
-            # 1. Exact question match (highest priority)
+            # 1. Exact question match (ULTRA HIGH priority)
             if query_lower == question_lower:
-                score = 1000  # Extremely high score for exact match
+                score = 10000  # Guaranteed match for exact questions
             elif query_lower in question_lower:
-                score = 500
+                score = 5000
             elif question_lower in query_lower:
-                score = 400
+                score = 4000
             
-            # 2. CRITICAL: Food keyword matching - REQUIRED for scoring
-            kb_food_keywords = [kw for kw in food_keywords if kw in question_lower or kw in answer_lower]
-            matching_food_keywords = set(query_food_keywords) & set(kb_food_keywords)
+            # 2. CRITICAL: Food keyword matching - MUST match in QUESTION TEXT (not just answer)
+            # This ensures we're matching the right food item
+            kb_food_keywords_in_question = [kw for kw in food_keywords if kw in question_lower]
+            kb_food_keywords_in_answer = [kw for kw in food_keywords if kw in answer_lower]
             
-            # If query has food keywords but this question doesn't match ANY, skip this question
-            if query_food_keywords and not matching_food_keywords:
-                continue  # Skip questions that don't match the food being asked about
+            # Prioritize matches in question text over answer text
+            matching_food_in_question = set(query_food_keywords) & set(kb_food_keywords_in_question)
+            matching_food_in_answer = set(query_food_keywords) & set(kb_food_keywords_in_answer)
             
-            # If food keywords match, give massive bonus
-            if matching_food_keywords:
-                score += 300 * len(matching_food_keywords)  # Much higher bonus
+            # STRICT REQUIREMENT: Must match food keyword in question OR have exact match
+            if query_food_keywords and not matching_food_in_question and score < 4000:
+                # Only allow answer matches if no question match AND score is not already high
+                if not matching_food_in_answer:
+                    continue  # Skip - doesn't match the specific food being asked about
+                else:
+                    # Penalize answer-only matches heavily
+                    score += 50 * len(matching_food_in_answer)
+            elif matching_food_in_question:
+                # Huge bonus for food keyword in question text
+                score += 1000 * len(matching_food_in_question)
                 
-                # Additional context matching only if food matches
-                safety_context_words = ['safe', 'safety', 'eat', 'feed', 'give', 'okay', 'ok', 'when', 'age', 'can']
+                # Additional context matching only if food matches in question
+                safety_context_words = ['safe', 'safety', 'eat', 'feed', 'give', 'okay', 'ok', 'when', 'age', 'can', 'how']
                 context_matches = sum(1 for word in safety_context_words if word in query_lower and word in question_lower)
-                score += context_matches * 5  # Reduced weight for context
+                score += context_matches * 10
             
-            # 3. Keyword overlap ONLY counts if we have food match or exact match
-            if matching_food_keywords or score >= 400:
+            # 3. Keyword overlap ONLY counts if we have strong food match
+            if matching_food_in_question or score >= 4000:
                 query_words = set(query_lower.split())
                 question_words = set(question_lower.split())
                 common_words = query_words & question_words
                 # Exclude common stop words from scoring
-                stop_words = {'can', 'babies', 'baby', 'eat', 'food', 'my', 'the', 'a', 'an', 'is', 'are'}
+                stop_words = {'can', 'babies', 'baby', 'eat', 'food', 'my', 'the', 'a', 'an', 'is', 'are', 'for', 'to'}
                 meaningful_common = common_words - stop_words
-                score += len(meaningful_common) * 3
+                score += len(meaningful_common) * 2
             
-            # 4. Category relevance (minor)
-            if any(kw in category_lower for kw in ['feeding', 'safety', 'nutrition']):
-                score += 2
+            # 4. Category relevance (very minor)
+            if any(kw in category_lower for kw in ['feeding', 'safety', 'nutrition', 'allergen']):
+                score += 1
             
             if score > best_score:
                 best_score = score
                 best_match = food_item
         
-        # Return result - require substantial match score
-        if best_match and best_score >= 100:  # Higher threshold to prevent false matches
+        # Return result - VERY HIGH threshold to ensure correct matches only
+        if best_match and best_score >= 500:  # Much higher threshold
             question_id = best_match.get('id', 'Unknown')
             matched_question = best_match.get('question', '')
             answer = best_match.get('answer', '')
