@@ -1220,12 +1220,16 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             if specific_food_match:
                 score += food_score_bonus
             
-            # Only add safety keyword points if food was found
-            if food_found:
+            # Only add safety keyword points if specific food was matched
+            if specific_food_match:
                 safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
+                safety_matches = 0
                 for keyword in safety_keywords:
                     if keyword in query_lower and keyword in question_lower:
-                        score += 10
+                        safety_matches += 1
+                
+                # Limit safety keyword bonus to prevent over-scoring
+                score += min(safety_matches * 5, 15)  # Max 15 points from safety keywords
             
             if score > best_score:
                 best_score = score
