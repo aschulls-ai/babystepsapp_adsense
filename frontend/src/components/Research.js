@@ -158,11 +158,12 @@ const Research = () => {
       const response = await offlineAPI.research(question);
       
       // Add AI response with unique ID
+      // offlineAPI.research returns { data: { answer, sources, timestamp } }
       const aiMessage = {
         id: `assistant-${Date.now()}-${Math.random()}`,
         type: 'assistant',
-        content: response.answer || 'I apologize, but I received an empty response. Please try again.',
-        sources: response.sources || [],
+        content: response.data?.answer || response.answer || 'I apologize, but I received an empty response. Please try again.',
+        sources: response.data?.sources || response.sources || [],
         timestamp: new Date().toISOString()
       };
       
