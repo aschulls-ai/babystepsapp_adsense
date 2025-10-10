@@ -1824,27 +1824,27 @@ I'm currently unable to connect to live AI services to provide real-time researc
     return typeMapping[contextType] || null;
   }
 
-  // Format knowledge base answer with context
+  // Format knowledge base answer with context (updated for user's JSON format)
   formatKnowledgeBaseAnswer(kbResult, originalQuery, context) {
     const question = kbResult.question;
     let formattedAnswer = question.answer;
 
-    // Add personalization if baby age is available
-    if (context.babyAgeMonths && question.age_range) {
-      const [minAge, maxAge] = question.age_range;
-      if (context.babyAgeMonths < minAge) {
-        formattedAnswer = `**Note: This information is for ${minAge}+ month babies. Your baby (${context.babyAgeMonths} months) may not be ready yet.**\n\n${formattedAnswer}`;
-      } else if (context.babyAgeMonths > maxAge) {
-        formattedAnswer = `**Note: This information is typically for babies up to ${maxAge} months. Your baby (${context.babyAgeMonths} months) may be ready for more advanced options.**\n\n${formattedAnswer}`;
-      }
+    // Add category context if available
+    if (question.category) {
+      formattedAnswer = `**${question.category} Guidelines**\n\n${formattedAnswer}`;
+    }
+
+    // Add personalization note if baby age is available
+    if (context.babyAgeMonths) {
+      formattedAnswer += `\n\n**Note:** This information is general guidance. Always consider your ${context.babyAgeMonths}-month-old's individual development and consult your pediatrician for personalized advice.`;
     }
 
     // Add knowledge base source info
     formattedAnswer += `\n\n**Source:** Baby Steps Knowledge Base (${Math.round(kbResult.similarity * 100)}% match)`;
     
-    // Add related tags if available
-    if (question.tags && question.tags.length > 0) {
-      formattedAnswer += `\n**Tags:** ${question.tags.join(', ')}`;
+    // Add question ID for reference
+    if (question.id) {
+      formattedAnswer += ` - Question ID: ${question.id}`;
     }
 
     return formattedAnswer;
