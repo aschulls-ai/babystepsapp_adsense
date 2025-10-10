@@ -239,7 +239,7 @@ const MealPlanner = ({ currentBaby }) => {
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Ask about food safety or search for meal ideas... (e.g., 'Is honey safe?' or 'breakfast ideas')"
+                  placeholder="Search for meal ideas and recipes... (e.g., 'breakfast ideas for 8 month old' or 'finger food recipes')"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all duration-200"
                   data-testid="meal-search-input"
