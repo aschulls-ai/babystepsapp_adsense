@@ -413,35 +413,118 @@ class BabyStepsAPITester:
             self.log_result("Enhanced Food Matching - Honey", False, f"Error: {str(e)}")
             return False
     
-    def test_meal_planner_search_endpoint(self):
-        """Test the meal planner search endpoint - MAIN FOCUS"""
+    def test_ai_question_variations_sleep(self):
+        """Test AI Assistant handles different sleep question phrasings - CRITICAL TEST B1"""
         try:
-            # Test meal idea search as per review request
-            search_query = {
-                "query": "breakfast ideas for 6 month old",
-                "baby_age_months": 6
-            }
+            questions = [
+                "How much should baby sleep",
+                "Baby won't sleep"
+            ]
             
-            response = self.session.post(f"{API_BASE}/meals/search", json=search_query, timeout=60)
-            
-            if response.status_code == 200:
-                data = response.json()
-                required_fields = ['results', 'query', 'age_months']
-                if all(field in data for field in required_fields):
-                    if data['query'] == search_query['query'] and data['age_months'] == search_query['baby_age_months']:
-                        self.log_result("Meal Planner Search Endpoint", True, "✅ /api/meals/search endpoint working correctly")
-                        return True
+            responses = []
+            for question in questions:
+                research_query = {"question": question}
+                response = self.session.post(f"{API_BASE}/research", json=research_query, timeout=60)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    answer = data.get('answer', '').lower()
+                    
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        if 'sleep' in answer and len(answer) > 50:
+                            responses.append(True)
+                        else:
+                            responses.append(False)
                     else:
-                        self.log_result("Meal Planner Search Endpoint", False, f"Query mismatch: {data}")
-                        return False
+                        responses.append(False)
                 else:
-                    self.log_result("Meal Planner Search Endpoint", False, f"Missing required fields: {data}")
-                    return False
+                    responses.append(False)
+            
+            if all(responses):
+                self.log_result("AI Question Variations - Sleep", True, "Both sleep question variations handled correctly")
+                return True
             else:
-                self.log_result("Meal Planner Search Endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("AI Question Variations - Sleep", False, f"Sleep variations failed: {responses}")
                 return False
         except Exception as e:
-            self.log_result("Meal Planner Search Endpoint", False, f"Error: {str(e)}")
+            self.log_result("AI Question Variations - Sleep", False, f"Error: {str(e)}")
+            return False
+
+    def test_ai_question_variations_feeding(self):
+        """Test AI Assistant handles different feeding question phrasings - CRITICAL TEST B2"""
+        try:
+            questions = [
+                "How often to feed newborn",
+                "When should I feed my baby"
+            ]
+            
+            responses = []
+            for question in questions:
+                research_query = {"question": question}
+                response = self.session.post(f"{API_BASE}/research", json=research_query, timeout=60)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    answer = data.get('answer', '').lower()
+                    
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        if ('feed' in answer or 'feeding' in answer) and len(answer) > 50:
+                            responses.append(True)
+                        else:
+                            responses.append(False)
+                    else:
+                        responses.append(False)
+                else:
+                    responses.append(False)
+            
+            if all(responses):
+                self.log_result("AI Question Variations - Feeding", True, "Both feeding question variations handled correctly")
+                return True
+            else:
+                self.log_result("AI Question Variations - Feeding", False, f"Feeding variations failed: {responses}")
+                return False
+        except Exception as e:
+            self.log_result("AI Question Variations - Feeding", False, f"Error: {str(e)}")
+            return False
+
+    def test_ai_question_variations_burping(self):
+        """Test AI Assistant handles different burping question phrasings - CRITICAL TEST B3"""
+        try:
+            questions = [
+                "When to burp baby",
+                "How to burp newborn"
+            ]
+            
+            responses = []
+            for question in questions:
+                research_query = {"question": question}
+                response = self.session.post(f"{API_BASE}/research", json=research_query, timeout=60)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    answer = data.get('answer', '').lower()
+                    
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        if 'burp' in answer and len(answer) > 50:
+                            responses.append(True)
+                        else:
+                            responses.append(False)
+                    else:
+                        responses.append(False)
+                else:
+                    responses.append(False)
+            
+            if all(responses):
+                self.log_result("AI Question Variations - Burping", True, "Both burping question variations handled correctly")
+                return True
+            else:
+                self.log_result("AI Question Variations - Burping", False, f"Burping variations failed: {responses}")
+                return False
+        except Exception as e:
+            self.log_result("AI Question Variations - Burping", False, f"Error: {str(e)}")
             return False
     
     def test_honey_safety_query(self):
