@@ -888,17 +888,19 @@ const SleepForm = ({ babyId, onSuccess }) => {
     setLoading(true);
 
     try {
-      // Use standalone offline API - Fixed structure for sleep tracking
+      // Use standalone offline API - Enhanced safety checks for sleep tracking
+      const startTime = formData.start_time instanceof Date ? formData.start_time : new Date(formData.start_time);
+      const endTime = (formData.end_time && formData.end_time !== '') ? new Date(formData.end_time) : null;
+      
       const sleepActivityData = {
         baby_id: babyId,
         type: 'sleep',
-        timestamp: formData.start_time.toISOString(),
-        duration: (formData.end_time && formData.end_time !== '') ? 
-          Math.round((new Date(formData.end_time) - formData.start_time) / (1000 * 60)) : null, // minutes
+        timestamp: startTime.toISOString(),
+        duration: endTime ? Math.round((endTime - startTime) / (1000 * 60)) : null, // minutes
         quality: formData.quality || null,
         notes: formData.notes || null,
-        sleep_start: formData.start_time.toISOString(),
-        sleep_end: (formData.end_time && formData.end_time !== '') ? new Date(formData.end_time).toISOString() : null
+        sleep_start: startTime.toISOString(),
+        sleep_end: endTime ? endTime.toISOString() : null
       };
       
       console.log('🛌 Logging sleep activity:', sleepActivityData);
