@@ -1,0 +1,37 @@
+[
+  {
+    "id": 101,
+    "category": "Feeding",
+    "age_range": "6–9 months",
+    "question": "How often should I feed solids at 6 months?",
+    "answer": "Start with 1–2 small meals a day, increasing to 3 by 8–9 months as breast milk or formula intake decreases."
+  },
+  {
+    "id": 102,
+    "category": "Feeding",
+    "age_range": "6–12 months",
+    "question": "Should solids replace milk feedings right away?",
+    "answer": "No. Breast milk or formula remains the main source of nutrition until about 12 months; solids complement it."
+  },
+  {
+    "id": 103,
+    "category": "Safety",
+    "age_range": "6–9 months",
+    "question": "How do I introduce new foods safely?",
+    "answer": "Introduce one new food every 3–5 days to monitor for reactions such as rash, vomiting, or swelling."
+  },
+  {
+    "id": 104,
+    "category": "Recipes",
+    "age_range": "6–8 months",
+    "question": "What are good first breakfast foods?",
+    "answer": "Iron-fortified baby cereal mixed with breast milk or formula, mashed banana, or pureed sweet potato are excellent first breakfast options."
+  },
+  {
+    "id": 105,
+    "category": "Recipes",
+    "age_range": "9–12 months",
+    "question": "What finger foods are safe for my 9 month old?",
+    "answer": "Soft cooked vegetables cut into small pieces, small pasta shapes, soft fruit pieces, and well-cooked ground meat are safe finger foods."
+  }
+]
