@@ -1514,15 +1514,15 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     }
   }
 
-  // Meal planning - Uses LIVE WEB SEARCH via device internet
+  // Meal planning - Uses Knowledge Base + LIVE WEB SEARCH via device internet
   async generateMealPlan(query, ageMonths = 6, restrictions = []) {
-    console.log(`🌐 Live web search for meal planning: "${query}" for ${ageMonths}-month-old baby`);
+    console.log(`🔍 Meal planning search: "${query}" for ${ageMonths}-month-old baby`);
     
     try {
       const restrictionsText = restrictions.length > 0 ? ` dietary restrictions ${restrictions.join(' ')}` : '';
       const searchQuery = `${query} meal ideas recipes ${ageMonths} month old baby nutrition${restrictionsText}`;
 
-      // Use real internet search system
+      // Use enhanced query system (knowledge base first, AI fallback)
       const response = await this.query(searchQuery, {
         type: 'meal_planning',
         query,
@@ -1530,38 +1530,44 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
         restrictions
       });
 
+      const isKnowledgeBaseResponse = response.includes('Knowledge Base');
+
       return {
         results: [{ 
-          title: `Live Search Results: ${query}`, 
+          title: isKnowledgeBaseResponse ? `Knowledge Base: ${query}` : `Live Search Results: ${query}`, 
           description: response,
-          ingredients: ['Current web search results', 'Live nutritional data', 'Real-time recipe information'],
-          instructions: ['Search results from Bing.com and Google.com', 'Updated meal ideas from internet sources'],
+          ingredients: isKnowledgeBaseResponse ? 
+            ['Verified recipe ingredients', 'Tested meal components', 'Safe food combinations'] :
+            ['Current web search results', 'Live nutritional data', 'Real-time recipe information'],
+          instructions: isKnowledgeBaseResponse ?
+            ['Detailed step-by-step instructions', 'Age-appropriate preparation methods', 'Safety guidelines included'] :
+            ['Search results from Bing.com and Google.com', 'Updated meal ideas from internet sources'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'From live web sources'
+          prep_time: isKnowledgeBaseResponse ? 'From verified recipes' : 'From live web sources'
         }],
         query,
         age_months: ageMonths,
         ai_powered: true,
-        source: 'Live Internet Search (Bing & Google)'
+        source: isKnowledgeBaseResponse ? 'Knowledge Base + AI Enhancement' : 'Live Internet Search (Bing & Google)'
       };
     } catch (error) {
-      console.log('🔄 Internet search failed, showing connection message');
+      console.log('🔄 All search methods failed, showing connection message');
       
-      const connectionMessage = `🌐 **Internet Search Required**\n\nTo get current meal ideas for "${query}", please connect to the internet.\n\n**Live search provides:**\n• Current recipe ideas from cooking websites\n• Nutritional information from pediatric sources\n• Age-appropriate meal suggestions\n• Real-time safety recommendations\n\n📱 Enable internet for comprehensive meal planning results.`;
+      const connectionMessage = `🌐 **Search Required**\n\nTo get current meal ideas for "${query}", please connect to the internet or check knowledge base.\n\n**Available search provides:**\n• Knowledge base of tested recipes and meal ideas\n• Current recipe ideas from cooking websites\n• Nutritional information from pediatric sources\n• Age-appropriate meal suggestions\n\n📱 Enable internet for comprehensive meal planning results.`;
       
       return {
         results: [{ 
-          title: `Internet Connection Needed: ${query}`, 
+          title: `Search Connection Needed: ${query}`, 
           description: connectionMessage,
-          ingredients: ['Internet connection required'],
-          instructions: ['Connect to wifi or mobile data', 'App will search live web sources automatically'],
+          ingredients: ['Search connection required'],
+          instructions: ['Connect to wifi or mobile data', 'App will search knowledge base and live web sources'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'Live web search needed'
+          prep_time: 'Search needed'
         }],
         query,
         age_months: ageMonths,
         ai_powered: false,
-        source: 'Internet Connection Required'
+        source: 'Search Connection Required'
       };
     }
   }
