@@ -77,7 +77,7 @@ class KnowledgeBaseService {
         return null;
       }
 
-      const questions = this.knowledgeBases[type][`${type}_questions`] || [];
+      const questions = Array.isArray(this.knowledgeBases[type]) ? this.knowledgeBases[type] : [];
       
       if (questions.length === 0) {
         console.log(`⚠️ No questions found in ${type} knowledge base`);
