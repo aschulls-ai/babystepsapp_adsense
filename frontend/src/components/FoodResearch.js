@@ -303,7 +303,7 @@ const FoodResearch = ({ currentBaby }) => {
                     onChange={handleQueryChange}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
-                    placeholder="Ask about food safety using key words... (e.g., 'strawberries' or 'honey safety')"
+                    placeholder="Use keywords to ask about food safety... (e.g., 'strawberries' or 'honey safety')"
                     onKeyPress={(e) => e.key === 'Enter' && performSearch()}
                     className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
                     data-testid="food-research-input"
