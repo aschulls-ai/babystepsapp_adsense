@@ -39,7 +39,10 @@ jobs:
         if [[ "${{ github.ref }}" == refs/tags/* ]]; then
           VERSION=${GITHUB_REF#refs/tags/v}
         else
-          VERSION="1.033"
+          # Start from 1.034 and increment based on run number
+          BASE_MINOR=34
+          NEW_MINOR=$((BASE_MINOR + ${{ github.run_number }}))
+          VERSION="1.0${NEW_MINOR}"
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Version: $VERSION"
