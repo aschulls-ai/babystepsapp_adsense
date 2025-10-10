@@ -172,7 +172,15 @@ jobs:
     - name: Export IPA
       working-directory: ./frontend
       run: |
-        # Create export options plist
+        # Check if APPLE_TEAM_ID is available
+        if [ -z "${{ secrets.APPLE_TEAM_ID }}" ]; then
+          echo "❌ APPLE_TEAM_ID secret not configured"
+          echo "Skipping IPA export - code signing not set up"
+          echo "Archive created successfully at: ios/App/build/App.xcarchive"
+          exit 0
+        fi
+        
+        # Create export options plist with team ID
         cat > ios/App/ExportOptions.plist << EOF
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -188,6 +196,8 @@ jobs:
             <false/>
             <key>uploadSymbols</key>
             <true/>
+            <key>signingStyle</key>
+            <string>automatic</string>
         </dict>
         </plist>
         EOF
