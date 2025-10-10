@@ -1980,8 +1980,8 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
       const bTime = new Date(b.timestamp || b.start_time || b.achieved_date);
       return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
     } else if (sortBy === 'type') {
-      const aType = a.display_type;
-      const bType = b.display_type;
+      const aType = a.type || a.activity_type || '';
+      const bType = b.type || b.activity_type || '';
       return sortOrder === 'desc' ? bType.localeCompare(aType) : aType.localeCompare(bType);
     }
     return 0;
