@@ -1171,7 +1171,7 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
         best_match = None
         best_score = 0
         
-        # Enhanced food keyword extraction - comprehensive list
+        # Enhanced food keyword extraction - comprehensive list including variations
         food_keywords = [
             'strawberr', 'honey', 'egg', 'avocado', 'peanut', 'nut', 'almond',
             'fish', 'salmon', 'tuna', 'milk', 'cheese', 'yogurt', 'butter',
@@ -1179,8 +1179,12 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             'pear', 'orange', 'grape', 'blueberr', 'peach', 'mango', 'melon',
             'watermelon', 'carrot', 'broccoli', 'spinach', 'pea', 'corn',
             'potato', 'tomato', 'rice', 'oat', 'bread', 'pasta', 'cereal',
-            'quinoa', 'bean', 'lentil', 'tofu', 'formula', 'water', 'juice'
+            'quinoa', 'bean', 'lentil', 'tofu', 'formula', 'water', 'juice',
+            'pesto', 'muffin', 'flour', 'oatmeal', 'scrambled', 'reheated'
         ]
+        
+        # Extract food keywords from query first
+        query_food_keywords = [kw for kw in food_keywords if kw in query_lower]
         
         for food_item in food_kb:
             question_lower = food_item.get('question', '').lower()
@@ -1192,43 +1196,49 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             
             # 1. Exact question match (highest priority)
             if query_lower == question_lower:
-                score = 200
+                score = 1000  # Extremely high score for exact match
             elif query_lower in question_lower:
-                score = 150
+                score = 500
             elif question_lower in query_lower:
-                score = 120
+                score = 400
             
-            # 2. Food keyword matching - find what food the user is asking about
-            query_food_keywords = [kw for kw in food_keywords if kw in query_lower]
+            # 2. CRITICAL: Food keyword matching - REQUIRED for scoring
             kb_food_keywords = [kw for kw in food_keywords if kw in question_lower or kw in answer_lower]
-            
-            # Check for matching food keywords
             matching_food_keywords = set(query_food_keywords) & set(kb_food_keywords)
+            
+            # If query has food keywords but this question doesn't match ANY, skip this question
+            if query_food_keywords and not matching_food_keywords:
+                continue  # Skip questions that don't match the food being asked about
+            
+            # If food keywords match, give massive bonus
             if matching_food_keywords:
-                # Strong bonus for matching the specific food item
-                score += 100 * len(matching_food_keywords)
+                score += 300 * len(matching_food_keywords)  # Much higher bonus
                 
-                # Additional context matching
+                # Additional context matching only if food matches
                 safety_context_words = ['safe', 'safety', 'eat', 'feed', 'give', 'okay', 'ok', 'when', 'age', 'can']
                 context_matches = sum(1 for word in safety_context_words if word in query_lower and word in question_lower)
-                score += context_matches * 10
+                score += context_matches * 5  # Reduced weight for context
             
-            # 3. Keyword overlap (for general matching)
-            query_words = set(query_lower.split())
-            question_words = set(question_lower.split())
-            common_words = query_words & question_words
-            score += len(common_words) * 5
+            # 3. Keyword overlap ONLY counts if we have food match or exact match
+            if matching_food_keywords or score >= 400:
+                query_words = set(query_lower.split())
+                question_words = set(question_lower.split())
+                common_words = query_words & question_words
+                # Exclude common stop words from scoring
+                stop_words = {'can', 'babies', 'baby', 'eat', 'food', 'my', 'the', 'a', 'an', 'is', 'are'}
+                meaningful_common = common_words - stop_words
+                score += len(meaningful_common) * 3
             
-            # 4. Category relevance
+            # 4. Category relevance (minor)
             if any(kw in category_lower for kw in ['feeding', 'safety', 'nutrition']):
-                score += 5
+                score += 2
             
             if score > best_score:
                 best_score = score
                 best_match = food_item
         
-        # Return result with more lenient threshold (accept any reasonable match)
-        if best_match and best_score >= 50:  # Lower threshold for better recall
+        # Return result - require substantial match score
+        if best_match and best_score >= 100:  # Higher threshold to prevent false matches
             question_id = best_match.get('id', 'Unknown')
             matched_question = best_match.get('question', '')
             answer = best_match.get('answer', '')
