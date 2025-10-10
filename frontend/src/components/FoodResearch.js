@@ -26,14 +26,35 @@ const FoodResearch = ({ currentBaby }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
-  const [quickChecks] = useState([
-    'Can my baby have honey?',
-    'Is avocado safe for babies?',
-    'When can babies have eggs?',
-    'Are strawberries safe for infants?',
-    'Can babies drink water?',
-    'Is peanut butter safe for babies?'
-  ]);
+  const [quickChecks, setQuickChecks] = useState([]);
+
+  // Load random questions from food_research.json for quick checks
+  useEffect(() => {
+    const loadRandomQuickChecks = async () => {
+      try {
+        const response = await fetch('/knowledge-base/food_research.json');
+        const data = await response.json();
+        
+        // Select 6 random questions
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 6).map(item => item.question);
+        setQuickChecks(selected);
+      } catch (error) {
+        console.error('Failed to load quick checks:', error);
+        // Fallback to default questions
+        setQuickChecks([
+          'Can my baby have honey?',
+          'Is avocado safe for babies?',
+          'When can babies have eggs?',
+          'Are strawberries safe for infants?',
+          'Can babies drink water?',
+          'Is peanut butter safe for babies?'
+        ]);
+      }
+    };
+    
+    loadRandomQuickChecks();
+  }, []); // Load once on mount
 
   useEffect(() => {
     if (currentBaby) {
