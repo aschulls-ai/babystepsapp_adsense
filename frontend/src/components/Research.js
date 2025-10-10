@@ -190,46 +190,9 @@ const Research = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-
-    const userMessage = {
-      id: Date.now(),
-      type: 'user',
-      content: inputValue.trim(),
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setLoading(true);
-
-    try {
-      // Always use standalone mode with AI integration
-      console.log('📚 Using standalone mode with AI for research');
-      const response = await offlineAPI.research(userMessage.content);
-      toast.info('Research completed');
-
-      const botMessage = {
-        id: Date.now() + 1,
-        type: 'bot',
-        content: response.data.answer,
-        sources: response.data.sources || [],
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-      console.error('Research failed:', error);
-      toast.error('Failed to get research answer. Please try again.');
-      const errorMessage = {
-        id: Date.now() + 1,
-        type: 'bot',
-        content: "I'm sorry, I'm having trouble accessing the research database right now. Please try again later, or consult your pediatrician for specific medical questions.",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setLoading(false);
-    }
+    
+    // Use performResearch to avoid code duplication
+    await performResearch(inputValue.trim());
   };
 
   const handleQuickQuestion = (question) => {
