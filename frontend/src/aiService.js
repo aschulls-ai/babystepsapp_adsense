@@ -1706,23 +1706,7 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     // Enhanced food research fallbacks - honey now handled by knowledge base
     if (context.type === 'food_research') {
       
-      if (lowerPrompt.includes('avocado')) {
-        return `✅ AVOCADO: Safe and excellent first food for babies! Rich in healthy fats crucial for brain development.
-        
-🥑 Preparation: Mash ripe avocado until smooth, serve at room temperature
-📋 Safety Level: SAFE for babies 6+ months
-🎂 Age Recommendation: 6+ months (great first food)
-💡 Tips: Choose very ripe avocados, serve fresh, watch for any allergic reactions`;
-      }
-      
-      if (lowerPrompt.includes('egg')) {
-        return `🥚 EGGS: Safe to introduce around 6 months. Actually recommended early to prevent allergies!
-        
-🍳 Preparation: Start with well-cooked scrambled eggs or hard-boiled egg yolk
-📋 Safety Level: SAFE with proper cooking
-🎂 Age Recommendation: 6+ months
-💡 Tips: Fully cook to reduce salmonella risk, start with small amounts`;
-      }
+      // All specific food queries now handled by knowledge base instead of hardcoded responses
       
       return `🔬 FOOD RESEARCH: For safety information about "${prompt}", here are general guidelines:
       
