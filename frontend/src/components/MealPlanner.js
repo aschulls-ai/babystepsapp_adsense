@@ -187,7 +187,7 @@ const MealPlanner = ({ currentBaby }) => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="meal-planner-title">
-            Meal Planner & Food Safety
+            Meal Planner
           </h1>
           <p className="text-lg text-gray-600 mt-2">
             Search meal ideas and food safety info for <span className="font-semibold text-orange-600">{currentBaby.name}</span> ({babyAgeMonths} months)
