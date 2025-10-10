@@ -427,30 +427,63 @@ class KnowledgeBaseService {
     return [...new Set([...keywords, ...importantWords])];
   }
 
-  // Semantic similarity for user's JSON format (handles both single answers and recipe arrays)
+  // Enhanced semantic similarity with better food and parenting term matching
   calculateSemanticSimilarity(query, questionObj) {
     const semanticGroups = {
-      feeding: ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food', 'burp', 'hungry'],
-      sleep: ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired', 'wake', 'rest'],
-      development: ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit', 'roll', 'month', 'age'],
-      health: ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom', 'temperature', 'illness'],
-      safety: ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect', 'choke', 'allergy'],
-      behavior: ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum', 'comfort'],
-      nutrition: ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium', 'recipe', 'meal'],
-      care: ['diaper', 'bath', 'bathing', 'clean', 'hygiene', 'care', 'routine', 'schedule'],
-      recipes: ['recipe', 'cook', 'cooking', 'prepare', 'ingredient', 'instructions', 'meal', 'breakfast', 'lunch', 'dinner', 'snack'],
-      foods: ['banana', 'apple', 'avocado', 'oats', 'rice', 'sweet potato', 'carrot', 'pear', 'chicken', 'fish', 'pasta', 'cheese']
+      // Food safety and introduction
+      food_safety: ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect', 'choke', 'allergy', 'allergic', 'reaction'],
+      food_introduction: ['introduce', 'start', 'begin', 'first', 'new', 'try', 'give', 'offer'],
+      food_timing: ['when', 'age', 'month', 'months', 'old', 'ready', 'appropriate'],
+      
+      // Specific foods (expanded)
+      fruits: ['apple', 'apples', 'banana', 'bananas', 'strawberry', 'strawberries', 'berry', 'berries', 'grape', 'grapes', 'pear', 'pears', 'orange', 'oranges'],
+      vegetables: ['avocado', 'avocados', 'carrot', 'carrots', 'sweet potato', 'potato', 'broccoli', 'peas', 'spinach', 'corn'],
+      proteins: ['egg', 'eggs', 'fish', 'salmon', 'chicken', 'meat', 'beef', 'turkey', 'beans', 'lentils', 'tofu'],
+      allergens: ['nut', 'nuts', 'peanut', 'peanuts', 'shellfish', 'dairy', 'milk', 'cheese', 'wheat', 'gluten', 'soy'],
+      sweeteners: ['honey', 'sugar', 'syrup', 'sweet', 'sweetener'],
+      
+      // Feeding and eating
+      feeding: ['feed', 'feeding', 'eat', 'eating', 'meal', 'meals', 'food', 'solid', 'solids', 'bite', 'chew'],
+      breastfeeding: ['breast', 'breastfeed', 'breastfeeding', 'nursing', 'nurse', 'latch'],
+      bottle_feeding: ['bottle', 'formula', 'milk'],
+      eating_skills: ['finger', 'self', 'spoon', 'cup', 'drink', 'sip', 'swallow'],
+      
+      // Sleep and rest
+      sleep: ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired', 'wake', 'rest', 'drowsy'],
+      sleep_training: ['train', 'training', 'routine', 'schedule', 'cry', 'soothe', 'comfort'],
+      
+      // Development and milestones
+      development: ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit', 'roll', 'stand'],
+      motor_skills: ['grasp', 'grab', 'hold', 'reach', 'kick', 'move', 'coordinate'],
+      
+      // Health and wellness  
+      health: ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom', 'temperature', 'illness', 'well'],
+      digestion: ['digest', 'stomach', 'tummy', 'gas', 'burp', 'spit', 'vomit', 'poop', 'constipat'],
+      
+      // Behavior and temperament
+      behavior: ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum', 'comfort', 'mood', 'happy', 'sad'],
+      
+      // Care and hygiene
+      care: ['diaper', 'change', 'bath', 'bathing', 'clean', 'wash', 'hygiene', 'soap', 'lotion'],
+      
+      // Cooking and preparation
+      recipes: ['recipe', 'cook', 'cooking', 'prepare', 'ingredient', 'instructions', 'bake', 'steam', 'boil', 'mash'],
+      meal_types: ['breakfast', 'lunch', 'dinner', 'snack', 'puree']
     };
 
     let matchCount = 0;
     let totalGroups = 0;
 
-    // Build searchable text from question and answer content
+    // Build comprehensive searchable text
     let questionText = questionObj.question.toLowerCase();
+    
+    // Add category for context
+    if (questionObj.category) {
+      questionText += ' ' + questionObj.category.toLowerCase();
+    }
     
     // Handle different answer formats
     if (Array.isArray(questionObj.answer)) {
-      // Multiple recipes format - include recipe names and ingredients for better matching
       questionObj.answer.forEach(recipe => {
         if (recipe.name) questionText += ' ' + recipe.name.toLowerCase();
         if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
@@ -459,10 +492,10 @@ class KnowledgeBaseService {
         if (recipe.instructions) questionText += ' ' + recipe.instructions.toLowerCase();
       });
     } else if (typeof questionObj.answer === 'string') {
-      // Single answer format
       questionText += ' ' + questionObj.answer.toLowerCase();
     }
 
+    // Calculate semantic overlap
     Object.values(semanticGroups).forEach(group => {
       const queryHasGroup = group.some(term => query.includes(term));
       const questionHasGroup = group.some(term => questionText.includes(term));
