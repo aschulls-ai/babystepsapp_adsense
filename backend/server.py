@@ -1542,7 +1542,7 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
                     score = 80
                 
                 # Require both parenting context AND topic match for scoring
-                parenting_keywords = ['baby', 'newborn', 'infant', 'feed', 'feeding', 'sleep', 'sleeping', 'cry', 'crying', 'diaper', 'milk', 'development', 'milestone', 'burp', 'burping']
+                parenting_keywords = ['baby', 'babies', 'newborn', 'infant', 'feed', 'feeding', 'sleep', 'sleeping', 'cry', 'crying', 'diaper', 'milk', 'development', 'milestone', 'burp', 'burping', 'walk', 'walking', 'crawl', 'crawling', 'sit', 'sitting', 'talk', 'talking', 'teeth', 'teething']
                 parenting_match_count = 0
                 for keyword in parenting_keywords:
                     if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
