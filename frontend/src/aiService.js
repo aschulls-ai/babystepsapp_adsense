@@ -22,64 +22,64 @@ class AIService {
     console.log('✅ AI service initialized - Ready for direct queries');
   }
 
-  // Generic AI query method using phone's internet
+  // Multi-tier search: AI → Google → Bing → Curated responses
   async query(prompt, context = {}) {
     try {
-      if (!navigator.onLine) {
-        console.log('📵 No internet connection - using Google search fallback');
-        return await this.googleSearchFallback(prompt, context);
-      }
-
-      console.log('🔍 AI Query:', prompt);
-      console.log('🌐 Making direct AI API call via phone internet...');
+      console.log('🔍 Multi-tier search for:', prompt);
       
-      const requestBody = {
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: this.getSystemPrompt(context.type || 'general')
-          },
-          {
-            role: 'user', 
-            content: prompt
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.7
-      };
-
-      // Direct API call using phone's internet connection
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      console.log('📥 API Response Status:', response.status, response.statusText);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Real AI response received via phone internet');
+      // Tier 1: Try AI first if online
+      if (navigator.onLine) {
+        console.log('🤖 Tier 1: Attempting AI via phone internet...');
         
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-          const aiResponse = data.choices[0].message.content;
-          this.saveToHistory(prompt, aiResponse, context.type);
-          return aiResponse;
-        } else {
-          throw new Error('Invalid response format from AI API');
+        try {
+          const requestBody = {
+            model: 'gpt-4o-mini',
+            messages: [
+              {
+                role: 'system',
+                content: this.getSystemPrompt(context.type || 'general')
+              },
+              {
+                role: 'user', 
+                content: prompt
+              }
+            ],
+            max_tokens: 700,
+            temperature: 0.7
+          };
+
+          const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.apiKey}`,
+            },
+            body: JSON.stringify(requestBody),
+            timeout: 10000 // 10 second timeout
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.choices && data.choices[0] && data.choices[0].message) {
+              const aiResponse = data.choices[0].message.content;
+              console.log('✅ Tier 1 Success: AI response received');
+              this.saveToHistory(prompt, aiResponse, context.type);
+              return aiResponse;
+            }
+          }
+        } catch (aiError) {
+          console.log('⚠️ Tier 1 Failed: AI unavailable, moving to Tier 2');
         }
-      } else {
-        console.log('🔄 AI API failed, falling back to Google search');
-        return await this.googleSearchFallback(prompt, context);
       }
+
+      // Tier 2: Enhanced search with curated responses
+      console.log('🔍 Tier 2: Using enhanced search fallback...');
+      return await this.enhancedSearchFallback(prompt, context);
+      
     } catch (error) {
-      console.error('❌ AI query failed:', error.message);
-      console.log('🔄 Using Google search fallback due to AI error');
-      return await this.googleSearchFallback(prompt, context);
+      console.error('❌ All search tiers failed:', error.message);
+      console.log('📚 Using offline knowledge base');
+      return this.getFallbackResponse(prompt, context);
     }
   }
 
