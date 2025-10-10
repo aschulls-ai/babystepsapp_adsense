@@ -970,22 +970,16 @@ const SleepForm = ({ babyId, onSuccess }) => {
       </div>
 
       <Button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        type="button"
+        disabled={true}
+        className="w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg cursor-not-allowed"
         data-testid="save-sleep-btn"
+        onClick={() => {
+          toast.info("Sleep logging temporarily disabled - was causing app issues");
+        }}
       >
-        {loading ? (
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            Saving...
-          </div>
-        ) : (
-          <>
-            <Save className="w-5 h-5 mr-2" />
-            Log Sleep Session
-          </>
-        )}
+        <Save className="w-5 h-5 mr-2" />
+        Sleep Logging Disabled
       </Button>
     </form>
   );
