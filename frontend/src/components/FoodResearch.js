@@ -35,9 +35,9 @@ const FoodResearch = ({ currentBaby }) => {
         const response = await fetch('/knowledge-base/food_research.json');
         const data = await response.json();
         
-        // Select 6 random questions
+        // Select 10 random questions for more variety
         const shuffled = [...data].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 6).map(item => item.question);
+        const selected = shuffled.slice(0, 10).map(item => item.question);
         setQuickChecks(selected);
       } catch (error) {
         console.error('Failed to load quick checks:', error);
