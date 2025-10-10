@@ -279,14 +279,27 @@ const Research = () => {
               {/* Input Form - Fixed at Bottom */}
               <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-600 p-6 bg-white dark:bg-gray-800">
                 <form onSubmit={handleSubmit} className="flex gap-3">
-                  <Input
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Ask about feeding, sleep, development..."
-                    disabled={loading}
-                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
-                    data-testid="research-question-input"
-                  />
+                  <div className="flex-1 relative">
+                    <Input
+                      value={inputValue}
+                      onChange={handleInputChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      placeholder="Ask about feeding, sleep, development..."
+                      disabled={loading}
+                      className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition-all duration-200"
+                      data-testid="research-question-input"
+                    />
+                    
+                    <QuestionSuggestions
+                      query={inputValue}
+                      onSelectQuestion={handleSelectSuggestion}
+                      type="ai_assistant"
+                      isOpen={showSuggestions}
+                      onToggle={setShowSuggestions}
+                      placeholder="Ask about parenting..."
+                    />
+                  </div>
                   <Button
                     type="submit"
                     disabled={loading || !inputValue.trim()}
