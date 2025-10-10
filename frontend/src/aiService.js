@@ -1470,38 +1470,51 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     return prompts[type] || prompts.general;
   }
 
-  // Food safety research - Uses Knowledge Base + LIVE WEB SEARCH via device internet
+  // Food safety research - ONLY uses Knowledge Base JSON file (no AI/web search)
   async researchFood(foodItem, babyAgeMonths = 6) {
-    console.log(`🔍 Food safety research: "${foodItem}" for ${babyAgeMonths}-month-old baby`);
+    console.log(`🔍 Food safety research (JSON only): "${foodItem}" for ${babyAgeMonths}-month-old baby`);
     
     try {
       const searchQuery = `Is ${foodItem} safe for ${babyAgeMonths} month old baby`;
 
-      // Use enhanced query system (knowledge base first, AI fallback)
-      const response = await this.query(searchQuery, { 
+      // ONLY search knowledge base - no AI or web search fallback
+      const kbResult = this.knowledgeBase.searchKnowledgeBase(searchQuery, 'food_research', {
         type: 'food_research',
         foodItem,
         babyAgeMonths 
       });
 
-      return {
-        answer: response,
-        safety_level: this.extractSafetyLevel(response),
-        age_recommendation: `${babyAgeMonths}+ months`,
-        sources: response.includes('Knowledge Base') ? 
-          ['Baby Steps Knowledge Base', 'Verified Food Safety Guidelines'] :
-          ['Live Web Search Results via Device Internet', 'Bing.com & Google.com Medical Sources']
-      };
+      if (kbResult && kbResult.question) {
+        console.log(`✅ Found answer in knowledge base: Question ID ${kbResult.question.id}`);
+        
+        const formattedAnswer = this.formatKnowledgeBaseAnswer(kbResult, searchQuery, { babyAgeMonths });
+        
+        return {
+          answer: formattedAnswer,
+          safety_level: this.extractSafetyLevel(formattedAnswer),
+          age_recommendation: kbResult.question.age_range || `${babyAgeMonths}+ months`,
+          sources: [`Knowledge Base Question ID: ${kbResult.question.id}`, 'Verified Food Safety Database']
+        };
+      } else {
+        console.log(`❌ No knowledge base entry found for "${foodItem}"`);
+        
+        const notFoundMessage = `**Food Safety Information Not Available**\n\nSorry, we don't have specific safety information for "${foodItem}" in our verified database yet.\n\n**Available in our database:**\n• Honey (12+ months)\n• Eggs (6+ months)\n• Avocado (6+ months) \n• Strawberries (6+ months)\n• Peanuts/Nuts (6+ months)\n\n**For other foods:** Please consult your pediatrician for guidance on "${foodItem}".`;
+        
+        return {
+          answer: notFoundMessage,
+          safety_level: 'unknown',
+          age_recommendation: 'Consult pediatrician',
+          sources: ['Knowledge Base - No entry found']
+        };
+      }
     } catch (error) {
-      console.log('🔄 All search methods unavailable, showing offline message');
-      
-      const offlineMessage = `🌐 **Search Required**\n\nTo get current food safety information about "${foodItem}", please ensure your device has an active internet connection.\n\n**This app searches:**\n• Knowledge base of common food safety questions\n• Live medical databases and pediatric guidelines\n• Current safety recommendations from AAP\n\n📱 Connect to internet or check knowledge base for comprehensive food safety results.`;
+      console.error('Knowledge base search failed:', error);
       
       return {
-        answer: offlineMessage,
-        safety_level: 'unknown',
-        age_recommendation: `${babyAgeMonths}+ months`,
-        sources: ['Search Required for Current Data']
+        answer: `**Knowledge Base Error**\n\nUnable to access food safety database. Please try again later.`,
+        safety_level: 'error',
+        age_recommendation: 'Unknown',
+        sources: ['Knowledge Base Error']
       };
     }
   }
