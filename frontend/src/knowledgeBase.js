@@ -274,7 +274,7 @@ class KnowledgeBaseService {
       .filter(word => !/^\d+$/.test(word)); // Remove pure numbers
   }
 
-  // Semantic similarity for user's simpler JSON format
+  // Semantic similarity for user's JSON format (handles both single answers and recipe arrays)
   calculateSemanticSimilarity(query, questionObj) {
     const semanticGroups = {
       feeding: ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food', 'burp', 'hungry'],
@@ -284,13 +284,31 @@ class KnowledgeBaseService {
       safety: ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect', 'choke', 'allergy'],
       behavior: ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum', 'comfort'],
       nutrition: ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium', 'recipe', 'meal'],
-      care: ['diaper', 'bath', 'bathing', 'clean', 'hygiene', 'care', 'routine', 'schedule']
+      care: ['diaper', 'bath', 'bathing', 'clean', 'hygiene', 'care', 'routine', 'schedule'],
+      recipes: ['recipe', 'cook', 'cooking', 'prepare', 'ingredient', 'instructions', 'meal', 'breakfast', 'lunch', 'dinner', 'snack'],
+      foods: ['banana', 'apple', 'avocado', 'oats', 'rice', 'sweet potato', 'carrot', 'pear', 'chicken', 'fish', 'pasta', 'cheese']
     };
 
     let matchCount = 0;
     let totalGroups = 0;
 
-    const questionText = questionObj.question.toLowerCase() + ' ' + (questionObj.answer?.toLowerCase() || '');
+    // Build searchable text from question and answer content
+    let questionText = questionObj.question.toLowerCase();
+    
+    // Handle different answer formats
+    if (Array.isArray(questionObj.answer)) {
+      // Multiple recipes format - include recipe names and ingredients for better matching
+      questionObj.answer.forEach(recipe => {
+        if (recipe.name) questionText += ' ' + recipe.name.toLowerCase();
+        if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+          questionText += ' ' + recipe.ingredients.join(' ').toLowerCase();
+        }
+        if (recipe.instructions) questionText += ' ' + recipe.instructions.toLowerCase();
+      });
+    } else if (typeof questionObj.answer === 'string') {
+      // Single answer format
+      questionText += ' ' + questionObj.answer.toLowerCase();
+    }
 
     Object.values(semanticGroups).forEach(group => {
       const queryHasGroup = group.some(term => query.includes(term));
