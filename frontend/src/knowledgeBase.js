@@ -283,26 +283,20 @@ class KnowledgeBaseService {
   // Add new question to knowledge base (learning from AI responses)
   async addQuestionToKnowledgeBase(type, query, answer, context = {}) {
     try {
-      if (!this.isLoaded[type]) return false;
+      if (!this.isLoaded[type] || !Array.isArray(this.knowledgeBases[type])) return false;
+
+      // Get the next ID by finding the highest existing ID
+      const maxId = this.knowledgeBases[type].length > 0 ? 
+        Math.max(...this.knowledgeBases[type].map(q => q.id || 0)) : 0;
 
       const newQuestion = {
-        id: `${type}_${Date.now()}`,
-        question: query.toLowerCase(),
-        keywords: this.extractKeywords(query.toLowerCase()),
+        id: maxId + 1,
         category: this.detectCategory(query, type),
-        age_range: context.babyAgeMonths ? [context.babyAgeMonths - 2, context.babyAgeMonths + 2] : [6, 24],
-        answer: answer,
-        tags: ["auto-generated"],
-        difficulty: "moderate",
-        created_at: new Date().toISOString()
+        question: query.trim(),
+        answer: answer
       };
 
-      const questionsKey = `${type}_questions`;
-      if (!this.knowledgeBases[type][questionsKey]) {
-        this.knowledgeBases[type][questionsKey] = [];
-      }
-
-      this.knowledgeBases[type][questionsKey].push(newQuestion);
+      this.knowledgeBases[type].push(newQuestion);
       localStorage.setItem(`kb_${type}`, JSON.stringify(this.knowledgeBases[type]));
 
       console.log(`✅ Added new question to ${type} knowledge base: "${query}"`);
