@@ -138,7 +138,10 @@ const Research = () => {
 
   // Separate research function for reusability
   const performResearch = async (question = inputValue) => {
-    if (!question.trim()) return;
+    if (!question.trim()) {
+      console.log('Empty question, skipping research');
+      return;
+    }
 
     setShowSuggestions(false);
     setLoading(true);
@@ -151,33 +154,64 @@ const Research = () => {
       content: question,
       timestamp: new Date().toISOString()
     };
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue(''); // Clear input
-
+    
     try {
+      setMessages(prev => [...prev, userMessage]);
+      setInputValue(''); // Clear input
+      
+      console.log('🔍 Researching question:', question);
       const response = await offlineAPI.research(question);
+      console.log('✅ Research response received:', response);
+      
+      // Handle both response structures safely
+      let answerContent = '';
+      let sourcesArray = [];
+      
+      if (response && response.data) {
+        answerContent = response.data.answer || response.data.content || '';
+        sourcesArray = response.data.sources || [];
+      } else if (response) {
+        answerContent = response.answer || response.content || '';
+        sourcesArray = response.sources || [];
+      }
+      
+      if (!answerContent || answerContent.trim() === '') {
+        throw new Error('Empty answer received from API');
+      }
       
       // Add AI response with unique ID
-      // offlineAPI.research returns { data: { answer, sources, timestamp } }
       const aiMessage = {
         id: `assistant-${Date.now()}-${Math.random()}`,
         type: 'assistant',
-        content: response.data?.answer || response.answer || 'I apologize, but I received an empty response. Please try again.',
-        sources: response.data?.sources || response.sources || [],
+        content: answerContent,
+        sources: Array.isArray(sourcesArray) ? sourcesArray : [],
         timestamp: new Date().toISOString()
       };
       
-      setMessages(prev => [...prev, aiMessage]);
+      console.log('Adding AI message to chat:', aiMessage);
+      setMessages(prev => {
+        const newMessages = [...prev, aiMessage];
+        console.log('Total messages:', newMessages.length);
+        return newMessages;
+      });
       toast.success('Got your answer!');
       
     } catch (error) {
-      console.error('Research error:', error);
+      console.error('❌ Research error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      
       const errorMessage = {
         id: `error-${Date.now()}-${Math.random()}`,
         type: 'assistant',
-        content: 'Sorry, I encountered an error while researching your question. Please try again.',
+        content: 'Sorry, I encountered an error while researching your question. Please try again or rephrase your question.',
+        sources: [],
         timestamp: new Date().toISOString()
       };
+      
       setMessages(prev => [...prev, errorMessage]);
       toast.error('Failed to get research results');
     } finally {
