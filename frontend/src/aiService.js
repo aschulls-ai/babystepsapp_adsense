@@ -1076,17 +1076,17 @@ class AIService {
 
       return {
         results: [{ 
-          title: `Meal Ideas: ${query}`, 
+          title: `Internet Search Results: ${query}`, 
           description: response,
-          ingredients: [],
-          instructions: [],
+          ingredients: ['Search results from live web sources'],
+          instructions: ['Results updated from current internet search'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'Varies by recipe'
+          prep_time: 'Live web data'
         }],
         query,
         age_months: ageMonths,
         ai_powered: true,
-        source: 'AI via Phone Internet'
+        source: 'Live Internet Search'
       };
     } catch (error) {
       console.log('🔄 Meal planning failed, using comprehensive fallback');
