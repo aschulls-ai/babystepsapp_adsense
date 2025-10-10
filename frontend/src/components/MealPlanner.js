@@ -323,7 +323,7 @@ const MealPlanner = ({ currentBaby }) => {
               </CardHeader>
               <CardContent>
                 <div className="prose prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-800">{searchResults.results}</div>
+                  <div className="break-words overflow-wrap-anywhere leading-relaxed whitespace-pre-wrap text-gray-800">{searchResults.results}</div>
                 </div>
               </CardContent>
             </Card>
