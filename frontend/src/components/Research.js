@@ -14,7 +14,9 @@ import {
   Stethoscope,
   Moon,
   Milk,
-  Clock
+  Clock,
+  AlertCircle,
+  Shield
 } from 'lucide-react';
 import { toast } from 'sonner';
 import PageAd from './ads/PageAd';
