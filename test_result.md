@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Frontend login UI issue: While backend authentication works perfectly, there appears to be a frontend login form issue preventing full UI testing. Investigation and fix required for login form to work correctly."
+## user_problem_statement: "Meal Planner search results are too generic and need actual recipe examples with detailed preparation instructions, similar to Bing's output. The age of the baby should be incorporated into the search query (e.g., 'when can my 9 month old baby have honey'). Results should be recipe-focused with step-by-step cooking instructions."
 
 ## backend:
   - task: "API endpoints functionality"
