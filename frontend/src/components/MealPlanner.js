@@ -26,6 +26,8 @@ const MealPlanner = ({ currentBaby }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const [formData, setFormData] = useState({
     meal_name: '',
     ingredients: [''],
