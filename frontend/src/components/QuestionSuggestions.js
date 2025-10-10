@@ -240,7 +240,7 @@ const QuestionSuggestions = ({
       return scoredQuestions
         .filter(item => item.score > 15) // Lower threshold to catch more variations
         .sort((a, b) => b.score - a.score)
-        .slice(0, 6) // Top 6 most relevant
+        .slice(0, 20) // Top 20 most relevant for better selection
         .map(item => item.question);
     };
   }, []);
