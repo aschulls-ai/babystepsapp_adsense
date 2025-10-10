@@ -143,9 +143,10 @@ const Research = () => {
     setShowSuggestions(false);
     setLoading(true);
 
-    // Add user message immediately
+    // Add user message immediately with unique ID
+    const timestamp = Date.now();
     const userMessage = {
-      id: Date.now(),
+      id: `user-${timestamp}-${Math.random()}`,
       type: 'user',
       content: question,
       timestamp: new Date().toISOString()
@@ -156,12 +157,12 @@ const Research = () => {
     try {
       const response = await offlineAPI.research(question);
       
-      // Add AI response
+      // Add AI response with unique ID
       const aiMessage = {
-        id: Date.now() + 1,
+        id: `assistant-${Date.now()}-${Math.random()}`,
         type: 'assistant',
-        content: response.answer,
-        sources: response.sources,
+        content: response.answer || 'I apologize, but I received an empty response. Please try again.',
+        sources: response.sources || [],
         timestamp: new Date().toISOString()
       };
       
@@ -171,7 +172,7 @@ const Research = () => {
     } catch (error) {
       console.error('Research error:', error);
       const errorMessage = {
-        id: Date.now() + 1,
+        id: `error-${Date.now()}-${Math.random()}`,
         type: 'assistant',
         content: 'Sorry, I encountered an error while researching your question. Please try again.',
         timestamp: new Date().toISOString()
