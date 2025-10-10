@@ -1824,10 +1824,22 @@ I'm currently unable to connect to live AI services to provide real-time researc
     return typeMapping[contextType] || null;
   }
 
-  // Format knowledge base answer with context (updated for user's JSON format)
+  // Format knowledge base answer with context (updated for multiple recipe format)
   formatKnowledgeBaseAnswer(kbResult, originalQuery, context) {
     const question = kbResult.question;
-    let formattedAnswer = question.answer;
+    let formattedAnswer;
+
+    // Handle different answer formats
+    if (Array.isArray(question.answer)) {
+      // Multiple recipe format - randomly select one recipe
+      const randomIndex = Math.floor(Math.random() * question.answer.length);
+      const selectedRecipe = question.answer[randomIndex];
+      
+      formattedAnswer = this.formatSingleRecipe(selectedRecipe, question, randomIndex + 1, question.answer.length);
+    } else {
+      // Single answer format (for AI Assistant and Food Research)
+      formattedAnswer = question.answer;
+    }
 
     // Add category and age range context if available
     let header = '';
@@ -1870,6 +1882,48 @@ I'm currently unable to connect to live AI services to provide real-time researc
     }
 
     return formattedAnswer;
+  }
+
+  // Format a single recipe from the array of options
+  formatSingleRecipe(recipe, question, recipeNumber, totalRecipes) {
+    let formatted = `# ${recipe.name}\n\n`;
+    
+    // Add variety indicator
+    formatted += `*Recipe ${recipeNumber} of ${totalRecipes} available options*\n\n`;
+    
+    // Add ingredients
+    if (recipe.ingredients && recipe.ingredients.length > 0) {
+      formatted += `**Ingredients:**\n`;
+      recipe.ingredients.forEach(ingredient => {
+        formatted += `• ${ingredient}\n`;
+      });
+      formatted += `\n`;
+    }
+    
+    // Add instructions
+    if (recipe.instructions) {
+      formatted += `**Instructions:**\n${recipe.instructions}\n\n`;
+    }
+    
+    // Add prep time if available
+    if (recipe.prep_time) {
+      formatted += `**Prep Time:** ${recipe.prep_time}\n\n`;
+    }
+    
+    // Add serving size if available
+    if (recipe.serving_size) {
+      formatted += `**Serving Size:** ${recipe.serving_size}\n\n`;
+    }
+    
+    // Add safety notes if available
+    if (recipe.safety_notes) {
+      formatted += `**Safety Notes:** ${recipe.safety_notes}\n\n`;
+    }
+    
+    // Add tip about multiple options
+    formatted += `💡 **Tip:** Search again to get a different recipe option for variety!`;
+    
+    return formatted;
   }
 
   // Get knowledge base statistics
