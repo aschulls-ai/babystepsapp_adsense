@@ -1005,21 +1005,15 @@ class AIService {
     return prompts[type] || prompts.general;
   }
 
-  // Food safety research - ALWAYS returns helpful response
+  // Food safety research - Uses LIVE WEB SEARCH via device internet
   async researchFood(foodItem, babyAgeMonths = 6) {
-    console.log(`🔬 Researching food safety: "${foodItem}" for ${babyAgeMonths}-month-old baby`);
+    console.log(`🌐 Live web search for food safety: "${foodItem}" for ${babyAgeMonths}-month-old baby`);
     
     try {
-      const prompt = `Is "${foodItem}" safe for a ${babyAgeMonths}-month-old baby? Please provide:
-      1. Safety assessment (safe/caution/avoid)
-      2. Recommended age for introduction
-      3. Preparation tips
-      4. Potential risks or allergies
-      5. Nutritional benefits
-      
-      Keep the response practical and parent-friendly.`;
+      const searchQuery = `Is "${foodItem}" safe for ${babyAgeMonths} month old baby food safety pediatric guidelines`;
 
-      const response = await this.query(prompt, { 
+      // Use real internet search system
+      const response = await this.query(searchQuery, { 
         type: 'food_research',
         foodItem,
         babyAgeMonths 
@@ -1029,23 +1023,18 @@ class AIService {
         answer: response,
         safety_level: this.extractSafetyLevel(response),
         age_recommendation: `${babyAgeMonths}+ months`,
-        sources: ['AI-Powered Pediatric Nutrition Assessment via Phone Internet']
+        sources: ['Live Web Search Results via Device Internet', 'Bing.com & Google.com Medical Sources']
       };
     } catch (error) {
-      console.log('🔄 Using comprehensive fallback response');
+      console.log('🔄 Internet search unavailable, showing offline message');
       
-      // Always provide a helpful response, never show network error
-      const fallbackResponse = this.getFallbackResponse(foodItem, { 
-        type: 'food_research', 
-        foodItem, 
-        babyAgeMonths 
-      });
+      const offlineMessage = `🌐 **Live Web Search Required**\n\nTo get current food safety information about "${foodItem}", please ensure your device has an active internet connection.\n\n**This app searches live sources:**\n• Medical databases and pediatric guidelines\n• Current safety recommendations from AAP\n• Real-time research from health authorities\n\n📱 Connect to internet for comprehensive food safety results.`;
       
       return {
-        answer: fallbackResponse,
-        safety_level: this.extractSafetyLevel(fallbackResponse),
+        answer: offlineMessage,
+        safety_level: 'unknown',
         age_recommendation: `${babyAgeMonths}+ months`,
-        sources: ['Comprehensive Nutrition Guidelines', 'Pediatric Safety Database']
+        sources: ['Internet Connection Required for Live Data']
       };
     }
   }
