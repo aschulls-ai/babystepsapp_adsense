@@ -15,15 +15,15 @@ class AIService {
   }
 
   initializeService() {
-    console.log('🤖 Initializing direct AI service for standalone app...');
+    console.log('🤖 Initializing AI service with knowledge base integration...');
     
     // Check internet connectivity
     if (!navigator.onLine) {
-      console.warn('⚠️ No internet connection - AI features will use fallback responses');
+      console.warn('⚠️ No internet connection - AI features will use knowledge base + fallback responses');
       this.isAvailable = false;
     }
     
-    console.log('✅ AI service initialized - Ready for direct queries');
+    console.log('✅ AI service initialized - Ready for knowledge base + AI queries');
   }
 
   // Real Internet Search using Device Connection
