@@ -98,7 +98,7 @@
   {"id":97,"category":"Parent Health","age_range":"0–6 months","question":"How can partners support a new mother?","answer":"Share nighttime care, encourage rest, provide meals, and watch for mood changes needing care."},
   {"id":98,"category":"Vaccines","age_range":"Birth","question":"What vaccine does my newborn get at birth?","answer":"Hepatitis B is typically given within 24 hours of birth unless deferred for medical reasons."},
   {"id":99,"category":"Vaccines","age_range":"0–24 months","question":"Why are infant vaccines important?","answer":"They prevent serious diseases like whooping cough, measles, and meningitis during a vulnerable period."},
-  {"id":100,"category":"Vaccines","age_range":"0–12 months","question":"Are vaccines safe for infants?","answer":"Yes—vaccines undergo rigorous testing and continuous safety monitoring by public health agencies."}
+,  {"id":100,"category":"Vaccines","age_range":"0–12 months","question":"Are vaccines safe for infants?","answer":"Yes—vaccines undergo rigorous testing and continuous safety monitoring by public health agencies."}
   {"id":101,"category":"Feeding","age_range":"6–9 months","question":"How often should I feed solids at 6 months?","answer":"Start with 1–2 small meals per day and increase to 3 by 8–9 months while continuing breast milk or formula."},
   {"id":102,"category":"Feeding","age_range":"6–12 months","question":"Should solids replace milk feedings right away?","answer":"No. Breast milk or formula remains the main nutrition source until about 12 months; solids complement it."},
   {"id":103,"category":"Feeding","age_range":"6–9 months","question":"How do I introduce new foods safely?","answer":"Offer one new food every 3–5 days and monitor for rash, swelling, or vomiting."},
