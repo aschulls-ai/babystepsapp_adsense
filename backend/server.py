@@ -1542,39 +1542,56 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
                         'score': score
                     })
         
-        # Search Food Research knowledge base
-        for item in food_research_kb:
-            question_lower = item.get('question', '').lower()
-            answer_lower = item.get('answer', '').lower()
-            
-            score = 0
-            # Exact question match (highest priority)
-            if query_lower == question_lower:
-                score = 100
-            elif query_lower in question_lower or question_lower in query_lower:
-                score = 80
-            
-            # Food name matching (REQUIRED for high relevance)
-            food_keywords = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese', 'food', 'eat', 'safe']
-            food_found = False
-            for keyword in food_keywords:
-                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
-                    score += 30  # Higher score for food matches
-                    food_found = True
-            
-            # Only add safety keyword points if food context was found
-            if food_found or any(word in query_lower for word in ['food', 'eat', 'safe']):
-                safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
-                for keyword in safety_keywords:
-                    if keyword in query_lower and keyword in question_lower:
+        # Search Food Research knowledge base (only for food safety related queries)
+        food_safety_context = any(keyword in query_lower for keyword in [
+            'food', 'eat', 'safe', 'safety', 'feed', 'feeding', 'nutrition', 'allergy', 'allergic'
+        ])
+        
+        # Specific food items that should trigger food research
+        specific_foods = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese', 'banana', 'apple', 'carrot']
+        has_specific_food = any(food in query_lower for food in specific_foods)
+        
+        if (food_safety_context or has_specific_food) and not has_unrelated_content:
+            for item in food_research_kb:
+                question_lower = item.get('question', '').lower()
+                answer_lower = item.get('answer', '').lower()
+                
+                score = 0
+                # Exact question match (highest priority)
+                if query_lower == question_lower:
+                    score = 100
+                elif query_lower in question_lower or question_lower in query_lower:
+                    score = 80
+                
+                # Food name matching (REQUIRED for relevance)
+                food_match_count = 0
+                for food in specific_foods:
+                    if food in query_lower and food in (question_lower + ' ' + answer_lower):
+                        food_match_count += 1
+                        score += 40  # Higher score for specific food matches
+                
+                # Require specific food match for food research
+                if food_match_count > 0:
+                    # Baby safety context (only if food was matched)
+                    baby_safety_keywords = ['baby', 'babies', 'infant', 'newborn', 'child']
+                    safety_keywords = ['safe', 'safety', 'eat', 'when', 'can']
+                    
+                    baby_context = any(keyword in query_lower for keyword in baby_safety_keywords)
+                    safety_context = any(keyword in query_lower for keyword in safety_keywords)
+                    
+                    # Bonus points for proper baby + food safety context
+                    if baby_context and safety_context:
+                        score += 20
+                    elif baby_context or safety_context:
                         score += 10
-            
-            if score > 0:
-                matches.append({
-                    'source': 'food_research',
-                    'item': item,
-                    'score': score
-                })
+                
+                # Only include if we have strong food + baby safety relevance
+                if score >= 40:  # Higher threshold for food research
+                    matches.append({
+                        'source': 'food_research',
+                        'item': item,
+                        'score': score
+                    })
         
         # Sort matches by score (highest first)
         matches.sort(key=lambda x: x['score'], reverse=True)
