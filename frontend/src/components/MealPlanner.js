@@ -81,7 +81,8 @@ const MealPlanner = ({ currentBaby }) => {
       const response = await offlineAPI.mealSearch(query, babyAgeMonths);
       
       if (response.data && response.data.results) {
-        setSearchResults(response.data.results);
+        // Set the entire response object, not just the results array
+        setSearchResults(response.data);
         setError('');
         toast.success('Meal ideas found');
       } else {
