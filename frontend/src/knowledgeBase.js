@@ -89,11 +89,14 @@ class KnowledgeBaseService {
       // Find the best match
       const bestMatch = this.findBestMatch(query, questions, context);
       
-      if (bestMatch && bestMatch.similarity >= 0.3) { // 30% minimum similarity threshold
+      // Set different thresholds based on type - food research needs higher precision
+      const minThreshold = type === 'food_research' ? 0.6 : 0.3; // 60% for food safety, 30% for others
+      
+      if (bestMatch && bestMatch.similarity >= minThreshold) {
         console.log(`✅ Found match in ${type} (${Math.round(bestMatch.similarity * 100)}% similarity): ${bestMatch.question.question}`);
         return bestMatch;
       } else {
-        console.log(`⚠️ No good match found in ${type} (best: ${bestMatch ? Math.round(bestMatch.similarity * 100) : 0}%), using fallback`);
+        console.log(`⚠️ No good match found in ${type} (best: ${bestMatch ? Math.round(bestMatch.similarity * 100) : 0}%), threshold: ${Math.round(minThreshold * 100)}%, using fallback`);
         return null;
       }
     } catch (error) {
