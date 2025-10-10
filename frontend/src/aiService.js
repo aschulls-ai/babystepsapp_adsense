@@ -1703,15 +1703,8 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     
     const lowerPrompt = prompt.toLowerCase();
     
-    // Enhanced food research fallbacks
+    // Enhanced food research fallbacks - honey now handled by knowledge base
     if (context.type === 'food_research') {
-      if (lowerPrompt.includes('honey')) {
-        return `🚫 HONEY: Never give honey to babies under 12 months old due to botulism risk. Honey contains spores that can cause serious illness in infants whose immune systems aren't fully developed. Wait until after their first birthday.
-        
-📋 Safety Level: AVOID until 12+ months
-🎂 Age Recommendation: 12+ months only
-📚 Source: American Academy of Pediatrics, CDC Guidelines`;
-      }
       
       if (lowerPrompt.includes('avocado')) {
         return `✅ AVOCADO: Safe and excellent first food for babies! Rich in healthy fats crucial for brain development.
