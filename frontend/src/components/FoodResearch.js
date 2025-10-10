@@ -125,7 +125,10 @@ const FoodResearch = ({ currentBaby }) => {
   const handleSearch = async (searchQuery = query) => {
     if (!searchQuery.trim()) return;
 
+    setShowSuggestions(false);
     setLoading(true);
+    setResults(null); // Clear previous results
+    
     try {
       const babyAgeMonths = currentBaby ? 
         Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 6;
@@ -135,6 +138,16 @@ const FoodResearch = ({ currentBaby }) => {
       const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
       setResults(response.data);
       setQuery('');
+      
+      // Add to search history
+      const newSearch = {
+        id: Date.now(),
+        query: searchQuery,
+        result: response.data,
+        timestamp: new Date().toISOString()
+      };
+      setSearchHistory(prev => [newSearch, ...prev.slice(0, 4)]);
+      
       toast.success('Food research completed');
       
       // Refresh safety history
