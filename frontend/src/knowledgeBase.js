@@ -307,26 +307,30 @@ class KnowledgeBaseService {
     }
   }
 
-  // Simple category detection
+  // Category detection matching user's format
   detectCategory(query, type) {
     const queryLower = query.toLowerCase();
     
+    // Common categories across all types
+    if (queryLower.includes('feed') || queryLower.includes('eat') || queryLower.includes('milk') || queryLower.includes('bottle')) return 'Feeding';
+    if (queryLower.includes('sleep') || queryLower.includes('nap') || queryLower.includes('bedtime')) return 'Sleep';
+    if (queryLower.includes('develop') || queryLower.includes('milestone') || queryLower.includes('growth')) return 'Development';
+    if (queryLower.includes('health') || queryLower.includes('sick') || queryLower.includes('fever')) return 'Health';
+    if (queryLower.includes('safe') || queryLower.includes('danger') || queryLower.includes('avoid')) return 'Safety';
+    if (queryLower.includes('cry') || queryLower.includes('fussy') || queryLower.includes('behavior')) return 'Behavior';
+    
+    // Type-specific categories
     if (type === 'meal_planner') {
-      if (queryLower.includes('breakfast') || queryLower.includes('morning')) return 'breakfast';
-      if (queryLower.includes('lunch') || queryLower.includes('midday')) return 'lunch';
-      if (queryLower.includes('dinner') || queryLower.includes('evening')) return 'dinner';
-      if (queryLower.includes('snack') || queryLower.includes('finger')) return 'snack';
-    } else if (type === 'food_research') {
-      if (queryLower.includes('safe') || queryLower.includes('danger')) return 'safety';
-      if (queryLower.includes('allerg') || queryLower.includes('reaction')) return 'allergy';
-      if (queryLower.includes('nutrition') || queryLower.includes('vitamin')) return 'nutrition';
-    } else if (type === 'ai_assistant') {
-      if (queryLower.includes('sleep') || queryLower.includes('nap')) return 'sleep';
-      if (queryLower.includes('develop') || queryLower.includes('milestone')) return 'development';
-      if (queryLower.includes('cry') || queryLower.includes('fussy')) return 'behavior';
+      if (queryLower.includes('recipe') || queryLower.includes('cook') || queryLower.includes('prepare')) return 'Recipes';
+      if (queryLower.includes('nutrition') || queryLower.includes('vitamin') || queryLower.includes('healthy')) return 'Nutrition';
+    }
+    
+    if (type === 'food_research') {
+      if (queryLower.includes('allerg') || queryLower.includes('reaction')) return 'Safety';
+      if (queryLower.includes('nutrition') || queryLower.includes('vitamin')) return 'Nutrition';
     }
 
-    return 'general';
+    return 'General';
   }
 
   // Get statistics about knowledge base
