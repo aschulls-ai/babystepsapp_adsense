@@ -216,117 +216,341 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     
     // Family meal ideas that baby can share
     if (lowerQuery.includes('family meal') || lowerQuery.includes('baby can share')) {
-      return `**Family Meal Ideas for ${babyAge}-Month-Old to Share**
+      return `**Family Meal Recipe Ideas for ${babyAge}-Month-Old to Share**
 
-**1. Slow Cooker Chicken and Vegetable Stew**
-• Ingredients: Chicken breast, carrots, sweet potatoes, celery, low-sodium broth
-• Instructions: Cook 6-8 hours on low. Shred chicken finely, mash vegetables for baby
-• Family portion: Serve with rice or bread
-• Baby portion: Ensure pieces are smaller than baby's thumb
+**Recipe 1: Slow Cooker Chicken and Sweet Potato Stew**
+**Ingredients:**
+• 1 lb boneless chicken breast, cubed
+• 2 medium sweet potatoes, diced small
+• 1 cup carrots, diced
+• 2 cups low-sodium chicken broth
+• 1 tsp mild herbs (optional for family)
 
-**2. Baked Salmon with Roasted Vegetables** 
-• Ingredients: Salmon fillet, zucchini, bell peppers, olive oil
-• Instructions: Bake at 375°F for 15-20 minutes. Flake salmon, cut vegetables into soft strips
-• Family portion: Season after cooking baby's portion
-• Baby portion: Check for bones, serve in small flakes
+**Detailed Instructions:**
+1. Add chicken, sweet potatoes, and carrots to slow cooker
+2. Pour broth over ingredients, ensuring everything is covered
+3. Cook on LOW for 6-8 hours until chicken shreds easily
+4. For baby: Remove portion, shred chicken finely, mash vegetables until soft
+5. For family: Season remaining portion with herbs, serve over rice or with bread
+6. Test temperature before serving to baby (should be warm, not hot)
 
-**3. Ground Turkey and Sweet Potato Hash**
-• Ingredients: Ground turkey, sweet potatoes, onions, mild herbs
-• Instructions: Cook turkey thoroughly, dice sweet potatoes small, sauté until soft
-• Family portion: Add spices and seasonings
-• Baby portion: Ensure turkey is well-cooked and vegetables are soft
+**Safety Notes:** Ensure no pieces larger than baby's thumb, check for proper cooking temperature
 
-**Serving Tips:** Always test temperature, cut food appropriately, and supervise eating. These meals provide balanced nutrition for the whole family while being safe for baby.`;
+**Recipe 2: One-Pan Baked Salmon with Roasted Vegetables**
+**Ingredients:**
+• 4 salmon fillets (remove 1 portion for baby before seasoning)
+• 2 zucchini, cut into strips
+• 1 bell pepper, cut into soft strips
+• 2 tbsp olive oil
+
+**Detailed Instructions:**
+1. Preheat oven to 375°F
+2. Place vegetables on baking sheet, drizzle with 1 tbsp oil
+3. Bake vegetables for 10 minutes
+4. Add salmon fillets, bake additional 12-15 minutes
+5. For baby: Remove 1 unseasoned salmon fillet, flake carefully (check for bones), serve with soft vegetables
+6. For family: Season remaining salmon and vegetables as desired
+7. Ensure baby portions are completely boneless and appropriate texture
+
+**Recipe 3: Ground Turkey and Vegetable Rice Bowl**
+**Ingredients:**
+• 1 lb ground turkey (93% lean)
+• 1 cup jasmine rice
+• 1 sweet potato, finely diced
+• 1/2 cup peas (fresh or frozen)
+• 2 cups low-sodium chicken broth
+
+**Detailed Instructions:**
+1. Cook rice according to package directions using broth instead of water
+2. In large skillet, cook ground turkey over medium heat until fully cooked (165°F internal temp)
+3. Add diced sweet potato, cook 8-10 minutes until tender
+4. Add peas in final 2 minutes of cooking
+5. For baby: Ensure sweet potato is very soft, turkey is finely crumbled, serve small portions
+6. For family: Season remaining portion, serve over rice
+7. Let baby portion cool to appropriate temperature
+
+**Storage & Reheating:** These recipes freeze well in individual portions for up to 3 months`;
     }
 
-    // Breakfast recipes
+    // Breakfast recipes with detailed instructions
     if (lowerQuery.includes('breakfast')) {
-      return `**Breakfast Recipes for ${babyAge}-Month-Old**
+      return `**Detailed Breakfast Recipe Collection for ${babyAge}-Month-Old**
 
-**1. Baby's First Pancakes**
-• Ingredients: 1 banana, 1 egg, 2 tbsp oat flour
-• Instructions: Mash banana, whisk in egg, add flour. Cook small pancakes on low heat
-• Serving: Cut into strips, serve warm. No syrup needed - banana provides sweetness
-• Prep time: 10 minutes
+**Recipe 1: Baby's First Banana Pancakes (Serves 2-3 babies)**
+**Ingredients:**
+• 1 ripe banana (brown spots are perfect)
+• 1 large egg
+• 2-3 tbsp oat flour (or finely ground oats)
+• Pinch of cinnamon (optional, 8+ months)
 
-**2. Overnight Oats for Baby**
-• Ingredients: 1/4 cup rolled oats, 1/4 cup breast milk/formula, mashed berries
-• Instructions: Mix ingredients, refrigerate overnight. Stir before serving
-• Serving: Ensure oats are soft, check temperature
-• Prep time: 5 minutes (plus overnight)
+**Step-by-Step Instructions:**
+1. Mash banana thoroughly with fork until completely smooth
+2. Crack egg into bowl, whisk until well combined with banana
+3. Gradually add oat flour, stirring until batter consistency (not too thick)
+4. Heat non-stick pan over LOW heat (important: low heat prevents burning)
+5. Pour small portions (2-3 inches diameter) onto pan
+6. Cook 2-3 minutes until edges set and bubbles form
+7. Flip carefully with spatula, cook 1-2 minutes more
+8. Cool completely before cutting into finger-width strips
+9. Serve at room temperature - natural banana sweetness means no syrup needed
 
-**3. Veggie Scrambled Eggs**
-• Ingredients: 2 eggs, finely diced bell peppers, mild cheese (if no allergies)
-• Instructions: Scramble eggs on low heat, add soft vegetables in last minute
-• Serving: Cut into small pieces, ensure eggs are fully cooked
-• Prep time: 8 minutes
+**Safety & Storage:** Pancakes should be soft enough to mash between fingers. Store leftovers in fridge 2-3 days, freeze up to 1 month.
 
-**Storage:** Most can be made ahead and reheated. Always check temperature before serving.`;
+**Recipe 2: Overnight Oats for Busy Mornings**
+**Ingredients:**
+• 1/4 cup rolled oats (not instant)
+• 1/4 cup breast milk, formula, or whole milk (12+ months)
+• 1 tbsp mashed fruit (berries, banana, or apple)
+• Optional: tiny pinch cinnamon (8+ months)
+
+**Detailed Preparation:**
+1. Combine oats and milk in small jar or container
+2. Add mashed fruit of choice, stir well
+3. Cover and refrigerate minimum 4 hours, preferably overnight
+4. Before serving, stir thoroughly and check consistency
+5. If too thick, add more milk; if too thin, add more oats
+6. Serve cold or slightly warmed (test temperature on wrist)
+7. For younger babies (6-8 months): blend mixture until smoother
+
+**Variations by Age:** 
+- 6-8 months: Blend smooth, single fruit flavors
+- 8-12 months: Leave texture, combine fruits
+- 12+ months: Add small soft pieces of fruit on top
+
+**Recipe 3: Veggie-Packed Scrambled Eggs**
+**Ingredients:**
+• 2 large eggs
+• 1 tbsp breast milk, formula, or regular milk
+• 1 tbsp finely diced bell pepper (red or yellow are sweeter)
+• 1 tbsp finely diced soft tomato (seeds removed)
+• 1 tsp olive oil or butter
+
+**Cooking Instructions:**
+1. Heat oil in non-stick pan over LOW-MEDIUM heat
+2. Add diced vegetables, cook 3-4 minutes until very soft
+3. In bowl, whisk eggs with milk until well combined
+4. Pour egg mixture over vegetables in pan
+5. Using spatula, gently stir and scramble over low heat
+6. Cook until eggs are fully set but still soft (no runny parts)
+7. Remove from heat, let cool slightly
+8. Cut into small, manageable pieces for baby
+9. Test temperature before serving
+
+**Texture Guide:** For 6-8 months: mash slightly; 8+ months: serve in small soft pieces
+
+**Nutritional Benefits:** High protein for growth, vegetables provide vitamins, healthy fats support brain development`;
     }
 
-    // Lunch/Dinner recipes
+    // Lunch/Dinner recipes with extensive detail
     if (lowerQuery.includes('lunch') || lowerQuery.includes('dinner')) {
-      return `**Nutritious Lunch & Dinner Recipes for ${babyAge}-Month-Old**
+      return `**Complete Lunch & Dinner Recipe Collection for ${babyAge}-Month-Old**
 
-**1. Mini Meatballs with Hidden Vegetables**
-• Ingredients: Ground beef/turkey, finely grated carrot, zucchini, breadcrumbs
-• Instructions: Mix ingredients, form small meatballs, bake at 350°F for 15-20 minutes
-• Serving: Ensure well-cooked, cut in half to prevent choking
-• Prep time: 25 minutes
+**Recipe 1: Hidden Veggie Mini Meatballs (Makes 20-24 mini meatballs)**
+**Ingredients:**
+• 1 lb ground beef or turkey (85% lean works best)
+• 1/2 cup finely grated carrot
+• 1/2 cup finely grated zucchini (squeeze out excess water)
+• 1/4 cup breadcrumbs (or ground oats)
+• 1 egg, beaten
+• 1 tbsp olive oil
 
-**2. Creamy Chicken and Rice**  
-• Ingredients: Chicken breast, jasmine rice, low-sodium chicken broth, mixed vegetables
-• Instructions: Cook rice in broth, add diced chicken and vegetables, simmer until tender
-• Serving: Shred chicken finely, ensure rice is very soft
-• Prep time: 30 minutes
+**Detailed Cooking Process:**
+1. Preheat oven to 350°F, line baking sheet with parchment paper
+2. Grate vegetables as finely as possible (use food processor if available)
+3. Squeeze grated zucchini in clean kitchen towel to remove excess moisture
+4. In large bowl, combine meat, vegetables, breadcrumbs, and egg
+5. Mix gently with hands until just combined (don't overmix)
+6. Roll into small balls (about 1 inch diameter - perfect for baby hands)
+7. Place on prepared baking sheet, drizzle lightly with olive oil
+8. Bake 15-20 minutes until internal temperature reaches 165°F
+9. Cool completely before serving to baby
+10. For serving: cut each meatball in half to prevent choking
 
-**3. Lentil and Sweet Potato Puree**
-• Ingredients: Red lentils, sweet potato, mild herbs, olive oil
-• Instructions: Boil lentils and diced sweet potato until very soft, mash together
-• Serving: Can be thinned with breast milk or served as finger food
-• Prep time: 20 minutes
+**Storage Instructions:** Freeze cooked meatballs in single layer, transfer to freezer bags. Reheat from frozen in 350°F oven for 10-12 minutes.
 
-**Batch Cooking:** These recipes freeze well in ice cube trays for easy portion control.`;
+**Recipe 2: Creamy Chicken and Vegetable Rice (Family-Style)**
+**Ingredients:**
+• 2 chicken breasts, cut into small cubes
+• 1 cup jasmine rice
+• 2 cups low-sodium chicken broth
+• 1/2 cup frozen mixed vegetables (peas, carrots, corn)
+• 1 tbsp olive oil
+• 1/4 cup cream cheese (optional, for creaminess)
+
+**Step-by-Step Instructions:**
+1. Heat olive oil in large pot over medium heat
+2. Add cubed chicken, cook 5-7 minutes until no longer pink
+3. Add rice to pot, stir to coat with oil and chicken juices
+4. Pour in chicken broth, bring to boil
+5. Reduce heat to low, cover tightly, simmer 18-20 minutes
+6. In final 5 minutes, add frozen vegetables on top (don't stir yet)
+7. Remove from heat, let stand 5 minutes
+8. Stir in cream cheese if using, fluff with fork
+9. For baby: Ensure chicken is shredded very fine, rice is soft, vegetables are mashable
+10. Cool to appropriate temperature before serving
+
+**Texture Modifications by Age:**
+- 6-8 months: Blend or mash to smooth consistency
+- 8-10 months: Leave small, soft chunks
+- 10+ months: Serve as prepared, ensure pieces are appropriate size
+
+**Recipe 3: Nutrient-Dense Lentil Sweet Potato Mash**
+**Ingredients:**
+• 1/2 cup red lentils (cook faster and softer)
+• 1 medium sweet potato, peeled and cubed
+• 1 1/2 cups water or low-sodium vegetable broth
+• 1 tsp olive oil
+• Optional: tiny pinch of mild herbs (thyme or oregano for 8+ months)
+
+**Cooking Method:**
+1. Rinse lentils thoroughly under cold water
+2. In medium pot, combine lentils, sweet potato cubes, and liquid
+3. Bring to boil, then reduce heat to gentle simmer
+4. Cook 15-20 minutes until both lentils and sweet potato are very soft
+5. Drain any excess liquid (save it - great for thinning if needed)
+6. Mash together with fork or potato masher
+7. Add olive oil and herbs if using
+8. For smoother consistency: use immersion blender or food processor
+9. Cool to appropriate temperature
+10. Thin with reserved cooking liquid or breast milk/formula if needed
+
+**Serving Suggestions:** 
+- Serve as puree for younger babies
+- Form into small balls for self-feeding practice
+- Use as a dip for soft bread or vegetables
+- Freeze in ice cube trays for individual portions
+
+**Nutritional Powerhouse:** High in protein, fiber, iron, and beta-carotene - perfect complete meal for growing babies`;
     }
 
-    // Finger foods
+    // Finger foods with extensive preparation details
     if (lowerQuery.includes('finger food') || lowerQuery.includes('self feeding')) {
-      return `**Finger Food Recipes for ${babyAge}-Month-Old**
+      return `**Comprehensive Finger Food Recipe Guide for ${babyAge}-Month-Old**
 
-**1. Sweet Potato Fries**
-• Ingredients: Sweet potato, olive oil
-• Instructions: Cut into thick strips, toss with oil, bake at 400°F for 20-25 minutes
-• Serving: Ensure soft enough to mash between fingers
-• Prep time: 30 minutes
+**Recipe 1: Perfect Sweet Potato Fries (Self-Feeding Starter)**
+**Ingredients:**
+• 2 medium sweet potatoes (orange variety works best)
+• 1-2 tbsp olive oil
+• Optional: tiny pinch of cinnamon (8+ months only)
 
-**2. Cheese and Vegetable Muffins**
-• Ingredients: Whole wheat flour, grated cheese, finely diced vegetables, eggs
-• Instructions: Mix ingredients, bake in mini muffin tins at 350°F for 15 minutes
-• Serving: Cool completely, great for on-the-go
-• Prep time: 25 minutes
+**Detailed Preparation:**
+1. Preheat oven to 400°F, line baking sheet with parchment
+2. Wash and peel sweet potatoes thoroughly
+3. Cut into thick strips (about finger-width - 1/2 inch thick minimum)
+4. Soak cut potatoes in cold water for 30 minutes (removes excess starch)
+5. Pat completely dry with paper towels
+6. Toss with olive oil until lightly coated
+7. Arrange in single layer on baking sheet (don't overcrowd)
+8. Bake 20-25 minutes until tender enough to mash between fingers
+9. Test doneness: should compress easily when pressed
+10. Cool completely before serving to baby
 
-**3. Banana Oat Cookies (No Sugar Added)**
-• Ingredients: Mashed banana, rolled oats, cinnamon
-• Instructions: Mix ingredients, form small cookies, bake at 325°F for 12 minutes
-• Serving: Soft cookies that dissolve easily
-• Prep time: 20 minutes
+**Safety Check:** Fries should be soft enough to mash between your thumb and finger - if too firm, bake 5 more minutes.
 
-**Safety:** All finger foods should be easily mashed between fingers and larger than baby's mouth.`;
+**Recipe 2: Cheese and Veggie Mini Muffins (Makes 12 mini muffins)**
+**Ingredients:**
+• 1 cup whole wheat flour (or oat flour for gluten-free)
+• 1/2 cup finely grated mild cheese (cheddar or mozzarella)
+• 1/4 cup finely diced vegetables (zucchini, carrot, bell pepper)
+• 2 eggs
+• 1/2 cup milk (breast, formula, or whole milk for 12+ months)
+• 2 tbsp olive oil
+• 1/2 tsp baking powder
+
+**Baking Instructions:**
+1. Preheat oven to 350°F, grease mini muffin tin or use paper liners
+2. Prepare vegetables: dice very finely (1/8 inch pieces or smaller)
+3. In large bowl, whisk together flour and baking powder
+4. In separate bowl, beat eggs, then add milk and oil
+5. Add grated cheese and diced vegetables to wet ingredients
+6. Pour wet ingredients into flour mixture, stir just until combined
+7. Fill mini muffin cups 2/3 full (important: don't overfill)
+8. Bake 12-15 minutes until tops are lightly golden
+9. Cool in pan 5 minutes, then transfer to wire rack
+10. Cool completely before serving (muffins will be very hot inside)
+
+**Storage & Serving:** Store in airtight container 3-4 days, freeze up to 2 months. Perfect size for baby hands!
+
+**Recipe 3: No-Sugar Banana Oat Cookies (Baby's First Cookie)**
+**Ingredients:**
+• 2 ripe bananas (the spottier, the better)
+• 1 cup old-fashioned oats
+• 1/4 tsp cinnamon (8+ months only)
+• Optional add-ins: finely chopped soft fruit, ground nuts (if no allergies, 12+ months)
+
+**Simple Baking Process:**
+1. Preheat oven to 325°F, line baking sheet with parchment
+2. Mash bananas completely until smooth (no lumps)
+3. Add oats to mashed banana, stir well
+4. Let mixture sit 10 minutes so oats absorb banana moisture
+5. Add cinnamon if using, stir to combine
+6. Drop spoonfuls of mixture onto baking sheet
+7. Flatten slightly with back of spoon (cookies won't spread much)
+8. Bake 12-15 minutes until edges are lightly firm
+9. Cool completely on baking sheet (they'll firm up as they cool)
+10. Test texture: should be soft enough to dissolve easily in baby's mouth
+
+**Perfect First Cookie:** These cookies are naturally sweet, soft, and dissolve easily - ideal for babies learning to self-feed!
+
+**Universal Safety Reminders for All Finger Foods:**
+• Always supervise eating
+• Foods should be easily mashed between your fingers
+• Size should be larger than baby's mouth but smaller than throat
+• Introduce one new ingredient at a time
+• Watch for allergic reactions
+• Never force feeding - let baby explore at their own pace`;
     }
 
-    // Generic meal ideas with recipes
-    return `**Complete Meal Recipes for ${babyAge}-Month-Old**
+    // Enhanced generic meal ideas with specific recipes
+    return `**Age-Appropriate Recipe Collection for ${babyAge}-Month-Old**
 
-**Quick & Easy Options:**
-• **15-Minute Chicken and Veggie Bowl:** Diced chicken, steamed broccoli, soft rice
-• **No-Cook Avocado Mash:** Avocado, banana, breast milk for consistency
-• **Simple Pasta:** Well-cooked small pasta with butter and mild cheese
+**Quick 15-Minute Recipes:**
 
-**Make-Ahead Meals:**
-• **Freezer-Friendly Purees:** Batch cook vegetables and proteins, freeze in portions
-• **Overnight Prep:** Slow cooker meals that cook while you sleep
+**Recipe 1: Chicken and Veggie Power Bowl**
+**Ingredients:** Pre-cooked chicken breast, frozen mixed vegetables, quick-cooking brown rice
+**Instructions:** 
+1. Cook rice according to package (8-10 minutes)
+2. Steam frozen vegetables until very soft (5-6 minutes)
+3. Shred chicken into tiny pieces
+4. Combine all, add splash of chicken broth for moisture
+5. Cool and serve in appropriate pieces
 
-Always ensure foods are appropriate texture, temperature-tested, and cut safely for your baby's development stage.`;
+**Recipe 2: No-Cook Avocado Banana Mash**
+**Ingredients:** 1/2 ripe avocado, 1/2 ripe banana, breast milk/formula for thinning
+**Instructions:**
+1. Mash avocado and banana together until smooth
+2. Add liquid gradually until desired consistency
+3. Serve immediately (doesn't store well)
+4. Perfect for babies 6+ months
+
+**Recipe 3: Soft Pasta with Butter and Cheese**
+**Ingredients:** Small pasta shapes, butter, mild grated cheese
+**Instructions:**
+1. Cook pasta until very soft (follow package time + 2-3 extra minutes)
+2. Drain, toss with small amount of butter
+3. Add grated cheese while warm
+4. Cool to appropriate temperature, ensure pieces are safe size
+
+**Make-Ahead Batch Cooking Recipes:**
+
+**Freezer-Friendly Puree Base:**
+- Steam large batches of sweet potato, butternut squash, carrots
+- Puree with cooking liquid, freeze in ice cube trays
+- Thaw individual portions as needed
+- Mix with proteins or grains for complete meals
+
+**Overnight Slow Cooker Prep:**
+- Combine chicken, root vegetables, low-sodium broth in slow cooker
+- Cook on low 6-8 hours while sleeping
+- Shred and portion in morning for week's meals
+- Freeze individual portions for quick reheating
+
+**Safety and Texture Guidelines for ${babyAge} Months:**
+${babyAge < 8 ? '• Smooth purees and very soft finger foods\n• No chunks larger than rice grain\n• Foods should melt in mouth' : 
+  babyAge < 12 ? '• Soft, mashable textures\n• Small, manageable pieces\n• Foods should break apart easily' : 
+  '• Most family foods with modifications\n• Cut to prevent choking\n• Supervise all eating'}
+
+Always ensure proper temperature, appropriate texture for your baby's developmental stage, and supervise all eating.`;
   }
 
   // Generate parenting answers (Bing format)  
