@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "category": "Feeding",
+    "age_range": "0–3 months",
+    "question": "How often should I feed my newborn?",
+    "answer": "Most newborns eat every 2–3 hours (8–12 times daily). Feed on demand whenever your baby shows hunger cues like rooting, sucking motions, or fussiness."
+  },
+  {
+    "id": 2,
+    "category": "Feeding",
+    "age_range": "0–12 months",
+    "question": "How can I tell if my baby is getting enough breast milk?",
+    "answer": "At least 6 wet diapers per day after day 5, steady weight gain, and contentment after feeding are reliable signs of adequate intake."
+  },
+  {
+    "id": 3,
+    "category": "Feeding",
+    "age_range": "0–12 months",
+    "question": "When should I burp my baby?",
+    "answer": "Burp after every 2–3 ounces of formula or when switching breasts while breastfeeding to reduce swallowed air."
+  },
+  {
+    "id": 4,
+    "category": "Safety",
+    "age_range": "0–6 months",
+    "question": "Can I give my baby water?",
+    "answer": "No. Babies under 6 months should receive only breast milk or formula; extra water can interfere with nutrition and electrolyte balance."
+  },
+  {
+    "id": 5,
+    "category": "Sleep",
+    "age_range": "0–12 months",
+    "question": "How much should my baby sleep?",
+    "answer": "Newborns sleep 14-17 hours per day. By 3-4 months, babies typically sleep 12-16 hours including naps. Every baby is different."
+  }
+]
