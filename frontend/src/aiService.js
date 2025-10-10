@@ -461,7 +461,14 @@ class AIService {
       });
 
       return {
-        results: this.parseMealResponse(response),
+        results: [{ 
+          title: `Meal Ideas: ${query}`, 
+          description: response,
+          ingredients: [],
+          instructions: [],
+          age_range: `${ageMonths}+ months`,
+          prep_time: 'Varies by recipe'
+        }],
         query,
         age_months: ageMonths,
         ai_powered: true,
