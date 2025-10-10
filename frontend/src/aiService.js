@@ -109,16 +109,23 @@ class AIService {
     }
   }
 
-  // Build appropriate search query for different contexts
+  // Build simple search query - just user input + baby age (as requested)
   buildSearchQuery(query, context) {
+    // Get baby age from context or default
+    const babyAgeMonths = context.babyAgeMonths || context.ageMonths || 9;
+    
+    // Simple format: "when can my X month old baby have [food/question]"
     let searchQuery = query;
     
     if (context.type === 'food_research') {
-      searchQuery = `baby food safety "${query}" pediatric guidelines AAP`;
+      // For food safety: "when can my 9 month old baby have honey"
+      searchQuery = `when can my ${babyAgeMonths} month old baby have ${query}`;
     } else if (context.type === 'meal_planning') {
-      searchQuery = `baby meal ideas "${query}" recipes age appropriate nutrition`;
-    } else if (context.type === 'parenting_research') {
-      searchQuery = `parenting "${query}" baby development pediatric advice`;
+      // For meal planning: "breakfast ideas for 9 month old baby"
+      searchQuery = `${query} for ${babyAgeMonths} month old baby`;
+    } else {
+      // For parenting: "9 month old baby [question]"
+      searchQuery = `${babyAgeMonths} month old baby ${query}`;
     }
     
     return searchQuery;
