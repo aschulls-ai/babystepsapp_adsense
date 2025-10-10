@@ -100,8 +100,8 @@ class AIAssistantMatchingTester:
             sources = result.get("sources", [])
             
             # Analyze response type
-            has_ai_assistant_source = any("ai_assistant.json" in str(source) or "Question ID:" in str(source) for source in sources)
-            has_food_research_source = any("food_research.json" in str(source) for source in sources)
+            has_ai_assistant_source = any("AI Assistant" in str(source) for source in sources)
+            has_food_research_source = any("Food Safety" in str(source) for source in sources)
             has_not_available = "Information Not Available" in answer or "not available" in answer.lower()
             has_combined_sections = "General Parenting Guidance" in answer and "Food Safety Information" in answer
             
