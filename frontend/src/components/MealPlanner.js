@@ -166,7 +166,7 @@ const MealPlanner = ({ currentBaby }) => {
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
               <Baby className="w-8 h-8 text-gray-400" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">No Baby Profile</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Baby Profile</h2>
             <p className="text-gray-600 mb-4">Please add a baby profile to get personalized meal planning.</p>
             <Button
               onClick={() => window.location.href = '/baby-profile'}
