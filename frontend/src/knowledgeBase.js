@@ -40,7 +40,7 @@ class KnowledgeBaseService {
         const data = await response.json();
         this.knowledgeBases[type] = data;
         this.isLoaded[type] = true;
-        console.log(`✅ Loaded ${type} knowledge base: ${data[`${type}_questions`]?.length || 0} questions`);
+        console.log(`✅ Loaded ${type} knowledge base: ${Array.isArray(data) ? data.length : 0} questions`);
         
         // Cache in localStorage for offline access
         localStorage.setItem(`kb_${type}`, JSON.stringify(data));
