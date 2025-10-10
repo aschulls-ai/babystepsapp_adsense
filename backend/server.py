@@ -1184,13 +1184,41 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             elif query_lower in question_lower or question_lower in query_lower:
                 score = 80
             
-            # Food name matching (REQUIRED for match)
-            food_keywords = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese']
-            food_found = False
-            for keyword in food_keywords:
-                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
-                    score += 50  # Higher score for food matches
-                    food_found = True
+            # Specific food name matching with exact matching priority
+            specific_food_match = False
+            food_score_bonus = 0
+            
+            # Direct food name matching (most specific first)
+            food_mappings = [
+                (['strawberr', 'strawberry'], ['strawberr']),  # strawberry variations
+                (['honey'], ['honey']),
+                (['egg', 'eggs'], ['egg']),
+                (['avocado'], ['avocado']),
+                (['peanut', 'nut', 'nuts'], ['peanut', 'nut']),
+                (['fish'], ['fish']),
+                (['milk'], ['milk']),
+                (['cheese'], ['cheese'])
+            ]
+            
+            for query_terms, kb_terms in food_mappings:
+                query_has_food = any(term in query_lower for term in query_terms)
+                kb_has_food = any(term in (question_lower + ' ' + answer_lower) for term in kb_terms)
+                
+                if query_has_food and kb_has_food:
+                    # Exact food match gets highest score
+                    for query_term in query_terms:
+                        for kb_term in kb_terms:
+                            if query_term in query_lower and kb_term in (question_lower + ' ' + answer_lower):
+                                food_score_bonus = 80  # High bonus for exact food match
+                                specific_food_match = True
+                                break
+                        if specific_food_match:
+                            break
+                if specific_food_match:
+                    break
+            
+            if specific_food_match:
+                score += food_score_bonus
             
             # Only add safety keyword points if food was found
             if food_found:
