@@ -156,9 +156,10 @@ jobs:
       id: version_update
       working-directory: frontend/android
       run: |
-        # Use fixed version code higher than current Google Play version (57)
-        NEW_VERSION_CODE=58
-        NEW_VERSION_NAME="1.033"
+        # Auto-increment version code starting from 58 (higher than current Google Play version 57)
+        BASE_VERSION_CODE=58
+        NEW_VERSION_CODE=$((BASE_VERSION_CODE + ${{ github.run_number }}))
+        NEW_VERSION_NAME="${{ steps.version.outputs.version }}"
         
         # Update build.gradle with new version code and name
         sed -i "s/versionName \".*\"/versionName \"$NEW_VERSION_NAME\"/" app/build.gradle
