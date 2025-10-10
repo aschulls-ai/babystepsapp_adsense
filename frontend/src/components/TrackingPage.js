@@ -898,7 +898,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
         quality: formData.quality || null,
         notes: formData.notes || null,
         sleep_start: formData.start_time.toISOString(),
-        sleep_end: formData.end_time ? new Date(formData.end_time).toISOString() : null
+        sleep_end: (formData.end_time && formData.end_time !== '') ? new Date(formData.end_time).toISOString() : null
       };
       
       console.log('🛌 Logging sleep activity:', sleepActivityData);
