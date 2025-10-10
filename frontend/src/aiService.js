@@ -485,7 +485,14 @@ class AIService {
       });
       
       return {
-        results: this.parseMealResponse(fallbackResponse),
+        results: [{ 
+          title: `Meal Ideas: ${query}`, 
+          description: fallbackResponse,
+          ingredients: [],
+          instructions: [],
+          age_range: `${ageMonths}+ months`,
+          prep_time: 'Varies by recipe'
+        }],
         query,
         age_months: ageMonths,
         ai_powered: false,
