@@ -135,6 +135,7 @@ class KnowledgeBaseService {
       keywords: 0.8,       // Keyword match (higher weight for simpler structure)
       semantic: 0.6,       // Semantic similarity
       category: 0.4,       // Category match
+      age: 0.5,           // Age appropriateness (important for baby-related content)
       partial: 0.3         // Partial question match
     };
 
@@ -169,17 +170,26 @@ class KnowledgeBaseService {
     const semanticScore = this.calculateSemanticSimilarity(queryLower, questionObj);
     similarity += semanticScore * weights.semantic;
 
-    // 5. Category bonus (if query contains category-related terms)
+    // 5. Age appropriateness (parse age_range string like "6–9 months")
+    if (questionObj.age_range && babyAge) {
+      const ageScore = this.calculateAgeCompatibility(questionObj.age_range, babyAge);
+      similarity += ageScore * weights.age;
+    }
+
+    // 6. Category bonus (if query contains category-related terms)
     if (questionObj.category) {
       const categoryTerms = {
-        'Feeding': ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food'],
-        'Sleep': ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired'],
-        'Development': ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit'],
-        'Health': ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom'],
-        'Safety': ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect'],
-        'Behavior': ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum'],
-        'Recipes': ['recipe', 'cook', 'prepare', 'meal', 'breakfast', 'lunch', 'dinner', 'ingredient'],
-        'Nutrition': ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium']
+        'Feeding': ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food', 'meal', 'nutrition'],
+        'Sleep': ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired', 'rest', 'wake'],
+        'Development': ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit', 'roll', 'stand'],
+        'Health': ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom', 'illness', 'temperature'],
+        'Safety': ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect', 'choke', 'allergy'],
+        'Behavior': ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum', 'comfort', 'mood'],
+        'Recipes': ['recipe', 'cook', 'prepare', 'meal', 'breakfast', 'lunch', 'dinner', 'ingredient', 'cooking'],
+        'Nutrition': ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium', 'protein'],
+        'Bathing': ['bath', 'bathing', 'clean', 'wash', 'hygiene', 'soap', 'water', 'dry'],
+        'Diaper': ['diaper', 'change', 'changing', 'wet', 'dirty', 'rash', 'clean'],
+        'Toys': ['toy', 'toys', 'play', 'playing', 'game', 'activity', 'fun', 'entertainment']
       };
 
       const categoryWords = categoryTerms[questionObj.category] || [questionObj.category.toLowerCase()];
@@ -190,6 +200,62 @@ class KnowledgeBaseService {
     }
 
     return Math.min(similarity, 1.0); // Cap at 1.0
+  }
+
+  // Parse age range and calculate compatibility with baby's age
+  calculateAgeCompatibility(ageRangeStr, babyAge) {
+    try {
+      // Handle different age range formats: "6–9 months", "0-3 months", "12+ months", etc.
+      const ageStr = ageRangeStr.toLowerCase();
+      
+      // Extract numbers from age range string
+      const numbers = ageStr.match(/\d+/g);
+      if (!numbers || numbers.length === 0) return 0;
+
+      const nums = numbers.map(n => parseInt(n));
+      
+      // Handle different formats
+      if (ageStr.includes('+')) {
+        // "12+ months" format
+        const minAge = nums[0];
+        if (babyAge >= minAge) return 1.0;
+        if (babyAge >= minAge - 2) return 0.7; // Close to range
+        return 0;
+      } else if (nums.length >= 2) {
+        // "6–9 months" or "6-9 months" format
+        const [minAge, maxAge] = [Math.min(nums[0], nums[1]), Math.max(nums[0], nums[1])];
+        
+        if (babyAge >= minAge && babyAge <= maxAge) {
+          return 1.0; // Perfect match
+        } else {
+          // Partial score for near matches
+          const distanceFromRange = Math.min(
+            Math.abs(babyAge - minAge),
+            Math.abs(babyAge - maxAge)
+          );
+          
+          if (distanceFromRange <= 1) return 0.8; // Within 1 month
+          if (distanceFromRange <= 2) return 0.6; // Within 2 months
+          if (distanceFromRange <= 3) return 0.4; // Within 3 months
+          return 0;
+        }
+      } else if (nums.length === 1) {
+        // Single age like "6 months"
+        const targetAge = nums[0];
+        const ageDiff = Math.abs(babyAge - targetAge);
+        
+        if (ageDiff === 0) return 1.0;
+        if (ageDiff <= 1) return 0.8;
+        if (ageDiff <= 2) return 0.6;
+        if (ageDiff <= 3) return 0.4;
+        return 0;
+      }
+      
+      return 0;
+    } catch (error) {
+      console.log('Error parsing age range:', ageRangeStr, error);
+      return 0;
+    }
   }
 
   // Extract meaningful keywords from query
