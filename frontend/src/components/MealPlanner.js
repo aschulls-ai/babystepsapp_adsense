@@ -230,7 +230,7 @@ const MealPlanner = ({ currentBaby }) => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Search className="w-5 h-5 text-orange-500" />
-                Search Meals & Food Safety
+                Search Meal Ideas & Recipes
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
