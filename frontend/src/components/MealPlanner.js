@@ -606,7 +606,7 @@ const MealPlanCard = ({ meal }) => (
     <CardContent className="p-4">
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h3 className="font-semibold text-gray-900">{meal.meal_name}</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">{meal.meal_name}</h3>
           <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
             {meal.age_months} months
           </span>
