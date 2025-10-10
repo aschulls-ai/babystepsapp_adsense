@@ -259,7 +259,7 @@
   current_focus:
     - "JSON-ONLY Food Safety Research Implementation - CRITICAL PRIORITY"
   stuck_tasks: 
-    - "JSON-ONLY Food Safety Research Implementation - Backend still using AI instead of JSON-only responses"
+    - "JSON-ONLY Food Safety Research Implementation - Matching algorithm needs refinement to prevent false positives"
     - "Activity Tracking Quick Actions - Missing UI Components"
     - "AI Integration - Search Input Fields Not Found"
     - "Baby Profile Data Binding Issues - CRITICAL: App.js fetchBabies() or currentBaby state management failing"
