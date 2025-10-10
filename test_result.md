@@ -177,6 +177,30 @@
         -agent: "testing"
         -comment: "✅ INTELLIGENT QUESTION SUGGESTION SYSTEM COMPREHENSIVE TESTING COMPLETED: Conducted extensive testing of the new intelligent question suggestion system for AI Assistant and Food Research as requested in review. SYSTEM ARCHITECTURE VERIFIED: 1) FRONTEND-BASED KNOWLEDGE BASE: ✅ JSON files in /public/knowledge-base/ (ai_assistant.json, food_research.json) with predefined questions and answers ✅ Smart keyword extraction and scoring system in QuestionSuggestions.js ✅ Real-time suggestions when user types 2+ characters ✅ Auto-search functionality when clicking suggestions 2) BACKEND INTEGRATION TESTING: ✅ All 15 backend tests passed with 0 failures ✅ Demo user authentication (demo@babysteps.com/demo123) working perfectly 3) FOOD RESEARCH PROGRESSIVE TYPING: ✅ 'av' → avocado-related backend responses (1365 chars) ✅ 'egg' → egg-related backend responses (1608 chars) ✅ 'safe' → safety-related backend responses with proper safety_level ✅ 'honey' → honey-specific backend responses with avoid safety_level 4) AI ASSISTANT PROGRESSIVE TYPING: ✅ 'sleep' → sleep-related backend responses (1569 chars) ✅ 'feed' → feeding-related backend responses (2349 chars) ✅ 'cry' → behavior-related backend responses (3830 chars) 5) SUGGESTION SELECTION & AUTO-SEARCH: ✅ Strawberry suggestion selection → backend handles queries from clicks (1631 chars) ✅ 'Baby won't' suggestion selection → backend handles complex queries (2860 chars) 6) USER EXPERIENCE REQUIREMENTS: ✅ Backend response times acceptable for suggestion system ✅ 100% contextual relevance for different food names ✅ 100% contextual relevance for different parenting terms ✅ Structured data supports category tags and age ranges CONCLUSION: The intelligent question suggestion system is fully functional. Backend APIs properly support the frontend suggestion system with contextually relevant, comprehensive responses for all suggestion types. The system provides smart keyword-based suggestions, real-time matching, and auto-search functionality as specified in the review request."
 
+  - task: "Food Safety Search - Improved Matching Algorithm and Answer Accuracy"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ IMPROVED MATCHING ALGORITHM IMPLEMENTED: Enhanced the food safety search matching algorithm with comprehensive food keyword list (50+ foods), better scoring system (200 for exact match, 100 per food keyword), lower threshold (50 vs 80) for better recall, and contextual word matching. Also updated placeholder text to 'Ask about food safety using key words...' and ensured age ranges are displayed but NOT used for filtering. Needs comprehensive testing to verify: 1) Correct answers matching Question IDs, 2) Quick safety check buttons working properly, 3) All food queries returning relevant results, 4) No age-based filtering occurring."
+
+  - task: "AI Assistant - Multi-Knowledge-Base Queries and Dropdown Functionality"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/frontend/src/components/Research.js, /app/frontend/src/components/QuestionSuggestions.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ ENHANCED QUESTION SUGGESTIONS IMPLEMENTED: Improved QuestionSuggestions component with comprehensive food pattern matching (50+ foods), question variation normalization, intent-based matching, improved scoring algorithm, and added QuestionSuggestions to MealPlanner. AI Assistant should be able to pull from both ai_assistant.json and food_research.json. Needs comprehensive testing to verify: 1) Dropdown suggestions working properly, 2) Correct answers being provided, 3) Quick questions functioning, 4) Multi-knowledge-base queries working (both ai_assistant.json and food_research.json)."
+
 ## frontend:
   - task: "Frontend login UI issue - API endpoint path fix"
     implemented: true
