@@ -952,10 +952,10 @@ class BabyStepsAPITester:
             return False
 
     def run_all_tests(self):
-        """Run comprehensive backend testing as per review request"""
-        print(f"🚀 COMPREHENSIVE BABY STEPS BACKEND TESTING")
+        """Run enhanced knowledge base improvements testing as per review request"""
+        print(f"🚀 BABY STEPS ENHANCED KNOWLEDGE BASE IMPROVEMENTS TESTING")
         print(f"📍 Testing against: {API_BASE}")
-        print(f"👤 Test user: {self.existing_user_email}")
+        print(f"👤 Demo user: {self.demo_email}")
         print("=" * 80)
         
         # Test basic connectivity first
@@ -964,112 +964,56 @@ class BabyStepsAPITester:
             return self.results
         
         # MAIN TEST SEQUENCE AS PER REVIEW REQUEST:
-        print("\n🔐 1. AUTHENTICATION & LOGIN TESTING:")
+        print("\n🔐 1. AUTHENTICATION WITH DEMO CREDENTIALS:")
         print("=" * 80)
         
-        # Login with test user
-        print("🔑 Testing login with test@babysteps.com...")
-        if not self.test_existing_user_login():
-            print("❌ Login failed - cannot proceed with authenticated tests")
+        # Login with demo user as specified in review request
+        print("🔑 Testing login with demo@babysteps.com/demo123...")
+        if not self.test_demo_user_login():
+            print("❌ Demo login failed - cannot proceed with authenticated tests")
             return self.results
         
-        # Get auth token for further testing
-        login_data = {"email": self.existing_user_email, "password": self.existing_user_password}
-        response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
-        if response.status_code == 200:
-            data = response.json()
-            self.auth_token = data.get('access_token')
-            self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
-            print(f"✅ Authentication token obtained")
-        
-        print("\n🍯 2. MEAL PLANNER SEARCH FIX VERIFICATION:")
+        print("\n🥗 2. ENHANCED FOOD MATCHING TESTS (CRITICAL - MUST NOT ONLY RETURN HONEY):")
         print("=" * 80)
         
-        # Test the corrected API endpoint '/api/meals/search'
-        print("🔍 Testing corrected '/api/meals/search' endpoint...")
-        self.test_meal_planner_search_endpoint()
+        # Test A: Food Research Enhanced Matching
+        print("🥑 Testing avocado safety query...")
+        self.test_enhanced_food_matching_avocado()
         
-        # Test food safety queries
+        print("🥚 Testing egg safety query...")
+        self.test_enhanced_food_matching_eggs()
+        
+        print("🍓 Testing strawberry safety query...")
+        self.test_enhanced_food_matching_strawberries()
+        
+        print("🥜 Testing nuts safety query...")
+        self.test_enhanced_food_matching_nuts()
+        
         print("🍯 Testing honey safety query...")
-        self.test_honey_safety_query()
+        self.test_enhanced_food_matching_honey()
         
-        # Test meal idea queries  
-        print("🥣 Testing breakfast ideas query...")
-        self.test_meal_ideas_query()
-        
-        # Test age customization
-        print("👶 Testing age-based customization...")
-        self.test_age_customization()
-        
-        print("\n🔗 3. API ENDPOINTS STATUS CHECK:")
+        print("\n🤖 3. AI ASSISTANT QUESTION VARIATIONS:")
         print("=" * 80)
         
-        # Test all API routes are responding correctly
-        print("📡 Testing all major API endpoints...")
-        self.test_all_api_endpoints_status()
+        # Test B: AI Assistant Question Variations
+        print("😴 Testing sleep question variations...")
+        self.test_ai_question_variations_sleep()
         
-        # Test authentication endpoints specifically
-        print("🔐 Testing authentication endpoints...")
-        self.test_authentication_required_endpoints()
+        print("🍼 Testing feeding question variations...")
+        self.test_ai_question_variations_feeding()
         
-        # Test Research component API endpoint
-        print("🔬 Testing research endpoint...")
-        research_query = {"question": "How often should I feed my 6 month old?"}
-        response = self.session.post(f"{API_BASE}/research", json=research_query, timeout=60)
-        if response.status_code == 200:
-            print("✅ Research endpoint working correctly")
-            self.log_result("Research Endpoint", True, "Research API responding correctly")
-        else:
-            print(f"❌ Research endpoint failed: HTTP {response.status_code}")
-            self.log_result("Research Endpoint", False, f"HTTP {response.status_code}")
+        print("🤱 Testing burping question variations...")
+        self.test_ai_question_variations_burping()
         
-        # Test baby profile endpoints
-        print("👶 Testing baby profile endpoints...")
-        self.test_get_babies()
-        
-        # Test tracking activity endpoints
-        print("📊 Testing tracking activity endpoints...")
-        tracking_endpoints = ["feedings", "diapers", "sleep", "pumping", "measurements", "milestones", "reminders"]
-        for endpoint in tracking_endpoints:
-            response = self.session.get(f"{API_BASE}/{endpoint}", timeout=10)
-            if response.status_code == 200:
-                print(f"✅ {endpoint} endpoint working")
-            else:
-                print(f"❌ {endpoint} endpoint failed: HTTP {response.status_code}")
-        
-        print("\n🏥 4. OVERALL BACKEND HEALTH:")
+        print("\n🍽️ 4. MEAL PLANNER RANDOM SELECTION:")
         print("=" * 80)
         
-        # Test database connectivity
-        print("💾 Testing database connectivity...")
-        self.test_database_connectivity()
-        
-        # Test JWT token validation
-        print("🔐 Testing JWT token validation...")
-        self.test_jwt_token_validation()
-        
-        # Test protected routes are secure
-        print("🛡️ Testing protected routes security...")
-        self.test_protected_routes_security()
-        
-        # Test no 500 or 422 errors in key endpoints
-        print("🚫 Testing for 500/422 errors...")
-        self.test_no_500_422_errors()
-        
-        # Additional backend functionality tests
-        print("\n🧪 5. ADDITIONAL FUNCTIONALITY TESTS:")
-        print("=" * 80)
-        
-        # Test food research endpoint
-        print("🥗 Testing food research functionality...")
-        self.test_food_research_endpoint()
-        
-        # Test AI integration
-        print("🤖 Testing AI integration...")
-        self.test_ai_integration()
+        # Test D: Meal Planner Random Selection
+        print("🔄 Testing meal planner random selection...")
+        self.test_meal_planner_random_selection()
         
         print("=" * 80)
-        print(f"📊 COMPREHENSIVE TEST RESULTS SUMMARY:")
+        print(f"📊 ENHANCED KNOWLEDGE BASE TEST RESULTS:")
         print(f"✅ Passed: {self.results['passed']}")
         print(f"❌ Failed: {self.results['failed']}")
         
@@ -1079,52 +1023,65 @@ class BabyStepsAPITester:
                 print(f"   • {error}")
         
         # Specific summary for the review request
-        print(f"\n🎯 REVIEW REQUEST VERIFICATION SUMMARY:")
+        print(f"\n🎯 ENHANCED KNOWLEDGE BASE IMPROVEMENTS VERIFICATION:")
         print("=" * 80)
         
-        # Check meal planner fix
-        meal_planner_tests = [error for error in self.results['errors'] 
-                             if any(test in error for test in ["Meal Planner Search", "Honey Safety", "Meal Ideas", "Age Customization"])]
+        # Check Food Research Enhanced Matching
+        food_matching_tests = [error for error in self.results['errors'] 
+                             if "Enhanced Food Matching" in error]
         
-        if len(meal_planner_tests) == 0:
-            print("✅ MEAL PLANNER SEARCH FIX: All tests passed")
-            print("   • '/api/meals/search' endpoint working correctly")
-            print("   • Food safety queries working (honey safety)")
-            print("   • Meal idea queries working (breakfast ideas)")
-            print("   • No more 'failed' error messages")
+        if len(food_matching_tests) == 0:
+            print("✅ FOOD RESEARCH ENHANCED MATCHING: All tests passed")
+            print("   • Avocado queries return avocado-specific answers")
+            print("   • Egg queries return egg-specific answers")
+            print("   • Strawberry queries return berry-specific answers")
+            print("   • Nut queries return nut-specific answers")
+            print("   • Honey queries return honey-specific answers")
+            print("   • NO MORE 'only honey' responses for all food queries")
         else:
-            print("❌ MEAL PLANNER SEARCH FIX: Issues found")
-            for test in meal_planner_tests:
+            print("❌ FOOD RESEARCH ENHANCED MATCHING: Issues found")
+            for test in food_matching_tests:
                 print(f"   • {test}")
         
-        # Check API endpoints
-        api_tests = [error for error in self.results['errors'] 
-                    if any(test in error for test in ["API Endpoints", "Research Endpoint", "Authentication Protection"])]
+        # Check AI Question Variations
+        ai_variation_tests = [error for error in self.results['errors'] 
+                            if "AI Question Variations" in error]
         
-        if len(api_tests) == 0:
-            print("✅ API ENDPOINTS STATUS: All endpoints responding correctly")
-            print("   • Authentication endpoints working")
-            print("   • Research component API working")
-            print("   • Baby profile endpoints working")
-            print("   • Tracking activity endpoints functional")
+        if len(ai_variation_tests) == 0:
+            print("✅ AI ASSISTANT QUESTION VARIATIONS: All tests passed")
+            print("   • Sleep questions handled with different phrasings")
+            print("   • Feeding questions handled with different phrasings")
+            print("   • Burping questions handled with different phrasings")
         else:
-            print("❌ API ENDPOINTS STATUS: Issues found")
-            for test in api_tests:
+            print("❌ AI ASSISTANT QUESTION VARIATIONS: Issues found")
+            for test in ai_variation_tests:
                 print(f"   • {test}")
         
-        # Check backend health
-        health_tests = [error for error in self.results['errors'] 
-                       if any(test in error for test in ["Database Connectivity", "JWT Token", "Protected Routes", "500/422 Errors"])]
+        # Check Clean Answer Verification
+        clean_answer_issues = [error for error in self.results['errors'] 
+                             if "source/pediatrician text" in error]
         
-        if len(health_tests) == 0:
-            print("✅ OVERALL BACKEND HEALTH: All systems operational")
-            print("   • Database connectivity confirmed")
-            print("   • JWT token validation working")
-            print("   • Protected routes secured")
-            print("   • No 500 or 422 errors in key endpoints")
+        if len(clean_answer_issues) == 0:
+            print("✅ CLEAN ANSWER VERIFICATION: All tests passed")
+            print("   • No 'source:' or 'sources:' text in responses")
+            print("   • No 'always consult your pediatrician' text in responses")
+            print("   • Clean, direct answers without attribution")
         else:
-            print("❌ OVERALL BACKEND HEALTH: Issues found")
-            for test in health_tests:
+            print("❌ CLEAN ANSWER VERIFICATION: Issues found")
+            for test in clean_answer_issues:
+                print(f"   • {test}")
+        
+        # Check Meal Planner Random Selection
+        meal_random_tests = [error for error in self.results['errors'] 
+                           if "Meal Planner Random Selection" in error]
+        
+        if len(meal_random_tests) == 0:
+            print("✅ MEAL PLANNER RANDOM SELECTION: All tests passed")
+            print("   • Different recipes returned on multiple searches")
+            print("   • Recipe format is clean without source text")
+        else:
+            print("❌ MEAL PLANNER RANDOM SELECTION: Issues found")
+            for test in meal_random_tests:
                 print(f"   • {test}")
         
         return self.results
