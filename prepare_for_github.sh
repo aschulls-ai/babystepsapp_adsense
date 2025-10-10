@@ -54,7 +54,7 @@ Visit: [Your Vercel URL will go here]
 3. Set Root Directory: `frontend`
 4. Add environment variables:
    ```
-   REACT_APP_BACKEND_URL=https://babytrak-dev.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://babysteps-app-2.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-0000000000000000
    ```
 5. Deploy!

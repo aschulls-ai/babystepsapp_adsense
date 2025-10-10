@@ -21,6 +21,6 @@
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "https://babytrak-dev.preview.emergentagent.com"
+    "REACT_APP_BACKEND_URL": "https://babysteps-app-2.preview.emergentagent.com"
   }
 }
