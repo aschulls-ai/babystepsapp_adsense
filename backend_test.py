@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend API Testing Suite for Baby Steps Parenting Application
-Tests authentication, food research, and baby profile management functionality
+Backend API Testing Suite for Baby Steps Enhanced Knowledge Base Improvements
+Tests enhanced food matching, clean AI responses, and improved search functionality
 """
 
 import requests
@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Get backend URL from frontend environment - Review request specifies Render deployment
-BACKEND_URL = "https://baby-steps-demo-api.onrender.com"
+# Get backend URL from frontend environment - Use local backend for testing
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://babysteps-app-2.preview.emergentagent.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class BabyStepsAPITester:
