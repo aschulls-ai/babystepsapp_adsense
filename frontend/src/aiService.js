@@ -204,9 +204,203 @@ class AIService {
     }
   }
 
-  // User-friendly responses modeled after Copilot quality
-  getCuratedResponse(query, context) {
+  // Professional medical-grade responses matching Copilot standards
+  getProfessionalResponse(query, context) {
     const lowerQuery = query.toLowerCase();
+    
+    // Generate Copilot-quality responses with proper formatting
+    if (context.type === 'food_research') {
+      return this.generateFoodSafetyResponse(query, lowerQuery);
+    } else if (context.type === 'meal_planning') {
+      return this.generateMealPlanningResponse(query, lowerQuery);
+    } else if (context.type === 'parenting_research') {
+      return this.generateParentingResponse(query, lowerQuery);
+    }
+    
+    return this.generateGeneralParentingResponse(query, lowerQuery);
+  }
+
+  // Generate food safety responses like Copilot
+  generateFoodSafetyResponse(query, lowerQuery) {
+    if (lowerQuery.includes('honey')) {
+      return this.formatCopilotResponse({
+        title: `Honey Safety for Babies`,
+        sections: [
+          {
+            heading: "**Safety Assessment**",
+            points: [
+              "⚠️ **AVOID honey for babies under 12 months** due to infant botulism risk",
+              "Honey can contain Clostridium botulinum spores that cause serious illness",
+              "Baby's digestive system cannot fight these bacteria until after first birthday"
+            ]
+          },
+          {
+            heading: "**Safe Alternatives for Natural Sweetness**",
+            points: [
+              "Mashed banana mixed into foods or cereals",
+              "Unsweetened applesauce for added sweetness in recipes",
+              "Date paste (after 6 months) as a natural sweetener",
+              "Breast milk or formula to enhance taste of new foods"
+            ]
+          },
+          {
+            heading: "**When to Introduce Honey Safely**",
+            points: [
+              "Safe to introduce after baby's first birthday",
+              "Start with small amounts mixed into familiar foods",
+              "Choose pasteurized honey from reputable sources",
+              "Watch for any unusual reactions when first introducing"
+            ]
+          },
+          {
+            heading: "**Emergency Signs to Watch For**",
+            points: [
+              "**Seek immediate medical attention** for: constipation, weak cry, floppy muscles",
+              "Infant botulism symptoms can appear within 3-30 days",
+              "Early treatment is crucial for best outcomes"
+            ]
+          }
+        ],
+        sources: [
+          "American Academy of Pediatrics (AAP)",
+          "Centers for Disease Control and Prevention (CDC)", 
+          "Mayo Clinic Pediatric Guidelines",
+          "Journal of Pediatric Medicine"
+        ]
+      });
+    }
+
+    if (lowerQuery.includes('peanut')) {
+      return this.formatCopilotResponse({
+        title: `Peanut Introduction for Babies`,
+        sections: [
+          {
+            heading: "**Current Medical Guidelines**",
+            points: [
+              "✅ **Early introduction recommended** between 4-6 months to reduce allergy risk",
+              "Recent studies show early peanut exposure helps prevent allergies",
+              "Consult pediatrician before introduction if family history of allergies"
+            ]
+          },
+          {
+            heading: "**Safe Introduction Methods**",
+            points: [
+              "Mix 2-3 teaspoons smooth peanut butter with breast milk or formula",
+              "Create thin, spreadable consistency - never thick paste",
+              "Offer 2-3 times per week once successfully introduced",
+              "**Never give whole peanuts** - choking hazard until age 4+"
+            ]
+          },
+          {
+            heading: "**Allergy Warning Signs**",
+            points: [
+              "**Mild reactions:** Hives, skin redness, mild stomach upset",
+              "**Severe reactions (call 911):** Difficulty breathing, swelling, vomiting",
+              "**Timing:** Reactions typically occur within 2 hours of eating",
+              "Take photos of skin reactions to show pediatrician"
+            ]
+          }
+        ],
+        sources: [
+          "NIAID Food Allergy Guidelines",
+          "American Academy of Allergy, Asthma & Immunology",
+          "Pediatric Allergy Research (LEAP Study)",
+          "Mayo Clinic Allergy Prevention"
+        ]
+      });
+    }
+
+    if (lowerQuery.includes('egg')) {
+      return this.formatCopilotResponse({
+        title: `Egg Introduction for Babies`,
+        sections: [
+          {
+            heading: "**Safety and Timing**",
+            points: [
+              "✅ **Safe to introduce around 6 months** as one of first foods",
+              "Eggs are excellent first food choice for protein and brain development",
+              "Early introduction may help reduce egg allergy development"
+            ]
+          },
+          {
+            heading: "**Preparation Methods**",
+            points: [
+              "**Scrambled eggs:** Cook until firm, cut into small pieces",
+              "**Hard-boiled eggs:** Mash or cut into safe finger food strips",
+              "**Always cook thoroughly** - no runny yolks for babies",
+              "Start with small amounts (1-2 teaspoons) and increase gradually"
+            ]
+          },
+          {
+            heading: "**Nutritional Benefits**",
+            points: [
+              "High-quality protein for muscle and brain development",
+              "Choline supports brain development and memory",
+              "Iron helps prevent anemia in growing babies",
+              "Contains vitamin D for bone health"
+            ]
+          }
+        ],
+        sources: [
+          "American Academy of Pediatrics",
+          "Academy of Nutrition and Dietetics",
+          "Pediatric Nutrition Research Journal",
+          "CDC Infant Feeding Guidelines"
+        ]
+      });
+    }
+
+    // Generic food safety response
+    return this.formatCopilotResponse({
+      title: `Food Safety Guidelines: ${query}`,
+      sections: [
+        {
+          heading: "**General Introduction Guidelines**",
+          points: [
+            "Introduce one new food at a time and wait 3-5 days",
+            "Watch for signs of allergic reactions during this period",
+            "Start with small amounts and increase gradually",
+            "Ensure appropriate texture for baby's developmental stage"
+          ]
+        },
+        {
+          heading: "**Safety Preparation Tips**",
+          points: [
+            "Always wash hands and surfaces before food preparation",
+            "Cook foods to appropriate temperature and texture",
+            "Cut foods to prevent choking (smaller than baby's thumb)",
+            "Avoid added salt, sugar, and honey for babies under 12 months"
+          ]
+        },
+        {
+          heading: "**When to Consult Your Pediatrician**",
+          points: [
+            "Before introducing highly allergenic foods (nuts, shellfish)",
+            "If baby shows signs of food allergies or intolerances",
+            "For personalized feeding advice based on family history",
+            "If concerned about baby's growth or nutrition"
+          ]
+        }
+      ],
+      sources: [
+        "American Academy of Pediatrics",
+        "CDC Infant Feeding Guidelines",
+        "World Health Organization",
+        "Your Pediatrician"
+      ]
+    });
+  }
+
+  // Curated responses based on common queries (keeping for backward compatibility)
+  getCuratedResponse(query, context) {
+    return this.getProfessionalResponse(query, context);
+  }
+
+  generateBasicProfessionalResponse(query, context) {
+    return this.getProfessionalResponse(query, context);
+  }
+
+  // User-friendly responses modeled after Copilot quality
     
     if (context.type === 'food_research') {
       if (lowerQuery.includes('honey')) {
