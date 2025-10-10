@@ -23,6 +23,8 @@ const FoodResearch = ({ currentBaby }) => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [safetyHistory, setSafetyHistory] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
   const [quickChecks] = useState([
     'Can my baby have honey?',
     'Is avocado safe for babies?',
