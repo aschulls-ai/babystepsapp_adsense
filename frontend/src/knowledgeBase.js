@@ -371,20 +371,60 @@ class KnowledgeBaseService {
     }
   }
 
-  // Extract meaningful keywords from query
+  // Extract meaningful keywords from query with food and parenting focus
   extractKeywords(text) {
     const stopWords = new Set([
       'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 
       'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with',
-      'can', 'my', 'i', 'me', 'you', 'your', 'what', 'when', 'where', 'how', 'why'
+      'me', 'you', 'your', 'what', 'when', 'where', 'how', 'why', 'should', 'would', 'could'
     ]);
 
-    return text
+    // Extract base keywords
+    let keywords = text
       .toLowerCase()
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
       .filter(word => word.length > 2 && !stopWords.has(word))
-      .filter(word => !/^\d+$/.test(word)); // Remove pure numbers
+      .filter(word => !/^\d+$/.test(word));
+
+    // Add important context words that help with matching
+    const importantWords = [];
+    
+    // Food safety context words
+    if (text.toLowerCase().includes('safe')) importantWords.push('safe', 'safety');
+    if (text.toLowerCase().includes('eat')) importantWords.push('eat', 'eating');
+    if (text.toLowerCase().includes('feed')) importantWords.push('feed', 'feeding');
+    if (text.toLowerCase().includes('baby')) importantWords.push('baby', 'babies');
+    if (text.toLowerCase().includes('month')) importantWords.push('month', 'months', 'age');
+    
+    // Parenting context words  
+    if (text.toLowerCase().includes('sleep')) importantWords.push('sleep', 'sleeping', 'nap');
+    if (text.toLowerCase().includes('cry')) importantWords.push('cry', 'crying', 'fussy');
+    if (text.toLowerCase().includes('milk')) importantWords.push('milk', 'breast', 'formula');
+    
+    // Extract food names more aggressively
+    const foodPatterns = [
+      /\b(avocado|avocados)\b/i,
+      /\b(honey)\b/i,
+      /\b(egg|eggs)\b/i,
+      /\b(nut|nuts|peanut|peanuts)\b/i,
+      /\b(fish|salmon|tuna)\b/i,
+      /\b(strawberr(?:y|ies)|berr(?:y|ies))\b/i,
+      /\b(grape|grapes)\b/i,
+      /\b(apple|apples)\b/i,
+      /\b(banana|bananas)\b/i,
+      /\b(carrot|carrots)\b/i,
+      /\b(dairy|milk|cheese|yogurt)\b/i
+    ];
+    
+    foodPatterns.forEach(pattern => {
+      const match = text.match(pattern);
+      if (match) {
+        importantWords.push(match[1].toLowerCase());
+      }
+    });
+
+    return [...new Set([...keywords, ...importantWords])];
   }
 
   // Semantic similarity for user's JSON format (handles both single answers and recipe arrays)
