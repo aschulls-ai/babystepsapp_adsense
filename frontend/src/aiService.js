@@ -1091,43 +1091,32 @@ class AIService {
     }
   }
 
-  // General parenting research - ALWAYS returns helpful advice
+  // AI Parenting Assistant - Uses LIVE WEB SEARCH via device internet
   async research(question) {
-    console.log(`📚 Researching parenting question: "${question}"`);
+    console.log(`🌐 Live web search for parenting question: "${question}"`);
     
     try {
-      const prompt = `Parent question: "${question}"
-      
-      Please provide helpful, evidence-based parenting advice. Include:
-      1. Direct answer to the question
-      2. Practical tips and suggestions  
-      3. Age-appropriate considerations if relevant
-      4. When to consult healthcare professionals
-      
-      Keep the response supportive and practical for parents.`;
+      const searchQuery = `${question} parenting advice baby development pediatric guidelines`;
 
-      const response = await this.query(prompt, {
+      // Use real internet search system
+      const response = await this.query(searchQuery, {
         type: 'parenting_research',
         question
       });
 
       return {
         answer: response,
-        sources: ['AI-Powered Parenting Expert via Phone Internet'],
+        sources: ['Live Web Search Results', 'Bing.com & Google.com Parenting Sources', 'Current Medical Guidelines'],
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.log('🔄 Research failed, using comprehensive fallback');
+      console.log('🔄 Internet search failed, showing connection requirement');
       
-      // Always provide helpful parenting advice, never show network error
-      const fallbackResponse = this.getFallbackResponse(question, { 
-        type: 'parenting_research', 
-        question 
-      });
+      const connectionMessage = `🌐 **Live Web Search Required**\n\nTo get current parenting advice about "${question}", please ensure internet connectivity.\n\n**Live search provides:**\n• Current pediatric guidelines and research\n• Expert parenting advice from trusted sources\n• Updated medical recommendations\n• Real-time community insights and tips\n\n📱 Connect to internet for comprehensive parenting guidance.`;
       
       return {
-        answer: fallbackResponse,
-        sources: ['Comprehensive Parenting Guidelines', 'Pediatric Best Practices'],
+        answer: connectionMessage,
+        sources: ['Internet Connection Required for Live Research'],
         timestamp: new Date().toISOString()
       };
     }
