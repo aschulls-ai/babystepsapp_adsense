@@ -1,0 +1,46 @@
+[
+  {
+    "query": "breakfast ideas for 8 month old",
+    "age_months": 8,
+    "response_length": 2872,
+    "has_detailed_instructions": true,
+    "has_ingredients_with_measurements": true,
+    "has_safety_guidelines": true,
+    "has_storage_info": false,
+    "has_age_modifications": true,
+    "is_detailed_not_generic": true
+  },
+  {
+    "query": "finger food recipes",
+    "age_months": 9,
+    "response_length": 4557,
+    "has_detailed_instructions": true,
+    "has_ingredients_with_measurements": true,
+    "has_safety_guidelines": true,
+    "has_storage_info": true,
+    "has_age_modifications": true,
+    "is_detailed_not_generic": true
+  },
+  {
+    "query": "family meal ideas baby can share",
+    "age_months": 12,
+    "response_length": 4776,
+    "has_detailed_instructions": true,
+    "has_ingredients_with_measurements": true,
+    "has_safety_guidelines": true,
+    "has_storage_info": true,
+    "has_age_modifications": true,
+    "is_detailed_not_generic": true
+  },
+  {
+    "query": "lunch recipes for 10 month old",
+    "age_months": 10,
+    "response_length": 4383,
+    "has_detailed_instructions": true,
+    "has_ingredients_with_measurements": true,
+    "has_safety_guidelines": true,
+    "has_storage_info": true,
+    "has_age_modifications": true,
+    "is_detailed_not_generic": true
+  }
+]
