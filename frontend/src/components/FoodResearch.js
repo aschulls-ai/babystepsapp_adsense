@@ -263,14 +263,27 @@ const FoodResearch = ({ currentBaby }) => {
             <CardContent className="space-y-6">
               {/* Search Form */}
               <div className="flex gap-3">
-                <Input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Ask about any food or drink... (e.g., 'Can my baby have honey?')"
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
-                  data-testid="food-research-input"
-                />
+                <div className="flex-1 relative">
+                  <Input
+                    value={query}
+                    onChange={handleQueryChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    placeholder="Ask about any food or drink... (e.g., 'Can my baby have honey?')"
+                    onKeyPress={(e) => e.key === 'Enter' && performSearch()}
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200"
+                    data-testid="food-research-input"
+                  />
+                  
+                  <QuestionSuggestions
+                    query={query}
+                    onSelectQuestion={handleSelectSuggestion}
+                    type="food_research"
+                    isOpen={showSuggestions}
+                    onToggle={setShowSuggestions}
+                    placeholder="Ask about any food safety..."
+                  />
+                </div>
                 <Button
                   onClick={() => handleSearch()}
                   disabled={loading || !query.trim()}
