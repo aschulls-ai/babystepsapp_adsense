@@ -274,14 +274,27 @@ const MealPlanner = ({ currentBaby }) => {
             <CardContent className="space-y-4">
               {/* Search Form */}
               <div className="flex gap-3">
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for meal ideas and recipes... (e.g., 'breakfast ideas for 8 month old' or 'finger food recipes')"
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all duration-200"
-                  data-testid="meal-search-input"
-                />
+                <div className="flex-1 relative">
+                  <Input
+                    value={searchQuery}
+                    onChange={handleQueryChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    placeholder="Search for meal ideas and recipes... (e.g., 'breakfast ideas for 8 month old' or 'finger food recipes')"
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all duration-200"
+                    data-testid="meal-search-input"
+                  />
+                  
+                  <QuestionSuggestions
+                    query={searchQuery}
+                    onSelectQuestion={handleSelectSuggestion}
+                    type="meal_planner"
+                    isOpen={showSuggestions}
+                    onToggle={setShowSuggestions}
+                    placeholder="Search for recipes..."
+                  />
+                </div>
                 <Button
                   onClick={() => handleSearch()}
                   disabled={loading || !searchQuery.trim()}
