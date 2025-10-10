@@ -31,28 +31,65 @@ const Research = () => {
   const [inputFocused, setInputFocused] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const quickQuestions = [
-    {
-      icon: <Milk className="w-5 h-5" />,
-      question: "How often should I feed my newborn?",
-      category: "Feeding"
-    },
-    {
-      icon: <Moon className="w-5 h-5" />,
-      question: "What are normal sleep patterns for a 2-month-old?",
-      category: "Sleep"
-    },
-    {
-      icon: <Baby className="w-5 h-5" />,
-      question: "When do babies typically start rolling over?",
-      category: "Development"
-    },
-    {
-      icon: <Stethoscope className="w-5 h-5" />,
-      question: "What temperature is considered a fever in infants?",
-      category: "Health"
-    }
-  ];
+  const [quickQuestions, setQuickQuestions] = useState([]);
+
+  // Load random questions from ai_assistant.json
+  useEffect(() => {
+    const loadRandomQuestions = async () => {
+      try {
+        const response = await fetch('/knowledge-base/ai_assistant.json');
+        const data = await response.json();
+        
+        // Select 5 random questions
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 5).map(item => ({
+          icon: getCategoryIcon(item.category),
+          question: item.question,
+          category: item.category
+        }));
+        setQuickQuestions(selected);
+      } catch (error) {
+        console.error('Failed to load quick questions:', error);
+        // Fallback to default
+        setQuickQuestions([
+          {
+            icon: <Milk className="w-5 h-5" />,
+            question: "How often should I feed my newborn?",
+            category: "Feeding"
+          },
+          {
+            icon: <Moon className="w-5 h-5" />,
+            question: "What are normal sleep patterns for a 2-month-old?",
+            category: "Sleep"
+          },
+          {
+            icon: <Baby className="w-5 h-5" />,
+            question: "When do babies typically start rolling over?",
+            category: "Development"
+          },
+          {
+            icon: <Heart className="w-5 h-5" />,
+            question: "What are the signs my baby is getting enough milk?",
+            category: "Feeding"
+          }
+        ]);
+      }
+    };
+    
+    loadRandomQuestions();
+  }, []); // Load once on mount
+
+  // Helper function to get icon based on category
+  const getCategoryIcon = (category) => {
+    const categoryLower = (category || '').toLowerCase();
+    if (categoryLower.includes('feed')) return <Milk className="w-5 h-5" />;
+    if (categoryLower.includes('sleep')) return <Moon className="w-5 h-5" />;
+    if (categoryLower.includes('develop')) return <Baby className="w-5 h-5" />;
+    if (categoryLower.includes('health')) return <Heart className="w-5 h-5" />;
+    if (categoryLower.includes('cry')) return <AlertCircle className="w-5 h-5" />;
+    if (categoryLower.includes('safety')) return <Shield className="w-5 h-5" />;
+    return <Lightbulb className="w-5 h-5" />;
+  };
 
   useEffect(() => {
     scrollToBottom();
