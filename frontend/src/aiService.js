@@ -1,5 +1,7 @@
-// Professional AI Search Service - Uses Internet Search Engines
-// Emulates Copilot/Bing quality responses for parenting queries
+// Professional AI Search Service - Uses Knowledge Base + Internet Search Engines
+// Prioritizes preset answers from JSON knowledge base, falls back to AI when needed
+
+import knowledgeBaseService from './knowledgeBase';
 
 class AIService {
   constructor() {
@@ -8,6 +10,7 @@ class AIService {
     this.baseUrl = 'https://api.openai.com/v1'; // Direct API calls via phone internet
     this.isAvailable = true;
     this.searchEngines = ['bing', 'google'];
+    this.knowledgeBase = knowledgeBaseService;
     this.initializeService();
   }
 
