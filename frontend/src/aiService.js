@@ -127,47 +127,251 @@ class AIService {
     }
   }
 
-  // Curated responses based on common queries
+  // User-friendly responses modeled after Copilot quality
   getCuratedResponse(query, context) {
     const lowerQuery = query.toLowerCase();
     
     if (context.type === 'food_research') {
       if (lowerQuery.includes('honey')) {
-        return "⚠️ **AVOID: Honey (Under 12 Months)**\n\nHoney should not be given to babies under 12 months due to risk of botulism. Honey can contain Clostridium botulinum spores that can cause infant botulism, a serious condition.\n\n**Safe alternatives:**\n• Mashed banana for sweetening\n• Apple puree\n• Date paste (after 6 months)\n\n**When to introduce:** After baby's first birthday when their immune system is stronger.";
+        return this.formatCopilotStyleResponse(
+          "Honey Safety for Babies",
+          {
+            "Food Safety Assessment": [
+              "⚠️ **AVOID** honey for babies under 12 months old",
+              "Honey can contain Clostridium botulinum spores that cause infant botulism",
+              "Baby's immune system isn't strong enough to fight these spores until after 1st birthday"
+            ],
+            "Safe Alternatives": [
+              "Mashed banana for natural sweetness",
+              "Unsweetened applesauce or apple puree", 
+              "Date paste (after 6 months)",
+              "Breast milk or formula for added sweetness"
+            ],
+            "When to Introduce": [
+              "Safe to introduce honey after baby's first birthday",
+              "Start with small amounts mixed into familiar foods",
+              "Always supervise when trying new foods"
+            ]
+          },
+          [
+            "American Academy of Pediatrics",
+            "CDC - Infant Botulism Prevention",
+            "Mayo Clinic - Baby Feeding Guidelines"
+          ]
+        );
       }
+      
       if (lowerQuery.includes('egg')) {
-        return "✅ **SAFE: Eggs (6+ Months)**\n\nEggs can be introduced around 6 months as one of baby's first foods.\n\n**How to serve:**\n• Well-cooked scrambled eggs\n• Hard-boiled egg pieces\n• Egg muffins or frittatas\n\n**Benefits:** Excellent source of protein and choline for brain development.\n\n**Safety:** Watch for allergic reactions when first introducing.";
+        return this.formatCopilotStyleResponse(
+          "Introducing Eggs to Babies",
+          {
+            "Safety Assessment": [
+              "✅ **SAFE** to introduce eggs around 6 months",
+              "Eggs are actually recommended as one of baby's first foods",
+              "Early introduction may help prevent egg allergies"
+            ],
+            "How to Serve Safely": [
+              "Start with well-cooked scrambled eggs (soft texture)",
+              "Hard-boiled egg pieces cut into safe sizes",
+              "Egg strips for baby-led weaning",
+              "Always cook eggs thoroughly - no runny yolks"
+            ],
+            "Nutritional Benefits": [
+              "Excellent source of protein for growth",
+              "Rich in choline for brain development", 
+              "Contains healthy fats and vitamins"
+            ]
+          },
+          [
+            "American Academy of Pediatrics", 
+            "CDC - Egg Allergy Prevention",
+            "Pediatric Nutrition Guidelines"
+          ]
+        );
       }
-      if (lowerQuery.includes('nuts') || lowerQuery.includes('peanut')) {
-        return "⚠️ **CAUTION: Nuts and Peanuts**\n\n**Whole nuts:** AVOID until 4+ years (choking hazard)\n**Nut butters:** Safe after 6 months when thinned\n**Peanut introduction:** Early introduction (4-6 months) may reduce allergy risk\n\n**Safe ways to serve:**\n• Thin nut butter spread\n• Ground nuts mixed into foods\n• Peanut powder in purees";
-      }
-      // Generic food research response
-      return `🍼 **Food Safety Information for "${query}"**\n\nFor specific guidance on this food item, I recommend:\n\n1. **Check with pediatrician** for personalized advice\n2. **Follow AAP guidelines** for food introduction\n3. **Watch for allergic reactions** when introducing new foods\n4. **Ensure appropriate texture** for baby's age\n\n**General food safety:**\n• Introduce one new food at a time\n• Wait 3-5 days between new foods\n• Start with small amounts\n• Always supervise feeding time`;
+      
+      // Generic food research response with Copilot-style formatting
+      return this.formatCopilotStyleResponse(
+        `Food Safety: ${query}`,
+        {
+          "General Food Safety Guidelines": [
+            "Introduce one new food at a time",
+            "Wait 3-5 days between new foods to watch for reactions",
+            "Start with small amounts and increase gradually",
+            "Always supervise feeding and watch for choking"
+          ],
+          "Age-Appropriate Preparation": [
+            "Ensure appropriate texture for baby's developmental stage",
+            "Cut foods to prevent choking (smaller than baby's thumb)",
+            "Steam or cook foods until soft for young babies",
+            "Avoid added salt, sugar, and honey (under 12 months)"
+          ],
+          "When to Consult Your Pediatrician": [
+            "Before introducing highly allergenic foods",
+            "If you notice any allergic reactions",
+            "For personalized feeding advice based on baby's health",
+            "If you have concerns about baby's nutrition or growth"
+          ]
+        },
+        [
+          "American Academy of Pediatrics",
+          "CDC - Infant Feeding Guidelines", 
+          "Your Pediatrician"
+        ]
+      );
     }
     
     if (context.type === 'meal_planning') {
       if (lowerQuery.includes('breakfast')) {
-        return "🌅 **Healthy Breakfast Ideas for Babies**\n\n**6-8 months:**\n• Oatmeal with mashed banana\n• Avocado strips\n• Sweet potato wedges\n• Baby cereal with breast milk/formula\n\n**8-12 months:**\n• Scrambled eggs (soft texture)\n• Toast strips with thin nut butter\n• Greek yogurt with fruit\n• Mini pancakes or muffins\n\n**12+ months:**\n• Whole grain cereal\n• Fruit and veggie smoothies\n• French toast strips\n• Overnight oats\n\n**Safety tips:** Always cut foods to prevent choking, supervise eating, and ensure age-appropriate textures.";
+        return this.formatCopilotStyleResponse(
+          "Healthy Breakfast Ideas for Babies",
+          {
+            "6-8 Months (First Foods)": [
+              "Iron-fortified baby cereal with breast milk or formula",
+              "Mashed banana or avocado",
+              "Sweet potato puree", 
+              "Soft-cooked oatmeal with fruit puree"
+            ],
+            "8-12 Months (More Texture)": [
+              "Scrambled eggs (soft texture)",
+              "Toast strips with thin nut butter spread",
+              "Greek yogurt with mashed fruit",
+              "Pancake strips made with whole grains"
+            ],
+            "12+ Months (Family Foods)": [
+              "Whole grain cereal with milk",
+              "French toast cut into strips",
+              "Smoothies with fruits and vegetables",
+              "Mini muffins with hidden vegetables"
+            ]
+          },
+          [
+            "Academy of Nutrition and Dietetics",
+            "American Academy of Pediatrics",
+            "Pediatric Nutrition Guidelines"
+          ]
+        );
       }
-      if (lowerQuery.includes('lunch') || lowerQuery.includes('dinner')) {
-        return "🍽️ **Nutritious Meal Ideas**\n\n**Protein sources:**\n• Well-cooked chicken strips\n• Soft fish pieces (no bones)\n• Beans and lentils\n• Tofu cubes\n\n**Vegetables:**\n• Steamed broccoli florets\n• Roasted sweet potato\n• Soft-cooked carrots\n• Mashed peas\n\n**Grains:**\n• Soft pasta shapes\n• Rice (appropriate texture)\n• Quinoa\n• Soft bread pieces\n\n**Combination meals:**\n• Mini meatballs with vegetables\n• Soft pasta with sauce\n• Rice and bean bowls\n• Veggie-packed muffins";
-      }
-      // Generic meal planning response  
-      return `🍽️ **Meal Planning for "${query}"**\n\n**Age-appropriate considerations:**\n• **6-8 months:** Purees and soft finger foods\n• **8-12 months:** More texture, self-feeding\n• **12+ months:** Family foods, modified textures\n\n**Balanced meal components:**\n1. **Protein:** Meat, fish, beans, eggs\n2. **Vegetables:** Various colors and textures\n3. **Grains:** Whole grains when appropriate\n4. **Healthy fats:** Avocado, olive oil\n\n**Preparation tips:**\n• Steam or roast vegetables until soft\n• Cut foods to appropriate sizes\n• Avoid added salt and sugar\n• Introduce variety gradually`;
+      
+      // Generic meal planning response
+      return this.formatCopilotStyleResponse(
+        `Meal Ideas: ${query}`,
+        {
+          "Balanced Meal Components": [
+            "**Protein:** Meat, fish, beans, eggs, tofu",
+            "**Vegetables:** Various colors - steamed until soft",
+            "**Grains:** Rice, pasta, quinoa (appropriate texture)",
+            "**Healthy fats:** Avocado, olive oil, nut butters"
+          ],
+          "Age-Appropriate Textures": [
+            "**6-8 months:** Smooth purees, very soft finger foods",
+            "**8-12 months:** Mashed foods, small soft pieces",
+            "**12+ months:** Modified family foods, more texture"
+          ],
+          "Meal Preparation Tips": [
+            "Steam or roast vegetables until soft",
+            "Cut all foods smaller than baby's thumb",
+            "Avoid choking hazards (whole grapes, nuts, hard candy)",
+            "No added salt, sugar, or honey for babies under 12 months"
+          ]
+        },
+        [
+          "Academy of Nutrition and Dietetics",
+          "American Academy of Pediatrics", 
+          "Feeding Guidelines for Infants"
+        ]
+      );
     }
     
     if (context.type === 'parenting_research') {
-      if (lowerQuery.includes('sleep')) {
-        return "😴 **Healthy Sleep Guidelines for Babies**\n\n**Sleep needs by age:**\n• **Newborn (0-3 months):** 14-17 hours total\n• **Infant (4-11 months):** 12-15 hours total\n• **Toddler (12-24 months):** 11-14 hours total\n\n**Safe sleep practices:**\n• Back sleeping position\n• Firm mattress\n• No loose bedding or toys\n• Room sharing (not bed sharing)\n\n**Sleep routine tips:**\n• Consistent bedtime routine\n• Watch for sleep cues\n• Dark, quiet environment\n• Appropriate room temperature\n\n**When to consult pediatrician:**\n• Persistent sleep issues\n• Sudden changes in sleep patterns\n• Safety concerns";
+      if (lowerQuery.includes('allerg')) {
+        return this.formatCopilotStyleResponse(
+          "Baby Allergies: What Parents Need to Know",
+          {
+            "Common Food Allergies": [
+              "**Top 8 allergens:** Milk, eggs, peanuts, tree nuts, soy, wheat, fish, shellfish",
+              "Symptoms can include rash, vomiting, diarrhea, or difficulty breathing",
+              "Introduce new foods one at a time to identify potential allergens"
+            ],
+            "Managing Food Allergies": [
+              "Keep a detailed food diary when introducing new foods",
+              "Take photos of any reactions to show your pediatrician", 
+              "Learn to read food labels carefully for hidden allergens",
+              "Always have emergency action plan if severe allergies diagnosed"
+            ],
+            "When to See a Doctor": [
+              "Any signs of severe allergic reaction (difficulty breathing, swelling)",
+              "Persistent rash or digestive issues after eating",
+              "Family history of severe allergies",
+              "Questions about safe food introduction timeline"
+            ]
+          },
+          [
+            "American Academy of Pediatrics",
+            "Food Allergy Research & Education (FARE)",
+            "CDC - Food Allergy Guidelines"
+          ]
+        );
       }
-      if (lowerQuery.includes('cry') || lowerQuery.includes('fussy')) {
-        return "😢 **Understanding Baby Crying**\n\n**Common reasons babies cry:**\n• Hunger\n• Tired/overstimulated\n• Dirty diaper\n• Need for comfort\n• Gas or digestive discomfort\n• Too hot or cold\n\n**Soothing techniques:**\n• Swaddling\n• Gentle rocking or bouncing\n• White noise\n• Skin-to-skin contact\n• Pacifier\n• Change of environment\n\n**When to seek help:**\n• Crying for 3+ hours daily\n• High-pitched or unusual crying\n• Signs of illness\n• Parent feeling overwhelmed";
-      }
-      // Generic parenting research response
-      return `👶 **Parenting Guidance for "${query}"**\n\n**Remember:**\n• Every baby is different\n• Trust your instincts\n• Don't hesitate to ask for help\n• Consult your pediatrician for concerns\n\n**Helpful resources:**\n• American Academy of Pediatrics (AAP)\n• Your child's pediatrician\n• Local parenting groups\n• Evidence-based parenting websites\n\n**Important note:** This information is for educational purposes only. Always consult healthcare professionals for personalized medical advice.`;
+      
+      // Generic parenting research
+      return this.formatCopilotStyleResponse(
+        `Parenting Guidance: ${query}`,
+        {
+          "General Parenting Tips": [
+            "Every baby develops at their own pace - trust your instincts",
+            "Consistent routines help babies feel secure and safe",
+            "Don't hesitate to ask for help from family, friends, or professionals"
+          ],
+          "When to Contact Your Pediatrician": [
+            "Any concerns about baby's health or development",
+            "Questions about feeding, sleeping, or behavior",
+            "If you feel overwhelmed or need additional support",
+            "For guidance on reaching developmental milestones"
+          ],
+          "Reliable Resources": [
+            "Your child's pediatrician and healthcare team",
+            "American Academy of Pediatrics (HealthyChildren.org)",
+            "Local parenting groups and support networks",
+            "Evidence-based parenting websites and books"
+          ]
+        },
+        [
+          "American Academy of Pediatrics",
+          "CDC - Child Development",
+          "Your Pediatrician"
+        ]
+      );
     }
     
     return this.getFallbackResponse(query, context);
+  }
+
+  // Format responses like Copilot with clear structure and sources
+  formatCopilotStyleResponse(title, sections, sources) {
+    let response = `## ${title}\n\n`;
+    
+    // Add each section with proper formatting
+    Object.entries(sections).forEach(([sectionTitle, points]) => {
+      response += `**${sectionTitle}**\n`;
+      points.forEach(point => {
+        response += `• ${point}\n`;
+      });
+      response += `\n`;
+    });
+    
+    // Add professional disclaimer
+    response += `**Important:** This information is for educational purposes only. Always consult with your pediatrician for personalized medical advice and guidance specific to your baby.\n\n`;
+    
+    // Add sources section like Copilot
+    if (sources && sources.length > 0) {
+      response += `**${sources.length} Sources:**\n`;
+      sources.forEach((source, index) => {
+        response += `${index + 1}. ${source}\n`;
+      });
+    }
+    
+    return response;
   }
 
   // System prompts for different AI contexts
