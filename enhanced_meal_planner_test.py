@@ -9,8 +9,8 @@ import json
 import time
 from datetime import datetime, timezone
 
-# Backend URL from frontend environment
-BACKEND_URL = "https://babysteps-app-2.preview.emergentagent.com"
+# Backend URL - using local backend for testing
+BACKEND_URL = "http://localhost:8001"
 API_BASE = f"{BACKEND_URL}/api"
 
 class EnhancedMealPlannerTester:
