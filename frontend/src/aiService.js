@@ -400,6 +400,242 @@ class AIService {
     return this.getProfessionalResponse(query, context);
   }
 
+  // Format Copilot-style responses with structured sections
+  formatCopilotResponse(config) {
+    let response = `## ${config.title}\n\n`;
+    
+    // Add each section with proper formatting
+    config.sections.forEach(section => {
+      response += `${section.heading}\n`;
+      section.points.forEach(point => {
+        response += `• ${point}\n`;
+      });
+      response += `\n`;
+    });
+    
+    // Add professional disclaimer
+    response += `**Important:** This information is for educational purposes only. Always consult with your pediatrician for personalized medical advice and guidance specific to your baby.\n\n`;
+    
+    // Add sources section like Copilot
+    if (config.sources && config.sources.length > 0) {
+      response += `**${config.sources.length} Sources:**\n`;
+      config.sources.forEach((source, index) => {
+        response += `${index + 1}. ${source}\n`;
+      });
+    }
+    
+    return response;
+  }
+
+  // Generate meal planning responses like Copilot
+  generateMealPlanningResponse(query, lowerQuery) {
+    if (lowerQuery.includes('breakfast')) {
+      return this.formatCopilotResponse({
+        title: `Healthy Breakfast Ideas for Babies`,
+        sections: [
+          {
+            heading: "**6-8 Months (First Foods)**",
+            points: [
+              "Iron-fortified baby cereal with breast milk or formula",
+              "Mashed banana or avocado for natural sweetness",
+              "Sweet potato puree - rich in vitamins and naturally sweet",
+              "Soft-cooked oatmeal mixed with fruit puree"
+            ]
+          },
+          {
+            heading: "**8-12 Months (More Texture)**",
+            points: [
+              "Scrambled eggs (soft texture) - excellent protein source",
+              "Toast strips with thin nut butter spread (if no allergies)",
+              "Greek yogurt with mashed fruit for probiotics",
+              "Pancake strips made with whole grains and mashed banana"
+            ]
+          },
+          {
+            heading: "**12+ Months (Family Foods)**",
+            points: [
+              "Whole grain cereal with whole milk",
+              "French toast cut into safe finger food strips",
+              "Smoothies with fruits and hidden vegetables",
+              "Mini muffins with vegetables like carrots or zucchini"
+            ]
+          }
+        ],
+        sources: [
+          "Academy of Nutrition and Dietetics",
+          "American Academy of Pediatrics",
+          "Pediatric Nutrition Research Journal",
+          "CDC Infant Feeding Guidelines"
+        ]
+      });
+    }
+
+    // Generic meal planning response
+    return this.formatCopilotResponse({
+      title: `Nutritious Meal Ideas: ${query}`,
+      sections: [
+        {
+          heading: "**Balanced Meal Components**",
+          points: [
+            "**Protein:** Meat, fish, beans, eggs, tofu - for growth and development",
+            "**Vegetables:** Various colors steamed until soft - for vitamins and minerals",
+            "**Grains:** Rice, pasta, quinoa in appropriate texture - for energy",
+            "**Healthy fats:** Avocado, olive oil, nut butters - for brain development"
+          ]
+        },
+        {
+          heading: "**Age-Appropriate Textures**",
+          points: [
+            "**6-8 months:** Smooth purees, very soft finger foods",
+            "**8-12 months:** Mashed foods, small soft pieces baby can pick up",
+            "**12+ months:** Modified family foods with more texture and variety"
+          ]
+        },
+        {
+          heading: "**Safe Meal Preparation**",
+          points: [
+            "Steam or roast vegetables until soft and easily mashable",
+            "Cut all foods smaller than baby's thumb to prevent choking",
+            "Avoid choking hazards: whole grapes, nuts, hard candy, popcorn",
+            "No added salt, sugar, or honey for babies under 12 months"
+          ]
+        }
+      ],
+      sources: [
+        "Academy of Nutrition and Dietetics",
+        "American Academy of Pediatrics",
+        "WHO Infant Feeding Guidelines",
+        "Pediatric Nutrition Specialists"
+      ]
+    });
+  }
+
+  // Generate parenting responses like Copilot
+  generateParentingResponse(query, lowerQuery) {
+    if (lowerQuery.includes('allerg')) {
+      return this.formatCopilotResponse({
+        title: `Baby Allergies: Complete Parent Guide`,
+        sections: [
+          {
+            heading: "**Common Food Allergies**",
+            points: [
+              "**Top 8 allergens:** Milk, eggs, peanuts, tree nuts, soy, wheat, fish, shellfish",
+              "Symptoms range from mild (rash, upset stomach) to severe (breathing difficulty)",
+              "Introduce new foods one at a time to identify potential allergens",
+              "Early introduction of allergens may actually help prevent allergies"
+            ]
+          },
+          {
+            heading: "**Managing Food Allergies**",
+            points: [
+              "Keep detailed food diary when introducing new foods",
+              "Take photos of any reactions to show your pediatrician",
+              "Learn to read food labels carefully for hidden allergens",
+              "Have emergency action plan if severe allergies are diagnosed"
+            ]
+          },
+          {
+            heading: "**When to Seek Medical Care**",
+            points: [
+              "**Call 911:** Difficulty breathing, swelling of face/throat, severe vomiting",
+              "**Contact pediatrician:** Persistent rash, digestive issues after eating",
+              "**Consult before introduction:** Family history of severe allergies",
+              "**Regular check-ups:** Questions about safe food introduction timeline"
+            ]
+          }
+        ],
+        sources: [
+          "American Academy of Pediatrics",
+          "Food Allergy Research & Education (FARE)",
+          "CDC Food Allergy Guidelines",
+          "Journal of Allergy and Clinical Immunology"
+        ]
+      });
+    }
+
+    // Generic parenting research
+    return this.formatCopilotResponse({
+      title: `Evidence-Based Parenting: ${query}`,
+      sections: [
+        {
+          heading: "**Core Parenting Principles**",
+          points: [
+            "Every baby develops at their own pace - trust your parental instincts",
+            "Consistent, loving routines help babies feel secure and safe",
+            "Responsive parenting builds strong emotional bonds and trust",
+            "Don't hesitate to ask for help from family, friends, or professionals"
+          ]
+        },
+        {
+          heading: "**When to Contact Your Pediatrician**",
+          points: [
+            "Any concerns about baby's health, growth, or development",
+            "Questions about feeding, sleeping patterns, or behavior changes",
+            "If you feel overwhelmed or need additional parenting support",
+            "For guidance on reaching developmental milestones appropriately"
+          ]
+        },
+        {
+          heading: "**Reliable Parenting Resources**",
+          points: [
+            "Your child's pediatrician and healthcare team",
+            "American Academy of Pediatrics (HealthyChildren.org)",
+            "Local parenting groups and community support networks",
+            "Evidence-based parenting websites, books, and research"
+          ]
+        }
+      ],
+      sources: [
+        "American Academy of Pediatrics",
+        "CDC Child Development Guidelines",
+        "Zero to Three: National Center",
+        "Your Pediatrician"
+      ]
+    });
+  }
+
+  // Generate general parenting responses
+  generateGeneralParentingResponse(query, lowerQuery) {
+    return this.formatCopilotResponse({
+      title: `Parenting Guidance: ${query}`,
+      sections: [
+        {
+          heading: "**General Guidelines**",
+          points: [
+            "Trust your instincts while staying informed about best practices",
+            "Every baby is unique - avoid comparing to other children",
+            "Establish consistent routines that work for your family",
+            "Prioritize your own well-being to better care for your baby"
+          ]
+        },
+        {
+          heading: "**When to Seek Professional Guidance**",
+          points: [
+            "Any concerns about your baby's health or development",
+            "Questions about feeding, sleep, or behavioral patterns",
+            "If you're feeling overwhelmed or experiencing postpartum challenges",
+            "For personalized advice based on your family's specific needs"
+          ]
+        },
+        {
+          heading: "**Trusted Resources**",
+          points: [
+            "Your pediatrician and healthcare providers",
+            "Evidence-based parenting websites and publications",
+            "Local parent support groups and community resources",
+            "Professional counselors specializing in family wellness"
+          ]
+        }
+      ],
+      sources: [
+        "American Academy of Pediatrics",
+        "CDC Parenting Guidelines",
+        "National Institutes of Health",
+        "Your Healthcare Provider"
+      ]
+    });
+  }
+
   // User-friendly responses modeled after Copilot quality
     
     if (context.type === 'food_research') {
