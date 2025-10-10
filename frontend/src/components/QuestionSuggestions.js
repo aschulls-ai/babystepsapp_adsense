@@ -13,7 +13,50 @@ const QuestionSuggestions = ({
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get relevant questions based on user input
+  // Enhanced keyword extraction and matching system
+  const extractSmartKeywords = (text) => {
+    const stopWords = new Set([
+      'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with', 'can', 'my', 'i', 'me', 'you', 'your', 'what', 'when', 'where', 'how', 'why', 'should', 'could', 'would', 'have'
+    ]);
+
+    // Extract base keywords
+    let keywords = text.toLowerCase()
+      .replace(/[^\w\s]/g, ' ')
+      .split(/\s+/)
+      .filter(word => word.length > 2 && !stopWords.has(word));
+
+    // Add important context keywords based on patterns
+    const contextKeywords = [];
+    
+    // Food-specific keywords
+    const foodPatterns = {
+      'avocado': /\b(avocado|avocados)\b/i,
+      'honey': /\b(honey)\b/i,
+      'eggs': /\b(egg|eggs)\b/i,
+      'nuts': /\b(nut|nuts|peanut|peanuts|almond|almonds)\b/i,
+      'fish': /\b(fish|salmon|tuna|seafood)\b/i,
+      'strawberries': /\b(strawberr\w+|berr\w+)\b/i,
+      'milk': /\b(milk|dairy|cheese|yogurt)\b/i,
+      'meat': /\b(meat|chicken|beef|turkey|pork)\b/i
+    };
+
+    Object.entries(foodPatterns).forEach(([food, pattern]) => {
+      if (pattern.test(text)) {
+        contextKeywords.push(food);
+      }
+    });
+
+    // Action keywords
+    if (text.includes('safe') || text.includes('okay')) contextKeywords.push('safety');
+    if (text.includes('eat') || text.includes('feed')) contextKeywords.push('eating');
+    if (text.includes('when') || text.includes('age')) contextKeywords.push('timing');
+    if (text.includes('sleep') || text.includes('nap')) contextKeywords.push('sleep');
+    if (text.includes('cry') || text.includes('fuss')) contextKeywords.push('behavior');
+    
+    return [...new Set([...keywords, ...contextKeywords])];
+  };
+
+  // Get relevant questions based on smart keyword matching
   const findRelevantQuestions = useMemo(() => {
     return (searchQuery, knowledgeBaseType) => {
       if (!searchQuery || searchQuery.length < 2) return [];
@@ -22,47 +65,97 @@ const QuestionSuggestions = ({
       if (!kb || !Array.isArray(kb)) return [];
 
       const queryLower = searchQuery.toLowerCase();
-      const queryWords = searchQuery.toLowerCase().split(' ').filter(word => word.length > 2);
+      const smartKeywords = extractSmartKeywords(searchQuery);
       
-      // Score and rank questions
+      // Advanced scoring system
       const scoredQuestions = kb.map(question => {
         let score = 0;
         const questionLower = question.question.toLowerCase();
         const answerLower = (question.answer || '').toLowerCase();
+        const categoryLower = (question.category || '').toLowerCase();
         
-        // Exact phrase match (highest priority)
+        // 1. Exact phrase matching (highest priority)
         if (questionLower.includes(queryLower)) {
-          score += 100;
+          score += 150;
         }
         
-        // Word matching
-        queryWords.forEach(word => {
-          if (questionLower.includes(word)) score += 20;
-          if (answerLower.includes(word)) score += 10;
-          if (question.category && question.category.toLowerCase().includes(word)) score += 15;
+        // 2. Smart keyword matching with different weights
+        smartKeywords.forEach(keyword => {
+          // Question title matches (very high weight)
+          if (questionLower.includes(keyword)) {
+            score += 50;
+          }
+          
+          // Answer content matches (medium weight)
+          if (answerLower.includes(keyword)) {
+            score += 25;
+          }
+          
+          // Category matches (medium weight)
+          if (categoryLower.includes(keyword)) {
+            score += 30;
+          }
+          
+          // Partial matches (lower weight)
+          if (questionLower.includes(keyword.slice(0, -1)) && keyword.length > 3) {
+            score += 15;
+          }
         });
         
-        // Boost for question starts with similar pattern
-        if (questionLower.startsWith(queryWords[0])) {
-          score += 30;
+        // 3. Question pattern matching
+        const questionPatterns = [
+          /^(is|are|can|when|how|what|why)/i,
+          /(safe|okay|good|bad|avoid)/i,
+          /(baby|babies|infant|child)/i,
+          /(eat|drink|have|give)/i
+        ];
+        
+        questionPatterns.forEach(pattern => {
+          if (pattern.test(queryLower) && pattern.test(questionLower)) {
+            score += 20;
+          }
+        });
+        
+        // 4. Age relevance (for questions with age ranges)
+        if (question.age_range) {
+          // Boost questions that mention age-related terms
+          if (queryLower.includes('month') || queryLower.includes('old') || /\d+/.test(queryLower)) {
+            score += 15;
+          }
         }
         
-        // Category relevance for food research
+        // 5. Type-specific boosts
         if (knowledgeBaseType === 'food_research') {
-          const foodWords = ['safe', 'eat', 'food', 'baby', 'month', 'age'];
-          foodWords.forEach(foodWord => {
-            if (queryLower.includes(foodWord)) score += 5;
+          // Food safety context boost
+          const safetyTerms = ['safe', 'safety', 'eat', 'food', 'okay', 'can', 'when', 'age'];
+          safetyTerms.forEach(term => {
+            if (queryLower.includes(term) && questionLower.includes(term)) {
+              score += 10;
+            }
           });
+        } else if (knowledgeBaseType === 'ai_assistant') {
+          // Parenting context boost
+          const parentingTerms = ['sleep', 'feed', 'cry', 'baby', 'help', 'problem', 'why', 'how'];
+          parentingTerms.forEach(term => {
+            if (queryLower.includes(term) && questionLower.includes(term)) {
+              score += 10;
+            }
+          });
+        }
+        
+        // 6. Recency boost for shorter, more specific questions
+        if (questionLower.length < 50 && score > 30) {
+          score += 10;
         }
         
         return { question, score };
       });
 
-      // Filter and sort by score
+      // Filter, sort and return top suggestions
       return scoredQuestions
-        .filter(item => item.score > 0)
+        .filter(item => item.score > 20) // Higher minimum threshold
         .sort((a, b) => b.score - a.score)
-        .slice(0, 6) // Limit to top 6 suggestions
+        .slice(0, 6) // Top 6 most relevant
         .map(item => item.question);
     };
   }, []);
