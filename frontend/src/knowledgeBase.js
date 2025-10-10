@@ -343,8 +343,8 @@ class KnowledgeBaseService {
       const kb = this.knowledgeBases[t];
       stats[t] = {
         loaded: this.isLoaded[t],
-        questionCount: kb ? (kb[`${t}_questions`] || []).length : 0,
-        categories: kb ? this.getCategoryStats(kb[`${t}_questions`] || []) : {}
+        questionCount: Array.isArray(kb) ? kb.length : 0,
+        categories: Array.isArray(kb) ? this.getCategoryStats(kb) : {}
       };
     });
 
