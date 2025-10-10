@@ -40,9 +40,9 @@ const Research = () => {
         const response = await fetch('/knowledge-base/ai_assistant.json');
         const data = await response.json();
         
-        // Select 5 random questions
+        // Select 8 random questions for more variety
         const shuffled = [...data].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 5).map(item => ({
+        const selected = shuffled.slice(0, 8).map(item => ({
           icon: getCategoryIcon(item.category),
           question: item.question,
           category: item.category
