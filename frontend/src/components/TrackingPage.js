@@ -896,24 +896,21 @@ const SleepForm = ({ babyId, onSuccess }) => {
         notes: formData.notes || null
       };
 
-      // Use standalone offline API
-      console.log('🛌 Logging sleep activity:', {
+      // Use standalone offline API - Fixed structure
+      const sleepActivityData = {
         baby_id: babyId,
         type: 'sleep',
-        start_time: formData.start_time.toISOString(),
-        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null,
+        timestamp: formData.start_time.toISOString(),
+        duration: formData.end_time ? 
+          Math.round((new Date(formData.end_time) - formData.start_time) / (1000 * 60)) : null, // minutes
         quality: formData.quality || null,
-        notes: formData.notes || null
-      });
+        notes: formData.notes || null,
+        sleep_start: formData.start_time.toISOString(),
+        sleep_end: formData.end_time ? new Date(formData.end_time).toISOString() : null
+      };
       
-      await offlineAPI.logActivity({
-        baby_id: babyId,
-        type: 'sleep',
-        start_time: formData.start_time.toISOString(),
-        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null,
-        quality: formData.quality || null,
-        notes: formData.notes || null
-      });
+      console.log('🛌 Logging sleep activity:', sleepActivityData);
+      await offlineAPI.logActivity(sleepActivityData);
       toast.success('💾 Sleep session saved to device!');
       setFormData({
         start_time: new Date(),
