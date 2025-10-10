@@ -324,7 +324,33 @@ const MealPlanner = ({ currentBaby }) => {
               </CardHeader>
               <CardContent>
                 <div className="prose prose-sm max-w-none">
-                  <div className="break-words overflow-wrap-anywhere leading-relaxed whitespace-pre-wrap text-gray-800">{searchResults.results}</div>
+                  {searchResults.results && searchResults.results.length > 0 ? (
+                    searchResults.results.map((result, index) => (
+                      <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg border">
+                        <h3 className="font-semibold text-gray-900 mb-2">{result.title}</h3>
+                        <div className="break-words overflow-wrap-anywhere leading-relaxed whitespace-pre-wrap text-gray-800">
+                          {result.description}
+                        </div>
+                        {result.ingredients && result.ingredients.length > 0 && (
+                          <div className="mt-3">
+                            <h4 className="font-medium text-gray-700 mb-1">Key Points:</h4>
+                            <ul className="text-sm text-gray-600">
+                              {result.ingredients.map((ingredient, i) => (
+                                <li key={i} className="mb-1">• {ingredient}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {result.prep_time && (
+                          <div className="mt-2 text-sm text-gray-500">
+                            <strong>Source:</strong> {result.prep_time}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500">No meal ideas found. Please try a different search.</div>
+                  )}
                 </div>
               </CardContent>
             </Card>
