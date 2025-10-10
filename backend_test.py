@@ -22,15 +22,11 @@ class BabyStepsAPITester:
     def __init__(self):
         self.session = requests.Session()
         # Set session timeout and retry settings
-        self.session.timeout = 30
+        self.session.timeout = 60  # Increased for AI responses
         self.auth_token = None
-        # Test credentials for new user (as per review request)
-        self.new_user_email = "newuser@test.com"
-        self.new_user_name = "New Test User"
-        self.new_user_password = "TestPass123"
-        # Existing user credentials
-        self.existing_user_email = "test@babysteps.com"
-        self.existing_user_password = "TestPassword123"
+        # Demo credentials as specified in review request
+        self.demo_email = "demo@babysteps.com"
+        self.demo_password = "demo123"
         self.baby_id = None
         self.results = {
             'passed': 0,
