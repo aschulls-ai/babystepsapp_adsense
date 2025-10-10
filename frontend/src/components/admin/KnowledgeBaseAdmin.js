@@ -285,7 +285,17 @@ const KnowledgeBaseAdmin = () => {
                 )}
               </div>
               <div className="text-sm">
-                <strong>Answer:</strong> {searchResults.question.answer}
+                <strong>Answer:</strong> 
+                {Array.isArray(searchResults.question.answer) ? (
+                  <div className="mt-2">
+                    <span className="text-blue-600">{searchResults.question.answer.length} recipes available</span>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Sample: {searchResults.question.answer[0]?.name || 'Recipe'}
+                    </div>
+                  </div>
+                ) : (
+                  <span className="ml-2">{searchResults.question.answer}</span>
+                )}
               </div>
             </div>
           )}
