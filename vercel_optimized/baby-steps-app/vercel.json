@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://parental-copilot.preview.emergentagent.com/api/$1"
+      "destination": "https://smart-parent.preview.emergentagent.com/api/$1"
     },
     {
       "source": "/(.*)",

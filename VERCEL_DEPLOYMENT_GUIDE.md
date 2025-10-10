@@ -38,7 +38,7 @@
 
 4. **Environment Variables** (Add these in Vercel dashboard)
    ```
-   REACT_APP_BACKEND_URL=https://parental-copilot.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://smart-parent.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-0000000000000000
    ```
 

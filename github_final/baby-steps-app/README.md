@@ -94,7 +94,7 @@ Visit `http://localhost:3000` to see the app running!
 
 3. **Environment Variables** (Add in Vercel dashboard)
    ```
-   REACT_APP_BACKEND_URL=https://parental-copilot.preview.emergentagent.com
+   REACT_APP_BACKEND_URL=https://smart-parent.preview.emergentagent.com
    REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053
    ```
 

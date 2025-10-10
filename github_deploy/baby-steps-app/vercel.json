@@ -21,6 +21,6 @@
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "https://parental-copilot.preview.emergentagent.com"
+    "REACT_APP_BACKEND_URL": "https://smart-parent.preview.emergentagent.com"
   }
 }
