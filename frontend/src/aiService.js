@@ -211,35 +211,122 @@ Peanut butter can be safely introduced to babies around 6 months of age. Recent 
 Most foods can be introduced around 6 months when baby shows readiness for solids. Always introduce one new food at a time and wait 3-5 days between new foods to watch for reactions. Ensure appropriate texture and size for baby's developmental stage. Always consult with a healthcare provider before introducing new foods to your baby's diet.`;
   }
 
-  // Generate meal planning answers (Bing format)
+  // Generate detailed meal recipes (Bing-style format with actual recipes)
   generateMealAnswer(query, lowerQuery, babyAge) {
+    
+    // Family meal ideas that baby can share
+    if (lowerQuery.includes('family meal') || lowerQuery.includes('baby can share')) {
+      return `**Family Meal Ideas for ${babyAge}-Month-Old to Share**
+
+**1. Slow Cooker Chicken and Vegetable Stew**
+• Ingredients: Chicken breast, carrots, sweet potatoes, celery, low-sodium broth
+• Instructions: Cook 6-8 hours on low. Shred chicken finely, mash vegetables for baby
+• Family portion: Serve with rice or bread
+• Baby portion: Ensure pieces are smaller than baby's thumb
+
+**2. Baked Salmon with Roasted Vegetables** 
+• Ingredients: Salmon fillet, zucchini, bell peppers, olive oil
+• Instructions: Bake at 375°F for 15-20 minutes. Flake salmon, cut vegetables into soft strips
+• Family portion: Season after cooking baby's portion
+• Baby portion: Check for bones, serve in small flakes
+
+**3. Ground Turkey and Sweet Potato Hash**
+• Ingredients: Ground turkey, sweet potatoes, onions, mild herbs
+• Instructions: Cook turkey thoroughly, dice sweet potatoes small, sauté until soft
+• Family portion: Add spices and seasonings
+• Baby portion: Ensure turkey is well-cooked and vegetables are soft
+
+**Serving Tips:** Always test temperature, cut food appropriately, and supervise eating. These meals provide balanced nutrition for the whole family while being safe for baby.`;
+    }
+
+    // Breakfast recipes
     if (lowerQuery.includes('breakfast')) {
-      return `**Healthy Breakfast Ideas for ${babyAge}-Month-Old**
+      return `**Breakfast Recipes for ${babyAge}-Month-Old**
 
-• **Oatmeal** mixed with mashed banana or breast milk
-• **Scrambled eggs** cooked soft and cut into small pieces  
-• **Avocado** mashed or cut into strips for self-feeding
-• **Toast strips** with thin nut butter (if no allergies)
-• **Baby cereal** fortified with iron, mixed with formula
+**1. Baby's First Pancakes**
+• Ingredients: 1 banana, 1 egg, 2 tbsp oat flour
+• Instructions: Mash banana, whisk in egg, add flour. Cook small pancakes on low heat
+• Serving: Cut into strips, serve warm. No syrup needed - banana provides sweetness
+• Prep time: 10 minutes
 
-Start with small portions and let baby explore textures. Always ensure foods are appropriate size to prevent choking. Always consult with a healthcare provider about your baby's nutrition needs.`;
+**2. Overnight Oats for Baby**
+• Ingredients: 1/4 cup rolled oats, 1/4 cup breast milk/formula, mashed berries
+• Instructions: Mix ingredients, refrigerate overnight. Stir before serving
+• Serving: Ensure oats are soft, check temperature
+• Prep time: 5 minutes (plus overnight)
+
+**3. Veggie Scrambled Eggs**
+• Ingredients: 2 eggs, finely diced bell peppers, mild cheese (if no allergies)
+• Instructions: Scramble eggs on low heat, add soft vegetables in last minute
+• Serving: Cut into small pieces, ensure eggs are fully cooked
+• Prep time: 8 minutes
+
+**Storage:** Most can be made ahead and reheated. Always check temperature before serving.`;
     }
 
+    // Lunch/Dinner recipes
     if (lowerQuery.includes('lunch') || lowerQuery.includes('dinner')) {
-      return `**Nutritious Meal Ideas for ${babyAge}-Month-Old**
+      return `**Nutritious Lunch & Dinner Recipes for ${babyAge}-Month-Old**
 
-• **Soft pasta** with mild sauce or butter
-• **Steamed vegetables** like carrots, sweet potato, broccoli
-• **Well-cooked chicken** shredded into small pieces
-• **Rice** cooked until very soft, mixed with vegetables
-• **Bean mash** from kidney beans or chickpeas
+**1. Mini Meatballs with Hidden Vegetables**
+• Ingredients: Ground beef/turkey, finely grated carrot, zucchini, breadcrumbs
+• Instructions: Mix ingredients, form small meatballs, bake at 350°F for 15-20 minutes
+• Serving: Ensure well-cooked, cut in half to prevent choking
+• Prep time: 25 minutes
 
-Offer variety in colors, textures, and flavors. Cut all foods smaller than baby's thumb to prevent choking. Always consult with a healthcare provider about your baby's nutrition needs.`;
+**2. Creamy Chicken and Rice**  
+• Ingredients: Chicken breast, jasmine rice, low-sodium chicken broth, mixed vegetables
+• Instructions: Cook rice in broth, add diced chicken and vegetables, simmer until tender
+• Serving: Shred chicken finely, ensure rice is very soft
+• Prep time: 30 minutes
+
+**3. Lentil and Sweet Potato Puree**
+• Ingredients: Red lentils, sweet potato, mild herbs, olive oil
+• Instructions: Boil lentils and diced sweet potato until very soft, mash together
+• Serving: Can be thinned with breast milk or served as finger food
+• Prep time: 20 minutes
+
+**Batch Cooking:** These recipes freeze well in ice cube trays for easy portion control.`;
     }
 
-    return `**Age-Appropriate Meal Ideas for ${babyAge}-Month-Old**
+    // Finger foods
+    if (lowerQuery.includes('finger food') || lowerQuery.includes('self feeding')) {
+      return `**Finger Food Recipes for ${babyAge}-Month-Old**
 
-Focus on soft, appropriately-sized foods that match your baby's developmental stage. Include proteins, vegetables, grains, and healthy fats. Avoid honey, whole nuts, hard candies, and choking hazards. Always supervise feeding time and ensure proper food safety. Always consult with a healthcare provider about your baby's nutrition needs.`;
+**1. Sweet Potato Fries**
+• Ingredients: Sweet potato, olive oil
+• Instructions: Cut into thick strips, toss with oil, bake at 400°F for 20-25 minutes
+• Serving: Ensure soft enough to mash between fingers
+• Prep time: 30 minutes
+
+**2. Cheese and Vegetable Muffins**
+• Ingredients: Whole wheat flour, grated cheese, finely diced vegetables, eggs
+• Instructions: Mix ingredients, bake in mini muffin tins at 350°F for 15 minutes
+• Serving: Cool completely, great for on-the-go
+• Prep time: 25 minutes
+
+**3. Banana Oat Cookies (No Sugar Added)**
+• Ingredients: Mashed banana, rolled oats, cinnamon
+• Instructions: Mix ingredients, form small cookies, bake at 325°F for 12 minutes
+• Serving: Soft cookies that dissolve easily
+• Prep time: 20 minutes
+
+**Safety:** All finger foods should be easily mashed between fingers and larger than baby's mouth.`;
+    }
+
+    // Generic meal ideas with recipes
+    return `**Complete Meal Recipes for ${babyAge}-Month-Old**
+
+**Quick & Easy Options:**
+• **15-Minute Chicken and Veggie Bowl:** Diced chicken, steamed broccoli, soft rice
+• **No-Cook Avocado Mash:** Avocado, banana, breast milk for consistency
+• **Simple Pasta:** Well-cooked small pasta with butter and mild cheese
+
+**Make-Ahead Meals:**
+• **Freezer-Friendly Purees:** Batch cook vegetables and proteins, freeze in portions
+• **Overnight Prep:** Slow cooker meals that cook while you sleep
+
+Always ensure foods are appropriate texture, temperature-tested, and cut safely for your baby's development stage.`;
   }
 
   // Generate parenting answers (Bing format)  
