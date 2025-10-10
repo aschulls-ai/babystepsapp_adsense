@@ -1,5 +1,5 @@
-// AI Integration Service for Standalone App
-// Uses backend API endpoints that connect to AI services
+// Professional AI Search Service - Uses Internet Search Engines
+// Emulates Copilot/Bing quality responses for parenting queries
 
 class AIService {
   constructor() {
