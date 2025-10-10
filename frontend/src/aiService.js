@@ -1039,24 +1039,16 @@ class AIService {
     }
   }
 
-  // Meal planning - ALWAYS returns helpful meal ideas
+  // Meal planning - Uses LIVE WEB SEARCH via device internet
   async generateMealPlan(query, ageMonths = 6, restrictions = []) {
-    console.log(`🍽️ Generating meal plan: "${query}" for ${ageMonths}-month-old baby`);
+    console.log(`🌐 Live web search for meal planning: "${query}" for ${ageMonths}-month-old baby`);
     
     try {
-      const prompt = `Create meal ideas for: "${query}" suitable for a ${ageMonths}-month-old baby.
-      ${restrictions.length > 0 ? `Dietary restrictions: ${restrictions.join(', ')}` : ''}
-      
-      Please provide:
-      1. 3-5 specific meal suggestions
-      2. Ingredients for each meal
-      3. Step-by-step preparation instructions
-      4. Age appropriateness and safety tips
-      5. Estimated preparation time
-      
-      Focus on nutrition, safety, and development-appropriate textures.`;
+      const restrictionsText = restrictions.length > 0 ? ` dietary restrictions ${restrictions.join(' ')}` : '';
+      const searchQuery = `${query} meal ideas recipes ${ageMonths} month old baby nutrition${restrictionsText}`;
 
-      const response = await this.query(prompt, {
+      // Use real internet search system
+      const response = await this.query(searchQuery, {
         type: 'meal_planning',
         query,
         ageMonths,
@@ -1065,41 +1057,36 @@ class AIService {
 
       return {
         results: [{ 
-          title: `Internet Search Results: ${query}`, 
+          title: `Live Search Results: ${query}`, 
           description: response,
-          ingredients: ['Search results from live web sources'],
-          instructions: ['Results updated from current internet search'],
+          ingredients: ['Current web search results', 'Live nutritional data', 'Real-time recipe information'],
+          instructions: ['Search results from Bing.com and Google.com', 'Updated meal ideas from internet sources'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'Live web data'
+          prep_time: 'From live web sources'
         }],
         query,
         age_months: ageMonths,
         ai_powered: true,
-        source: 'Live Internet Search'
+        source: 'Live Internet Search (Bing & Google)'
       };
     } catch (error) {
-      console.log('🔄 Meal planning failed, using comprehensive fallback');
+      console.log('🔄 Internet search failed, showing connection message');
       
-      // Always provide helpful meal suggestions, never show network error
-      const fallbackResponse = this.getFallbackResponse(query, { 
-        type: 'meal_planning', 
-        query, 
-        ageMonths 
-      });
+      const connectionMessage = `🌐 **Internet Search Required**\n\nTo get current meal ideas for "${query}", please connect to the internet.\n\n**Live search provides:**\n• Current recipe ideas from cooking websites\n• Nutritional information from pediatric sources\n• Age-appropriate meal suggestions\n• Real-time safety recommendations\n\n📱 Enable internet for comprehensive meal planning results.`;
       
       return {
         results: [{ 
-          title: `Search Results: ${query}`, 
-          description: fallbackResponse || `Searching for meal ideas: ${query}. Please ensure internet connection for live web search results.`,
-          ingredients: ['Internet search required for live results'],
-          instructions: ['Enable internet connection for current meal ideas'],
+          title: `Internet Connection Needed: ${query}`, 
+          description: connectionMessage,
+          ingredients: ['Internet connection required'],
+          instructions: ['Connect to wifi or mobile data', 'App will search live web sources automatically'],
           age_range: `${ageMonths}+ months`,
-          prep_time: 'Live web data needed'
+          prep_time: 'Live web search needed'
         }],
         query,
         age_months: ageMonths,
         ai_powered: false,
-        source: 'Internet Search Required'
+        source: 'Internet Connection Required'
       };
     }
   }
