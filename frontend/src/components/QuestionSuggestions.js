@@ -16,11 +16,13 @@ const QuestionSuggestions = ({
   // Enhanced keyword extraction and matching system
   const extractSmartKeywords = (text) => {
     const stopWords = new Set([
-      'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with', 'can', 'my', 'i', 'me', 'you', 'your', 'what', 'when', 'where', 'how', 'why', 'should', 'could', 'would', 'have'
+      'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'will', 'with'
     ]);
 
-    // Extract base keywords
-    let keywords = text.toLowerCase()
+    const textLower = text.toLowerCase();
+    
+    // Extract base keywords (keep important question words now)
+    let keywords = textLower
       .replace(/[^\w\s]/g, ' ')
       .split(/\s+/)
       .filter(word => word.length > 2 && !stopWords.has(word));
@@ -28,16 +30,51 @@ const QuestionSuggestions = ({
     // Add important context keywords based on patterns
     const contextKeywords = [];
     
-    // Food-specific keywords
+    // Comprehensive food patterns with variations
     const foodPatterns = {
       'avocado': /\b(avocado|avocados)\b/i,
-      'honey': /\b(honey)\b/i,
-      'eggs': /\b(egg|eggs)\b/i,
-      'nuts': /\b(nut|nuts|peanut|peanuts|almond|almonds)\b/i,
-      'fish': /\b(fish|salmon|tuna|seafood)\b/i,
-      'strawberries': /\b(strawberr\w+|berr\w+)\b/i,
-      'milk': /\b(milk|dairy|cheese|yogurt)\b/i,
-      'meat': /\b(meat|chicken|beef|turkey|pork)\b/i
+      'honey': /\b(honey|honeys)\b/i,
+      'egg': /\b(egg|eggs)\b/i,
+      'peanut': /\b(peanut|peanuts|nut|nuts)\b/i,
+      'almond': /\b(almond|almonds)\b/i,
+      'fish': /\b(fish|salmon|tuna|cod|seafood)\b/i,
+      'strawberry': /\b(strawberr\w*|berr\w+)\b/i,
+      'blueberry': /\b(blueberr\w*)\b/i,
+      'grape': /\b(grape|grapes)\b/i,
+      'banana': /\b(banana|bananas)\b/i,
+      'apple': /\b(apple|apples)\b/i,
+      'pear': /\b(pear|pears)\b/i,
+      'orange': /\b(orange|oranges|citrus)\b/i,
+      'peach': /\b(peach|peaches)\b/i,
+      'mango': /\b(mango|mangos|mangoes)\b/i,
+      'watermelon': /\b(watermelon)\b/i,
+      'melon': /\b(melon)\b/i,
+      'milk': /\b(milk|dairy)\b/i,
+      'cheese': /\b(cheese)\b/i,
+      'yogurt': /\b(yogurt|yoghurt)\b/i,
+      'butter': /\b(butter)\b/i,
+      'meat': /\b(meat|beef|pork)\b/i,
+      'chicken': /\b(chicken|poultry)\b/i,
+      'turkey': /\b(turkey)\b/i,
+      'carrot': /\b(carrot|carrots)\b/i,
+      'broccoli': /\b(broccoli)\b/i,
+      'spinach': /\b(spinach)\b/i,
+      'peas': /\b(pea|peas)\b/i,
+      'corn': /\b(corn)\b/i,
+      'potato': /\b(potato|potatoes)\b/i,
+      'tomato': /\b(tomato|tomatoes)\b/i,
+      'rice': /\b(rice)\b/i,
+      'oat': /\b(oat|oats|oatmeal)\b/i,
+      'bread': /\b(bread|toast)\b/i,
+      'pasta': /\b(pasta|noodle|noodles)\b/i,
+      'cereal': /\b(cereal)\b/i,
+      'quinoa': /\b(quinoa)\b/i,
+      'bean': /\b(bean|beans)\b/i,
+      'lentil': /\b(lentil|lentils)\b/i,
+      'tofu': /\b(tofu)\b/i,
+      'formula': /\b(formula)\b/i,
+      'water': /\b(water)\b/i,
+      'juice': /\b(juice)\b/i
     };
 
     Object.entries(foodPatterns).forEach(([food, pattern]) => {
@@ -46,12 +83,15 @@ const QuestionSuggestions = ({
       }
     });
 
-    // Action keywords
-    if (text.includes('safe') || text.includes('okay')) contextKeywords.push('safety');
-    if (text.includes('eat') || text.includes('feed')) contextKeywords.push('eating');
-    if (text.includes('when') || text.includes('age')) contextKeywords.push('timing');
-    if (text.includes('sleep') || text.includes('nap')) contextKeywords.push('sleep');
-    if (text.includes('cry') || text.includes('fuss')) contextKeywords.push('behavior');
+    // Action/intent keywords that shouldn't be filtered
+    if (/\b(can|safe|okay|ok)\b/i.test(text)) contextKeywords.push('safety');
+    if (/\b(eat|eating|feed|feeding|give|serve)\b/i.test(text)) contextKeywords.push('eating');
+    if (/\b(when|age|old|month|months)\b/i.test(text)) contextKeywords.push('timing');
+    if (/\b(sleep|sleeping|nap|napping|bedtime)\b/i.test(text)) contextKeywords.push('sleep');
+    if (/\b(cry|crying|fuss|fussy|upset)\b/i.test(text)) contextKeywords.push('behavior');
+    if (/\b(milk|breast|breastfeed|bottle)\b/i.test(text)) contextKeywords.push('feeding');
+    if (/\b(develop|development|milestone|growth)\b/i.test(text)) contextKeywords.push('development');
+    if (/\b(recipe|meal|cook|prepare)\b/i.test(text)) contextKeywords.push('cooking');
     
     return [...new Set([...keywords, ...contextKeywords])];
   };
