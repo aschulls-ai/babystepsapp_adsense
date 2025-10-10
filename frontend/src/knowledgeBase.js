@@ -127,15 +127,15 @@ class KnowledgeBaseService {
     return bestMatch;
   }
 
-  // Comprehensive similarity calculation
+  // Comprehensive similarity calculation for user's JSON format
   calculateSimilarity(queryLower, queryWords, questionObj, babyAge) {
     let similarity = 0;
     const weights = {
       exact: 1.0,          // Exact question match
-      keywords: 0.7,       // Keyword match
-      semantic: 0.5,       // Semantic similarity
-      age: 0.3,           // Age appropriateness
-      category: 0.2       // Category match
+      keywords: 0.8,       // Keyword match (higher weight for simpler structure)
+      semantic: 0.6,       // Semantic similarity
+      category: 0.4,       // Category match
+      partial: 0.3         // Partial question match
     };
 
     // 1. Exact question match
@@ -143,12 +143,19 @@ class KnowledgeBaseService {
       similarity += weights.exact;
     }
 
-    // 2. Keyword matching
-    const questionKeywords = [
-      ...this.extractKeywords(questionObj.question.toLowerCase()),
-      ...(questionObj.keywords || [])
-    ];
+    // 2. Partial question match (contains most of the query)
+    const questionLower = questionObj.question.toLowerCase();
+    const queryInQuestion = queryWords.filter(word => questionLower.includes(word)).length;
+    const questionWordsInQuery = this.extractKeywords(questionLower).filter(word => queryLower.includes(word)).length;
+    
+    const partialScore = Math.max(
+      queryInQuestion / Math.max(queryWords.length, 1),
+      questionWordsInQuery / Math.max(this.extractKeywords(questionLower).length, 1)
+    );
+    similarity += partialScore * weights.partial;
 
+    // 3. Keyword matching from question text
+    const questionKeywords = this.extractKeywords(questionLower);
     const keywordMatches = queryWords.filter(word => 
       questionKeywords.some(keyword => 
         keyword.includes(word) || word.includes(keyword) || this.areSimilar(word, keyword)
@@ -158,37 +165,25 @@ class KnowledgeBaseService {
     const keywordScore = Math.min(keywordMatches / Math.max(queryWords.length, 1), 1.0);
     similarity += keywordScore * weights.keywords;
 
-    // 3. Semantic similarity (simple approach)
+    // 4. Semantic similarity
     const semanticScore = this.calculateSemanticSimilarity(queryLower, questionObj);
     similarity += semanticScore * weights.semantic;
-
-    // 4. Age appropriateness
-    if (questionObj.age_range && questionObj.age_range.length >= 2) {
-      const [minAge, maxAge] = questionObj.age_range;
-      if (babyAge >= minAge && babyAge <= maxAge) {
-        similarity += weights.age;
-      } else {
-        // Partial score for near-age matches
-        const ageDiff = Math.min(Math.abs(babyAge - minAge), Math.abs(babyAge - maxAge));
-        if (ageDiff <= 3) { // Within 3 months
-          similarity += weights.age * (1 - ageDiff / 6);
-        }
-      }
-    }
 
     // 5. Category bonus (if query contains category-related terms)
     if (questionObj.category) {
       const categoryTerms = {
-        breakfast: ['breakfast', 'morning', 'first meal'],
-        lunch: ['lunch', 'midday', 'noon'],
-        dinner: ['dinner', 'evening', 'supper'],
-        snack: ['snack', 'between meals', 'finger food'],
-        safety: ['safe', 'safety', 'dangerous', 'avoid'],
-        development: ['development', 'milestone', 'growth']
+        'Feeding': ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food'],
+        'Sleep': ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired'],
+        'Development': ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit'],
+        'Health': ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom'],
+        'Safety': ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect'],
+        'Behavior': ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum'],
+        'Recipes': ['recipe', 'cook', 'prepare', 'meal', 'breakfast', 'lunch', 'dinner', 'ingredient'],
+        'Nutrition': ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium']
       };
 
-      const categoryWords = categoryTerms[questionObj.category] || [questionObj.category];
-      const categoryMatch = categoryWords.some(term => queryLower.includes(term));
+      const categoryWords = categoryTerms[questionObj.category] || [questionObj.category.toLowerCase()];
+      const categoryMatch = categoryWords.some(term => queryLower.includes(term.toLowerCase()));
       if (categoryMatch) {
         similarity += weights.category;
       }
