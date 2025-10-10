@@ -1595,12 +1595,35 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
                 elif query_lower in question_lower or question_lower in query_lower:
                     score = 80
                 
-                # Food name matching (REQUIRED for relevance)
+                # Specific food name matching (same logic as food research endpoint)
                 food_match_count = 0
-                for food in specific_foods:
-                    if food in query_lower and food in (question_lower + ' ' + answer_lower):
-                        food_match_count += 1
-                        score += 40  # Higher score for specific food matches
+                food_mappings = [
+                    (['strawberr', 'strawberry'], ['strawberr']),
+                    (['honey'], ['honey']),
+                    (['egg', 'eggs'], ['egg']),
+                    (['avocado'], ['avocado']),
+                    (['peanut', 'nut', 'nuts'], ['peanut', 'nut']),
+                    (['fish'], ['fish']),
+                    (['milk'], ['milk']),
+                    (['cheese'], ['cheese'])
+                ]
+                
+                for query_terms, kb_terms in food_mappings:
+                    query_has_food = any(term in query_lower for term in query_terms)
+                    kb_has_food = any(term in (question_lower + ' ' + answer_lower) for term in kb_terms)
+                    
+                    if query_has_food and kb_has_food:
+                        # Check for exact food match
+                        for query_term in query_terms:
+                            for kb_term in kb_terms:
+                                if query_term in query_lower and kb_term in (question_lower + ' ' + answer_lower):
+                                    food_match_count += 1
+                                    score += 60  # Higher score for specific food matches in AI Assistant
+                                    break
+                            if food_match_count > 0:
+                                break
+                    if food_match_count > 0:
+                        break
                 
                 # Require specific food match for food research
                 if food_match_count > 0:
