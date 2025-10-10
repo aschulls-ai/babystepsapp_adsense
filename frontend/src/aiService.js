@@ -1799,8 +1799,58 @@ I'm currently unable to connect to live AI services to provide real-time researc
 💡 Try your question again later when internet connectivity improves.`;
   }
 
+  // Knowledge Base Helper Methods
+  
+  // Map context type to knowledge base type
+  getKnowledgeBaseType(contextType) {
+    const typeMapping = {
+      'meal_planning': 'meal_planner',
+      'food_research': 'food_research',
+      'parenting_research': 'ai_assistant',
+      'general': 'ai_assistant'
+    };
+    return typeMapping[contextType] || null;
+  }
+
+  // Format knowledge base answer with context
+  formatKnowledgeBaseAnswer(kbResult, originalQuery, context) {
+    const question = kbResult.question;
+    let formattedAnswer = question.answer;
+
+    // Add personalization if baby age is available
+    if (context.babyAgeMonths && question.age_range) {
+      const [minAge, maxAge] = question.age_range;
+      if (context.babyAgeMonths < minAge) {
+        formattedAnswer = `**Note: This information is for ${minAge}+ month babies. Your baby (${context.babyAgeMonths} months) may not be ready yet.**\n\n${formattedAnswer}`;
+      } else if (context.babyAgeMonths > maxAge) {
+        formattedAnswer = `**Note: This information is typically for babies up to ${maxAge} months. Your baby (${context.babyAgeMonths} months) may be ready for more advanced options.**\n\n${formattedAnswer}`;
+      }
+    }
+
+    // Add knowledge base source info
+    formattedAnswer += `\n\n**Source:** Baby Steps Knowledge Base (${Math.round(kbResult.similarity * 100)}% match)`;
+    
+    // Add related tags if available
+    if (question.tags && question.tags.length > 0) {
+      formattedAnswer += `\n**Tags:** ${question.tags.join(', ')}`;
+    }
+
+    return formattedAnswer;
+  }
+
+  // Get knowledge base statistics
+  getKnowledgeBaseStats() {
+    return this.knowledgeBase.getStats();
+  }
+
+  // Check if specific knowledge base is ready
+  isKnowledgeBaseReady(type) {
+    const kbType = this.getKnowledgeBaseType(type);
+    return kbType ? this.knowledgeBase.isReady(kbType) : false;
+  }
+
   // Save AI interactions to local history
-  saveToHistory(prompt, response, type = 'general') {
+  saveToHistory(prompt, response, type = 'general', source = 'ai_search') {
     try {
       const history = JSON.parse(localStorage.getItem('babysteps_ai_history') || '{}');
       const userId = localStorage.getItem('babysteps_current_user');
