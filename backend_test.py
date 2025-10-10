@@ -248,12 +248,11 @@ class BabyStepsAPITester:
             self.log_result("Get Baby Profiles", False, f"Error: {str(e)}")
             return False
     
-    def test_food_research_endpoint(self):
-        """Test the food research endpoint"""
+    def test_enhanced_food_matching_avocado(self):
+        """Test enhanced food matching for avocado - CRITICAL TEST A1"""
         try:
-            # Test food safety query
             food_query = {
-                "question": "Is avocado safe for my baby to eat?",
+                "question": "Is avocado safe for babies",
                 "baby_age_months": 8
             }
             
@@ -261,22 +260,157 @@ class BabyStepsAPITester:
             
             if response.status_code == 200:
                 data = response.json()
-                required_fields = ['answer', 'safety_level', 'sources']
-                if all(field in data for field in required_fields):
-                    if data['safety_level'] in ['safe', 'caution', 'avoid', 'consult_doctor']:
-                        self.log_result("Food Research Endpoint", True, f"Safety level: {data['safety_level']}")
+                answer = data.get('answer', '').lower()
+                
+                # Check if response is about avocado specifically (not just honey)
+                if 'avocado' in answer and len(answer) > 50:
+                    # Check for clean response (no source text)
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        self.log_result("Enhanced Food Matching - Avocado", True, "Found avocado-specific clean answer")
                         return True
                     else:
-                        self.log_result("Food Research Endpoint", False, f"Invalid safety level: {data['safety_level']}")
+                        self.log_result("Enhanced Food Matching - Avocado", False, "Response contains source/pediatrician text")
                         return False
                 else:
-                    self.log_result("Food Research Endpoint", False, f"Missing required fields: {data}")
+                    self.log_result("Enhanced Food Matching - Avocado", False, f"No avocado-specific answer found: {answer[:100]}...")
                     return False
             else:
-                self.log_result("Food Research Endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_result("Enhanced Food Matching - Avocado", False, f"HTTP {response.status_code}: {response.text}")
                 return False
         except Exception as e:
-            self.log_result("Food Research Endpoint", False, f"Error: {str(e)}")
+            self.log_result("Enhanced Food Matching - Avocado", False, f"Error: {str(e)}")
+            return False
+
+    def test_enhanced_food_matching_eggs(self):
+        """Test enhanced food matching for eggs - CRITICAL TEST A2"""
+        try:
+            food_query = {
+                "question": "Can baby eat eggs",
+                "baby_age_months": 9
+            }
+            
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                answer = data.get('answer', '').lower()
+                
+                # Check if response is about eggs specifically
+                if ('egg' in answer or 'eggs' in answer) and len(answer) > 50:
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        self.log_result("Enhanced Food Matching - Eggs", True, "Found egg-specific clean answer")
+                        return True
+                    else:
+                        self.log_result("Enhanced Food Matching - Eggs", False, "Response contains source/pediatrician text")
+                        return False
+                else:
+                    self.log_result("Enhanced Food Matching - Eggs", False, f"No egg-specific answer found: {answer[:100]}...")
+                    return False
+            else:
+                self.log_result("Enhanced Food Matching - Eggs", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Enhanced Food Matching - Eggs", False, f"Error: {str(e)}")
+            return False
+
+    def test_enhanced_food_matching_strawberries(self):
+        """Test enhanced food matching for strawberries - CRITICAL TEST A3"""
+        try:
+            food_query = {
+                "question": "Are strawberries safe for 8 month old",
+                "baby_age_months": 8
+            }
+            
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                answer = data.get('answer', '').lower()
+                
+                # Check if response is about strawberries/berries specifically
+                if ('strawberr' in answer or 'berr' in answer) and len(answer) > 50:
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        self.log_result("Enhanced Food Matching - Strawberries", True, "Found strawberry-specific clean answer")
+                        return True
+                    else:
+                        self.log_result("Enhanced Food Matching - Strawberries", False, "Response contains source/pediatrician text")
+                        return False
+                else:
+                    self.log_result("Enhanced Food Matching - Strawberries", False, f"No strawberry-specific answer found: {answer[:100]}...")
+                    return False
+            else:
+                self.log_result("Enhanced Food Matching - Strawberries", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Enhanced Food Matching - Strawberries", False, f"Error: {str(e)}")
+            return False
+
+    def test_enhanced_food_matching_nuts(self):
+        """Test enhanced food matching for nuts - CRITICAL TEST A4"""
+        try:
+            food_query = {
+                "question": "When can babies have nuts",
+                "baby_age_months": 10
+            }
+            
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                answer = data.get('answer', '').lower()
+                
+                # Check if response is about nuts/peanuts specifically
+                if ('nut' in answer or 'peanut' in answer) and len(answer) > 50:
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        self.log_result("Enhanced Food Matching - Nuts", True, "Found nut-specific clean answer")
+                        return True
+                    else:
+                        self.log_result("Enhanced Food Matching - Nuts", False, "Response contains source/pediatrician text")
+                        return False
+                else:
+                    self.log_result("Enhanced Food Matching - Nuts", False, f"No nut-specific answer found: {answer[:100]}...")
+                    return False
+            else:
+                self.log_result("Enhanced Food Matching - Nuts", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Enhanced Food Matching - Nuts", False, f"Error: {str(e)}")
+            return False
+
+    def test_enhanced_food_matching_honey(self):
+        """Test enhanced food matching for honey - CRITICAL TEST A5"""
+        try:
+            food_query = {
+                "question": "Is honey safe for baby",
+                "baby_age_months": 8
+            }
+            
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                answer = data.get('answer', '').lower()
+                
+                # Check if response is about honey specifically
+                if 'honey' in answer and len(answer) > 50:
+                    # Check for clean response
+                    if 'source:' not in answer and 'sources:' not in answer and 'always consult your pediatrician' not in answer:
+                        self.log_result("Enhanced Food Matching - Honey", True, "Found honey-specific clean answer")
+                        return True
+                    else:
+                        self.log_result("Enhanced Food Matching - Honey", False, "Response contains source/pediatrician text")
+                        return False
+                else:
+                    self.log_result("Enhanced Food Matching - Honey", False, f"No honey-specific answer found: {answer[:100]}...")
+                    return False
+            else:
+                self.log_result("Enhanced Food Matching - Honey", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+        except Exception as e:
+            self.log_result("Enhanced Food Matching - Honey", False, f"Error: {str(e)}")
             return False
     
     def test_meal_planner_search_endpoint(self):
