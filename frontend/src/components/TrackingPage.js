@@ -888,15 +888,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
     setLoading(true);
 
     try {
-      const data = {
-        baby_id: babyId,
-        start_time: formData.start_time.toISOString(),
-        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null,
-        quality: formData.quality || null,
-        notes: formData.notes || null
-      };
-
-      // Use standalone offline API - Fixed structure
+      // Use standalone offline API - Fixed structure for sleep tracking
       const sleepActivityData = {
         baby_id: babyId,
         type: 'sleep',
