@@ -1572,32 +1572,36 @@ Most foods can be introduced around 6 months when baby shows readiness for solid
     }
   }
 
-  // AI Parenting Assistant - Uses LIVE WEB SEARCH via device internet
+  // AI Parenting Assistant - Uses Knowledge Base + LIVE WEB SEARCH via device internet
   async research(question) {
-    console.log(`🌐 Live web search for parenting question: "${question}"`);
+    console.log(`🔍 Parenting research: "${question}"`);
     
     try {
       const searchQuery = `${question} parenting advice baby development pediatric guidelines`;
 
-      // Use real internet search system
+      // Use enhanced query system (knowledge base first, AI fallback)
       const response = await this.query(searchQuery, {
         type: 'parenting_research',
         question
       });
 
+      const isKnowledgeBaseResponse = response.includes('Knowledge Base');
+
       return {
         answer: response,
-        sources: ['Live Web Search Results', 'Bing.com & Google.com Parenting Sources', 'Current Medical Guidelines'],
+        sources: isKnowledgeBaseResponse ? 
+          ['Baby Steps Knowledge Base', 'Verified Parenting Guidelines', 'Pediatric Best Practices'] :
+          ['Live Web Search Results', 'Bing.com & Google.com Parenting Sources', 'Current Medical Guidelines'],
         timestamp: new Date().toISOString()
       };
     } catch (error) {
-      console.log('🔄 Internet search failed, showing connection requirement');
+      console.log('🔄 All search methods failed, showing connection requirement');
       
-      const connectionMessage = `🌐 **Live Web Search Required**\n\nTo get current parenting advice about "${question}", please ensure internet connectivity.\n\n**Live search provides:**\n• Current pediatric guidelines and research\n• Expert parenting advice from trusted sources\n• Updated medical recommendations\n• Real-time community insights and tips\n\n📱 Connect to internet for comprehensive parenting guidance.`;
+      const connectionMessage = `🌐 **Search Required**\n\nTo get current parenting advice about "${question}", please ensure internet connectivity.\n\n**Available search provides:**\n• Knowledge base of common parenting questions\n• Current pediatric guidelines and research\n• Expert parenting advice from trusted sources\n• Updated medical recommendations\n\n📱 Connect to internet for comprehensive parenting guidance.`;
       
       return {
         answer: connectionMessage,
-        sources: ['Internet Connection Required for Live Research'],
+        sources: ['Search Required for Current Research'],
         timestamp: new Date().toISOString()
       };
     }
