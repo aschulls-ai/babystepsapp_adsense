@@ -1,37 +1,192 @@
 [
   {
-    "id": 101,
-    "category": "Feeding",
-    "age_range": "6–9 months",
-    "question": "How often should I feed solids at 6 months?",
-    "answer": "Start with 1–2 small meals a day, increasing to 3 by 8–9 months as breast milk or formula intake decreases."
-  },
-  {
-    "id": 102,
-    "category": "Feeding",
-    "age_range": "6–12 months",
-    "question": "Should solids replace milk feedings right away?",
-    "answer": "No. Breast milk or formula remains the main source of nutrition until about 12 months; solids complement it."
-  },
-  {
-    "id": 103,
-    "category": "Safety",
-    "age_range": "6–9 months",
-    "question": "How do I introduce new foods safely?",
-    "answer": "Introduce one new food every 3–5 days to monitor for reactions such as rash, vomiting, or swelling."
-  },
-  {
-    "id": 104,
-    "category": "Recipes",
+    "id": 1,
+    "category": "Breakfast",
     "age_range": "6–8 months",
-    "question": "What are good first breakfast foods?",
-    "answer": "Iron-fortified baby cereal mixed with breast milk or formula, mashed banana, or pureed sweet potato are excellent first breakfast options."
+    "question": "What are healthy breakfast ideas for a 6-month-old baby?",
+    "answer": [
+      {
+        "name": "Banana Oatmeal",
+        "ingredients": [
+          "1/4 cup oats",
+          "1/2 ripe banana",
+          "1/4 cup breast milk or formula"
+        ],
+        "instructions": "Cook oats until soft. Mash banana and stir in milk. Cool before serving."
+      },
+      {
+        "name": "Avocado Pear Mash",
+        "ingredients": [
+          "1/2 ripe avocado",
+          "1/4 ripe pear"
+        ],
+        "instructions": "Mash avocado and pear together until smooth. Serve immediately."
+      },
+      {
+        "name": "Sweet Potato Puree",
+        "ingredients": [
+          "1/2 small sweet potato, peeled and diced",
+          "2 tbsp water"
+        ],
+        "instructions": "Steam until tender, then blend with water to smooth puree."
+      },
+      {
+        "name": "Apple Cinnamon Oats",
+        "ingredients": [
+          "1/4 cup oats",
+          "1/4 grated apple",
+          "Dash of cinnamon"
+        ],
+        "instructions": "Cook oats, stir in apple and cinnamon. Cool before feeding."
+      },
+      {
+        "name": "Pumpkin Rice Mash",
+        "ingredients": [
+          "1/4 cup cooked rice",
+          "2 tbsp pumpkin puree"
+        ],
+        "instructions": "Mix rice with pumpkin and mash until soft texture."
+      },
+      {
+        "name": "Carrot Banana Blend",
+        "ingredients": [
+          "1/4 banana",
+          "2 tbsp steamed carrot"
+        ],
+        "instructions": "Blend banana and carrot until smooth. Serve fresh."
+      },
+      {
+        "name": "Blueberry Yogurt",
+        "ingredients": [
+          "2 tbsp plain yogurt",
+          "1 tbsp mashed blueberries"
+        ],
+        "instructions": "Mix ingredients. Ensure smooth texture without skins."
+      },
+      {
+        "name": "Pear Oatmeal",
+        "ingredients": [
+          "1/4 cup oats",
+          "1/4 pear",
+          "Water as needed"
+        ],
+        "instructions": "Cook oats, mash in pear, thin with water if needed."
+      },
+      {
+        "name": "Butternut Squash Puree",
+        "ingredients": [
+          "1/2 cup diced butternut squash",
+          "Water for steaming"
+        ],
+        "instructions": "Steam and blend to a smooth consistency."
+      },
+      {
+        "name": "Rice Cereal with Banana",
+        "ingredients": [
+          "2 tbsp iron-fortified rice cereal",
+          "1/4 mashed banana",
+          "Breast milk or formula"
+        ],
+        "instructions": "Mix until smooth and slightly runny. Serve lukewarm."
+      }
+    ]
   },
   {
-    "id": 105,
-    "category": "Recipes",
+    "id": 2,
+    "category": "Lunch",
     "age_range": "9–12 months",
-    "question": "What finger foods are safe for my 9 month old?",
-    "answer": "Soft cooked vegetables cut into small pieces, small pasta shapes, soft fruit pieces, and well-cooked ground meat are safe finger foods."
+    "question": "What are nutritious lunch ideas for a 9-month-old?",
+    "answer": [
+      {
+        "name": "Mini Chicken Meatballs",
+        "ingredients": [
+          "1/4 cup ground chicken",
+          "1 tbsp breadcrumbs",
+          "1 tbsp finely chopped vegetables"
+        ],
+        "instructions": "Mix ingredients, form small balls, bake at 350°F for 15 minutes."
+      },
+      {
+        "name": "Lentil Sweet Potato Mash",
+        "ingredients": [
+          "1/4 cup cooked red lentils",
+          "1/4 cup mashed sweet potato",
+          "1 tsp olive oil"
+        ],
+        "instructions": "Combine lentils and sweet potato, drizzle with olive oil."
+      },
+      {
+        "name": "Cheesy Broccoli Rice",
+        "ingredients": [
+          "1/4 cup cooked rice",
+          "2 tbsp steamed broccoli, chopped",
+          "1 tbsp shredded mild cheese"
+        ],
+        "instructions": "Mix rice and broccoli, top with cheese while warm."
+      },
+      {
+        "name": "Salmon and Vegetable Puree",
+        "ingredients": [
+          "2 tbsp cooked salmon, flaked",
+          "2 tbsp steamed carrots",
+          "1 tbsp peas"
+        ],
+        "instructions": "Mash vegetables, mix with salmon. Check for bones."
+      },
+      {
+        "name": "Turkey and Apple Stew",
+        "ingredients": [
+          "1/4 cup ground turkey, cooked",
+          "1/4 apple, diced and steamed",
+          "2 tbsp low-sodium broth"
+        ],
+        "instructions": "Combine ingredients and mash to appropriate texture."
+      },
+      {
+        "name": "Quinoa Vegetable Bowl",
+        "ingredients": [
+          "2 tbsp cooked quinoa",
+          "2 tbsp mixed steamed vegetables",
+          "1 tsp butter"
+        ],
+        "instructions": "Mix quinoa and vegetables, add butter for richness."
+      },
+      {
+        "name": "Egg and Vegetable Scramble",
+        "ingredients": [
+          "1 egg, scrambled",
+          "1 tbsp finely diced bell pepper",
+          "1 tbsp mild cheese"
+        ],
+        "instructions": "Scramble egg with vegetables, add cheese at the end."
+      },
+      {
+        "name": "Bean and Rice Medley",
+        "ingredients": [
+          "2 tbsp mashed black beans",
+          "1/4 cup cooked rice",
+          "1 tsp avocado, mashed"
+        ],
+        "instructions": "Combine beans and rice, top with avocado."
+      },
+      {
+        "name": "Pasta with Meat Sauce",
+        "ingredients": [
+          "1/4 cup small pasta, cooked soft",
+          "2 tbsp ground beef, cooked",
+          "1 tbsp tomato sauce, no salt added"
+        ],
+        "instructions": "Mix pasta with meat and sauce. Ensure pasta is very soft."
+      },
+      {
+        "name": "Veggie Cheese Quesadilla",
+        "ingredients": [
+          "1 small tortilla",
+          "1 tbsp shredded cheese",
+          "1 tbsp finely chopped steamed vegetables"
+        ],
+        "instructions": "Fill tortilla with cheese and vegetables, cook until melted. Cut into strips."
+      }
+    ]
   }
 ]
