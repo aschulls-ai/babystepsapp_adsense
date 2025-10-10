@@ -32,27 +32,22 @@ const MealPlanner = ({ currentBaby }) => {
     nutrition_notes: ''
   });
 
-  // Common search suggestions for easy access
+  // Meal planning suggestions - focused only on meal ideas and recipes
   const commonSuggestions = [
-    // Food Safety Questions
-    'Is honey safe for babies?',
-    'When can babies have eggs?',
-    'Can babies eat strawberries?',
-    'Is peanut butter safe for infants?',
-    'When can babies drink water?',
-    'Are grapes safe for toddlers?',
-    'Can babies have dairy products?',
-    'Is fish safe for babies?',
+    // Breakfast Ideas
+    'Healthy breakfast ideas for babies',
+    'Easy morning meals for 8 month old',
+    'Quick breakfast recipes for toddlers',
     
-    // Meal Ideas
-    'First food ideas for 6 month old',
-    'Easy puree recipes',
-    'Finger foods for 8 month old',
-    'Breakfast ideas for toddlers',
-    'Healthy snacks for babies',
-    'Iron rich foods for babies',
-    'Soft foods for teething babies',
-    'One year old meal ideas'
+    // Lunch & Dinner Ideas  
+    'Nutritious lunch ideas for 10 month old',
+    'Easy dinner recipes for babies',
+    'Family meal ideas baby can share',
+    
+    // Snacks & Special Occasions
+    'Healthy snack ideas for toddlers',
+    'Finger foods for baby led weaning',
+    'First birthday party food ideas'
   ];
 
   useEffect(() => {
