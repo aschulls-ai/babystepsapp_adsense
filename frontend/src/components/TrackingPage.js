@@ -436,15 +436,11 @@ const TrackingPage = ({ currentBaby }) => {
             <TimerQuickActionButton 
               icon={activeTimers.sleep.active ? Square : Moon}
               label={activeTimers.sleep.active ? "Stop Sleep" : "Start Sleep"}
-              color="gray"
-              isActive={false}
+              color="purple"
+              isActive={activeTimers.sleep.active}
               timer={activeTimers.sleep}
               testId="quick-action-sleep"
-              onClick={() => {
-                // Temporarily disabled - was causing screen blanks
-                console.log("Sleep tracking temporarily disabled");
-              }}
-              disabled={true}
+              onClick={() => handleQuickAction('sleep')}
             />
             <TimerQuickActionButton 
               icon={activeTimers.pumping.active ? Square : Zap}
