@@ -1841,44 +1841,18 @@ I'm currently unable to connect to live AI services to provide real-time researc
       formattedAnswer = question.answer;
     }
 
-    // Add category and age range context if available
-    let header = '';
-    if (question.category) {
-      header += `**${question.category}**`;
-    }
-    if (question.age_range) {
-      header += question.category ? ` (${question.age_range})` : `**${question.age_range}**`;
-    }
-    
-    if (header) {
-      formattedAnswer = `${header}\n\n${formattedAnswer}`;
-    }
-
-    // Add age compatibility note if baby age is available
+    // Add age compatibility note if baby age is available and there's a significant mismatch
     if (context.babyAgeMonths && question.age_range) {
       const ageCompatibility = this.knowledgeBase.calculateAgeCompatibility(question.age_range, context.babyAgeMonths);
       
-      if (ageCompatibility < 0.8) {
+      if (ageCompatibility < 0.6) { // Only show age warning for significant mismatches
         if (question.age_range.includes('+')) {
           const minAge = question.age_range.match(/\d+/)[0];
           if (context.babyAgeMonths < minAge) {
-            formattedAnswer += `\n\n**Age Note:** This guidance is for ${question.age_range}. Your baby (${context.babyAgeMonths} months) may not be ready for this yet.`;
+            formattedAnswer += `\n\n*Note: This is typically for babies ${question.age_range}. Your baby (${context.babyAgeMonths} months) may not be ready yet.*`;
           }
-        } else {
-          formattedAnswer += `\n\n**Age Note:** This guidance is for ${question.age_range}. Your baby is ${context.babyAgeMonths} months old - always consider individual development.`;
         }
       }
-    }
-
-    // Add general pediatrician consultation note
-    formattedAnswer += `\n\n**Always consult your pediatrician** for personalized advice about your baby's specific needs.`;
-
-    // Add knowledge base source info
-    formattedAnswer += `\n\n**Source:** Baby Steps Knowledge Base (${Math.round(kbResult.similarity * 100)}% match)`;
-    
-    // Add question ID for reference
-    if (question.id) {
-      formattedAnswer += ` • ID: ${question.id}`;
     }
 
     return formattedAnswer;
