@@ -125,32 +125,9 @@ class MobileService {
   }
 
   async syncSingleItem(item) {
-    const token = await this.getItem('token');
-    const baseURL = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
-
-    const syncEndpoints = {
-      feeding: '/feedings',
-      sleep: '/sleep',
-      diaper: '/diapers',
-      milestone: '/milestones',
-      baby: '/babies'
-    };
-
-    const endpoint = syncEndpoints[item.type];
-    if (!endpoint) return;
-
-    const response = await fetch(`${baseURL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(item.data)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Sync failed: ${response.status}`);
-    }
+    // Disabled for standalone mode - all data stays local
+    console.log('🏠 Standalone mode: Data sync skipped (offline mode)', item.type);
+    return;
   }
 
   // === PUSH NOTIFICATIONS ===
