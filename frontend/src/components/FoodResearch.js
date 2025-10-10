@@ -16,6 +16,7 @@ import {
 import { toast } from 'sonner';
 import PageAd from './ads/PageAd';
 import { shouldUseOfflineMode, offlineAPI } from '../offlineMode';
+import QuestionSuggestions from './QuestionSuggestions';
 
 const FoodResearch = ({ currentBaby }) => {
   const [query, setQuery] = useState('');
