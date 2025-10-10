@@ -208,25 +208,27 @@ class KnowledgeBaseService {
       .filter(word => !/^\d+$/.test(word)); // Remove pure numbers
   }
 
-  // Simple semantic similarity using common patterns
+  // Semantic similarity for user's simpler JSON format
   calculateSemanticSimilarity(query, questionObj) {
     const semanticGroups = {
-      food_items: ['apple', 'banana', 'egg', 'milk', 'cheese', 'bread', 'rice', 'pasta', 'chicken', 'fish', 'carrot', 'peas'],
-      meal_times: ['breakfast', 'lunch', 'dinner', 'snack', 'meal', 'eating'],
-      preparation: ['cook', 'bake', 'steam', 'boil', 'mash', 'chop', 'prepare', 'recipe'],
-      safety: ['safe', 'dangerous', 'choke', 'allergy', 'avoid', 'careful'],
-      development: ['month', 'old', 'age', 'development', 'ready', 'introduce']
+      feeding: ['feed', 'feeding', 'eat', 'eating', 'milk', 'bottle', 'breast', 'formula', 'solid', 'food', 'burp', 'hungry'],
+      sleep: ['sleep', 'sleeping', 'nap', 'napping', 'bedtime', 'night', 'tired', 'wake', 'rest'],
+      development: ['develop', 'development', 'milestone', 'growth', 'crawl', 'walk', 'talk', 'sit', 'roll', 'month', 'age'],
+      health: ['health', 'sick', 'fever', 'cough', 'doctor', 'medicine', 'symptom', 'temperature', 'illness'],
+      safety: ['safe', 'safety', 'dangerous', 'danger', 'avoid', 'careful', 'protect', 'choke', 'allergy'],
+      behavior: ['behavior', 'cry', 'crying', 'fussy', 'calm', 'soothe', 'tantrum', 'comfort'],
+      nutrition: ['nutrition', 'vitamin', 'healthy', 'diet', 'nutrients', 'iron', 'calcium', 'recipe', 'meal'],
+      care: ['diaper', 'bath', 'bathing', 'clean', 'hygiene', 'care', 'routine', 'schedule']
     };
 
     let matchCount = 0;
     let totalGroups = 0;
 
+    const questionText = questionObj.question.toLowerCase() + ' ' + (questionObj.answer?.toLowerCase() || '');
+
     Object.values(semanticGroups).forEach(group => {
       const queryHasGroup = group.some(term => query.includes(term));
-      const questionHasGroup = group.some(term => 
-        questionObj.question.toLowerCase().includes(term) ||
-        (questionObj.keywords || []).some(keyword => keyword.includes(term))
-      );
+      const questionHasGroup = group.some(term => questionText.includes(term));
 
       if (queryHasGroup || questionHasGroup) {
         totalGroups++;
