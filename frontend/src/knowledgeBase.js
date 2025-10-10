@@ -115,7 +115,12 @@ class KnowledgeBaseService {
     let bestSimilarity = 0;
 
     questions.forEach(questionObj => {
-      const similarity = this.calculateSimilarity(queryLower, queryWords, questionObj, babyAge);
+      let similarity = this.calculateSimilarity(queryLower, queryWords, questionObj, babyAge);
+      
+      // Special handling for food research - boost exact food name matches
+      if (context.type === 'food_research') {
+        similarity = this.enhanceFoodSafetyMatching(queryLower, questionObj, similarity);
+      }
       
       if (similarity > bestSimilarity) {
         bestSimilarity = similarity;
@@ -128,6 +133,111 @@ class KnowledgeBaseService {
     });
 
     return bestMatch;
+  }
+
+  // Enhanced matching specifically for food safety queries
+  enhanceFoodSafetyMatching(queryLower, questionObj, baseSimilarity) {
+    const questionLower = questionObj.question.toLowerCase();
+    const answerLower = (questionObj.answer || '').toLowerCase();
+    
+    // Extract food names from common query patterns
+    const foodPatterns = [
+      /is\s+(.+?)\s+safe/i,           // "is honey safe"
+      /can\s+.*\s+eat\s+(.+?)[\s\?]/i, // "can baby eat eggs"
+      /(.+?)\s+for\s+bab/i,           // "avocados for babies"
+      /when\s+.*\s+(.+?)[\s\?]/i,     // "when can babies have nuts"
+      /(.+?)\s+bab/i                  // "honey baby"
+    ];
+    
+    let extractedFood = '';
+    for (const pattern of foodPatterns) {
+      const match = queryLower.match(pattern);
+      if (match && match[1]) {
+        extractedFood = match[1].trim();
+        break;
+      }
+    }
+    
+    // If no pattern matched, try simple extraction
+    if (!extractedFood) {
+      const queryWords = queryLower.split(' ').filter(word => 
+        !['is', 'are', 'can', 'safe', 'baby', 'babies', 'for', 'my', 'eat', 'have', 'when', 'the', 'a', 'an'].includes(word)
+      );
+      if (queryWords.length > 0) {
+        extractedFood = queryWords[0];
+      }
+    }
+    
+    if (extractedFood) {
+      // Check for exact food matches in question or answer
+      const foodVariations = this.getFoodVariations(extractedFood);
+      
+      for (const foodVar of foodVariations) {
+        if (questionLower.includes(foodVar) || answerLower.includes(foodVar)) {
+          console.log(`🎯 Food safety match detected: "${foodVar}" in question about ${questionObj.question}`);
+          return Math.min(baseSimilarity + 0.4, 1.0); // Significant boost for food matches
+        }
+      }
+      
+      // Check for partial food matches (e.g., "egg" matches "eggs")
+      for (const foodVar of foodVariations) {
+        const partial = questionLower.includes(foodVar.slice(0, -1)) || 
+                       answerLower.includes(foodVar.slice(0, -1)) ||
+                       questionLower.includes(foodVar + 's') ||
+                       answerLower.includes(foodVar + 's');
+        
+        if (partial) {
+          console.log(`🎯 Partial food safety match: "${foodVar}" partial match in ${questionObj.question}`);
+          return Math.min(baseSimilarity + 0.25, 1.0); // Moderate boost for partial matches
+        }
+      }
+    }
+    
+    return baseSimilarity;
+  }
+
+  // Generate food variations for better matching
+  getFoodVariations(food) {
+    const variations = [food];
+    
+    // Add plural/singular variations
+    if (food.endsWith('s')) {
+      variations.push(food.slice(0, -1)); // Remove 's'
+    } else {
+      variations.push(food + 's'); // Add 's'
+    }
+    
+    // Add common food aliases
+    const aliases = {
+      'avocado': ['avocados'],
+      'honey': ['honeys'],
+      'egg': ['eggs'],
+      'nut': ['nuts', 'peanut', 'peanuts'],
+      'fish': ['salmon', 'tuna'],
+      'strawberry': ['strawberries', 'berry', 'berries'],
+      'grape': ['grapes'],
+      'carrot': ['carrots'],
+      'apple': ['apples'],
+      'banana': ['bananas'],
+      'peanut': ['peanuts', 'nut', 'nuts'],
+      'shellfish': ['shrimp', 'crab', 'lobster'],
+      'dairy': ['milk', 'cheese', 'yogurt'],
+      'gluten': ['wheat', 'bread']
+    };
+    
+    if (aliases[food]) {
+      variations.push(...aliases[food]);
+    }
+    
+    // Find reverse aliases
+    Object.entries(aliases).forEach(([key, values]) => {
+      if (values.includes(food)) {
+        variations.push(key);
+        variations.push(...values);
+      }
+    });
+    
+    return [...new Set(variations)]; // Remove duplicates
   }
 
   // Comprehensive similarity calculation for user's JSON format
