@@ -1829,22 +1829,44 @@ I'm currently unable to connect to live AI services to provide real-time researc
     const question = kbResult.question;
     let formattedAnswer = question.answer;
 
-    // Add category context if available
+    // Add category and age range context if available
+    let header = '';
     if (question.category) {
-      formattedAnswer = `**${question.category} Guidelines**\n\n${formattedAnswer}`;
+      header += `**${question.category}**`;
+    }
+    if (question.age_range) {
+      header += question.category ? ` (${question.age_range})` : `**${question.age_range}**`;
+    }
+    
+    if (header) {
+      formattedAnswer = `${header}\n\n${formattedAnswer}`;
     }
 
-    // Add personalization note if baby age is available
-    if (context.babyAgeMonths) {
-      formattedAnswer += `\n\n**Note:** This information is general guidance. Always consider your ${context.babyAgeMonths}-month-old's individual development and consult your pediatrician for personalized advice.`;
+    // Add age compatibility note if baby age is available
+    if (context.babyAgeMonths && question.age_range) {
+      const ageCompatibility = this.knowledgeBase.calculateAgeCompatibility(question.age_range, context.babyAgeMonths);
+      
+      if (ageCompatibility < 0.8) {
+        if (question.age_range.includes('+')) {
+          const minAge = question.age_range.match(/\d+/)[0];
+          if (context.babyAgeMonths < minAge) {
+            formattedAnswer += `\n\n**Age Note:** This guidance is for ${question.age_range}. Your baby (${context.babyAgeMonths} months) may not be ready for this yet.`;
+          }
+        } else {
+          formattedAnswer += `\n\n**Age Note:** This guidance is for ${question.age_range}. Your baby is ${context.babyAgeMonths} months old - always consider individual development.`;
+        }
+      }
     }
+
+    // Add general pediatrician consultation note
+    formattedAnswer += `\n\n**Always consult your pediatrician** for personalized advice about your baby's specific needs.`;
 
     // Add knowledge base source info
     formattedAnswer += `\n\n**Source:** Baby Steps Knowledge Base (${Math.round(kbResult.similarity * 100)}% match)`;
     
     // Add question ID for reference
     if (question.id) {
-      formattedAnswer += ` - Question ID: ${question.id}`;
+      formattedAnswer += ` • ID: ${question.id}`;
     }
 
     return formattedAnswer;
