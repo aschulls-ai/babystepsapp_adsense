@@ -94,18 +94,21 @@ const FoodResearch = ({ currentBaby }) => {
     if (!searchQuery.trim()) return;
 
     setShowSuggestions(false);
-    setIsLoading(true);
-    setResult(null);
+    setLoading(true);
+    setResults(null);
 
     try {
+      const babyAgeMonths = currentBaby ? 
+        Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)) : 6;
+      
       const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
-      setResult(response);
+      setResults(response.data);
       
       // Add to search history
       const newSearch = {
         id: Date.now(),
         query: searchQuery,
-        result: response,
+        result: response.data,
         timestamp: new Date().toISOString()
       };
       setSearchHistory(prev => [newSearch, ...prev.slice(0, 4)]);
@@ -115,7 +118,7 @@ const FoodResearch = ({ currentBaby }) => {
       console.error('Food research error:', error);
       toast.error('Failed to get food safety information');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
