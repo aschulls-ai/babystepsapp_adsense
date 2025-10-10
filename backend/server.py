@@ -1138,63 +1138,126 @@ async def get_dashboard(baby_id: str, current_user: User = Depends(get_current_u
 # Food Research & Safety Routes
 @api_router.post("/food/research", response_model=FoodResponse)
 async def food_research(query: FoodQuery, current_user: User = Depends(get_current_user)):
+    """
+    Food safety research using ONLY JSON knowledge base (no AI)
+    Returns answers from designated question IDs in food_research.json
+    """
     try:
-        age_context = ""
-        if query.baby_age_months is not None:
-            age_context = f"For a {query.baby_age_months} month old baby: "
+        # Load food research knowledge base JSON file
+        json_file_path = "/app/frontend/public/knowledge-base/food_research.json"
         
-        chat = LlmChat(
-            api_key=os.environ.get('EMERGENT_LLM_KEY'),
-            session_id=f"food_research_{current_user.id}",
-            system_message="""You are a specialized pediatric nutrition assistant following American Academy of Pediatrics (AAP) guidelines. 
-
-IMPORTANT: Always provide:
-1. Clear safety assessment (safe/caution/avoid/consult_doctor)
-2. Age-appropriate guidance 
-3. Evidence-based recommendations
-4. Brief, practical answers
-
-For each response, assess safety level:
-- "safe": Generally safe when prepared appropriately
-- "caution": Safe but requires specific preparation or timing
-- "avoid": Not recommended for this age
-- "consult_doctor": Medical consultation recommended"""
-        ).with_model("openai", "gpt-5")
+        try:
+            with open(json_file_path, 'r', encoding='utf-8') as file:
+                food_kb = json.load(file)
+        except FileNotFoundError:
+            logging.error(f"Food research JSON file not found: {json_file_path}")
+            return FoodResponse(
+                answer="Food safety database is currently unavailable. Please consult your pediatrician.",
+                safety_level="consult_doctor",
+                age_recommendation="Unknown",
+                sources=["Database Error"]
+            )
+        except json.JSONDecodeError as e:
+            logging.error(f"Invalid JSON format in food research file: {str(e)}")
+            return FoodResponse(
+                answer="Food safety database format error. Please consult your pediatrician.",
+                safety_level="consult_doctor", 
+                age_recommendation="Unknown",
+                sources=["Database Error"]
+            )
         
-        user_message = UserMessage(text=age_context + query.question)
-        response = await chat.send_message(user_message)
+        # Search for matching question in JSON knowledge base
+        query_lower = query.question.lower()
+        best_match = None
+        best_score = 0
         
-        # Parse response for safety level
-        safety_level = "safe"
-        response_lower = response.lower()
-        if any(word in response_lower for word in ["avoid", "not safe", "don't give", "too young"]):
-            safety_level = "avoid"
-        elif any(word in response_lower for word in ["caution", "careful", "supervise", "small amounts"]):
-            safety_level = "caution"
-        elif any(word in response_lower for word in ["consult", "doctor", "pediatrician", "medical"]):
-            safety_level = "consult_doctor"
+        for food_item in food_kb:
+            question_lower = food_item.get('question', '').lower()
+            answer_lower = food_item.get('answer', '').lower()
+            
+            # Calculate match score
+            score = 0
+            
+            # Exact question match (highest priority)
+            if query_lower == question_lower:
+                score = 100
+            elif query_lower in question_lower or question_lower in query_lower:
+                score = 80
+            
+            # Keyword matching for food names
+            food_keywords = ['avocado', 'honey', 'egg', 'eggs', 'strawberr', 'nut', 'peanut', 'fish', 'milk', 'cheese']
+            for keyword in food_keywords:
+                if keyword in query_lower and keyword in (question_lower + ' ' + answer_lower):
+                    score += 30
+            
+            # Safety-related keyword matching
+            safety_keywords = ['safe', 'eat', 'when', 'can', 'baby', 'babies']
+            for keyword in safety_keywords:
+                if keyword in query_lower and keyword in question_lower:
+                    score += 10
+            
+            if score > best_score:
+                best_score = score
+                best_match = food_item
         
-        age_rec = None
-        if query.baby_age_months is not None:
-            if query.baby_age_months < 6:
-                age_rec = "0-6 months: Breast milk or formula only"
-            elif query.baby_age_months < 12:
-                age_rec = "6-12 months: Introduction phase"
+        # Return result based on match quality
+        if best_match and best_score >= 30:  # Require minimum match score
+            question_id = best_match.get('id', 'Unknown')
+            answer = best_match.get('answer', '')
+            category = best_match.get('category', 'General')
+            age_range = best_match.get('age_range', 'Consult pediatrician')
+            
+            # Extract safety level from answer content
+            answer_lower = answer.lower()
+            if 'not safe' in answer_lower or 'never' in answer_lower or 'avoid' in answer_lower:
+                safety_level = "avoid"
+            elif 'caution' in answer_lower or 'careful' in answer_lower or 'watch' in answer_lower:
+                safety_level = "caution"
+            elif 'safe' in answer_lower:
+                safety_level = "safe"
             else:
-                age_rec = "12+ months: Varied diet"
-        
-        return FoodResponse(
-            answer=response,
-            safety_level=safety_level,
-            age_recommendation=age_rec,
-            sources=["AAP Pediatric Guidelines", "Evidence-based Nutrition"]
-        )
+                safety_level = "consult_doctor"
+            
+            return FoodResponse(
+                answer=f"**{category}** ({age_range})\n\n{answer}",
+                safety_level=safety_level,
+                age_recommendation=age_range,
+                sources=[f"Knowledge Base Question ID: {question_id}", "Verified Food Safety Database"]
+            )
+        else:
+            # No match found - return "not available" message
+            available_foods = []
+            for item in food_kb[:10]:  # Show first 10 available foods
+                if 'question' in item:
+                    # Extract food name from question
+                    question = item['question'].lower()
+                    if 'honey' in question:
+                        available_foods.append('Honey (12+ months)')
+                    elif 'egg' in question:
+                        available_foods.append('Eggs (6+ months)')
+                    elif 'avocado' in question:
+                        available_foods.append('Avocado (6+ months)')
+                    elif 'strawberr' in question:
+                        available_foods.append('Strawberries (6+ months)')
+                    elif 'peanut' in question or 'nut' in question:
+                        available_foods.append('Nuts/Peanuts (6+ months)')
+            
+            available_list = '\n'.join([f"• {food}" for food in available_foods[:5]])
+            
+            return FoodResponse(
+                answer=f"**Food Safety Information Not Available**\n\nSorry, we don't have specific safety information for your query in our verified database.\n\n**Available in our database:**\n{available_list}\n\n**For other foods:** Please consult your pediatrician for guidance.",
+                safety_level="consult_doctor",
+                age_recommendation="Consult pediatrician", 
+                sources=["Knowledge Base - No entry found"]
+            )
+            
     except Exception as e:
-        logging.error(f"Food research error: {str(e)}")
+        logging.error(f"Food research JSON processing error: {str(e)}")
         return FoodResponse(
-            answer="I'm sorry, I'm having trouble accessing nutritional information right now. Please consult your pediatrician for specific feeding questions.",
+            answer="Unable to access food safety database. Please consult your pediatrician for specific feeding questions.",
             safety_level="consult_doctor",
-            sources=[]
+            age_recommendation="Unknown",
+            sources=["Database Error"]
         )
 
 @api_router.post("/food/safety-check", response_model=FoodSafetyCheck)
