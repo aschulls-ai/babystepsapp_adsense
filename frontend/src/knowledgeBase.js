@@ -268,7 +268,7 @@ class KnowledgeBaseService {
   // Update knowledge base (for admin functionality)
   async updateKnowledgeBase(type, newQuestions) {
     try {
-      this.knowledgeBases[type] = { [`${type}_questions`]: newQuestions };
+      this.knowledgeBases[type] = newQuestions; // Direct array format
       localStorage.setItem(`kb_${type}`, JSON.stringify(this.knowledgeBases[type]));
       this.isLoaded[type] = true;
       
