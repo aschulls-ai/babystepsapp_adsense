@@ -893,7 +893,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
         baby_id: babyId,
         type: 'sleep',
         timestamp: formData.start_time.toISOString(),
-        duration: formData.end_time ? 
+        duration: (formData.end_time && formData.end_time !== '') ? 
           Math.round((new Date(formData.end_time) - formData.start_time) / (1000 * 60)) : null, // minutes
         quality: formData.quality || null,
         notes: formData.notes || null,
