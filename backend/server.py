@@ -1682,13 +1682,13 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
                 "Verified Parenting & Food Safety Database"
             ]
         
-        elif ai_match and ai_match['score'] >= 20:
+        elif ai_match and ai_match['score'] >= 15:
             # Primary AI Assistant match
             item = ai_match['item']
             combined_answer = f"**{item.get('category', 'General Parenting')}** ({item.get('age_range', 'All ages')})\n\n{item.get('answer', '')}"
             combined_sources = [f"AI Assistant Knowledge Base Question ID: {item.get('id', 'Unknown')}", "Verified Parenting Guidelines"]
             
-        elif food_match and food_match['score'] >= 40:
+        elif food_match and food_match['score'] >= 35:
             # Primary Food Safety match
             item = food_match['item']
             combined_answer = f"**{item.get('category', 'Food Safety')}** ({item.get('age_range', 'Consult pediatrician')})\n\n{item.get('answer', '')}"
