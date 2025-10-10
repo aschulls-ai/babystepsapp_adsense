@@ -151,7 +151,7 @@ const FoodResearch = ({ currentBaby }) => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="food-research-title">
+          <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white" data-testid="food-research-title">
             Food Safety Research
           </h1>
           <p className="text-lg text-gray-600 mt-2">
