@@ -99,12 +99,12 @@ const Research = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Handle suggestion selection for AI Assistant
+  // Handle suggestion selection for AI Assistant - ONLY PREFILL (no auto-search)
   const handleSelectSuggestion = (selectedQuestion) => {
     setInputValue(selectedQuestion.question);
     setShowSuggestions(false);
-    // Automatically search the selected question
-    performResearch(selectedQuestion.question);
+    // DO NOT auto-search - let user press Enter/Submit button
+    // This ensures Android app properly updates and finds correct ID
   };
 
   // Handle input focus/blur for suggestions
