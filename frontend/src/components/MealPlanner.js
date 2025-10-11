@@ -1,23 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { 
-  ChefHat, 
-  Plus, 
-  Clock, 
-  Baby,
-  Search,
-  Utensils,
-  BookOpen
-} from 'lucide-react';
-import { toast } from 'sonner';
+import React from 'react';
+import ChatKitWrapper from './ChatKitWrapper';
 import PageAd from './ads/PageAd';
-import { shouldUseOfflineMode, offlineAPI } from '../offlineMode';
-import QuestionSuggestions from './QuestionSuggestions';
 
 const MealPlanner = ({ currentBaby }) => {
   const [mealPlans, setMealPlans] = useState([]);
