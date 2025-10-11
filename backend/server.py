@@ -1183,7 +1183,38 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             'pesto', 'muffin', 'flour', 'oatmeal', 'scrambled', 'reheated'
         ]
         
-        # Extract food keywords from query first
+        # CRITICAL FIX: Check for EXACT question match FIRST before any scoring
+        # This ensures quick safety checks and identical questions return correct ID immediately
+        for food_item in food_kb:
+            question_lower = food_item.get('question', '').lower()
+            if query_lower == question_lower:
+                # EXACT MATCH - Return immediately without further comparison
+                question_id = food_item.get('id', 'Unknown')
+                matched_question = food_item.get('question', '')
+                answer = food_item.get('answer', '')
+                category = food_item.get('category', 'General')
+                age_range = food_item.get('age_range', 'Consult pediatrician')
+                
+                logging.info(f"EXACT MATCH - Query: '{query.question}' -> ID: {question_id} (Score: 10000)")
+                
+                # Extract safety level
+                safety_level = "consult_doctor"
+                if "safe" in answer.lower() and "not" not in answer.lower()[:50]:
+                    safety_level = "safe"
+                elif any(word in answer.lower() for word in ["avoid", "never", "not safe", "wait until"]):
+                    safety_level = "avoid"
+                elif any(word in answer.lower() for word in ["caution", "watch", "monitor"]):
+                    safety_level = "caution"
+                
+                return FoodResponse(
+                    answer=f"**{category}** ({age_range})\n\n{answer}",
+                    safety_level=safety_level,
+                    age_recommendation=age_range,
+                    sources=[f"Food Safety Knowledge Base Question ID: {question_id}", "Verified Food Safety Database"]
+                )
+        
+        # If no exact match, proceed with scoring algorithm
+        # Extract food keywords from query
         query_food_keywords = [kw for kw in food_keywords if kw in query_lower]
         
         # CRITICAL: Require at least one food keyword in query for proper matching
