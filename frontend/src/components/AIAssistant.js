@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Send, Bot, User, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 import PageAd from './ads/PageAd';
+import { androidFetch } from '../App';
 
 const AIAssistant = ({ currentBaby }) => {
   const [messages, setMessages] = useState([]);
