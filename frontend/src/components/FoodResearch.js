@@ -73,12 +73,12 @@ const FoodResearch = ({ currentBaby }) => {
     }
   };
 
-  // Handle suggestion selection
+  // Handle suggestion selection for Food Research - ONLY PREFILL (no auto-search)
   const handleSelectSuggestion = (selectedQuestion) => {
     setQuery(selectedQuestion.question);
     setShowSuggestions(false);
-    // Automatically search the selected question
-    performSearch(selectedQuestion.question);
+    // DO NOT auto-search - let user press Enter/Search button
+    // This ensures Android app properly updates and finds correct ID
   };
 
   // Handle input focus/blur for suggestions
