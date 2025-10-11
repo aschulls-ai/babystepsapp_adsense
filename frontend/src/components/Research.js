@@ -2,33 +2,22 @@ import React from 'react';
 import ChatKitWrapper from './ChatKitWrapper';
 import PageAd from './ads/PageAd';
 
-const Research = () => {
+const Research = ({ currentBaby }) => {
   return (
-    <div className="max-w-4xl mx-auto space-y-6 fade-in">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white mb-4" data-testid="research-title">
-          Research & Parenting Tips
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Ask questions and get reliable parenting guidance
-        </p>
-      </div>
-
+    <div className="space-y-6 fade-in">
       {/* ChatKit Integration */}
       <ChatKitWrapper 
-        mode="research"
         title="AI Parenting Assistant"
-        placeholder="Ask about feeding, sleep, development..."
-        knowledgeBase="ai_assistant"
+        subtitle="Ask questions and get reliable, evidence-based parenting guidance"
+        currentBaby={currentBaby}
       />
 
       {/* Page Ad */}
-      <PageAd position="bottom" />
+      <div className="mt-6">
+        <PageAd position="bottom" />
+      </div>
     </div>
   );
 };
-
-// Helper components removed - now using ChatKitWrapper
 
 export default Research;
