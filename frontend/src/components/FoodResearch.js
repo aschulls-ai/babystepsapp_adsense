@@ -376,7 +376,7 @@ const FoodResearch = ({ currentBaby }) => {
 
               {/* Results */}
               {results && (
-                <div className="space-y-4">
+                <div key={results.answer?.substring(0, 50)} className="space-y-4">
                   <div className={`p-4 rounded-lg border-2 food-${results.safety_level}`}>
                     <div className="flex items-center gap-3 mb-3">
                       {getSafetyIcon(results.safety_level)}
