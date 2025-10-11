@@ -30,7 +30,8 @@ def test_gpt5_nano():
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "Say hello in one sentence."}
             ],
-            max_completion_tokens=100
+            max_completion_tokens=2000,
+            reasoning_effort="low"
         )
         
         print(f"✅ Response received:")
