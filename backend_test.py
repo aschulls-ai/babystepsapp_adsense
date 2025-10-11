@@ -357,10 +357,13 @@ def main():
     success = tester.run_comprehensive_tests()
     
     if success:
-        print("\n🎉 ALL CRITICAL TESTS PASSED - JSON-ONLY IMPLEMENTATION WORKING!")
+        print("\n🎉 BACKEND CONNECTIVITY VERIFIED - OFFLINEMODE FIX WORKING!")
+        print("   Android app should now be able to reach backend when REACT_APP_BACKEND_URL is available")
+        print("   OpenAI tokens should be consumed when AI requests are made")
         sys.exit(0)
     else:
-        print("\n⚠️  SOME TESTS FAILED - REVIEW IMPLEMENTATION NEEDED")
+        print("\n⚠️  BACKEND CONNECTIVITY ISSUES FOUND - INVESTIGATION NEEDED")
+        print("   May indicate offlineMode fix incomplete or backend configuration issues")
         sys.exit(1)
 
 if __name__ == "__main__":
