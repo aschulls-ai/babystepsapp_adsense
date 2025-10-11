@@ -103,8 +103,22 @@ const AIAssistant = ({ currentBaby }) => {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Failed to get response');
+        // Handle authentication errors specifically
+        if (response.status === 401) {
+          console.log('🔑 Authentication failed (401), clearing token and requesting re-login');
+          localStorage.removeItem('token');
+          throw new Error('Your session has expired. Please logout and login again to use the AI Assistant.');
+        }
+        
+        let errorMessage = 'Failed to get response';
+        try {
+          const error = await response.json();
+          errorMessage = error.detail || errorMessage;
+        } catch (e) {
+          console.log('Could not parse error response');
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
