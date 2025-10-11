@@ -678,7 +678,7 @@ function App() {
                     />
                     <Route 
                       path="/ai-assistant" 
-                      element={<Research currentBaby={currentBaby} />} 
+                      element={<AIAssistant currentBaby={currentBaby} />} 
                     />
                     <Route 
                       path="/settings" 
