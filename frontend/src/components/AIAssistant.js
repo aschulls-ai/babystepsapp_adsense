@@ -128,6 +128,7 @@ const AIAssistant = ({ currentBaby }) => {
       }
 
       const data = await response.json();
+      console.log('✅ AI Response received:', data.response ? `${data.response.length} chars` : 'No response field');
 
       const aiMessage = {
         id: `assistant-${Date.now()}`,
