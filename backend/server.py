@@ -1618,6 +1618,69 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
         query_lower = query.question.lower()
         matches = []
         
+        # CRITICAL: Check for EXACT question matches FIRST (for AI Assistant)
+        # Helper function to parse age range
+        def get_age_range_months_ai(age_str):
+            try:
+                parts = age_str.lower().replace('months', '').replace('month', '').strip().split('–')
+                if len(parts) == 2:
+                    min_age = int(parts[0].strip())
+                    max_age = int(parts[1].strip())
+                    return min_age, max_age
+                return 0, 999
+            except:
+                return 0, 999
+        
+        # Check AI Assistant for exact matches
+        exact_ai_matches = []
+        for item in ai_assistant_kb:
+            if query_lower == item.get('question', '').lower():
+                exact_ai_matches.append(item)
+        
+        # Check Food Research for exact matches
+        exact_food_matches = []
+        for item in food_research_kb:
+            if query_lower == item.get('question', '').lower():
+                exact_food_matches.append(item)
+        
+        # If we have exact match from either KB, return it immediately
+        if exact_ai_matches or exact_food_matches:
+            combined_answer = ""
+            combined_sources = []
+            
+            if exact_ai_matches:
+                # Select best age match if multiple
+                best_ai = exact_ai_matches[0]
+                if len(exact_ai_matches) > 1:
+                    # Prefer most specific age range (not implemented in AI assistant, but use first)
+                    pass
+                
+                combined_answer += f"**{best_ai.get('category', 'General Parenting')}** ({best_ai.get('age_range', 'All ages')})\n\n{best_ai.get('answer', '')}"
+                combined_sources.append(f"AI Assistant Knowledge Base Question ID: {best_ai.get('id', 'Unknown')}")
+                combined_sources.append("Verified Parenting Guidelines")
+            
+            if exact_food_matches:
+                # Select best age match if multiple
+                best_food = exact_food_matches[0]
+                if len(exact_food_matches) > 1:
+                    # Prefer most specific age range (not implemented in AI assistant, but use first)
+                    pass
+                
+                if combined_answer:
+                    combined_answer += "\n\n---\n\n"
+                combined_answer += f"**{best_food.get('category', 'Food Safety')}** ({best_food.get('age_range', 'All ages')})\n\n{best_food.get('answer', '')}"
+                combined_sources.append(f"Food Safety Knowledge Base Question ID: {best_food.get('id', 'Unknown')}")
+                combined_sources.append("Verified Food Safety Database")
+            
+            logging.info(f"AI Research EXACT MATCH - Query: '{query.question}' -> IDs: {[m.get('id') for m in exact_ai_matches + exact_food_matches]}")
+            
+            return ResearchResponse(
+                answer=combined_answer,
+                sources=list(set(combined_sources)),
+                metadata={"source": "Baby Steps API", "timestamp": datetime.now(timezone.utc).isoformat()}
+            )
+        
+        # If no exact match, proceed with scoring algorithm
         # Check for clearly unrelated topics (exclude from parenting search)
         unrelated_keywords = [
             'smartphone', 'phone', 'computer', 'laptop', 'internet', 'social media', 'facebook', 'instagram',
