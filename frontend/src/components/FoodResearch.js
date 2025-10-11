@@ -263,7 +263,7 @@ const FoodResearch = ({ currentBaby }) => {
             Food Safety Research
           </h1>
           <p className="text-lg text-gray-600 mt-2">
-            Get evidence-based guidance for feeding <span className="font-semibold text-green-600">{currentBaby.name}</span> ({babyAgeMonths} months)
+            Type keywords, select from suggestions, then press Search
           </p>
         </div>
       </div>
