@@ -275,67 +275,51 @@ class BackendTester:
         return all_passed
     
     def run_comprehensive_tests(self):
-        """Run all JSON-only food research tests"""
+        """Run comprehensive backend connectivity tests after offlineMode.js fix"""
         print("=" * 80)
-        print("🧪 JSON-ONLY FOOD RESEARCH BACKEND TESTING")
+        print("🧪 BACKEND CONNECTIVITY TESTING AFTER OFFLINEMODE.JS FIX")
         print("=" * 80)
+        print("Testing that baby-genius.preview.emergentagent.com backend is accessible")
+        print("after fixing shouldUseOfflineMode() hardcoded return true issue.")
         print()
-        
-        # Step 1: Authentication
-        if not self.authenticate():
-            print("❌ CRITICAL: Authentication failed. Cannot proceed with testing.")
-            return False
-        
-        # Step 2: Test specific food queries as requested in review
-        print("📋 TESTING SPECIFIC FOOD QUERIES FROM REVIEW REQUEST...")
-        print()
-        
-        test_cases = [
-            {
-                "question": "When can babies eat eggs?",
-                "expected_food": "eggs",
-                "expected_id": 202,
-                "should_find_match": True
-            },
-            {
-                "question": "Is avocado safe for babies?", 
-                "expected_food": "avocado",
-                "expected_id": None,  # Avocado not in current JSON
-                "should_find_match": False  # Should return "not available"
-            },
-            {
-                "question": "Can babies eat strawberries?",
-                "expected_food": "strawberries", 
-                "expected_id": 205,
-                "should_find_match": True
-            },
-            {
-                "question": "Is honey safe for babies?",
-                "expected_food": "honey",
-                "expected_id": 201,
-                "should_find_match": True
-            },
-            {
-                "question": "Can babies eat pizza?",
-                "expected_food": "pizza",
-                "expected_id": None,
-                "should_find_match": False  # Should return "not available"
-            }
-        ]
         
         passed_tests = 0
-        total_tests = len(test_cases)
+        total_tests = 0
         
-        for test_case in test_cases:
-            if self.test_json_food_research(**test_case):
-                passed_tests += 1
-        
-        # Step 3: Test no AI integration
-        if self.test_no_ai_calls():
+        # Step 1: Test backend accessibility
+        if self.test_backend_accessibility():
             passed_tests += 1
         total_tests += 1
         
-        # Step 4: Summary
+        # Step 2: Test environment variables
+        if self.test_environment_variables():
+            passed_tests += 1
+        total_tests += 1
+        
+        # Step 3: Authentication
+        if not self.authenticate():
+            print("❌ CRITICAL: Authentication failed. Cannot proceed with protected endpoint testing.")
+            total_tests += 4  # Account for remaining tests
+        else:
+            passed_tests += 1
+            total_tests += 1
+            
+            # Step 4: Test AI chat endpoint with gpt-5-nano
+            if self.test_ai_chat_endpoint():
+                passed_tests += 1
+            total_tests += 1
+            
+            # Step 5: Test baby management endpoints
+            if self.test_baby_management_endpoints():
+                passed_tests += 1
+            total_tests += 1
+            
+            # Step 6: Test food safety queries
+            if self.test_food_safety_queries():
+                passed_tests += 1
+            total_tests += 1
+        
+        # Step 7: Summary
         print("=" * 80)
         print("📊 TEST SUMMARY")
         print("=" * 80)
@@ -345,15 +329,17 @@ class BackendTester:
         print()
         
         if success_rate >= 80:
-            print("✅ JSON-ONLY FOOD RESEARCH IMPLEMENTATION: SUCCESS")
-            print("   - AI/LLM system completely removed")
-            print("   - JSON knowledge base loading working")
-            print("   - Smart matching implemented")
-            print("   - Source attribution with Question IDs")
-            print("   - 'Not available' responses for unknown foods")
+            print("✅ BACKEND CONNECTIVITY AFTER OFFLINEMODE FIX: SUCCESS")
+            print("   - Backend accessible at baby-genius.preview.emergentagent.com")
+            print("   - Authentication working with demo user")
+            print("   - AI chat endpoint responding with gpt-5-nano")
+            print("   - Baby management endpoints functional")
+            print("   - Food safety queries working")
+            print("   - Environment variables properly configured")
         else:
-            print("❌ JSON-ONLY FOOD RESEARCH IMPLEMENTATION: ISSUES FOUND")
-            print("   - Some tests failed - see details above")
+            print("❌ BACKEND CONNECTIVITY ISSUES FOUND")
+            print("   - Some critical functionality not working")
+            print("   - May indicate offlineMode fix incomplete or other issues")
         
         print()
         print("🔍 DETAILED TEST RESULTS:")
