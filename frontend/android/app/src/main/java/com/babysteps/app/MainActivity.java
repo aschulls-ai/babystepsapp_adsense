@@ -1,4 +1,4 @@
-package com.babysteps.app;
+package com.babysteps.mobile;
 
 import android.os.Bundle;
 import android.webkit.WebView;
