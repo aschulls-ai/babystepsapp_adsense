@@ -1,6 +1,6 @@
 {
   "appId": "com.babysteps.mobile",
-  "appName": "Baby Steps",
+  "appName": "Baby Steps Mobile",
   "webDir": "build",
   "server": {
     "cleartext": true,
