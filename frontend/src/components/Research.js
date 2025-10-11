@@ -1,27 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { 
-  BookOpen, 
-  Send, 
-  Bot, 
-  User, 
-  Lightbulb,
-  Heart,
-  Baby,
-  Stethoscope,
-  Moon,
-  Milk,
-  Clock,
-  AlertCircle,
-  Shield
-} from 'lucide-react';
-import { toast } from 'sonner';
+import React from 'react';
+import ChatKitWrapper from './ChatKitWrapper';
 import PageAd from './ads/PageAd';
-import { shouldUseOfflineMode, offlineAPI } from '../offlineMode';
-import QuestionSuggestions from './QuestionSuggestions';
 
 const Research = () => {
   const [messages, setMessages] = useState([]);
