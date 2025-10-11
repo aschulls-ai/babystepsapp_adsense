@@ -459,7 +459,82 @@ async def send_password_reset_email_mock(email: str, reset_token: str):
     # In production, replace this with actual email sending
     # await send_actual_email(email, reset_url)
 
-# OpenAI ChatKit Session Endpoint
+# OpenAI Chat API Endpoint (Simple, no ChatKit)
+class ChatRequest(BaseModel):
+    message: str
+    baby_age_months: Optional[int] = None
+
+class ChatResponse(BaseModel):
+    response: str
+    timestamp: str
+
+@api_router.post("/ai/chat", response_model=ChatResponse)
+async def ai_chat(request: ChatRequest, current_user: User = Depends(get_current_user)):
+    """
+    Simple OpenAI Chat Completions API endpoint
+    Works with basic API key - no special permissions needed
+    """
+    try:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="OpenAI API key not configured")
+        
+        # Create OpenAI client
+        client = OpenAI(api_key=api_key)
+        
+        # Build system message with baby care context
+        system_message = """You are an expert AI Parenting Assistant specializing in evidence-based baby care for ages 0-24 months.
+
+Your role:
+- Provide accurate, age-appropriate guidance on baby feeding, nutrition, food safety, sleep, development, and health
+- Give specific, actionable advice tailored to the baby's age
+- Always prioritize safety and recommend consulting a pediatrician for medical concerns
+
+CRITICAL SAFETY RULES:
+- NEVER recommend honey for babies under 12 months
+- ALWAYS emphasize choking hazards for young babies
+- ALWAYS recommend consulting a pediatrician for medical concerns
+
+Response format:
+- Be concise but thorough (2-4 paragraphs)
+- Use clear, parent-friendly language
+- Include age-specific recommendations when relevant
+- End with: "Consult your pediatrician for personalized medical advice."
+"""
+        
+        # Add baby age context if available
+        user_message = request.message
+        if request.baby_age_months is not None:
+            system_message += f"\n\nCurrent baby's age: {request.baby_age_months} months. Tailor your response to this age."
+        
+        # Call OpenAI Chat Completions API
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # Fast and cost-effective
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        logging.info(f"AI Chat - User: {current_user.id}, Message: {request.message[:50]}..., Response length: {len(ai_response)}")
+        
+        return ChatResponse(
+            response=ai_response,
+            timestamp=datetime.now(timezone.utc).isoformat()
+        )
+        
+    except Exception as e:
+        logging.error(f"AI Chat error: {str(e)}")
+        logging.error(f"Exception type: {type(e).__name__}")
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"AI Chat failed: {str(e)}")
+
+# OpenAI ChatKit Session Endpoint (keeping for future use)
 @api_router.post("/chatkit/session")
 async def create_chatkit_session(current_user: User = Depends(get_current_user)):
     """
