@@ -515,7 +515,7 @@ Response format:
                 {"role": "user", "content": user_message}
             ],
             temperature=0.7,
-            max_tokens=500
+            max_completion_tokens=500  # gpt-5-nano uses max_completion_tokens instead of max_tokens
         )
         
         ai_response = response.choices[0].message.content
