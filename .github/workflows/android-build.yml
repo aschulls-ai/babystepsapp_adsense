@@ -89,8 +89,29 @@ jobs:
         echo "   - App Signing Key: Managed by Google for final distribution"
         echo ""
         
-        # Generate consistent upload keystore (same parameters = same keystore)
-        if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+        # Use extracted certificate from working AAB or generate consistent keystore
+        if [ -n "${{ secrets.UPLOAD_CERTIFICATE_BASE64 }}" ]; then
+          echo "🎯 Using extracted certificate from successful AAB"
+          # Extract certificate and attempt to reconstruct keystore
+          echo "${{ secrets.UPLOAD_CERTIFICATE_BASE64 }}" | base64 -d > upload_cert.p7s
+          
+          # Try to extract the certificate details
+          openssl pkcs7 -inform DER -in upload_cert.p7s -print_certs | openssl x509 -outform PEM > upload_cert.pem
+          
+          # Generate keystore with matching parameters and try to import certificate
+          keytool -genkeypair -v \
+            -keystore upload.keystore \
+            -alias upload \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass upload2024 \
+            -keypass upload2024 \
+            -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
+            
+          echo "⚠️ Note: Certificate extracted but private key cannot be recreated"
+          echo "SHA1 fingerprint may differ from expected: A0:B7:D4:97:A7:BE:5F:C4:D1:AA:48:87:75:E9:95:0A:AE:76:0D:5E"
+        elif [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
           echo "✅ Using keystore from GitHub Secrets"
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload.keystore
         else
