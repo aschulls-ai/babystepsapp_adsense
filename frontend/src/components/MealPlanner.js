@@ -90,7 +90,8 @@ const MealPlanner = ({ currentBaby }) => {
   const handleSelectSuggestion = (selectedQuestion) => {
     setSearchQuery(selectedQuestion.question);
     setShowSuggestions(false);
-    handleSearch(selectedQuestion.question);
+    // DO NOT auto-search - let user press Enter/Search button
+    // This ensures Android app properly updates and finds correct ID
   };
 
   const handleInputFocus = () => {
