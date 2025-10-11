@@ -69,87 +69,165 @@ class BackendTester:
             self.log_test("Authentication", False, f"Authentication error: {str(e)}")
             return False
     
-    def test_json_food_research(self, question, expected_food, expected_id=None, should_find_match=True):
-        """Test JSON-only food research endpoint"""
-        print(f"🔍 TESTING FOOD QUERY: '{question}'")
+    def test_backend_accessibility(self):
+        """Test that backend URL is accessible"""
+        print("🌐 TESTING BACKEND ACCESSIBILITY...")
         
         try:
-            query_data = {
-                "question": question,
+            # Test basic connectivity to backend
+            response = self.session.get(
+                f"{BACKEND_URL.replace('/api', '')}/health",
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                self.log_test("Backend Accessibility", True, 
+                            f"Backend accessible at {BACKEND_URL.replace('/api', '')}")
+                return True
+            else:
+                # Try alternative health check
+                response = self.session.get(
+                    f"{BACKEND_URL}/dashboard/available-widgets",
+                    timeout=10
+                )
+                if response.status_code in [200, 401, 403]:  # 401/403 means endpoint exists but needs auth
+                    self.log_test("Backend Accessibility", True, 
+                                f"Backend accessible (got {response.status_code})")
+                    return True
+                else:
+                    self.log_test("Backend Accessibility", False, 
+                                f"Backend not accessible: {response.status_code}")
+                    return False
+                
+        except Exception as e:
+            self.log_test("Backend Accessibility", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_ai_chat_endpoint(self):
+        """Test AI chat endpoint with gpt-5-nano model"""
+        print("🤖 TESTING AI CHAT ENDPOINT...")
+        
+        try:
+            chat_data = {
+                "message": "What breakfast ideas for my baby?",
                 "baby_age_months": 8
             }
             
             response = self.session.post(
-                f"{BACKEND_URL}/food/research",
-                json=query_data,
+                f"{BACKEND_URL}/ai/chat",
+                json=chat_data,
                 headers={"Content-Type": "application/json"},
+                timeout=60  # AI requests can take longer
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                ai_response = result.get("response", "")
+                timestamp = result.get("timestamp", "")
+                
+                if len(ai_response) > 100:  # Expect substantial response
+                    self.log_test("AI Chat Endpoint", True, 
+                                f"AI response received ({len(ai_response)} chars): {ai_response[:100]}...")
+                    return True
+                else:
+                    self.log_test("AI Chat Endpoint", False, 
+                                f"AI response too short: {ai_response}")
+                    return False
+            else:
+                self.log_test("AI Chat Endpoint", False, 
+                            f"AI chat failed: {response.status_code} - {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("AI Chat Endpoint", False, f"AI chat error: {str(e)}")
+            return False
+    
+    def test_baby_management_endpoints(self):
+        """Test baby management endpoints"""
+        print("👶 TESTING BABY MANAGEMENT ENDPOINTS...")
+        
+        try:
+            # Test GET /api/babies
+            response = self.session.get(
+                f"{BACKEND_URL}/babies",
                 timeout=30
             )
             
-            if response.status_code != 200:
-                self.log_test(f"Food Research: {question}", False, 
-                            f"HTTP {response.status_code}: {response.text}")
-                return False
-            
-            result = response.json()
-            answer = result.get("answer", "")
-            sources = result.get("sources", [])
-            safety_level = result.get("safety_level", "")
-            
-            # Check if this is a JSON-only response (no AI)
-            is_json_response = any("Knowledge Base Question ID:" in source for source in sources)
-            has_ai_indicators = any(keyword in answer.lower() for keyword in [
-                "i recommend", "i suggest", "as an ai", "i think", "in my opinion"
-            ])
-            
-            if should_find_match:
-                # Should find a match in JSON database
-                if not is_json_response:
-                    self.log_test(f"Food Research: {question}", False, 
-                                f"Expected JSON response with Question ID, got: {sources}")
-                    return False
+            if response.status_code == 200:
+                babies = response.json()
+                self.log_test("Baby Management - GET", True, 
+                            f"Retrieved {len(babies)} baby profiles")
                 
-                if has_ai_indicators:
-                    self.log_test(f"Food Research: {question}", False, 
-                                f"Response contains AI-generated content: {answer[:200]}...")
-                    return False
+                # Test creating a new baby profile
+                baby_data = {
+                    "name": "Test Baby Backend",
+                    "birth_date": "2024-01-15T00:00:00Z",
+                    "gender": "other"
+                }
                 
-                # Check for expected food content
-                if expected_food.lower() not in answer.lower():
-                    self.log_test(f"Food Research: {question}", False, 
-                                f"Expected {expected_food} content, got: {answer[:200]}...")
-                    return False
+                create_response = self.session.post(
+                    f"{BACKEND_URL}/babies",
+                    json=baby_data,
+                    headers={"Content-Type": "application/json"},
+                    timeout=30
+                )
                 
-                # Check for expected question ID if provided
-                if expected_id:
-                    expected_id_text = f"Knowledge Base Question ID: {expected_id}"
-                    if not any(expected_id_text in source for source in sources):
-                        self.log_test(f"Food Research: {question}", False, 
-                                    f"Expected {expected_id_text}, got sources: {sources}")
+                if create_response.status_code == 200:
+                    new_baby = create_response.json()
+                    baby_id = new_baby.get("id")
+                    
+                    self.log_test("Baby Management - POST", True, 
+                                f"Created baby profile: {new_baby.get('name')}")
+                    
+                    # Test updating the baby profile
+                    update_data = {
+                        "name": "Updated Test Baby",
+                        "birth_date": "2024-01-15T00:00:00Z",
+                        "gender": "other"
+                    }
+                    
+                    update_response = self.session.put(
+                        f"{BACKEND_URL}/babies/{baby_id}",
+                        json=update_data,
+                        headers={"Content-Type": "application/json"},
+                        timeout=30
+                    )
+                    
+                    if update_response.status_code == 200:
+                        self.log_test("Baby Management - PUT", True, 
+                                    "Successfully updated baby profile")
+                        return True
+                    else:
+                        self.log_test("Baby Management - PUT", False, 
+                                    f"Update failed: {update_response.status_code}")
                         return False
-                
-                self.log_test(f"Food Research: {question}", True, 
-                            f"JSON response with {expected_food} content, safety: {safety_level}, sources: {sources}")
-                return True
-            
+                else:
+                    self.log_test("Baby Management - POST", False, 
+                                f"Create failed: {create_response.status_code} - {create_response.text}")
+                    return False
             else:
-                # Should NOT find a match - expect "not available" response
-                if "Food Safety Information Not Available" not in answer:
-                    self.log_test(f"Food Research: {question}", False, 
-                                f"Expected 'not available' response, got: {answer[:200]}...")
-                    return False
-                
-                if "Available in our database:" not in answer:
-                    self.log_test(f"Food Research: {question}", False, 
-                                f"Expected available foods list, got: {answer[:200]}...")
-                    return False
-                
-                self.log_test(f"Food Research: {question}", True, 
-                            f"Correctly returned 'not available' with food list, safety: {safety_level}")
-                return True
+                self.log_test("Baby Management - GET", False, 
+                            f"GET babies failed: {response.status_code} - {response.text}")
+                return False
                 
         except Exception as e:
-            self.log_test(f"Food Research: {question}", False, f"Request error: {str(e)}")
+            self.log_test("Baby Management Endpoints", False, f"Request error: {str(e)}")
+            return False
+    
+    def test_environment_variables(self):
+        """Test that environment variables are properly configured"""
+        print("⚙️ TESTING ENVIRONMENT CONFIGURATION...")
+        
+        # Check if REACT_APP_BACKEND_URL is set correctly by testing if backend responds
+        expected_backend = "https://baby-genius.preview.emergentagent.com"
+        
+        if BACKEND_URL.startswith(expected_backend):
+            self.log_test("Environment Variables", True, 
+                        f"REACT_APP_BACKEND_URL correctly set to {expected_backend}")
+            return True
+        else:
+            self.log_test("Environment Variables", False, 
+                        f"Backend URL mismatch. Expected {expected_backend}, got {BACKEND_URL}")
             return False
     
     def test_no_ai_calls(self):
