@@ -242,7 +242,7 @@ const Research = () => {
           Research & Parenting Tips
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Get evidence-based answers to your parenting questions from our AI assistant trained on reliable medical sources
+          Type your question, select a suggestion, then press Send
         </p>
       </div>
 
