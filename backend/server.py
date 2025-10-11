@@ -516,10 +516,18 @@ async def create_chatkit_session(current_user: User = Depends(get_current_user))
             return {"client_secret": client_secret}
         
     except httpx.HTTPError as e:
-        logging.error(f"HTTP error creating ChatKit session: {str(e)}")
+        error_msg = f"HTTP error creating ChatKit session: {str(e)}"
+        logging.error(error_msg)
+        logging.error(f"Exception type: {type(e).__name__}")
+        logging.error(f"Exception details: {repr(e)}")
         raise HTTPException(status_code=500, detail=f"Network error: {str(e)}")
     except Exception as e:
-        logging.error(f"Failed to create ChatKit session: {str(e)}")
+        error_msg = f"Failed to create ChatKit session: {str(e)}"
+        logging.error(error_msg)
+        logging.error(f"Exception type: {type(e).__name__}")
+        logging.error(f"Exception details: {repr(e)}")
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Failed to create ChatKit session: {str(e)}")
 
 # Authentication Routes - Support multiple concurrent sessions
