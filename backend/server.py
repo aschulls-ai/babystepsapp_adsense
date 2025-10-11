@@ -514,8 +514,9 @@ Response format:
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message}
             ],
-            # gpt-5-nano only supports default temperature (1) and max_completion_tokens
-            max_completion_tokens=500
+            # gpt-5-nano specific configuration to avoid empty responses
+            max_completion_tokens=2000,  # Increased to ensure enough tokens for both reasoning and output
+            reasoning_effort="low"  # Use minimal reasoning to preserve tokens for response content
         )
         
         ai_response = response.choices[0].message.content
