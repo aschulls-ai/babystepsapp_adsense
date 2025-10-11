@@ -291,7 +291,6 @@
 ## test_plan:
   current_focus:
     - "Food Safety Search - Comprehensive Testing (matching algorithm, quick checks, correct answers)"
-    - "AI Assistant - Full Functionality Testing (dropdown suggestions, multi-KB queries, quick questions)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
