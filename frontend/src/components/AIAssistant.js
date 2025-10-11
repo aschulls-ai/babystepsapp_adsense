@@ -87,6 +87,12 @@ const AIAssistant = ({ currentBaby }) => {
         contextMessage = `[Baby: ${currentBaby.name}, Age: ${babyAgeMonths} months] ${userMessage.content}`;
       }
 
+      // Debug logging for Android troubleshooting
+      console.log('🤖 AI Assistant: Making request to backend');
+      console.log('🔗 Backend URL:', process.env.REACT_APP_BACKEND_URL);
+      console.log('🔑 Token present:', !!token);
+      console.log('👶 Baby context:', currentBaby ? `${currentBaby.name} (${Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44))} months)` : 'None');
+
       // Call backend API using Android-optimized fetch
       const response = await androidFetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai/chat`, {
         method: 'POST',
