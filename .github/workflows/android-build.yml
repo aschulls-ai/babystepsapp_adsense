@@ -89,22 +89,22 @@ jobs:
         echo "   - App Signing Key: Managed by Google for final distribution"
         echo ""
         
-        # Generate upload keystore if not exists from secrets
+        # Generate consistent upload keystore (same parameters = same keystore)
         if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
           echo "✅ Using keystore from GitHub Secrets"
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload.keystore
         else
-          echo "🔧 Generating upload keystore (temporary for this build)"
+          echo "🔧 Generating consistent upload keystore"
           keytool -genkeypair -v \
             -keystore upload.keystore \
             -alias upload \
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
-            -storepass upload2024 \
-            -keypass upload2024 \
-            -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
-          echo "⚠️  Using temporary upload key - add ANDROID_KEYSTORE_BASE64 secret for consistency"
+            -storepass BabyStepsUpload2024 \
+            -keypass BabyStepsUpload2024 \
+            -dname "CN=Baby Steps Upload Key,OU=Baby Steps Mobile,O=Baby Steps App LLC,L=San Francisco,ST=California,C=US"
+          echo "✅ Consistent upload key generated"
         fi
         
         # Configure signing in gradle.properties (matches build.gradle expectations)
