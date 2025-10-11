@@ -1213,18 +1213,23 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             if len(exact_matches) == 1:
                 best_age_match = exact_matches[0]
             else:
-                # Multiple exact matches - choose based on baby's age
+                # Multiple exact matches - choose the MOST SPECIFIC age range for baby's age
+                matching_ranges = []
+                
                 for item in exact_matches:
                     age_range_str = item.get('age_range', '')
                     min_age, max_age = get_age_range_months(age_range_str)
                     
                     # Check if baby's age falls within this range
                     if min_age <= baby_age <= max_age:
-                        best_age_match = item
-                        break
+                        range_width = max_age - min_age
+                        matching_ranges.append((item, range_width))
                 
-                # If no perfect match, choose the broadest range (usually 0-24 months)
-                if not best_age_match:
+                # Choose the narrowest (most specific) age range
+                if matching_ranges:
+                    best_age_match = min(matching_ranges, key=lambda x: x[1])[0]
+                else:
+                    # If no perfect match, choose the broadest range (usually 0-24 months)
                     best_age_match = max(exact_matches, key=lambda x: get_age_range_months(x.get('age_range', ''))[1])
             
             # Return the best age-matched result
