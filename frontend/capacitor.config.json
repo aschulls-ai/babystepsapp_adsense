@@ -2,6 +2,13 @@
   "appId": "com.babysteps.app",
   "appName": "Baby Steps",
   "webDir": "build",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "https://baby-genius.preview.emergentagent.com",
+      "https://baby-genius.preview.emergentagent.com/*"
+    ]
+  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 3000,
