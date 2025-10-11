@@ -507,9 +507,9 @@ Response format:
         if request.baby_age_months is not None:
             system_message += f"\n\nCurrent baby's age: {request.baby_age_months} months. Tailor your response to this age."
         
-        # Call OpenAI Chat Completions API with available model
+        # Call OpenAI Chat Completions API with gpt-5-nano for cost-effectiveness
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Using standard model that works with test key
+            model="gpt-5-nano",  # Using cost-effective gpt-5-nano model
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": user_message}
