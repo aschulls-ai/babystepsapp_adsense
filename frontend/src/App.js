@@ -262,7 +262,7 @@ function App() {
       console.log('🚀 Initializing Baby Steps standalone app...');
       
       // Initialize standalone mode as primary
-      initializeStandaloneMode();
+      initializeBackendMode();
       
       // Initialize mobile features if running on native platform
       if (Capacitor.isNativePlatform()) {
