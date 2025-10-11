@@ -65,10 +65,17 @@ const AIAssistant = ({ currentBaby }) => {
     setLoading(true);
 
     try {
-      // Get auth token
-      const token = localStorage.getItem('token');
+      // Get auth token with validation
+      let token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('Not authenticated');
+        throw new Error('Not authenticated - please login again');
+      }
+      
+      // Validate token format (basic check)
+      if (!token.includes('.') || token.split('.').length !== 3) {
+        console.log('🔑 Invalid token format detected, clearing token');
+        localStorage.removeItem('token');
+        throw new Error('Invalid authentication token - please login again');
       }
 
       // Add baby context to the message
