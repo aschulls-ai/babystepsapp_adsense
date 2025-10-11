@@ -290,7 +290,7 @@
 
 ## test_plan:
   current_focus:
-    - "Food Safety Search - Comprehensive Testing (matching algorithm, quick checks, correct answers)"
+    - "Backend Connectivity After offlineMode.js Fix - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
