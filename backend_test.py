@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-JSON-ONLY Food Research Backend Testing
-Testing the completely rewritten JSON-ONLY food research backend implementation
+Backend Connectivity Testing After offlineMode.js Fix
+Testing that baby-genius.preview.emergentagent.com backend is accessible and working correctly
+after fixing shouldUseOfflineMode() hardcoded return true issue.
 """
 
 import requests
