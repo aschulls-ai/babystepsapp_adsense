@@ -4,10 +4,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import aiService from './aiService';
 
-// Standalone app mode - this is now the PRIMARY mode
+// Backend app mode - server connection enabled  
 export const shouldUseOfflineMode = () => {
-  // Always use standalone mode as primary - server connection is optional
-  return true;
+  // Use backend mode when REACT_APP_BACKEND_URL is available
+  return !process.env.REACT_APP_BACKEND_URL;
 };
 
 // Enable offline mode
