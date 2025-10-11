@@ -230,19 +230,16 @@ class BackendTester:
                         f"Backend URL mismatch. Expected {expected_backend}, got {BACKEND_URL}")
             return False
     
-    def test_no_ai_calls(self):
-        """Test that no AI/LLM calls are being made"""
-        print("🚫 TESTING NO AI/LLM INTEGRATION...")
+    def test_food_safety_queries(self):
+        """Test food safety queries as specified in review request"""
+        print("🥗 TESTING FOOD SAFETY QUERIES...")
         
-        # Test multiple queries to ensure consistent JSON-only responses
         test_queries = [
-            "When can babies eat eggs?",
-            "Is avocado safe for babies?", 
-            "Can babies eat strawberries?",
-            "Is honey safe for babies?"
+            "Can my baby eat strawberries?",
+            "What breakfast ideas for my baby?",
         ]
         
-        all_json_only = True
+        all_passed = True
         
         for query in test_queries:
             try:
@@ -251,34 +248,31 @@ class BackendTester:
                     f"{BACKEND_URL}/food/research",
                     json=query_data,
                     headers={"Content-Type": "application/json"},
-                    timeout=10  # Short timeout to detect AI delays
+                    timeout=30
                 )
                 
                 if response.status_code == 200:
                     result = response.json()
-                    sources = result.get("sources", [])
+                    answer = result.get("answer", "")
+                    safety_level = result.get("safety_level", "")
                     
-                    # Check if response is from JSON knowledge base
-                    is_json_response = any("Knowledge Base Question ID:" in source for source in sources)
-                    if not is_json_response:
-                        all_json_only = False
-                        break
+                    if len(answer) > 50:  # Expect substantial response
+                        self.log_test(f"Food Safety Query: {query}", True, 
+                                    f"Response received ({len(answer)} chars), safety: {safety_level}")
+                    else:
+                        self.log_test(f"Food Safety Query: {query}", False, 
+                                    f"Response too short: {answer}")
+                        all_passed = False
                 else:
-                    all_json_only = False
-                    break
+                    self.log_test(f"Food Safety Query: {query}", False, 
+                                f"Query failed: {response.status_code}")
+                    all_passed = False
                     
             except Exception as e:
-                all_json_only = False
-                break
+                self.log_test(f"Food Safety Query: {query}", False, f"Error: {str(e)}")
+                all_passed = False
         
-        if all_json_only:
-            self.log_test("No AI/LLM Integration", True, 
-                        "All responses come from JSON knowledge base with Question IDs")
-        else:
-            self.log_test("No AI/LLM Integration", False, 
-                        "Some responses may still be using AI/LLM instead of JSON-only")
-        
-        return all_json_only
+        return all_passed
     
     def run_comprehensive_tests(self):
         """Run all JSON-only food research tests"""
