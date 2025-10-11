@@ -101,9 +101,9 @@ jobs:
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
-            -storepass BabyStepsUpload2024 \
-            -keypass BabyStepsUpload2024 \
-            -dname "CN=Baby Steps Upload Key,OU=Baby Steps Mobile,O=Baby Steps App LLC,L=San Francisco,ST=California,C=US"
+            -storepass upload2024 \
+            -keypass upload2024 \
+            -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
           echo "✅ Consistent upload key generated"
         fi
         
