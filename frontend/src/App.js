@@ -669,36 +669,16 @@ function App() {
                       } 
                     />
                     <Route 
-                      path="/food-research" 
-                      element={
-                        <FoodResearch 
-                          currentBaby={currentBaby}
-                        />
-                      } 
-                    />
-                    <Route 
                       path="/formula-comparison" 
-                      element={
-                        <FormulaComparison 
-                          currentBaby={currentBaby}
-                        />
-                      } 
+                      element={<FormulaComparison />} 
                     />
                     <Route 
                       path="/emergency-training" 
-                      element={<EmergencyTraining currentBaby={currentBaby} />} 
+                      element={<EmergencyTraining />} 
                     />
                     <Route 
-                      path="/meal-planner" 
-                      element={
-                        <MealPlanner 
-                          currentBaby={currentBaby}
-                        />
-                      } 
-                    />
-                    <Route 
-                      path="/research" 
-                      element={<Research />} 
+                      path="/ai-assistant" 
+                      element={<Research currentBaby={currentBaby} />} 
                     />
                     <Route 
                       path="/settings" 
