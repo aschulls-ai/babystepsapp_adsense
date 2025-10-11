@@ -18,7 +18,7 @@ import BabyProfile from './components/BabyProfile';
 import TrackingPage from './components/TrackingPage';
 import FormulaComparison from './components/FormulaComparison';
 import EmergencyTraining from './components/EmergencyTraining';
-import Research from './components/Research';
+import AIAssistant from './components/AIAssistant';
 import Settings from './components/Settings';
 import EmailVerification from './components/EmailVerification';
 import PasswordReset from './components/PasswordReset';
