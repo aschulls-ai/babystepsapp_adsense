@@ -466,27 +466,58 @@ async def create_chatkit_session(current_user: User = Depends(get_current_user))
     Create a ChatKit session for the authenticated user
     Returns client_secret for frontend ChatKit integration
     """
+    import httpx
+    
     try:
-        # Initialize OpenAI client with API key from environment
-        openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-        
-        # Get workflow ID from environment
+        # Get configuration from environment
+        api_key = os.environ.get("OPENAI_API_KEY")
         workflow_id = os.environ.get("CHATKIT_WORKFLOW_ID")
+        
+        if not api_key:
+            logging.error("OPENAI_API_KEY not set in environment")
+            raise HTTPException(status_code=500, detail="OpenAI API key not configured")
         
         if not workflow_id:
             logging.error("CHATKIT_WORKFLOW_ID not set in environment")
-            raise HTTPException(status_code=500, detail="ChatKit not configured")
+            raise HTTPException(status_code=500, detail="ChatKit workflow not configured")
         
-        # Create ChatKit session
-        session = openai_client.chatkit.sessions.create(
-            workflow={"id": workflow_id},
-            user=current_user.id,  # Use the authenticated user's ID
-        )
+        # Create ChatKit session via direct API call
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.openai.com/v1/chatkit/sessions",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {api_key}",
+                    "OpenAI-Beta": "chatkit_beta=v1"
+                },
+                json={
+                    "workflow": {"id": workflow_id},
+                    "user": str(current_user.id)
+                },
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                error_detail = response.text
+                logging.error(f"OpenAI API error: {response.status_code} - {error_detail}")
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail=f"OpenAI API error: {error_detail}"
+                )
+            
+            session_data = response.json()
+            client_secret = session_data.get("client_secret")
+            
+            if not client_secret:
+                logging.error(f"No client_secret in response: {session_data}")
+                raise HTTPException(status_code=500, detail="Invalid response from OpenAI")
+            
+            logging.info(f"Created ChatKit session for user {current_user.id}")
+            return {"client_secret": client_secret}
         
-        logging.info(f"Created ChatKit session for user {current_user.id}")
-        
-        return {"client_secret": session.client_secret}
-        
+    except httpx.HTTPError as e:
+        logging.error(f"HTTP error creating ChatKit session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Network error: {str(e)}")
     except Exception as e:
         logging.error(f"Failed to create ChatKit session: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to create ChatKit session: {str(e)}")
