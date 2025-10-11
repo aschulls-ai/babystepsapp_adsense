@@ -1,22 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { 
-  Search, 
-  CheckCircle, 
-  AlertTriangle, 
-  X, 
-  Stethoscope,
-  Clock,
-  Baby
-} from 'lucide-react';
-import { toast } from 'sonner';
+import React from 'react';
+import ChatKitWrapper from './ChatKitWrapper';
 import PageAd from './ads/PageAd';
-import { shouldUseOfflineMode, offlineAPI } from '../offlineMode';
-import QuestionSuggestions from './QuestionSuggestions';
 
 const FoodResearch = ({ currentBaby }) => {
   const [query, setQuery] = useState('');
