@@ -144,11 +144,18 @@ const FoodResearch = ({ currentBaby }) => {
   };
 
   const handleSearch = async (searchQuery = query) => {
-    if (!searchQuery.trim()) return;
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) {
+      console.log('Empty query, skipping search');
+      return;
+    }
 
+    console.log('🔍 Starting search for:', trimmedQuery);
+    
+    // CRITICAL: Clear everything first
     setShowSuggestions(false);
+    setResults(null); // Clear previous results IMMEDIATELY
     setLoading(true);
-    setResults(null); // Clear previous results
     
     try {
       const babyAgeMonths = currentBaby ? 
@@ -156,30 +163,43 @@ const FoodResearch = ({ currentBaby }) => {
 
       // Always use standalone/offline mode for better reliability
       console.log('🔬 Using standalone mode with AI integration for food research');
-      const response = await offlineAPI.foodResearch(searchQuery, babyAgeMonths);
+      console.log('Baby age:', babyAgeMonths, 'months');
+      
+      const response = await offlineAPI.foodResearch(trimmedQuery, babyAgeMonths);
+      console.log('✅ Got response:', response);
+      
+      if (!response || !response.data) {
+        throw new Error('Invalid response from API');
+      }
+      
+      // Set new results
+      console.log('Setting new results:', response.data);
       setResults(response.data);
-      setQuery('');
+      setQuery(''); // Clear search bar
       
       // Add to search history
       const newSearch = {
         id: Date.now(),
-        query: searchQuery,
+        query: trimmedQuery,
         result: response.data,
         timestamp: new Date().toISOString()
       };
       setSearchHistory(prev => [newSearch, ...prev.slice(0, 4)]);
       
       toast.success('Food research completed');
+      console.log('✅ Search completed successfully');
       
       // Refresh safety history
       if (currentBaby) {
         fetchSafetyHistory();
       }
     } catch (error) {
-      console.error('Food research failed:', error);
+      console.error('❌ Food research failed:', error);
+      setResults(null); // Clear results on error
       toast.error('Failed to get food safety information');
     } finally {
       setLoading(false);
+      console.log('🏁 Search finished');
     }
   };
 
