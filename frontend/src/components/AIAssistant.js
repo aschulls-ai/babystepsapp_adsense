@@ -80,8 +80,8 @@ const AIAssistant = ({ currentBaby }) => {
         contextMessage = `[Baby: ${currentBaby.name}, Age: ${babyAgeMonths} months] ${userMessage.content}`;
       }
 
-      // Call backend API
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/ai/chat`, {
+      // Call backend API using Android-optimized fetch
+      const response = await androidFetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
