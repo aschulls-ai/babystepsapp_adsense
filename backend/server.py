@@ -1183,35 +1183,74 @@ async def food_research(query: FoodQuery, current_user: User = Depends(get_curre
             'pesto', 'muffin', 'flour', 'oatmeal', 'scrambled', 'reheated'
         ]
         
-        # CRITICAL FIX: Check for EXACT question match FIRST before any scoring
-        # This ensures quick safety checks and identical questions return correct ID immediately
+        # CRITICAL FIX: Check for EXACT question matches and select best age match
+        # Collect all exact matches first
+        exact_matches = []
         for food_item in food_kb:
             question_lower = food_item.get('question', '').lower()
             if query_lower == question_lower:
-                # EXACT MATCH - Return immediately without further comparison
-                question_id = food_item.get('id', 'Unknown')
-                matched_question = food_item.get('question', '')
-                answer = food_item.get('answer', '')
-                category = food_item.get('category', 'General')
-                age_range = food_item.get('age_range', 'Consult pediatrician')
+                exact_matches.append(food_item)
+        
+        # If we have exact matches, select the best one based on baby's age
+        if exact_matches:
+            best_age_match = None
+            baby_age = query.baby_age_months
+            
+            # Helper function to parse age range
+            def get_age_range_months(age_str):
+                """Extract min and max months from age range string like '6-12 months' or '0-24 months'"""
+                try:
+                    parts = age_str.lower().replace('months', '').replace('month', '').strip().split('–')
+                    if len(parts) == 2:
+                        min_age = int(parts[0].strip())
+                        max_age = int(parts[1].strip())
+                        return min_age, max_age
+                    return 0, 999
+                except:
+                    return 0, 999
+            
+            # Find the best age match
+            if len(exact_matches) == 1:
+                best_age_match = exact_matches[0]
+            else:
+                # Multiple exact matches - choose based on baby's age
+                for item in exact_matches:
+                    age_range_str = item.get('age_range', '')
+                    min_age, max_age = get_age_range_months(age_range_str)
+                    
+                    # Check if baby's age falls within this range
+                    if min_age <= baby_age <= max_age:
+                        best_age_match = item
+                        break
                 
-                logging.info(f"EXACT MATCH - Query: '{query.question}' -> ID: {question_id} (Score: 10000)")
-                
-                # Extract safety level
-                safety_level = "consult_doctor"
-                if "safe" in answer.lower() and "not" not in answer.lower()[:50]:
-                    safety_level = "safe"
-                elif any(word in answer.lower() for word in ["avoid", "never", "not safe", "wait until"]):
-                    safety_level = "avoid"
-                elif any(word in answer.lower() for word in ["caution", "watch", "monitor"]):
-                    safety_level = "caution"
-                
-                return FoodResponse(
-                    answer=f"**{category}** ({age_range})\n\n{answer}",
-                    safety_level=safety_level,
-                    age_recommendation=age_range,
-                    sources=[f"Food Safety Knowledge Base Question ID: {question_id}", "Verified Food Safety Database"]
-                )
+                # If no perfect match, choose the broadest range (usually 0-24 months)
+                if not best_age_match:
+                    best_age_match = max(exact_matches, key=lambda x: get_age_range_months(x.get('age_range', ''))[1])
+            
+            # Return the best age-matched result
+            question_id = best_age_match.get('id', 'Unknown')
+            matched_question = best_age_match.get('question', '')
+            answer = best_age_match.get('answer', '')
+            category = best_age_match.get('category', 'General')
+            age_range = best_age_match.get('age_range', 'Consult pediatrician')
+            
+            logging.info(f"EXACT MATCH - Query: '{query.question}' -> ID: {question_id} | Baby Age: {baby_age} months | Matched Age Range: {age_range}")
+            
+            # Extract safety level
+            safety_level = "consult_doctor"
+            if "safe" in answer.lower() and "not" not in answer.lower()[:50]:
+                safety_level = "safe"
+            elif any(word in answer.lower() for word in ["avoid", "never", "not safe", "wait until"]):
+                safety_level = "avoid"
+            elif any(word in answer.lower() for word in ["caution", "watch", "monitor"]):
+                safety_level = "caution"
+            
+            return FoodResponse(
+                answer=f"**{category}** ({age_range})\n\n{answer}",
+                safety_level=safety_level,
+                age_recommendation=age_range,
+                sources=[f"Food Safety Knowledge Base Question ID: {question_id}", "Verified Food Safety Database"]
+            )
         
         # If no exact match, proceed with scoring algorithm
         # Extract food keywords from query
