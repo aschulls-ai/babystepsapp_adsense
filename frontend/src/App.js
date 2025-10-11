@@ -59,7 +59,7 @@ console.log('Environment configuration:', {
 });
 
 // Alternative HTTP client for Android compatibility
-const androidFetch = async (url, options = {}) => {
+export const androidFetch = async (url, options = {}) => {
   console.log('📱 Android-specific fetch:', { url, options });
   
   // Method 1: Native fetch with Android-specific headers
