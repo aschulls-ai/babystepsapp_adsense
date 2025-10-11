@@ -459,6 +459,38 @@ async def send_password_reset_email_mock(email: str, reset_token: str):
     # In production, replace this with actual email sending
     # await send_actual_email(email, reset_url)
 
+# OpenAI ChatKit Session Endpoint
+@api_router.post("/chatkit/session")
+async def create_chatkit_session(current_user: User = Depends(get_current_user)):
+    """
+    Create a ChatKit session for the authenticated user
+    Returns client_secret for frontend ChatKit integration
+    """
+    try:
+        # Initialize OpenAI client with API key from environment
+        openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        
+        # Get workflow ID from environment
+        workflow_id = os.environ.get("CHATKIT_WORKFLOW_ID")
+        
+        if not workflow_id:
+            logging.error("CHATKIT_WORKFLOW_ID not set in environment")
+            raise HTTPException(status_code=500, detail="ChatKit not configured")
+        
+        # Create ChatKit session
+        session = openai_client.chatkit.sessions.create(
+            workflow={"id": workflow_id},
+            user=current_user.id,  # Use the authenticated user's ID
+        )
+        
+        logging.info(f"Created ChatKit session for user {current_user.id}")
+        
+        return {"client_secret": session.client_secret}
+        
+    except Exception as e:
+        logging.error(f"Failed to create ChatKit session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create ChatKit session: {str(e)}")
+
 # Authentication Routes - Support multiple concurrent sessions
 @api_router.post("/auth/register")
 async def register(user_data: UserCreate, background_tasks: BackgroundTasks):
