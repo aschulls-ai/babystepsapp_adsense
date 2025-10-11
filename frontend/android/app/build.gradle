@@ -4,7 +4,7 @@ android {
     namespace "com.babysteps.mobile"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.babysteps.app"
+        applicationId "com.babysteps.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 58
