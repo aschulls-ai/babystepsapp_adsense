@@ -35,10 +35,10 @@ import {
   isOfflineMode 
 } from './offlineMode';
 
-// Initialize standalone mode on app start
-const initializeStandaloneMode = () => {
-  localStorage.setItem('babysteps_app_mode', 'standalone');
-  console.log('🏠 Baby Steps running in standalone mode - all features available');
+// Initialize backend mode on app start
+const initializeBackendMode = () => {
+  localStorage.setItem('babysteps_app_mode', 'backend');
+  console.log('🌐 Baby Steps running with backend connectivity - full API features available');
 };
 
 // Backend-enabled App - Full functionality with API connectivity
