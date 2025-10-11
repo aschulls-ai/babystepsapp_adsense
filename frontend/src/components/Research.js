@@ -8,7 +8,7 @@ const Research = ({ currentBaby }) => {
       {/* ChatKit Integration */}
       <ChatKitWrapper 
         title="AI Parenting Assistant"
-        subtitle="Ask questions and get reliable, evidence-based parenting guidance"
+        subtitle="Ask any question for parenting guidance, meal prep, food safety, and general baby care knowledge"
         currentBaby={currentBaby}
       />
 
