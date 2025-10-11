@@ -410,22 +410,9 @@ function App() {
       console.error('Failed to fetch babies:', error);
       
       // If online fetch fails and not already in offline mode, try offline
-      if (!shouldUseOfflineMode()) {
-        try {
-          console.log('🏠 Online fetch failed, trying offline mode...');
-          enableOfflineMode();
-          const offlineResponse = await offlineAPI.getBabies();
-          setBabies(offlineResponse.data);
-          if (offlineResponse.data.length > 0 && !currentBaby) {
-            setCurrentBaby(offlineResponse.data[0]);
-          }
-        } catch (offlineError) {
-          console.error('Offline fetch also failed:', offlineError);
-          throw error; // Throw original error to maintain existing behavior
-        }
-      } else {
-        throw error;
-      }
+      // Don't fallback to offline mode - keep trying backend connectivity
+      console.log('⚠️ Backend fetch failed, but staying in online mode for debugging');
+      throw error; // Throw error to maintain existing behavior and allow debugging
     }
   };
 
