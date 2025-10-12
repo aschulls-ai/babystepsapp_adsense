@@ -636,17 +636,32 @@ function App() {
 
   const addBaby = async (babyData) => {
     try {
-      // Use offline API for standalone mode
-      console.log('👶 Creating baby in standalone mode:', babyData);
-      const response = await offlineAPI.createBaby(babyData);
-      const newBaby = response.data;
+      // PHASE 2: Cloud-first - Always use backend API
+      console.log('👶 Creating baby via backend API:', babyData);
+      const token = localStorage.getItem('token');
+      
+      const response = await androidFetch(`${API}/api/babies`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(babyData)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+      }
+      
+      const newBaby = await response.json();
       
       setBabies([...babies, newBaby]);
       if (!currentBaby) {
         setCurrentBaby(newBaby);
       }
-      toast.success(`${newBaby.name}'s profile created successfully! (Saved to device)`);
-      console.log('✅ Baby created and state updated:', newBaby.name);
+      toast.success(`${newBaby.name}'s profile created successfully!`);
+      console.log('✅ Baby created in backend database:', newBaby.name);
       return newBaby;
     } catch (error) {
       console.error('❌ Failed to add baby profile:', error);
