@@ -563,14 +563,13 @@ class ActivityTrackingTester:
         current_time = datetime.now(timezone.utc).isoformat()
         measurement_data = {
             "baby_id": self.baby_id,
-            "type": "measurement",
-            "weight": "15.5",
-            "height": "65",
+            "weight": 15.5,
+            "height": 65.0,
             "notes": "Growth check test",
             "timestamp": current_time
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', measurement_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/measurements', measurement_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
