@@ -112,7 +112,7 @@ class BabyStepsBackendTester:
             self.log_result("Demo Account Login", False, f"Error: {str(e)}")
             return False
         
-        # 3. New User Registration (Test 1)
+        # 3. New User Registration (Test 1) - Skip if login failed
         print("\n3. New User Registration (Test 1)")
         try:
             timestamp = int(time.time())
@@ -150,10 +150,17 @@ class BabyStepsBackendTester:
                         self.log_result("Immediate Login After Registration", False, "No JWT token in response", login_response_time)
                         return False
                 else:
-                    self.log_result("Immediate Login After Registration", False, f"HTTP {login_response.status_code}", login_response_time)
+                    error_text = login_response.text if login_response.text else "No response body"
+                    self.log_result("Immediate Login After Registration", False, f"HTTP {login_response.status_code}: {error_text[:200]}", login_response_time)
                     return False
             else:
-                self.log_result("New User Registration", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                error_text = response.text if response.text else "No response body"
+                self.log_result("New User Registration", False, f"HTTP {response.status_code}: {error_text[:200]}", response_time)
+                
+                # Log additional debugging info for registration
+                print(f"   🔍 Registration Debug Info:")
+                print(f"      - Status Code: {response.status_code}")
+                print(f"      - Response Body: {error_text[:500]}")
                 return False
         except Exception as e:
             self.log_result("New User Registration", False, f"Error: {str(e)}")
