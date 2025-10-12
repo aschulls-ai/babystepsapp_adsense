@@ -196,10 +196,10 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# Initialize demo data
-def init_demo_data():
-    """Initialize demo data if not exists"""
-    conn = get_db_connection()
+# OLD SQLite demo data initialization - DEPRECATED
+def init_demo_data_old_sqlite():
+    """OLD - Initialize demo data if not exists - DEPRECATED"""
+    conn = get_db_connection_old_sqlite()
     cursor = conn.cursor()
     
     # Check if demo user exists
