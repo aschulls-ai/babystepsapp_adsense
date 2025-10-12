@@ -93,14 +93,10 @@ class BackendTester:
         except requests.exceptions.RequestException as e:
             response_time = time.time() - start_time
             return None, response_time
-            print(f"✅ {test_name}: PASSED {message}{time_info}")
-        else:
-            self.results['failed'] += 1
-            self.results['errors'].append(f"{test_name}: {message}")
-            self.results['details'].append(f"❌ {test_name}: {message}{time_info}")
-            print(f"❌ {test_name}: FAILED {message}{time_info}")
+
+    # PHASE 1: Authentication & PostgreSQL Tests
     
-    def test_phase1_core_auth_database(self):
+    def test_1_health_check(self):
         """PHASE 1: Core Authentication & Database"""
         print("\n🔐 PHASE 1: CORE AUTHENTICATION & DATABASE")
         print("=" * 60)
