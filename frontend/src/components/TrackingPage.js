@@ -1085,16 +1085,29 @@ const PumpingForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      // Use standalone offline API
-      await offlineAPI.logActivity({
-        baby_id: babyId,
-        type: 'pumping',
-        amount: formData.amount || null,
-        duration: formData.duration || null,
-        notes: formData.notes || null,
-        timestamp: formData.timestamp.toISOString()
+      // PHASE 2: Log to backend API
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          baby_id: babyId,
+          type: 'pumping',
+          amount: formData.amount || null,
+          duration: formData.duration || null,
+          notes: formData.notes || null,
+          timestamp: formData.timestamp.toISOString()
+        })
       });
-      toast.success('💾 Pumping session saved to device!');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      toast.success('Pumping session logged successfully!');
       setFormData({
         amount: '',
         duration: '',
