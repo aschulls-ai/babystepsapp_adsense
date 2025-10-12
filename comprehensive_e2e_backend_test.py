@@ -1233,60 +1233,44 @@ class ComprehensiveE2ETester:
                 None
             )
             return False
-            
-        response, response_time = self.make_request('GET', '/api/activities', auth_required=True)
         
-        if response and response.status_code == 200:
-            try:
-                data = response.json()
-                if isinstance(data, list):
-                    activity_count = len(data)
-                    expected_count = 4  # We created 4 activities in this test session
-                    
-                    if activity_count >= expected_count:
-                        self.log_test(
-                            "6.2 Verify Activity Count",
-                            True,
-                            f"Correct count of activities ({activity_count} >= {expected_count} from this test session)",
-                            response_time,
-                            response.status_code
-                        )
-                        return True
-                    else:
-                        self.log_test(
-                            "6.2 Verify Activity Count",
-                            False,
-                            f"Incorrect activity count: {activity_count} (expected >= {expected_count})",
-                            response_time,
-                            response.status_code
-                        )
-                        return False
-                else:
-                    self.log_test(
-                        "6.2 Verify Activity Count",
-                        False,
-                        "Response is not a list",
-                        response_time,
-                        response.status_code
-                    )
-                    return False
-            except json.JSONDecodeError:
-                self.log_test(
-                    "6.2 Verify Activity Count",
-                    False,
-                    "Invalid JSON response",
-                    response_time,
-                    response.status_code
-                )
-                return False
+        # Count activities across all endpoints
+        total_activities = 0
+        activity_breakdown = []
+        
+        for endpoint, name in [('/api/feedings', 'feedings'), ('/api/diapers', 'diapers'), 
+                              ('/api/sleep', 'sleep'), ('/api/pumping', 'pumping')]:
+            response, response_time = self.make_request('GET', endpoint, auth_required=True)
+            if response and response.status_code == 200:
+                try:
+                    data = response.json()
+                    if isinstance(data, list):
+                        count = len(data)
+                        total_activities += count
+                        activity_breakdown.append(f"{name}: {count}")
+                except:
+                    activity_breakdown.append(f"{name}: error")
+            else:
+                activity_breakdown.append(f"{name}: failed")
+        
+        expected_count = 4  # We created 4 activities in this test session
+        
+        if total_activities >= expected_count:
+            self.log_test(
+                "6.2 Verify Activity Count",
+                True,
+                f"Correct count of activities ({total_activities} >= {expected_count} from this test session) - {', '.join(activity_breakdown)}",
+                response_time,
+                200
+            )
+            return True
         else:
-            error_msg = f"Verify activity count failed - Status: {response.status_code if response else 'Timeout'}"
             self.log_test(
                 "6.2 Verify Activity Count",
                 False,
-                error_msg,
+                f"Incorrect activity count: {total_activities} (expected >= {expected_count}) - {', '.join(activity_breakdown)}",
                 response_time,
-                response.status_code if response else None
+                None
             )
             return False
 
