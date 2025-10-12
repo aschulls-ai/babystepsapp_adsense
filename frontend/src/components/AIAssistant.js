@@ -12,7 +12,7 @@ const AIAssistant = ({ currentBaby }) => {
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const messagesEndRef = useRef(null);
+  // Removed messagesEndRef - no automatic scrolling needed
 
   // Removed automatic scrolling - users can manually scroll to read responses
 
