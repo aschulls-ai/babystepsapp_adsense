@@ -326,11 +326,12 @@
 
 ## test_plan:
   current_focus:
-    - "Frontend Login & Authentication Testing - COMPLETED"
+    - "Production Backend Critical Failure Investigation - URGENT"
   stuck_tasks: 
-    - "User Registration & Login Persistence Issue - Backend Database Problem"
+    - "Production Backend Authentication Endpoints - HTTP 500 Errors"
+    - "Render Deployment Configuration Issues"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "critical_first"
 
   - task: "Activity History repositioning and renaming"
     implemented: true
