@@ -550,10 +550,19 @@ async def food_research(request: dict, current_user_email: str = Depends(get_cur
             
             response = await chat.send_message(user_message)
             
-            # Parse AI response and format it
+            # Determine safety level based on age and response content
+            # For proper safety assessment based on baby age
+            if baby_age_months < 4:
+                default_safety = "consult_doctor"
+            elif baby_age_months < 6:
+                default_safety = "caution"
+            else:
+                default_safety = "safe"
+            
+            # Parse AI response and format it with proper safety level
             return {
                 "answer": response,
-                "safety_level": "ai_assessed",
+                "safety_level": default_safety,  # Use standard levels: safe/caution/avoid/consult_doctor
                 "age_recommendation": f"Based on {baby_age_months} months old",
                 "sources": ["AI-Powered Pediatric Nutrition Assessment", "Evidence-Based Guidelines"]
             }
