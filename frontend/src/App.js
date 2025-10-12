@@ -192,17 +192,9 @@ const testConnection = async () => {
   }
 };
 
-// Set up axios defaults with Android-specific configuration
-axios.defaults.baseURL = API;
-axios.defaults.timeout = 30000; // Increased timeout for mobile networks
-axios.defaults.headers.common['User-Agent'] = 'BabyStepsApp/1.0 Android';
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Cache-Control'] = 'no-cache';
-axios.defaults.headers.common['Pragma'] = 'no-cache';
-
-// Android-specific axios configuration
-axios.defaults.adapter = 'http'; // Force HTTP adapter
+// Use androidFetch instead of axios for better Android WebView compatibility
+// Axios has adapter issues in Android WebView environment
+console.log('🔧 Configured to use androidFetch for all network requests (bypassing Axios adapter issues)');
 axios.defaults.validateStatus = function (status) {
   return status >= 200 && status < 500; // Accept 4xx errors as valid responses
 };
