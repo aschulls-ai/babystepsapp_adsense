@@ -15,8 +15,12 @@ import time
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Backend URL from review request - PostgreSQL Migration Verification
-BACKEND_URL = "https://baby-steps-demo-api.onrender.com"
+# Backend URL - Test both production and local
+PRODUCTION_URL = "https://baby-steps-demo-api.onrender.com"
+LOCAL_URL = "http://localhost:8001"
+
+# Try production first, fallback to local if production fails
+BACKEND_URL = PRODUCTION_URL
 API_BASE = f"{BACKEND_URL}/api"
 
 class BabyStepsBackendTester:
