@@ -151,7 +151,7 @@ jobs:
       working-directory: frontend
       run: |
         echo "Configuring production environment..."
-        echo "REACT_APP_BACKEND_URL=https://baby-genius.preview.emergentagent.com" > .env.production
+        echo "REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com" > .env.production
         echo "REACT_APP_ADSENSE_CLIENT_ID=ca-pub-1934622676928053" >> .env.production
         echo "GENERATE_SOURCEMAP=false" >> .env.production
         echo "CI=false" >> .env.production
