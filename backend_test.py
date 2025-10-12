@@ -445,6 +445,45 @@ class BabyStepsBackendTester:
         
         return True
     
+    def test_additional_diagnostics(self):
+        """Additional diagnostic tests to understand backend status"""
+        print("\n🔍 ADDITIONAL DIAGNOSTICS")
+        print("=" * 60)
+        
+        # Test various endpoints to understand what's working
+        endpoints_to_test = [
+            ("/health", "GET", None),
+            ("/dashboard/available-widgets", "GET", None),
+        ]
+        
+        for endpoint, method, data in endpoints_to_test:
+            try:
+                print(f"\nTesting {method} {endpoint}")
+                start_time = time.time()
+                
+                if method == "GET":
+                    response = requests.get(f"{self.api_base}{endpoint}", timeout=10)
+                else:
+                    response = requests.post(f"{self.api_base}{endpoint}", json=data, timeout=10)
+                
+                response_time = time.time() - start_time
+                
+                print(f"   Status: {response.status_code}")
+                print(f"   Response Time: {response_time:.2f}s")
+                if response.status_code == 200:
+                    try:
+                        resp_data = response.json()
+                        print(f"   Response: {str(resp_data)[:200]}...")
+                    except:
+                        print(f"   Response: {response.text[:200]}...")
+                else:
+                    print(f"   Error: {response.text[:200]}...")
+                    
+            except Exception as e:
+                print(f"   Exception: {str(e)}")
+        
+        return True
+    
     # Removed old test methods - using new phase-based testing approach
     
     def run_comprehensive_tests(self):
