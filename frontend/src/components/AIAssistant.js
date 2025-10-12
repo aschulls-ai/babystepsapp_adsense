@@ -36,12 +36,15 @@ const AIAssistant = ({ currentBaby }) => {
   };
 
   useEffect(() => {
-    // Add a small delay to ensure DOM is updated before scrolling
-    const timer = setTimeout(() => {
-      scrollToBottom();
-    }, 100);
-    
-    return () => clearTimeout(timer);
+    // Only scroll when there are messages and the last one is from AI
+    if (messages.length > 0 && messages[messages.length - 1].type === 'ai') {
+      // Add a small delay to ensure DOM is updated before scrolling
+      const timer = setTimeout(() => {
+        scrollToLatestAIResponse();
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
   }, [messages]);
 
   // Monitor online/offline status
