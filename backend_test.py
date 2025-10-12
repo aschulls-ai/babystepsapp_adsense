@@ -1,370 +1,477 @@
 #!/usr/bin/env python3
 """
-Backend Connectivity Testing After offlineMode.js Fix
-Testing that baby-genius.preview.emergentagent.com backend is accessible and working correctly
-after fixing shouldUseOfflineMode() hardcoded return true issue.
+Baby Steps Backend Testing Suite - Review Request Testing
+Tests all endpoints as specified in the comprehensive backend testing review request
 """
 
 import requests
 import json
-import sys
-from datetime import datetime
+import uuid
+from datetime import datetime, timezone
+import os
+from dotenv import load_dotenv
+import time
 
-# Configuration
-BACKEND_URL = "https://baby-steps-demo-api.onrender.com/api"
-TEST_USER_EMAIL = "demo@babysteps.com"
-TEST_USER_PASSWORD = "demo123"
+# Load environment variables
+load_dotenv('/app/frontend/.env')
 
-class BackendTester:
+# Backend URL from review request
+BACKEND_URL = "https://baby-steps-demo-api.onrender.com"
+API_BASE = f"{BACKEND_URL}/api"
+
+class BabyStepsBackendTester:
     def __init__(self):
         self.session = requests.Session()
+        self.session.timeout = 120  # 2 minute timeout for AI endpoints
         self.auth_token = None
-        self.test_results = []
-        
-    def log_test(self, test_name, passed, details=""):
-        """Log test result"""
-        status = "✅ PASS" if passed else "❌ FAIL"
-        result = {
-            "test": test_name,
-            "passed": passed,
-            "details": details,
-            "timestamp": datetime.now().isoformat()
+        # Demo credentials from review request
+        self.demo_email = "demo@babysteps.com"
+        self.demo_password = "demo123"
+        self.baby_id = None
+        self.results = {
+            'passed': 0,
+            'failed': 0,
+            'errors': [],
+            'details': []
         }
-        self.test_results.append(result)
-        print(f"{status}: {test_name}")
-        if details:
-            print(f"   Details: {details}")
-        print()
     
-    def authenticate(self):
-        """Authenticate with demo user credentials"""
-        print("🔐 AUTHENTICATING WITH DEMO USER...")
+    def log_result(self, test_name, success, message="", response_time=None):
+        """Log test results with details"""
+        time_info = f" ({response_time:.2f}s)" if response_time else ""
+        if success:
+            self.results['passed'] += 1
+            self.results['details'].append(f"✅ {test_name}: {message}{time_info}")
+            print(f"✅ {test_name}: PASSED {message}{time_info}")
+        else:
+            self.results['failed'] += 1
+            self.results['errors'].append(f"{test_name}: {message}")
+            self.results['details'].append(f"❌ {test_name}: {message}{time_info}")
+            print(f"❌ {test_name}: FAILED {message}{time_info}")
+    
+    def test_health_connectivity(self):
+        """1. Health & Connectivity - GET /api/health"""
+        print("\n🏥 1. HEALTH & CONNECTIVITY")
+        print("=" * 50)
         
+        try:
+            start_time = time.time()
+            response = requests.get(f"{API_BASE}/health", timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    if data.get('status') == 'healthy':
+                        self.log_result("Health Check", True, f"Backend responding - {data.get('service', 'Baby Steps API')}", response_time)
+                        return True
+                    else:
+                        self.log_result("Health Check", False, f"Unhealthy status: {data}", response_time)
+                        return False
+                except json.JSONDecodeError:
+                    self.log_result("Health Check", False, f"Invalid JSON response: {response.text[:100]}", response_time)
+                    return False
+            else:
+                self.log_result("Health Check", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Health Check", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_authentication_flow(self):
+        """2. Authentication Flow - Register and Login"""
+        print("\n🔐 2. AUTHENTICATION FLOW")
+        print("=" * 50)
+        
+        # Test account registration first
+        try:
+            test_email = f"test_{uuid.uuid4().hex[:8]}@babysteps.com"
+            user_data = {
+                "email": test_email,
+                "name": "Test User",
+                "password": "TestPassword123"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/auth/register", json=user_data, timeout=30)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data and 'email' in data:
+                    self.log_result("Registration", True, f"Test account created: {data['email']}", response_time)
+                else:
+                    self.log_result("Registration", False, f"Invalid registration response: {data}", response_time)
+            else:
+                self.log_result("Registration", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+        except Exception as e:
+            self.log_result("Registration", False, f"Error: {str(e)}")
+        
+        # Test demo user login
         try:
             login_data = {
-                "email": TEST_USER_EMAIL,
-                "password": TEST_USER_PASSWORD
+                "email": self.demo_email,
+                "password": self.demo_password
             }
             
-            response = self.session.post(
-                f"{BACKEND_URL}/auth/login",
-                json=login_data,
-                headers={"Content-Type": "application/json"},
-                timeout=30
-            )
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/auth/login", json=login_data, timeout=30)
+            response_time = time.time() - start_time
             
             if response.status_code == 200:
-                token_data = response.json()
-                self.auth_token = token_data.get("access_token")
-                self.session.headers.update({
-                    "Authorization": f"Bearer {self.auth_token}"
-                })
-                self.log_test("Authentication", True, f"Successfully logged in as {TEST_USER_EMAIL}")
-                return True
-            else:
-                self.log_test("Authentication", False, f"Login failed: {response.status_code} - {response.text}")
-                return False
-                
-        except Exception as e:
-            self.log_test("Authentication", False, f"Authentication error: {str(e)}")
-            return False
-    
-    def test_backend_accessibility(self):
-        """Test that backend URL is accessible"""
-        print("🌐 TESTING BACKEND ACCESSIBILITY...")
-        
-        try:
-            # Test basic connectivity to backend
-            response = self.session.get(
-                f"{BACKEND_URL.replace('/api', '')}/health",
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                self.log_test("Backend Accessibility", True, 
-                            f"Backend accessible at {BACKEND_URL.replace('/api', '')}")
-                return True
-            else:
-                # Try alternative health check
-                response = self.session.get(
-                    f"{BACKEND_URL}/dashboard/available-widgets",
-                    timeout=10
-                )
-                if response.status_code in [200, 401, 403]:  # 401/403 means endpoint exists but needs auth
-                    self.log_test("Backend Accessibility", True, 
-                                f"Backend accessible (got {response.status_code})")
+                data = response.json()
+                if 'access_token' in data and data.get('token_type') == 'bearer':
+                    self.auth_token = data['access_token']
+                    self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
+                    self.log_result("Demo Login", True, "JWT token generated successfully", response_time)
                     return True
                 else:
-                    self.log_test("Backend Accessibility", False, 
-                                f"Backend not accessible: {response.status_code}")
-                    return False
-                
-        except Exception as e:
-            self.log_test("Backend Accessibility", False, f"Connection error: {str(e)}")
-            return False
-    
-    def test_ai_chat_endpoint(self):
-        """Test AI chat endpoint with gpt-5-nano model"""
-        print("🤖 TESTING AI CHAT ENDPOINT...")
-        
-        try:
-            chat_data = {
-                "message": "What breakfast ideas for my baby?",
-                "baby_age_months": 8
-            }
-            
-            response = self.session.post(
-                f"{BACKEND_URL}/ai/chat",
-                json=chat_data,
-                headers={"Content-Type": "application/json"},
-                timeout=60  # AI requests can take longer
-            )
-            
-            if response.status_code == 200:
-                result = response.json()
-                ai_response = result.get("response", "")
-                timestamp = result.get("timestamp", "")
-                
-                if len(ai_response) > 100:  # Expect substantial response
-                    self.log_test("AI Chat Endpoint", True, 
-                                f"AI response received ({len(ai_response)} chars): {ai_response[:100]}...")
-                    return True
-                else:
-                    self.log_test("AI Chat Endpoint", False, 
-                                f"AI response too short: {ai_response}")
+                    self.log_result("Demo Login", False, f"Invalid login response: {data}", response_time)
                     return False
             else:
-                self.log_test("AI Chat Endpoint", False, 
-                            f"AI chat failed: {response.status_code} - {response.text}")
+                self.log_result("Demo Login", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
                 return False
-                
         except Exception as e:
-            self.log_test("AI Chat Endpoint", False, f"AI chat error: {str(e)}")
+            self.log_result("Demo Login", False, f"Error: {str(e)}")
             return False
     
-    def test_baby_management_endpoints(self):
-        """Test baby management endpoints"""
-        print("👶 TESTING BABY MANAGEMENT ENDPOINTS...")
+    def test_baby_profile_endpoints(self):
+        """3. Baby Profile Endpoints (with auth)"""
+        print("\n👶 3. BABY PROFILE ENDPOINTS")
+        print("=" * 50)
+        
+        if not self.auth_token:
+            self.log_result("Baby Profiles", False, "No authentication token available")
+            return False
         
         try:
-            # Test GET /api/babies
-            response = self.session.get(
-                f"{BACKEND_URL}/babies",
-                timeout=30
-            )
+            # GET /api/babies
+            start_time = time.time()
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            response_time = time.time() - start_time
             
             if response.status_code == 200:
                 babies = response.json()
-                self.log_test("Baby Management - GET", True, 
-                            f"Retrieved {len(babies)} baby profiles")
-                
-                # Test creating a new baby profile
-                baby_data = {
-                    "name": "Test Baby Backend",
-                    "birth_date": "2024-01-15T00:00:00Z",
-                    "gender": "other"
-                }
-                
-                create_response = self.session.post(
-                    f"{BACKEND_URL}/babies",
-                    json=baby_data,
-                    headers={"Content-Type": "application/json"},
-                    timeout=30
-                )
-                
-                if create_response.status_code == 200:
-                    new_baby = create_response.json()
-                    baby_id = new_baby.get("id")
-                    
-                    self.log_test("Baby Management - POST", True, 
-                                f"Created baby profile: {new_baby.get('name')}")
-                    
-                    # Test updating the baby profile
-                    update_data = {
-                        "name": "Updated Test Baby",
-                        "birth_date": "2024-01-15T00:00:00Z",
-                        "gender": "other"
-                    }
-                    
-                    update_response = self.session.put(
-                        f"{BACKEND_URL}/babies/{baby_id}",
-                        json=update_data,
-                        headers={"Content-Type": "application/json"},
-                        timeout=30
-                    )
-                    
-                    if update_response.status_code == 200:
-                        self.log_test("Baby Management - PUT", True, 
-                                    "Successfully updated baby profile")
-                        return True
-                    else:
-                        self.log_test("Baby Management - PUT", False, 
-                                    f"Update failed: {update_response.status_code}")
-                        return False
+                self.log_result("GET /api/babies", True, f"Retrieved {len(babies)} baby profiles", response_time)
+            else:
+                self.log_result("GET /api/babies", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # POST /api/babies (create test baby)
+            baby_data = {
+                "name": "Emma Test Baby",
+                "birth_date": "2024-03-15T10:30:00Z",
+                "birth_weight": 7.2,
+                "birth_length": 20.5,
+                "gender": "girl"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/babies", json=baby_data, timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'id' in data:
+                    self.baby_id = data['id']
+                    self.log_result("POST /api/babies", True, f"Baby created: {data['name']}", response_time)
                 else:
-                    self.log_test("Baby Management - POST", False, 
-                                f"Create failed: {create_response.status_code} - {create_response.text}")
+                    self.log_result("POST /api/babies", False, "No ID in response", response_time)
                     return False
             else:
-                self.log_test("Baby Management - GET", False, 
-                            f"GET babies failed: {response.status_code} - {response.text}")
+                self.log_result("POST /api/babies", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
                 return False
+            
+            # PUT /api/babies/{id} (update baby)
+            if self.baby_id:
+                update_data = {
+                    "name": "Emma Updated Test Baby",
+                    "birth_date": "2024-03-15T10:30:00Z",
+                    "birth_weight": 7.5,
+                    "birth_length": 21.0,
+                    "gender": "girl"
+                }
                 
-        except Exception as e:
-            self.log_test("Baby Management Endpoints", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_environment_variables(self):
-        """Test that environment variables are properly configured"""
-        print("⚙️ TESTING ENVIRONMENT CONFIGURATION...")
-        
-        # Check if REACT_APP_BACKEND_URL is set correctly by testing if backend responds
-        expected_backend = "https://baby-steps-demo-api.onrender.com"
-        
-        if BACKEND_URL.startswith(expected_backend):
-            self.log_test("Environment Variables", True, 
-                        f"REACT_APP_BACKEND_URL correctly set to {expected_backend}")
-            return True
-        else:
-            self.log_test("Environment Variables", False, 
-                        f"Backend URL mismatch. Expected {expected_backend}, got {BACKEND_URL}")
-            return False
-    
-    def test_food_safety_queries(self):
-        """Test food safety queries as specified in review request"""
-        print("🥗 TESTING FOOD SAFETY QUERIES...")
-        
-        test_queries = [
-            "Can my baby eat strawberries?",
-            "What breakfast ideas for my baby?",
-        ]
-        
-        all_passed = True
-        
-        for query in test_queries:
-            try:
-                query_data = {"question": query, "baby_age_months": 8}
-                response = self.session.post(
-                    f"{BACKEND_URL}/food/research",
-                    json=query_data,
-                    headers={"Content-Type": "application/json"},
-                    timeout=30
-                )
+                start_time = time.time()
+                response = self.session.put(f"{API_BASE}/babies/{self.baby_id}", json=update_data, timeout=10)
+                response_time = time.time() - start_time
                 
                 if response.status_code == 200:
-                    result = response.json()
-                    answer = result.get("answer", "")
-                    safety_level = result.get("safety_level", "")
-                    
-                    if len(answer) > 50:  # Expect substantial response
-                        self.log_test(f"Food Safety Query: {query}", True, 
-                                    f"Response received ({len(answer)} chars), safety: {safety_level}")
-                    else:
-                        self.log_test(f"Food Safety Query: {query}", False, 
-                                    f"Response too short: {answer}")
-                        all_passed = False
+                    self.log_result("PUT /api/babies/{id}", True, "Baby profile updated successfully", response_time)
                 else:
-                    self.log_test(f"Food Safety Query: {query}", False, 
-                                f"Query failed: {response.status_code}")
-                    all_passed = False
-                    
-            except Exception as e:
-                self.log_test(f"Food Safety Query: {query}", False, f"Error: {str(e)}")
-                all_passed = False
+                    self.log_result("PUT /api/babies/{id}", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                    return False
+            
+            return True
+        except Exception as e:
+            self.log_result("Baby Profile Endpoints", False, f"Error: {str(e)}")
+            return False
+    
+    def test_ai_features(self):
+        """4. AI Features (with auth)"""
+        print("\n🤖 4. AI FEATURES")
+        print("=" * 50)
         
-        return all_passed
+        if not self.auth_token:
+            self.log_result("AI Features", False, "No authentication token available")
+            return False
+        
+        try:
+            # POST /api/ai/chat (test query: "When can babies eat strawberries?")
+            chat_query = {
+                "message": "When can babies eat strawberries?",
+                "baby_age_months": 6
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/ai/chat", json=chat_query, timeout=120)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'response' in data and len(data['response']) > 20:
+                    self.log_result("POST /api/ai/chat", True, f"AI response received ({len(data['response'])} chars)", response_time)
+                else:
+                    self.log_result("POST /api/ai/chat", False, "Empty or invalid AI response", response_time)
+                    return False
+            else:
+                self.log_result("POST /api/ai/chat", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # POST /api/food/research (test food safety query)
+            food_query = {
+                "question": "Are strawberries safe for babies?",
+                "baby_age_months": 8
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'answer' in data and 'safety_level' in data:
+                    self.log_result("POST /api/food/research", True, f"Food safety assessment: {data['safety_level']}", response_time)
+                else:
+                    self.log_result("POST /api/food/research", False, "Invalid food research response format", response_time)
+                    return False
+            else:
+                self.log_result("POST /api/food/research", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # POST /api/meals/search (test meal planning)
+            meal_query = {
+                "query": "breakfast ideas for 8 month old baby",
+                "baby_age_months": 8
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/meals/search", json=meal_query, timeout=120)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'results' in data and len(data['results']) > 50:
+                    self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(data['results'])} chars)", response_time)
+                else:
+                    self.log_result("POST /api/meals/search", False, "Empty or invalid meal search response", response_time)
+                    return False
+            else:
+                self.log_result("POST /api/meals/search", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            return True
+        except Exception as e:
+            self.log_result("AI Features", False, f"Error: {str(e)}")
+            return False
+    
+    def test_tracking_endpoints(self):
+        """5. Tracking Endpoints (with auth)"""
+        print("\n📊 5. TRACKING ENDPOINTS")
+        print("=" * 50)
+        
+        if not self.auth_token or not self.baby_id:
+            self.log_result("Tracking Endpoints", False, "No authentication token or baby ID available")
+            return False
+        
+        try:
+            # POST /api/tracking/feeding (note: actual endpoint is /api/feedings)
+            feeding_data = {
+                "baby_id": self.baby_id,
+                "type": "bottle",
+                "amount": 4.5,
+                "notes": "Test feeding for review"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/feedings", json=feeding_data, timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_result("POST /api/feedings", True, "Feeding activity logged successfully", response_time)
+            else:
+                self.log_result("POST /api/feedings", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # POST /api/tracking/sleep (note: actual endpoint is /api/sleep)
+            sleep_data = {
+                "baby_id": self.baby_id,
+                "start_time": "2024-10-08T14:00:00Z",
+                "end_time": "2024-10-08T16:30:00Z",
+                "quality": "good",
+                "notes": "Test sleep session"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/sleep", json=sleep_data, timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_result("POST /api/sleep", True, "Sleep activity logged successfully", response_time)
+            else:
+                self.log_result("POST /api/sleep", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # POST /api/tracking/diaper (note: actual endpoint is /api/diapers)
+            diaper_data = {
+                "baby_id": self.baby_id,
+                "type": "wet",
+                "notes": "Test diaper change"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/diapers", json=diaper_data, timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_result("POST /api/diapers", True, "Diaper activity logged successfully", response_time)
+            else:
+                self.log_result("POST /api/diapers", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            # GET /api/tracking/summary (note: actual endpoint is /api/dashboard/{baby_id})
+            start_time = time.time()
+            response = self.session.get(f"{API_BASE}/dashboard/{self.baby_id}", timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'baby' in data and 'stats' in data:
+                    self.log_result("GET /api/dashboard/{baby_id}", True, "Activity summary retrieved successfully", response_time)
+                else:
+                    self.log_result("GET /api/dashboard/{baby_id}", False, "Invalid dashboard response format", response_time)
+                    return False
+            else:
+                self.log_result("GET /api/dashboard/{baby_id}", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+            
+            return True
+        except Exception as e:
+            self.log_result("Tracking Endpoints", False, f"Error: {str(e)}")
+            return False
+    
+    def test_critical_checks(self):
+        """Critical Checks - Response validation and performance"""
+        print("\n🔍 6. CRITICAL CHECKS")
+        print("=" * 50)
+        
+        try:
+            # Test Pydantic validation (no errors)
+            baby_data = {
+                "name": "Validation Test Baby",
+                "birth_date": "2024-01-15T08:00:00Z",
+                "gender": "boy"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{API_BASE}/babies", json=baby_data, timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                self.log_result("Pydantic Validation", True, "No validation errors detected", response_time)
+            else:
+                # Check if it's a validation error
+                if response.status_code == 422:
+                    try:
+                        error_data = response.json()
+                        if 'detail' in error_data:
+                            self.log_result("Pydantic Validation", False, f"Validation error: {error_data['detail']}", response_time)
+                        else:
+                            self.log_result("Pydantic Validation", False, f"422 error: {response.text[:100]}", response_time)
+                    except:
+                        self.log_result("Pydantic Validation", False, f"422 error: {response.text[:100]}", response_time)
+                else:
+                    self.log_result("Pydantic Validation", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+            
+            # Test response times < 2 seconds for non-AI endpoints
+            start_time = time.time()
+            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            response_time = time.time() - start_time
+            
+            if response_time < 2.0:
+                self.log_result("Response Time Check", True, f"Fast response time: {response_time:.2f}s", response_time)
+            else:
+                self.log_result("Response Time Check", False, f"Slow response time: {response_time:.2f}s", response_time)
+            
+            return True
+        except Exception as e:
+            self.log_result("Critical Checks", False, f"Error: {str(e)}")
+            return False
     
     def run_comprehensive_tests(self):
-        """Run comprehensive backend connectivity tests after offlineMode.js fix"""
-        print("=" * 80)
-        print("🧪 BACKEND CONNECTIVITY TESTING AFTER OFFLINEMODE.JS FIX")
-        print("=" * 80)
-        print("Testing that baby-genius.preview.emergentagent.com backend is accessible")
-        print("after fixing shouldUseOfflineMode() hardcoded return true issue.")
-        print()
-        
-        passed_tests = 0
-        total_tests = 0
-        
-        # Step 1: Test backend accessibility
-        if self.test_backend_accessibility():
-            passed_tests += 1
-        total_tests += 1
-        
-        # Step 2: Test environment variables
-        if self.test_environment_variables():
-            passed_tests += 1
-        total_tests += 1
-        
-        # Step 3: Authentication
-        if not self.authenticate():
-            print("❌ CRITICAL: Authentication failed. Cannot proceed with protected endpoint testing.")
-            total_tests += 4  # Account for remaining tests
-        else:
-            passed_tests += 1
-            total_tests += 1
-            
-            # Step 4: Test AI chat endpoint with gpt-5-nano
-            if self.test_ai_chat_endpoint():
-                passed_tests += 1
-            total_tests += 1
-            
-            # Step 5: Test baby management endpoints
-            if self.test_baby_management_endpoints():
-                passed_tests += 1
-            total_tests += 1
-            
-            # Step 6: Test food safety queries
-            if self.test_food_safety_queries():
-                passed_tests += 1
-            total_tests += 1
-        
-        # Step 7: Summary
-        print("=" * 80)
-        print("📊 TEST SUMMARY")
+        """Run all comprehensive backend tests as specified in review request"""
+        print("🚀 BABY STEPS COMPREHENSIVE BACKEND TESTING")
+        print(f"📍 Testing Backend: {BACKEND_URL}")
+        print(f"🔑 Demo Account: {self.demo_email} / {self.demo_password}")
         print("=" * 80)
         
-        success_rate = (passed_tests / total_tests) * 100
-        print(f"Tests Passed: {passed_tests}/{total_tests} ({success_rate:.1f}%)")
-        print()
+        # Run all test suites
+        health_ok = self.test_health_connectivity()
+        auth_ok = self.test_authentication_flow()
         
-        if success_rate >= 80:
-            print("✅ BACKEND CONNECTIVITY AFTER OFFLINEMODE FIX: SUCCESS")
-            print("   - Backend accessible at baby-genius.preview.emergentagent.com")
-            print("   - Authentication working with demo user")
-            print("   - AI chat endpoint responding with gpt-5-nano")
-            print("   - Baby management endpoints functional")
-            print("   - Food safety queries working")
-            print("   - Environment variables properly configured")
-        else:
-            print("❌ BACKEND CONNECTIVITY ISSUES FOUND")
-            print("   - Some critical functionality not working")
-            print("   - May indicate offlineMode fix incomplete or other issues")
+        if not auth_ok:
+            print("\n❌ Authentication failed - cannot proceed with authenticated tests")
+            return self.results
         
-        print()
-        print("🔍 DETAILED TEST RESULTS:")
-        for result in self.test_results:
-            status = "✅" if result["passed"] else "❌"
-            print(f"   {status} {result['test']}")
-            if result["details"]:
-                print(f"      {result['details']}")
+        baby_ok = self.test_baby_profile_endpoints()
+        ai_ok = self.test_ai_features()
+        tracking_ok = self.test_tracking_endpoints()
+        critical_ok = self.test_critical_checks()
         
-        return success_rate >= 80
+        # Print final results
+        print("\n" + "=" * 80)
+        print("📊 COMPREHENSIVE BACKEND TEST RESULTS:")
+        print(f"✅ Passed: {self.results['passed']}")
+        print(f"❌ Failed: {self.results['failed']}")
+        
+        success_rate = (self.results['passed'] / (self.results['passed'] + self.results['failed'])) * 100 if (self.results['passed'] + self.results['failed']) > 0 else 0
+        print(f"📈 Success Rate: {success_rate:.1f}%")
+        
+        if self.results['errors']:
+            print(f"\n🔍 FAILED TESTS:")
+            for error in self.results['errors']:
+                print(f"   • {error}")
+        
+        # Summary of critical functionality
+        print(f"\n🎯 CRITICAL FUNCTIONALITY STATUS:")
+        print(f"   • Backend Health: {'✅' if health_ok else '❌'}")
+        print(f"   • Authentication: {'✅' if auth_ok else '❌'}")
+        print(f"   • Baby Profiles: {'✅' if baby_ok else '❌'}")
+        print(f"   • AI Features: {'✅' if ai_ok else '❌'}")
+        print(f"   • Activity Tracking: {'✅' if tracking_ok else '❌'}")
+        print(f"   • Data Validation: {'✅' if critical_ok else '❌'}")
+        
+        return self.results
 
 def main():
     """Main test execution"""
-    tester = BackendTester()
-    success = tester.run_comprehensive_tests()
+    tester = BabyStepsBackendTester()
+    results = tester.run_comprehensive_tests()
     
-    if success:
-        print("\n🎉 BACKEND CONNECTIVITY VERIFIED - OFFLINEMODE FIX WORKING!")
-        print("   Android app should now be able to reach backend when REACT_APP_BACKEND_URL is available")
-        print("   OpenAI tokens should be consumed when AI requests are made")
-        sys.exit(0)
+    # Exit with appropriate code
+    if results['failed'] > 0:
+        exit(1)
     else:
-        print("\n⚠️  BACKEND CONNECTIVITY ISSUES FOUND - INVESTIGATION NEEDED")
-        print("   May indicate offlineMode fix incomplete or backend configuration issues")
-        sys.exit(1)
+        exit(0)
 
 if __name__ == "__main__":
     main()
