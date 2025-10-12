@@ -465,12 +465,13 @@ function App() {
         toast.success('Welcome to Baby Steps!');
       }
       
-      // Set the complete user object from the response
-      const userToSet = { 
-        ...userData, 
-        email: userData.email, 
-        authenticated: true, 
-        offline: false // All features work in standalone mode
+      // Handle case where backend doesn't return user data
+      const userToSet = {
+        id: userData?.id || 'backend-user',
+        email: userData?.email || email,  // Use login email if not provided
+        name: userData?.name || email.split('@')[0], // Use email prefix as name fallback
+        authenticated: true,
+        offline: false
       };
       console.log('👤 Setting user state to:', userToSet);
       setUser(userToSet);
