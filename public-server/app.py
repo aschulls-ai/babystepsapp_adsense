@@ -274,11 +274,11 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
     print(f"Email: {login_data.email}")
     
     # Debug: List all users in database
-    all_users = db.query(User).all()
+    all_users = db.query(DBUser).all()
     print(f"🔍 DEBUG: Users in database: {[u.email for u in all_users]}")
     
     # Find user by email
-    user = db.query(User).filter(User.email == login_data.email).first()
+    user = db.query(DBUser).filter(DBUser.email == login_data.email).first()
     
     if not user:
         print(f"❌ User not found in database: {login_data.email}")
