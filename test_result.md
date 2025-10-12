@@ -107,10 +107,10 @@
 ## backend:
   - task: "API endpoints functionality"
     implemented: true
-    working: true
+    working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
-    priority: "high"
+    stuck_count: 1
+    priority: "critical"
     needs_retesting: false
     status_history:
         -working: true
