@@ -1209,18 +1209,31 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
         timestamp: formData.timestamp.toISOString()
       };
 
-      // Use standalone offline API
-      await offlineAPI.logActivity({
-        baby_id: babyId,
-        type: 'measurement',
-        weight: formData.weight || null,
-        height: formData.height || null,
-        head_circumference: formData.head_circumference || null,
-        temperature: formData.temperature || null,
-        notes: formData.notes || null,
-        timestamp: formData.timestamp.toISOString()
+      // PHASE 2: Log to backend API
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          baby_id: babyId,
+          type: 'measurement',
+          weight: formData.weight || null,
+          height: formData.height || null,
+          head_circumference: formData.head_circumference || null,
+          temperature: formData.temperature || null,
+          notes: formData.notes || null,
+          timestamp: formData.timestamp.toISOString()
+        })
       });
-      toast.success('💾 Measurements saved to device!');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      toast.success('Measurements logged successfully!');
       setFormData({
         weight: '',
         height: '',
