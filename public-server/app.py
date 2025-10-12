@@ -54,10 +54,10 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 480
 EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
 
-# Note: Database setup is now in database.py module
-# This section is kept for backwards compatibility but uses the new module
+# OLD SQLite functions - DEPRECATED - kept for reference only
+# Using new SQLAlchemy functions from database.py instead
 
-def init_database_old():
+def init_database_old_sqlite():
     """Initialize SQLite database with tables"""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
