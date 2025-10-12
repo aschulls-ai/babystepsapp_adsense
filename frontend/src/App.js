@@ -352,7 +352,9 @@ function App() {
         }
       }
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // Note: Using androidFetch instead of axios for critical auth calls
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      console.log('🔑 Authentication token stored, using androidFetch for API calls');
       
       // Set user object first to avoid redirect
       setUser({ 
