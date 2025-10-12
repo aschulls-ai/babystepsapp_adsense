@@ -458,12 +458,18 @@ function App() {
       }
       
       const data = await response.json();
-      const responseData = { data }; // Match expected format
-      console.log('✅ Login response received:', responseData);
+      console.log('✅ Login response received:', data);
       
-      const { access_token, user: userData } = responseData.data;
+      // Backend returns {access_token, token_type} directly
+      const access_token = data.access_token || data.data?.access_token;
+      const userData = data.user || data.data?.user;
+      
       console.log('👤 User data from login:', userData);
       console.log('🔑 Access token:', access_token);
+      
+      if (!access_token) {
+        throw new Error('No access token received from backend');
+      }
       
       localStorage.setItem('token', access_token);
       console.log('💾 Token saved to localStorage');
