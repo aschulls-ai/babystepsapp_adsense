@@ -969,8 +969,21 @@ const SleepForm = ({ babyId, onSuccess }) => {
       };
       
       console.log('🛌 Logging sleep activity:', sleepActivityData);
-      await offlineAPI.logActivity(sleepActivityData);
-      toast.success('💾 Sleep session saved to device!');
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sleepActivityData)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      toast.success('Sleep session logged successfully!');
       setFormData({
         start_time: new Date(),
         end_time: '',
