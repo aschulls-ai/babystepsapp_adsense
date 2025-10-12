@@ -524,51 +524,65 @@ async def get_activities(
     ]
 
 @app.post("/api/activities")
-async def create_activity(request: ActivityRequest, current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def create_activity(
+    request: ActivityRequest,
+    current_user_email: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     # Verify baby belongs to user
-    cursor.execute("SELECT id FROM babies WHERE id = ? AND user_id = ?", (request.baby_id, user["id"]))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Baby not found")
-    
-    activity_id = str(uuid.uuid4())
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    baby = db.query(DBBaby).filter(
+        DBBaby.id == request.baby_id,
+        DBBaby.user_id == user.id
+    ).first()
+    if not baby:
+        raise HTTPException(status_code=404, detail="Baby not found or doesn't belong to user")
     
     try:
-        cursor.execute("""
-            INSERT INTO activities (id, type, notes, baby_id, user_id, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (activity_id, request.type, request.notes, request.baby_id, user["id"], timestamp))
+        # Create activity using SQLAlchemy model
+        new_activity = DBActivity(
+            id=str(uuid.uuid4()),
+            type=request.type,
+            baby_id=request.baby_id,
+            user_id=user.id,
+            timestamp=datetime.utcnow(),
+            notes=request.notes,
+            # Optional fields based on activity type
+            feeding_type=getattr(request, 'feeding_type', None),
+            amount=getattr(request, 'amount', None),
+            duration=getattr(request, 'duration', None),
+            diaper_type=getattr(request, 'diaper_type', None),
+            weight=getattr(request, 'weight', None),
+            height=getattr(request, 'height', None),
+            head_circumference=getattr(request, 'head_circumference', None),
+            temperature=getattr(request, 'temperature', None),
+            title=getattr(request, 'title', None),
+            description=getattr(request, 'description', None),
+            category=getattr(request, 'category', None)
+        )
         
-        conn.commit()
-        conn.close()
+        db.add(new_activity)
+        db.commit()
+        db.refresh(new_activity)
         
-        activity = {
-            "id": activity_id,
-            "type": request.type,
-            "notes": request.notes,
-            "baby_id": request.baby_id,
-            "user_id": user["id"],
-            "timestamp": timestamp
+        print(f"✅ Activity logged to PostgreSQL: {new_activity.type} for baby {baby.name}")
+        
+        return {
+            "id": new_activity.id,
+            "type": new_activity.type,
+            "baby_id": new_activity.baby_id,
+            "user_id": new_activity.user_id,
+            "timestamp": new_activity.timestamp.isoformat() if new_activity.timestamp else None,
+            "notes": new_activity.notes
         }
-        
-        print(f"✅ Activity created: {request.type}")
-        return activity
-        
     except Exception as e:
-        conn.close()
-        print(f"❌ Activity creation failed: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create activity")
+        db.rollback()
+        print(f"❌ Failed to create activity: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create activity: {str(e)}")
 
 # AI-powered food research endpoint
 @app.post("/api/food/research")
