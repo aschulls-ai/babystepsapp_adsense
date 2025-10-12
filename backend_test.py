@@ -24,7 +24,9 @@ BACKEND_URL = PRODUCTION_URL
 API_BASE = f"{BACKEND_URL}/api"
 
 class BabyStepsBackendTester:
-    def __init__(self):
+    def __init__(self, backend_url=None):
+        self.backend_url = backend_url or BACKEND_URL
+        self.api_base = f"{self.backend_url}/api"
         self.session = requests.Session()
         self.session.timeout = 120  # 2 minute timeout for AI endpoints
         self.auth_token = None
