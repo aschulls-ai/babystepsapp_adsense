@@ -116,23 +116,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS middleware - Enhanced for mobile apps
+# CORS middleware - Enhanced for mobile apps and Android WebView
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for demo
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=[
-        "Accept",
-        "Accept-Language",
-        "Content-Language",
-        "Content-Type",
-        "Authorization",
-        "X-Requested-With",
-        "User-Agent",
-        "Cache-Control"
-    ],
-    expose_headers=["*"]
+    allow_credentials=False,  # Must be False when using wildcard origins
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
+    allow_headers=["*"],  # Allow all headers for maximum compatibility
+    expose_headers=["*"],
+    max_age=3600  # Cache preflight requests for 1 hour
 )
 
 # Pydantic Models
