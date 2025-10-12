@@ -32,7 +32,12 @@ const AIAssistant = ({ currentBaby }) => {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Add a small delay to ensure DOM is updated before scrolling
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [messages]);
 
   // Monitor online/offline status
