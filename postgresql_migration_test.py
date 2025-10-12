@@ -287,7 +287,7 @@ class PostgreSQLMigrationTester:
         self.test_backend(self.local_url, 'local')
         
         # Generate comprehensive report
-        self.generate_report()
+        return self.generate_report()
     
     def generate_report(self):
         """Generate comprehensive test report"""
