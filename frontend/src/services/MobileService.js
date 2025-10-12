@@ -10,15 +10,40 @@ class MobileService {
     this.isNative = Capacitor.isNativePlatform();
     this.isOnline = true;
     this.syncQueue = [];
-    this.initializeServices();
+    this.initialized = false;
+    // DON'T call initializeServices() here - let App.js call it explicitly
   }
 
   async initializeServices() {
+    if (this.initialized) {
+      console.log('⚠️ MobileService already initialized, skipping...');
+      return;
+    }
+    
     if (this.isNative) {
-      // Temporarily disabled push notifications to prevent crashes
-      // await this.setupPushNotifications();
-      await this.setupNetworkListener();
-      await this.setupAppStateListener();
+      console.log('📱 Initializing mobile services...');
+      try {
+        // Wrap each service in try-catch to prevent single failure from crashing app
+        try {
+          await this.setupNetworkListener();
+          console.log('✅ Network listener initialized');
+        } catch (error) {
+          console.error('❌ Network listener failed:', error);
+        }
+        
+        try {
+          await this.setupAppStateListener();
+          console.log('✅ App state listener initialized');
+        } catch (error) {
+          console.error('❌ App state listener failed:', error);
+        }
+        
+        this.initialized = true;
+        console.log('✅ Mobile services initialized successfully');
+      } catch (error) {
+        console.error('❌ Mobile service initialization failed:', error);
+        // Don't throw - allow app to continue without mobile features
+      }
     }
   }
 
