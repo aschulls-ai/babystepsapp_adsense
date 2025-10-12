@@ -300,15 +300,16 @@ function App() {
       
       await checkAuthState();
       
-      // Run API tests in development/debugging mode
-      if (process.env.NODE_ENV === 'development' || window.location.hostname.includes('vercel')) {
-        runApiTests().then(results => {
-          console.log('API Test Results:', results);
-          if (!results.overall) {
-            console.warn('⚠️ API connection issues detected. Check deployment configuration.');
-          }
-        });
-      }
+      // PHASE 2: API tests disabled - causing spurious "test@test.com" login attempts in logs
+      // Uncomment below if you need to debug backend connectivity
+      // if (process.env.NODE_ENV === 'development' || window.location.hostname.includes('vercel')) {
+      //   runApiTests().then(results => {
+      //     console.log('API Test Results:', results);
+      //     if (!results.overall) {
+      //       console.warn('⚠️ API connection issues detected. Check deployment configuration.');
+      //     }
+      //   });
+      // }
       
       console.log('✅ Baby Steps standalone app initialized successfully');
     };
