@@ -62,10 +62,16 @@ console.log('Environment configuration:', {
 export const androidFetch = async (url, options = {}) => {
   console.log('📱 Android-specific fetch:', { url, options });
   
-  // Method 1: Native fetch with Android-specific headers
+  // Add a timeout wrapper to prevent hanging
+  const timeout = options.timeout || 10000; // Default 10 second timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
   try {
+    // Method 1: Native fetch with Android-specific headers
     const response = await fetch(url, {
       ...options,
+      signal: controller.signal,
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
@@ -79,9 +85,18 @@ export const androidFetch = async (url, options = {}) => {
       credentials: 'omit'
     });
     
+    clearTimeout(timeoutId);
     console.log('📱 Android fetch success:', response.status);
     return response;
   } catch (fetchError) {
+    clearTimeout(timeoutId);
+    
+    // Check if it was a timeout
+    if (fetchError.name === 'AbortError') {
+      console.log('📱 Request timeout after', timeout, 'ms');
+      throw new Error('Request timeout');
+    }
+    
     console.log('📱 Android fetch failed, trying XMLHttpRequest:', fetchError);
     
     // Method 2: XMLHttpRequest with Promise wrapper
@@ -90,7 +105,7 @@ export const androidFetch = async (url, options = {}) => {
       const method = options.method || 'GET';
       
       xhr.open(method, url, true);
-      xhr.timeout = 30000;
+      xhr.timeout = timeout;
       
       // Set headers
       xhr.setRequestHeader('Accept', 'application/json');
