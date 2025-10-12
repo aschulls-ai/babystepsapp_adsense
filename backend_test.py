@@ -270,10 +270,18 @@ class BabyStepsBackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if 'results' in data and len(data['results']) > 50:
-                    self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(data['results'])} chars)", response_time)
+                if 'results' in data:
+                    # Check if results is a list of meal objects or a string
+                    results = data['results']
+                    if isinstance(results, list) and len(results) > 0:
+                        self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(results)} meals)", response_time)
+                    elif isinstance(results, str) and len(results) > 50:
+                        self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(results)} chars)", response_time)
+                    else:
+                        self.log_result("POST /api/meals/search", False, f"Empty or invalid meal search response: {results}", response_time)
+                        return False
                 else:
-                    self.log_result("POST /api/meals/search", False, "Empty or invalid meal search response", response_time)
+                    self.log_result("POST /api/meals/search", False, f"No 'results' field in response: {data}", response_time)
                     return False
             else:
                 self.log_result("POST /api/meals/search", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
