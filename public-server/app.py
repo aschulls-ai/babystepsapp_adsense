@@ -469,28 +469,59 @@ async def update_baby(baby_id: str, request: BabyCreateRequest, current_user_ema
 
 # Activity endpoints
 @app.get("/api/activities")
-async def get_activities(current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def get_activities(
+    baby_id: str = None,
+    type: str = None,
+    limit: int = None,
+    current_user_email: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Get user's activities
-    cursor.execute("""
-        SELECT id, type, notes, baby_id, user_id, timestamp 
-        FROM activities 
-        WHERE user_id = ? 
-        ORDER BY timestamp DESC
-    """, (user["id"],))
-    activities = cursor.fetchall()
-    conn.close()
+    # Build query
+    query = db.query(DBActivity).filter(DBActivity.user_id == user.id)
     
-    return [dict(activity) for activity in activities]
+    # Apply filters
+    if baby_id:
+        query = query.filter(DBActivity.baby_id == baby_id)
+    if type:
+        query = query.filter(DBActivity.type == type)
+    
+    # Order by timestamp desc
+    query = query.order_by(DBActivity.timestamp.desc())
+    
+    # Apply limit
+    if limit:
+        query = query.limit(limit)
+    
+    activities = query.all()
+    
+    # Convert to dict
+    return [
+        {
+            "id": a.id,
+            "type": a.type,
+            "baby_id": a.baby_id,
+            "user_id": a.user_id,
+            "timestamp": a.timestamp.isoformat() if a.timestamp else None,
+            "notes": a.notes,
+            "feeding_type": a.feeding_type,
+            "amount": a.amount,
+            "duration": a.duration,
+            "diaper_type": a.diaper_type,
+            "weight": a.weight,
+            "height": a.height,
+            "head_circumference": a.head_circumference,
+            "temperature": a.temperature,
+            "title": a.title,
+            "description": a.description,
+            "category": a.category
+        }
+        for a in activities
+    ]
 
 @app.post("/api/activities")
 async def create_activity(request: ActivityRequest, current_user_email: str = Depends(get_current_user)):
