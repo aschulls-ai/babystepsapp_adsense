@@ -317,7 +317,7 @@
 
 ## test_plan:
   current_focus:
-    - "Urgent Review Request Testing - Login 401 Error & AI Issues - COMPLETED"
+    - "User Registration & Login Persistence Testing - Render Backend - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
