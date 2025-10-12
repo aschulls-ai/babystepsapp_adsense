@@ -297,13 +297,13 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
 @app.post("/api/auth/register") 
 async def register(request: RegisterRequest, db: Session = Depends(get_db)):
     # Check if email already exists
-    existing_user = db.query(User).filter(User.email == request.email).first()
+    existing_user = db.query(DBUser).filter(DBUser.email == request.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
     # Create new user
     user_id = str(uuid.uuid4())
-    new_user = User(
+    new_user = DBUser(
         id=user_id,
         email=request.email,
         name=request.name,
