@@ -26,7 +26,7 @@ EMERGENT_LLM_KEY=[Get from emergent_integrations_manager]
 
 **Build Command:**
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt && pip install emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/
 ```
 
 **Start Command:**
