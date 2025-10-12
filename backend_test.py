@@ -97,24 +97,27 @@ class BackendTester:
     # PHASE 1: Authentication & PostgreSQL Tests
     
     def test_1_health_check(self):
-        """PHASE 1: Core Authentication & Database"""
-        print("\n🔐 PHASE 1: CORE AUTHENTICATION & DATABASE")
-        print("=" * 60)
+        """Test 1: Health Check"""
+        response, response_time = self.make_request('GET', '/api/health')
         
-        # 1. Health Check
-        print("\n1. Health Check - GET /api/health")
-        try:
-            start_time = time.time()
-            response = requests.get(f"{self.api_base}/health", timeout=10)
-            response_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                self.log_result("Health Check", True, "200 OK", response_time)
-            else:
-                self.log_result("Health Check", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
-                return False
-        except Exception as e:
-            self.log_result("Health Check", False, f"Connection error: {str(e)}")
+        if response and response.status_code == 200:
+            self.log_test(
+                "1. Health Check",
+                True,
+                f"Backend healthy and operational ({response_time:.2f}s)",
+                response_time,
+                response.status_code
+            )
+            return True
+        else:
+            error_msg = f"Health check failed - Status: {response.status_code if response else 'Timeout'}"
+            self.log_test(
+                "1. Health Check", 
+                False,
+                error_msg,
+                response_time,
+                response.status_code if response else None
+            )
             return False
         
         # 2. Demo Account Login
