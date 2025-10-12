@@ -119,8 +119,8 @@ class BackendTester:
                 response.status_code if response else None
             )
             return False
-        
-        # 2. Demo Account Login
+    
+    def test_2_demo_login(self):
         print("\n2. Demo Account Login")
         try:
             login_data = {
