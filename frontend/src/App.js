@@ -370,9 +370,9 @@ function App() {
         }
       } catch (error) {
         console.error('Failed to fetch babies on auth check:', error);
-        // Don't logout immediately - babies fetch might fail for other reasons
-        // Just log the error and continue with authenticated state
-        console.log('Continuing with authenticated state despite babies fetch failure');
+        // Don't crash the app - just continue without babies
+        // User can add a baby or try again from the UI
+        console.log('✅ App continuing despite babies fetch failure - user can add baby from UI');
       }
     }
     setLoading(false);
