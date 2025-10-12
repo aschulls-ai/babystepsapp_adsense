@@ -727,6 +727,64 @@ async def research(request: dict, current_user_email: str = Depends(get_current_
         "sources": ["Demo Mode"]
     }
 
+# AI Chat endpoint - matches Android app expectations
+@app.post("/api/ai/chat")
+async def ai_chat(request: dict, current_user_email: str = Depends(get_current_user)):
+    """
+    AI Chat endpoint for Android app - uses gpt-5-nano model for cost-effectiveness
+    Expected request format: {"message": "user question", "baby_age_months": 15}
+    """
+    message = request.get("message", "")
+    baby_age_months = request.get("baby_age_months")
+    
+    if not message.strip():
+        raise HTTPException(status_code=400, detail="Message is required")
+    
+    print(f"🤖 AI Chat request: {message} (baby age: {baby_age_months} months)")
+    
+    # Try AI-powered response if available
+    if AI_AVAILABLE and EMERGENT_LLM_KEY:
+        try:
+            # Create specialized system message for baby care
+            system_prompt = "You are an expert parenting and baby care assistant. Provide helpful, evidence-based advice about baby care, nutrition, safety, development, and parenting. Always prioritize safety and recommend consulting pediatricians for medical concerns."
+            
+            # Add baby age context if provided
+            if baby_age_months is not None:
+                system_prompt += f" The baby is {baby_age_months} months old - tailor your advice appropriately for this age."
+            
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"ai_chat_{uuid.uuid4()}",
+                system_message=system_prompt
+            ).with_model("openai", "gpt-5-nano")  # Use cost-effective gpt-5-nano model
+            
+            user_message = UserMessage(text=message)
+            response = await chat.send_message(user_message)
+            
+            return {
+                "response": response,
+                "timestamp": datetime.utcnow().isoformat(),
+                "model": "gpt-5-nano"
+            }
+            
+        except Exception as e:
+            print(f"❌ AI chat failed: {e}")
+            # Fall through to fallback response
+    
+    # Fallback response when AI is not available
+    fallback_response = f"I understand you're asking about: {message}. "
+    
+    if baby_age_months is not None:
+        fallback_response += f"For a {baby_age_months}-month-old baby, "
+    
+    fallback_response += "I'd recommend consulting with your pediatrician for personalized advice. This is a demo response - full AI functionality requires proper setup."
+    
+    return {
+        "response": fallback_response,
+        "timestamp": datetime.utcnow().isoformat(),
+        "model": "fallback"
+    }
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
