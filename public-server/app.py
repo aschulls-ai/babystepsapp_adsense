@@ -345,23 +345,23 @@ async def get_profile(current_user_email: str = Depends(get_current_user)):
 
 # Baby endpoints
 @app.get("/api/babies")
-async def get_babies(current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def get_babies(current_user_email: str = Depends(get_current_user), db: Session = Depends(get_db)):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     # Get user's babies
-    cursor.execute("SELECT id, name, birth_date, gender, profile_image, user_id FROM babies WHERE user_id = ?", (user["id"],))
-    babies = cursor.fetchall()
-    conn.close()
+    babies = db.query(DBBaby).filter(DBBaby.user_id == user.id).all()
     
-    return [Baby(**dict(baby)) for baby in babies]
+    return [Baby(
+        id=baby.id,
+        name=baby.name,
+        birth_date=baby.birth_date,
+        gender=baby.gender,
+        profile_image=None,
+        user_id=baby.user_id
+    ) for baby in babies]
 
 @app.post("/api/babies")
 async def create_baby(request: BabyCreateRequest, current_user_email: str = Depends(get_current_user)):
