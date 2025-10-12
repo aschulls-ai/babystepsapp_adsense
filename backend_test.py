@@ -565,47 +565,75 @@ class BabyStepsBackendTester:
             return False
     
     def run_comprehensive_tests(self):
-        """Run all comprehensive backend tests as specified in review request"""
-        print("🚀 BABY STEPS COMPREHENSIVE BACKEND TESTING")
-        print(f"📍 Testing Backend: {BACKEND_URL}")
-        print(f"🔑 Demo Account: {self.demo_email} / {self.demo_password}")
+        """Run FINAL COMPREHENSIVE BACKEND TESTING as specified in review request"""
+        print("🚀 FINAL COMPREHENSIVE BACKEND TESTING - Production Render Deployment")
+        print(f"📍 Backend URL: {BACKEND_URL}")
+        print(f"🔑 Demo Account: demo@babysteps.com / demo123")
+        print("🎯 CRITICAL: Full Production Verification Before Android App Download")
         print("=" * 80)
         
-        # Run all test suites
-        health_ok = self.test_health_connectivity()
-        auth_ok = self.test_authentication_flow()
+        # Run all test phases
+        phase1_ok = self.test_phase1_core_auth_database()
         
-        if not auth_ok:
-            print("\n❌ Authentication failed - cannot proceed with authenticated tests")
+        if not self.auth_token:
+            print("\n❌ Phase 1 failed - cannot proceed with authenticated tests")
             return self.results
         
-        baby_ok = self.test_baby_profile_endpoints()
-        ai_ok = self.test_ai_features()
-        tracking_ok = self.test_tracking_endpoints()
-        critical_ok = self.test_critical_checks()
+        phase2_ok = self.test_phase2_ai_integration()
+        phase3_ok = self.test_phase3_baby_profile_operations()
+        phase4_ok = self.test_phase4_error_scenarios()
         
         # Print final results
         print("\n" + "=" * 80)
-        print("📊 COMPREHENSIVE BACKEND TEST RESULTS:")
+        print("📊 FINAL COMPREHENSIVE BACKEND TEST RESULTS:")
         print(f"✅ Passed: {self.results['passed']}")
         print(f"❌ Failed: {self.results['failed']}")
         
         success_rate = (self.results['passed'] / (self.results['passed'] + self.results['failed'])) * 100 if (self.results['passed'] + self.results['failed']) > 0 else 0
-        print(f"📈 Success Rate: {success_rate:.1f}%")
+        print(f"📈 Overall Success Rate: {success_rate:.1f}% ({self.results['passed']}/{self.results['passed'] + self.results['failed']} tests passed)")
         
         if self.results['errors']:
             print(f"\n🔍 FAILED TESTS:")
             for error in self.results['errors']:
                 print(f"   • {error}")
         
-        # Summary of critical functionality
-        print(f"\n🎯 CRITICAL FUNCTIONALITY STATUS:")
-        print(f"   • Backend Health: {'✅' if health_ok else '❌'}")
-        print(f"   • Authentication: {'✅' if auth_ok else '❌'}")
-        print(f"   • Baby Profiles: {'✅' if baby_ok else '❌'}")
-        print(f"   • AI Features: {'✅' if ai_ok else '❌'}")
-        print(f"   • Activity Tracking: {'✅' if tracking_ok else '❌'}")
-        print(f"   • Data Validation: {'✅' if critical_ok else '❌'}")
+        # SUCCESS CRITERIA from review request
+        print(f"\n🎯 SUCCESS CRITERIA:")
+        print(f"   ✅ Authentication: {'✅ Demo + new users can login' if phase1_ok else '❌ Issues with login'}")
+        print(f"   ✅ Database: {'✅ PostgreSQL working, users persist' if phase1_ok else '❌ Database issues'}")
+        print(f"   ✅ AI: {'✅ Real responses (emergentintegrations working)' if phase2_ok else '❌ AI not working properly'}")
+        print(f"   ✅ Errors: {'✅ Proper HTTP status codes (no 500s)' if phase4_ok else '❌ Improper error handling'}")
+        
+        # FAILURE INDICATORS from review request
+        print(f"\n⚠️ FAILURE INDICATORS CHECK:")
+        has_500_errors = any("500" in error for error in self.results['errors'])
+        has_demo_responses = any("demo response" in error.lower() for error in self.results['errors'])
+        has_auth_issues = any("401" in error and "login" in error.lower() for error in self.results['errors'])
+        
+        if has_500_errors:
+            print(f"   ❌ HTTP 500 on endpoints → Backend error detected")
+        else:
+            print(f"   ✅ No HTTP 500 errors detected")
+            
+        if has_demo_responses:
+            print(f"   ❌ 'demo response' in AI → emergentintegrations not working")
+        else:
+            print(f"   ✅ No demo responses detected in AI")
+            
+        if has_auth_issues:
+            print(f"   ❌ 401 on new user login → User not persisting")
+        else:
+            print(f"   ✅ No user persistence issues detected")
+        
+        # Overall assessment
+        all_phases_ok = phase1_ok and phase2_ok and phase3_ok and phase4_ok
+        print(f"\n🏆 OVERALL ASSESSMENT:")
+        if all_phases_ok and success_rate >= 90:
+            print(f"   ✅ PRODUCTION READY - All critical functionality working")
+        elif success_rate >= 75:
+            print(f"   ⚠️ MOSTLY FUNCTIONAL - Some issues need attention")
+        else:
+            print(f"   ❌ CRITICAL ISSUES - Not ready for production")
         
         return self.results
 
