@@ -628,17 +628,16 @@ class ActivityTrackingTester:
             )
             return False
             
-        current_time = datetime.now(timezone.utc).isoformat()
+        current_time = datetime.now(timezone.utc)
         milestone_data = {
             "baby_id": self.baby_id,
-            "type": "milestone",
             "title": "First smile",
             "category": "social",
-            "notes": "Milestone test",
-            "timestamp": current_time
+            "achieved_date": current_time.isoformat(),
+            "notes": "Milestone test"
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', milestone_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/milestones', milestone_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
