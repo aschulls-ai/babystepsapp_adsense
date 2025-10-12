@@ -293,32 +293,32 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/api/auth/register") 
-async def register(request: RegisterRequest):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def register(request: RegisterRequest, db: Session = Depends(get_db)):
     # Check if email already exists
-    cursor.execute("SELECT id FROM users WHERE email = ?", (request.email,))
-    if cursor.fetchone():
-        conn.close()
+    existing_user = db.query(User).filter(User.email == request.email).first()
+    if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
+    # Create new user
     user_id = str(uuid.uuid4())
+    new_user = User(
+        id=user_id,
+        email=request.email,
+        name=request.name,
+        password=request.password  # In production, should be hashed
+    )
+    
     try:
-        cursor.execute("""
-            INSERT INTO users (id, email, name, password)
-            VALUES (?, ?, ?, ?)
-        """, (user_id, request.email, request.name, request.password))
-        
-        conn.commit()
-        conn.close()
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
         
         access_token = create_access_token(data={"sub": request.email})
-        print(f"✅ New user registered: {request.email}")
+        print(f"✅ New user registered: {request.email} (PostgreSQL - persistent!)")
         return {"access_token": access_token, "token_type": "bearer"}
         
     except Exception as e:
-        conn.close()
+        db.rollback()
         print(f"❌ Registration failed for {request.email}: {e}")
         raise HTTPException(status_code=500, detail="Registration failed")
 
