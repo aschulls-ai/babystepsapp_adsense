@@ -15,9 +15,14 @@ import time
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Backend URL from review request
-BACKEND_URL = "https://baby-steps-demo-api.onrender.com"
+# Get backend URL from environment or use the production URL from review request
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://baby-steps-demo-api.onrender.com')
 API_BASE = f"{BACKEND_URL}/api"
+
+# If we're testing locally, use local backend
+if 'localhost' in BACKEND_URL or '127.0.0.1' in BACKEND_URL:
+    BACKEND_URL = "http://localhost:8001"
+    API_BASE = f"{BACKEND_URL}/api"
 
 class BabyStepsBackendTester:
     def __init__(self):
