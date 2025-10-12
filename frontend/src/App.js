@@ -392,8 +392,22 @@ function App() {
         return;
       }
 
-      // Try online fetch
-      const response = await axios.get('/api/babies');
+      // Try online fetch using androidFetch (bypassing Axios adapter issues)
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/babies`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      const responseData = { data }; // Match axios response format
       setBabies(response.data);
       if (response.data.length > 0 && !currentBaby) {
         setCurrentBaby(response.data[0]);
