@@ -6,7 +6,15 @@
     "cleartext": true,
     "allowNavigation": [
       "https://baby-steps-demo-api.onrender.com",
-      "https://baby-steps-demo-api.onrender.com/*"
+      "https://baby-steps-demo-api.onrender.com/*",
+      "https://*.googlesyndication.com",
+      "https://*.googleadservices.com",
+      "https://cdn.platform.openai.com",
+      "https://unpkg.com",
+      "https://*.cloudfront.net",
+      "https://*.posthog.com",
+      "https://*.githubusercontent.com",
+      "*"
     ]
   },
   "plugins": {
