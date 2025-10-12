@@ -408,9 +408,9 @@ function App() {
       
       const data = await response.json();
       const responseData = { data }; // Match axios response format
-      setBabies(response.data);
-      if (response.data.length > 0 && !currentBaby) {
-        setCurrentBaby(response.data[0]);
+      setBabies(responseData.data);
+      if (responseData.data.length > 0 && !currentBaby) {
+        setCurrentBaby(responseData.data[0]);
       }
     } catch (error) {
       console.error('Failed to fetch babies:', error);
