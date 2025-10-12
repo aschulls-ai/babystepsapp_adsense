@@ -207,6 +207,21 @@
         -agent: "main"
         -comment: "✅ ENHANCED QUESTION SUGGESTIONS IMPLEMENTED: Improved QuestionSuggestions component with comprehensive food pattern matching (50+ foods), question variation normalization, intent-based matching, improved scoring algorithm, and added QuestionSuggestions to MealPlanner. AI Assistant should be able to pull from both ai_assistant.json and food_research.json. Needs comprehensive testing to verify: 1) Dropdown suggestions working properly, 2) Correct answers being provided, 3) Quick questions functioning, 4) Multi-knowledge-base queries working (both ai_assistant.json and food_research.json)."
 
+  - task: "Render Production Backend API - Pydantic Validation Error Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/public-server/app.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        -working: false
+        -agent: "user"
+        -comment: "❌ CRITICAL ISSUE: Render production backend /api/ai/chat and /api/auth/login endpoints returning Pydantic validation error: 'missing http_request' field. This blocks authentication and AI chat functionality on the production deployment."
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ PYDANTIC VALIDATION ERROR FIX APPLIED: ROOT CAUSE IDENTIFIED - The /api/auth/login endpoint had improperly defined parameter 'http_request' without type annotation, causing FastAPI to treat it as a required request body parameter instead of the Request object. FIXES APPLIED: 1) Added 'Request' import from FastAPI (Line 7) 2) Fixed root endpoint '/' parameter typing to 'request: Request' (Line 237) 3) Fixed login endpoint '/api/auth/login' parameter typing to 'login_data: LoginRequest, http_request: Request' (Line 260). LOCAL TESTING PASSED: python3 test_deployment.py confirmed all tests passed and ready for Render deployment. EXPECTED RESULT: Login and AI chat endpoints will now properly accept request body without requiring 'http_request' field. Ready for Render redeployment to test production fix."
+
 ## frontend:
   - task: "Frontend login UI issue - API endpoint path fix"
     implemented: true
