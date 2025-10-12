@@ -5,8 +5,8 @@
   "server": {
     "cleartext": true,
     "allowNavigation": [
-      "https://baby-genius.preview.emergentagent.com",
-      "https://baby-genius.preview.emergentagent.com/*"
+      "https://baby-steps-demo-api.onrender.com",
+      "https://baby-steps-demo-api.onrender.com/*"
     ]
   },
   "plugins": {
