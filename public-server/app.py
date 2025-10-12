@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Baby Steps - Public Demo Server
-Simple FastAPI backend for Android app testing
+FastAPI backend with PostgreSQL support for production
 """
 
 from fastapi import FastAPI, HTTPException, Depends, status, Request
@@ -14,12 +14,18 @@ import json
 from datetime import datetime, timezone, timedelta
 from jose import JWTError, jwt
 import os
-import sqlite3
 import asyncio
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
 # Load environment variables
 load_dotenv()
+
+# Import database configuration
+from database import (
+    get_db, init_database, init_demo_data,
+    User, Baby, Activity
+)
 
 # Try to import AI functionality
 try:
