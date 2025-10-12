@@ -61,7 +61,7 @@ class BabyStepsBackendTester:
         
         try:
             start_time = time.time()
-            response = requests.get(f"{API_BASE}/health", timeout=10)
+            response = requests.get(f"{self.api_base}/health", timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
