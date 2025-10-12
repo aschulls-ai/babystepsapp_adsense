@@ -8,7 +8,7 @@ import requests
 import json
 
 # Configuration
-BACKEND_URL = "https://baby-genius.preview.emergentagent.com/api"
+BACKEND_URL = "https://openai-parent.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "demo@babysteps.com"
 TEST_USER_PASSWORD = "demo123"
 

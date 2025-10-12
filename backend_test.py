@@ -11,7 +11,7 @@ import sys
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://baby-genius.preview.emergentagent.com/api"
+BACKEND_URL = "https://openai-parent.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "demo@babysteps.com"
 TEST_USER_PASSWORD = "demo123"
 
@@ -219,7 +219,7 @@ class BackendTester:
         print("⚙️ TESTING ENVIRONMENT CONFIGURATION...")
         
         # Check if REACT_APP_BACKEND_URL is set correctly by testing if backend responds
-        expected_backend = "https://baby-genius.preview.emergentagent.com"
+        expected_backend = "https://openai-parent.preview.emergentagent.com"
         
         if BACKEND_URL.startswith(expected_backend):
             self.log_test("Environment Variables", True, 

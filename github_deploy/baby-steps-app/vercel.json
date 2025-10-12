@@ -21,6 +21,6 @@
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "https://baby-genius.preview.emergentagent.com"
+    "REACT_APP_BACKEND_URL": "https://openai-parent.preview.emergentagent.com"
   }
 }

@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://baby-genius.preview.emergentagent.com"
+BACKEND_URL = "https://openai-parent.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 DEMO_EMAIL = "demo@babysteps.com"
 DEMO_PASSWORD = "demo123"
