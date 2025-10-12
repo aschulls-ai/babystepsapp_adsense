@@ -21,10 +21,10 @@ from sqlalchemy.orm import Session
 # Load environment variables
 load_dotenv()
 
-# Import database configuration
+# Import database configuration (using aliases to avoid naming conflicts)
 from database import (
     get_db, init_database, init_demo_data,
-    User, Baby, Activity
+    User as DBUser, Baby as DBBaby, Activity as DBActivity
 )
 
 # Try to import AI functionality
