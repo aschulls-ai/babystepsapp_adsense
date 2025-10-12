@@ -406,26 +406,33 @@ async def create_baby(request: BabyCreateRequest, current_user_email: str = Depe
         raise HTTPException(status_code=500, detail=f"Failed to create baby: {str(e)}")
 
 @app.get("/api/babies/{baby_id}")
-async def get_baby(baby_id: str, current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def get_baby(
+    baby_id: str,
+    current_user_email: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     # Get baby
-    cursor.execute("SELECT id, name, birth_date, gender, profile_image, user_id FROM babies WHERE id = ? AND user_id = ?", (baby_id, user["id"]))
-    baby = cursor.fetchone()
-    conn.close()
+    baby = db.query(DBBaby).filter(
+        DBBaby.id == baby_id,
+        DBBaby.user_id == user.id
+    ).first()
     
     if not baby:
         raise HTTPException(status_code=404, detail="Baby not found")
     
-    return Baby(**dict(baby))
+    return {
+        "id": baby.id,
+        "name": baby.name,
+        "birth_date": baby.birth_date,
+        "gender": baby.gender,
+        "profile_image": baby.profile_image,
+        "user_id": baby.user_id
+    }
 
 @app.put("/api/babies/{baby_id}")
 async def update_baby(baby_id: str, request: BabyCreateRequest, current_user_email: str = Depends(get_current_user)):
