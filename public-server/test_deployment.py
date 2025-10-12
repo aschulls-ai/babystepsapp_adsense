@@ -13,7 +13,7 @@ def test_imports():
         import pydantic
         import passlib
         import httpx
-        import python_dotenv
+        from dotenv import load_dotenv
         print("✅ Standard dependencies imported successfully")
         
         from emergentintegrations.llm.chat import LlmChat, UserMessage
