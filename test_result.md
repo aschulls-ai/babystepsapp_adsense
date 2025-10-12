@@ -329,12 +329,15 @@
 
 ## test_plan:
   current_focus:
-    - "Baby Profile Endpoints HTTP 500 Error Fix - CRITICAL"
-    - "Food Research Safety Level Standardization"
-    - "Meal Search Response Format Fix"
+    - "User Registration Response Format Fix - CRITICAL"
+    - "Food Research Safety Level Standardization - ai_assessed → safe/caution/avoid/consult_doctor"
+    - "Meal Search Response Format Fix - 1 char → structured data"
+    - "Error Handling Timeout Issues - Should return 401/403 not timeout"
   stuck_tasks: 
-    - "Baby Profile Management - HTTP 500 on Create/Retrieve"
-    - "Production Backend Error Handling - Some 500s instead of 401/403"
+    - "User Registration Invalid Response Format"
+    - "Food Research Endpoint Safety Level Format"
+    - "Meal Search Minimal Data Response"
+    - "Error Handling Timeouts Instead of HTTP Codes"
   test_all: false
   test_priority: "critical_first"
 
