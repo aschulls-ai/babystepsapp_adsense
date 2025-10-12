@@ -721,7 +721,7 @@ class BackendTester:
             return False
     
     def test_8_meal_search_endpoint(self):
-        """Test 8: Meal Search Endpoint - Real meal suggestions expected"""
+        """Test 8: Meal Search Endpoint - FIXED: Check for structured array format"""
         if not self.auth_token:
             self.log_test(
                 "8. Meal Search Endpoint",
@@ -745,26 +745,60 @@ class BackendTester:
                 if 'results' in data:
                     results = data['results']
                     
-                    # Check if results are substantial (not just 1 character)
-                    if len(results) < 10:
+                    # Check if results is an array with structured meal data
+                    if isinstance(results, list) and len(results) > 0:
+                        # Check if each result has proper meal structure
+                        first_result = results[0]
+                        if isinstance(first_result, dict) and 'name' in first_result:
+                            meal_count = len(results)
+                            self.log_test(
+                                "8. Meal Search Endpoint",
+                                True,
+                                f"Structured meal data received - {meal_count} meals with proper format ({response_time:.2f}s)",
+                                response_time,
+                                response.status_code
+                            )
+                            return True
+                        else:
+                            # Check if it's a string response (AI-generated format)
+                            if isinstance(results, str) and len(results) > 100:
+                                self.log_test(
+                                    "8. Meal Search Endpoint",
+                                    True,
+                                    f"AI-generated meal content received ({len(results)} chars, {response_time:.2f}s)",
+                                    response_time,
+                                    response.status_code
+                                )
+                                return True
+                            else:
+                                self.log_test(
+                                    "8. Meal Search Endpoint",
+                                    False,
+                                    f"Invalid meal data structure - expected array of meal objects or substantial string content",
+                                    response_time,
+                                    response.status_code
+                                )
+                                return False
+                    elif isinstance(results, str) and len(results) > 100:
+                        # String format with substantial content
+                        results_preview = results[:150] + "..." if len(results) > 150 else results
+                        self.log_test(
+                            "8. Meal Search Endpoint",
+                            True,
+                            f"Meal suggestions received ({len(results)} chars, {response_time:.2f}s): {results_preview}",
+                            response_time,
+                            response.status_code
+                        )
+                        return True
+                    else:
                         self.log_test(
                             "8. Meal Search Endpoint",
                             False,
-                            f"Meal search returning minimal data ({len(results)} chars) instead of structured meal suggestions ({response_time:.2f}s)",
+                            f"Meal search returning minimal data ({len(str(results))} chars) instead of structured meal suggestions ({response_time:.2f}s)",
                             response_time,
                             response.status_code
                         )
                         return False
-                    
-                    results_preview = results[:150] + "..." if len(results) > 150 else results
-                    self.log_test(
-                        "8. Meal Search Endpoint",
-                        True,
-                        f"Meal suggestions received ({len(results)} chars, {response_time:.2f}s): {results_preview}",
-                        response_time,
-                        response.status_code
-                    )
-                    return True
                 else:
                     self.log_test(
                         "8. Meal Search Endpoint",
