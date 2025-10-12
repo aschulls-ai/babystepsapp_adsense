@@ -519,16 +519,68 @@ function App() {
   };
 
   const register = async (name, email, password) => {
-    console.log('📝 Creating new account in standalone mode...');
+    console.log('📝 Creating new account via backend API...');
+    console.log('📧 Registration data:', { name, email, password: password ? '***' : 'empty' });
     
     try {
-      const response = await offlineAPI.register(name, email, password);
-      const { access_token } = response.data;
+      // Call backend registration API (matching login pattern)
+      console.log('🌐 Calling backend API for registration...');
+      const response = await androidFetch(`${API}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
+      });
+      
+      console.log('📡 Response status:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        // Try to get error details from response body
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+          console.error('❌ Backend error response:', errorData);
+        } catch (e) {
+          console.error('❌ Could not parse error response');
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Registration response received:', data);
+      
+      // Backend returns {access_token, token_type, user}
+      const access_token = data.access_token || data.data?.access_token;
+      const userData = data.user || data.data?.user;
+      
+      console.log('👤 User data from registration:', userData);
+      console.log('🔑 Access token:', access_token);
+      
+      if (!access_token) {
+        throw new Error('No access token received from backend');
+      }
       
       localStorage.setItem('token', access_token);
+      console.log('💾 Token saved to localStorage');
       
       toast.success('Welcome to Baby Steps! Account created successfully.');
-      setUser({ email, authenticated: true, offline: false }); // All features work in standalone
+      
+      // Set user state with backend data
+      const userToSet = {
+        id: userData?.id || 'backend-user',
+        email: userData?.email || email,
+        name: userData?.name || name,
+        authenticated: true,
+        offline: false
+      };
+      console.log('👤 Setting user state to:', userToSet);
+      setUser(userToSet);
+      
+      console.log('👶 Fetching babies after successful registration...');
+      await fetchBabies();
+      console.log('✅ Registration process completed successfully');
       return true;
     } catch (error) {
       console.error('❌ Registration failed:', error);
