@@ -283,9 +283,10 @@ const AIAssistant = ({ currentBaby }) => {
                     </div>
                   </div>
                 )}
-                <div ref={messagesEndRef} />
               </>
             )}
+            {/* Scroll target placed at the end of messages container */}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Form */}
