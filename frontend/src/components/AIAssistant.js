@@ -16,17 +16,7 @@ const AIAssistant = ({ currentBaby }) => {
 
   // Removed automatic scrolling - users can manually scroll to read responses
 
-  useEffect(() => {
-    // Only scroll when there are messages and the last one is from AI
-    if (messages.length > 0 && messages[messages.length - 1].type === 'ai') {
-      // Add a small delay to ensure DOM is updated before scrolling
-      const timer = setTimeout(() => {
-        scrollToLatestAIResponse();
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [messages]);
+  // No automatic scrolling - users control their own reading experience
 
   // Monitor online/offline status
   useEffect(() => {
