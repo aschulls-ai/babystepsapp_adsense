@@ -1032,6 +1032,21 @@ class BackendTester:
         response, response_time = self.make_request('GET', '/api/babies')
         
         if response and response.status_code in [401, 403]:
+            # Check if response contains proper error message
+            try:
+                error_data = response.json()
+                if 'detail' in error_data:
+                    self.log_test(
+                        "12. Unauthorized Access",
+                        True,
+                        f"Proper {response.status_code} returned for unauthorized access ({response_time:.2f}s) - {error_data['detail']}",
+                        response_time,
+                        response.status_code
+                    )
+                    return True
+            except:
+                pass
+            
             self.log_test(
                 "12. Unauthorized Access",
                 True,
