@@ -371,12 +371,26 @@ const TrackingPage = ({ currentBaby }) => {
           break;
       }
 
-      // Use standalone/offline API for logging
-      console.log('📝 Logging activity to device storage:', payload);
-      const result = await offlineAPI.logActivity(payload);
-      console.log('✅ Activity logged successfully:', result);
+      // PHASE 2: Log to backend API
+      console.log('📝 Logging activity to backend:', payload);
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
       
-      toast.success(successMessage + ' (Saved to device)');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const result = await response.json();
+      console.log('✅ Activity logged successfully to cloud:', result);
+      
+      toast.success(successMessage);
       
       fetchRecentActivities();
       fetchAllActivities(); // Refresh comprehensive activity list
