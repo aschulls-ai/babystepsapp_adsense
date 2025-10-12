@@ -1191,7 +1191,7 @@ class ActivityTrackingTester:
             )
             return False
             
-        response, response_time = self.make_request('GET', '/api/activities', auth_required=True)
+        response, response_time = self.make_request('GET', '/api/feedings', auth_required=True)
         
         if response and response.status_code == 200:
             try:
