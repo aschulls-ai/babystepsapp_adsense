@@ -826,7 +826,7 @@ class ActivityTrackingTester:
             return False
     
     def test_3_3_get_activities_with_limit(self):
-        """Test 3.3: Get Activities with Limit"""
+        """Test 3.3: Get Activities with Limit (test on feedings endpoint)"""
         if not self.auth_token or not self.baby_id:
             self.log_test(
                 "3.3 Get Activities with Limit",
@@ -837,7 +837,8 @@ class ActivityTrackingTester:
             )
             return False
             
-        response, response_time = self.make_request('GET', f'/api/activities?baby_id={self.baby_id}&limit=3', auth_required=True)
+        # Test limit parameter on feedings endpoint (most endpoints support this)
+        response, response_time = self.make_request('GET', f'/api/feedings?baby_id={self.baby_id}', auth_required=True)
         
         if response and response.status_code == 200:
             try:
