@@ -155,7 +155,7 @@ class BabyStepsBackendTester:
         try:
             # GET /api/babies
             start_time = time.time()
-            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            response = self.session.get(f"{self.api_base}/babies", timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
