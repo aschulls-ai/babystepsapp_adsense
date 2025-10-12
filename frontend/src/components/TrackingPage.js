@@ -1358,27 +1358,34 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
         notes: formData.notes || null
       };
 
-      // Use standalone offline API
-      console.log('🏆 Logging milestone activity:', {
+      // PHASE 2: Log to backend API
+      const milestoneData = {
         baby_id: babyId,
         type: 'milestone',
         title: formData.title,
         description: formData.description || null,
         category: formData.category,
-        achieved_date: formData.achieved_date.toISOString(),
+        timestamp: formData.achieved_date.toISOString(),
         notes: formData.notes || null
+      };
+      
+      console.log('🏆 Logging milestone activity to backend:', milestoneData);
+      
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(milestoneData)
       });
       
-      await offlineAPI.logActivity({
-        baby_id: babyId,
-        type: 'milestone',
-        title: formData.title,
-        description: formData.description || null,
-        category: formData.category,
-        timestamp: formData.achieved_date.toISOString(), // Use timestamp for consistency
-        notes: formData.notes || null
-      });
-      toast.success('💾 Milestone saved to device!');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      toast.success('Milestone logged successfully!');
       setFormData({
         title: '',
         description: '',
