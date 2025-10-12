@@ -1128,14 +1128,13 @@ class ActivityTrackingTester:
         current_time = datetime.now(timezone.utc).isoformat()
         feeding_data = {
             "baby_id": fake_baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle",
-            "amount": "8",
+            "type": "bottle",
+            "amount": 8.0,
             "notes": "Non-existent baby test",
             "timestamp": current_time
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', feeding_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/feedings', feeding_data, auth_required=True)
         
         if response and response.status_code == 404:
             try:
