@@ -672,10 +672,25 @@ function App() {
 
   const updateBaby = async (babyData) => {
     try {
-      // Use offline API for standalone mode
-      console.log('👶 Updating baby in standalone mode:', babyData);
-      const response = await offlineAPI.updateBaby(currentBaby.id, babyData);
-      const updatedBaby = response.data;
+      // PHASE 2: Cloud-first - Always use backend API
+      console.log('👶 Updating baby via backend API:', babyData);
+      const token = localStorage.getItem('token');
+      
+      const response = await androidFetch(`${API}/api/babies/${currentBaby.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(babyData)
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+      }
+      
+      const updatedBaby = await response.json();
       
       // Update babies array
       setBabies(babies.map(baby => 
