@@ -1012,7 +1012,7 @@ class BackendTester:
             return False
     
     def test_12_unauthorized_access(self):
-        """Test 12: Unauthorized Access - Should return 401/403 (not 500)"""
+        """Test 12: Unauthorized Access - Should return 401/403 (not 500 or 502)"""
         # Try to access protected endpoint without token
         response, response_time = self.make_request('GET', '/api/babies')
         
@@ -1034,14 +1034,42 @@ class BackendTester:
                 response.status_code
             )
             return False
+        elif response and response.status_code == 502:
+            self.log_test(
+                "12. Unauthorized Access",
+                False,
+                f"HTTP 502 Bad Gateway - Backend service unavailable or crashed ({response_time:.2f}s)",
+                response_time,
+                response.status_code
+            )
+            return False
+        elif response is None:
+            self.log_test(
+                "12. Unauthorized Access",
+                False,
+                f"Request timeout ({response_time:.2f}s) - Backend may be overloaded or unresponsive (expected 401/403)",
+                response_time,
+                None
+            )
+            return False
         else:
-            error_msg = f"Unexpected status code: {response.status_code if response else 'Timeout'} (expected 401/403)"
+            error_msg = f"Unexpected status code: {response.status_code} (expected 401/403)"
+            if hasattr(response, 'text'):
+                try:
+                    error_detail = response.json().get('detail', 'No detail')
+                    error_msg += f" - Detail: {error_detail}"
+                except:
+                    # Check if it's HTML (like 502 page)
+                    if 'html' in response.text.lower():
+                        error_msg += " - HTML error page returned"
+                    else:
+                        error_msg += f" - Response: {response.text[:100]}"
             self.log_test(
                 "12. Unauthorized Access",
                 False,
                 error_msg,
                 response_time,
-                response.status_code if response else None
+                response.status_code
             )
             return False
 
