@@ -968,6 +968,21 @@ class BackendTester:
         response, response_time = self.make_request('POST', '/api/auth/login', invalid_login_data)
         
         if response and response.status_code == 401:
+            # Check if response contains proper error message
+            try:
+                error_data = response.json()
+                if 'detail' in error_data:
+                    self.log_test(
+                        "11. Invalid Login Credentials",
+                        True,
+                        f"Proper 401 Unauthorized returned for invalid credentials ({response_time:.2f}s) - {error_data['detail']}",
+                        response_time,
+                        response.status_code
+                    )
+                    return True
+            except:
+                pass
+            
             self.log_test(
                 "11. Invalid Login Credentials",
                 True,
