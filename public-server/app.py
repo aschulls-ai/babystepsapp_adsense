@@ -127,6 +127,16 @@ app.add_middleware(
     max_age=3600  # Cache preflight requests for 1 hour
 )
 
+# Request logging middleware for debugging mobile connections
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"📱 Incoming request: {request.method} {request.url.path}")
+    print(f"   Origin: {request.headers.get('origin', 'none')}")
+    print(f"   User-Agent: {request.headers.get('user-agent', 'unknown')[:100]}")
+    response = await call_next(request)
+    print(f"   Response: {response.status_code}")
+    return response
+
 # Pydantic Models
 class User(BaseModel):
     id: str
