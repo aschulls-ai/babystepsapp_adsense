@@ -498,12 +498,17 @@ class BabyStepsBackendTester:
         phase1_ok = self.test_phase1_core_auth_database()
         
         if not self.auth_token:
-            print("\n❌ Phase 1 failed - cannot proceed with authenticated tests")
-            return self.results
-        
-        phase2_ok = self.test_phase2_ai_integration()
-        phase3_ok = self.test_phase3_baby_profile_operations()
-        phase4_ok = self.test_phase4_error_scenarios()
+            print("\n❌ Phase 1 failed - running diagnostics and continuing with limited tests")
+            self.test_additional_diagnostics()
+            
+            # Still run error scenarios since they don't require auth
+            phase2_ok = False
+            phase3_ok = False
+            phase4_ok = self.test_phase4_error_scenarios()
+        else:
+            phase2_ok = self.test_phase2_ai_integration()
+            phase3_ok = self.test_phase3_baby_profile_operations()
+            phase4_ok = self.test_phase4_error_scenarios()
         
         # Print final results
         print("\n" + "=" * 80)
