@@ -1081,15 +1081,14 @@ class ActivityTrackingTester:
         current_time = datetime.now(timezone.utc).isoformat()
         feeding_data = {
             "baby_id": self.baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle",
-            "amount": "8",
+            "type": "bottle",
+            "amount": 8.0,
             "notes": "Unauthorized test",
             "timestamp": current_time
         }
         
         # Make request WITHOUT auth token
-        response, response_time = self.make_request('POST', '/api/activities', feeding_data, auth_required=False)
+        response, response_time = self.make_request('POST', '/api/feedings', feeding_data, auth_required=False)
         
         if response and response.status_code in [401, 403]:
             self.log_test(
