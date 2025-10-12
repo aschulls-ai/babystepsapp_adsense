@@ -568,15 +568,17 @@ class ComprehensiveE2ETester:
             )
             return False
             
-        current_time = datetime.now(timezone.utc).isoformat()
+        current_time = datetime.now(timezone.utc)
+        end_time = current_time + timedelta(hours=2)
         activity_data = {
-            "type": "sleep",
             "baby_id": self.baby_id,
-            "notes": "Nap - 2 hours",
-            "timestamp": current_time
+            "start_time": current_time.isoformat(),
+            "end_time": end_time.isoformat(),
+            "quality": "good",
+            "notes": "Nap - 2 hours"
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', activity_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/sleep', activity_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
