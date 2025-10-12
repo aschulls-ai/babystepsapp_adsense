@@ -395,22 +395,10 @@ function App() {
 
   const fetchBabies = async () => {
     try {
-      if (shouldUseOfflineMode()) {
-        console.log('🏠 Fetching babies from offline storage');
-        const response = await offlineAPI.getBabies();
-        console.log('👶 Babies response:', response);
-        setBabies(response.data);
-        if (response.data && response.data.length > 0) {
-          console.log('✅ Setting current baby:', response.data[0]);
-          setCurrentBaby(response.data[0]);
-        } else {
-          console.log('⚠️ No babies found in response');
-        }
-        return;
-      }
-
-      // Try online fetch using androidFetch (bypassing Axios adapter issues)
+      // PHASE 2: Cloud-first - Always fetch from backend API
+      console.log('👶 Fetching babies from backend API');
       const token = localStorage.getItem('token');
+      
       const response = await androidFetch(`${API}/api/babies`, {
         method: 'GET',
         headers: {
@@ -424,10 +412,11 @@ function App() {
       }
       
       const data = await response.json();
-      const responseData = { data }; // Match axios response format
-      setBabies(responseData.data);
-      if (responseData.data.length > 0 && !currentBaby) {
-        setCurrentBaby(responseData.data[0]);
+      console.log('✅ Babies fetched from backend:', data);
+      
+      setBabies(data);
+      if (data.length > 0 && !currentBaby) {
+        setCurrentBaby(data[0]);
       }
     } catch (error) {
       console.error('Failed to fetch babies:', error);
