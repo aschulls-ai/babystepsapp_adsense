@@ -21,7 +21,7 @@ LOCAL_URL = "http://localhost:8001"
 
 # Try production first, fallback to local if production fails
 BACKEND_URL = PRODUCTION_URL
-API_BASE = f"{BACKEND_URL}/api"
+self.api_base = f"{BACKEND_URL}/api"
 
 class BabyStepsBackendTester:
     def __init__(self, backend_url=None):
@@ -175,7 +175,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/babies", json=baby_data, timeout=10)
+            response = self.session.post(f"{self.api_base}/babies", json=baby_data, timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -201,7 +201,7 @@ class BabyStepsBackendTester:
                 }
                 
                 start_time = time.time()
-                response = self.session.put(f"{API_BASE}/babies/{self.baby_id}", json=update_data, timeout=10)
+                response = self.session.put(f"{self.api_base}/babies/{self.baby_id}", json=update_data, timeout=10)
                 response_time = time.time() - start_time
                 
                 if response.status_code == 200:
@@ -232,7 +232,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/ai/chat", json=chat_query, timeout=120)
+            response = self.session.post(f"{self.api_base}/ai/chat", json=chat_query, timeout=120)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -253,7 +253,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/food/research", json=food_query, timeout=60)
+            response = self.session.post(f"{self.api_base}/food/research", json=food_query, timeout=60)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -274,7 +274,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/meals/search", json=meal_query, timeout=120)
+            response = self.session.post(f"{self.api_base}/meals/search", json=meal_query, timeout=120)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -323,7 +323,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/activities", json=feeding_data, timeout=10)
+            response = self.session.post(f"{self.api_base}/activities", json=feeding_data, timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -340,7 +340,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/activities", json=sleep_data, timeout=10)
+            response = self.session.post(f"{self.api_base}/activities", json=sleep_data, timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -357,7 +357,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/activities", json=diaper_data, timeout=10)
+            response = self.session.post(f"{self.api_base}/activities", json=diaper_data, timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -368,7 +368,7 @@ class BabyStepsBackendTester:
             
             # GET /api/tracking/summary (actual endpoint is /api/activities)
             start_time = time.time()
-            response = self.session.get(f"{API_BASE}/activities", timeout=10)
+            response = self.session.get(f"{self.api_base}/activities", timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -401,7 +401,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/babies", json=baby_data, timeout=10)
+            response = self.session.post(f"{self.api_base}/babies", json=baby_data, timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
@@ -422,7 +422,7 @@ class BabyStepsBackendTester:
             
             # Test response times < 2 seconds for non-AI endpoints
             start_time = time.time()
-            response = self.session.get(f"{API_BASE}/babies", timeout=10)
+            response = self.session.get(f"{self.api_base}/babies", timeout=10)
             response_time = time.time() - start_time
             
             if response_time < 2.0:
