@@ -81,15 +81,24 @@ const TrackingPage = ({ currentBaby }) => {
     if (!currentBaby) return;
     
     try {
-      // Use offline API to get activities
-      const response = await offlineAPI.getActivities(currentBaby.id, { 
-        type: activeTab,
-        limit: 5 
+      // PHASE 2: Fetch from backend API
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities?baby_id=${currentBaby.id}&type=${activeTab}&limit=5`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
       setRecentActivities(prev => ({
         ...prev,
-        [activeTab]: response.data
+        [activeTab]: data
       }));
     } catch (error) {
       console.error('Failed to fetch recent activities:', error);
