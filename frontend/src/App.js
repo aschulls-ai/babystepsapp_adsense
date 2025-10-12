@@ -448,7 +448,7 @@ function App() {
       const responseData = { data }; // Match expected format
       console.log('✅ Login response received:', responseData);
       
-      const { access_token, user: userData } = response.data;
+      const { access_token, user: userData } = responseData.data;
       console.log('👤 User data from login:', userData);
       console.log('🔑 Access token:', access_token);
       
