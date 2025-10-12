@@ -5,7 +5,7 @@ This document lists every location where the backend URL `https://baby-genius.pr
 
 ## Current Backend URL
 **Development/Preview**: `https://baby-genius.preview.emergentagent.com`
-**Production**: `[TO BE UPDATED]`
+**Production**: `https://baby-steps-demo-api.onrender.com`
 
 ---
 
