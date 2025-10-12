@@ -98,7 +98,7 @@ class BabyStepsBackendTester:
             }
             
             start_time = time.time()
-            response = self.session.post(f"{API_BASE}/auth/register", json=user_data, timeout=30)
+            response = self.session.post(f"{self.api_base}/auth/register", json=user_data, timeout=30)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
