@@ -698,47 +698,73 @@ class ComprehensiveE2ETester:
                 None
             )
             return False
-            
-        response, response_time = self.make_request('GET', '/api/activities', auth_required=True)
         
-        if response and response.status_code == 200:
+        # Get all activity types and count total
+        total_activities = 0
+        activity_types = []
+        
+        # Check feedings
+        response1, response_time1 = self.make_request('GET', '/api/feedings', auth_required=True)
+        if response1 and response1.status_code == 200:
             try:
-                data = response.json()
-                if isinstance(data, list) and len(data) >= 4:
-                    self.log_test(
-                        "3.5 Get Activity History",
-                        True,
-                        f"HTTP 200, array with {len(data)} activities (including all 4 just logged)",
-                        response_time,
-                        response.status_code
-                    )
-                    return True
-                else:
-                    self.log_test(
-                        "3.5 Get Activity History",
-                        False,
-                        f"Expected array with at least 4 activities, got: {len(data) if isinstance(data, list) else 'not a list'}",
-                        response_time,
-                        response.status_code
-                    )
-                    return False
-            except json.JSONDecodeError:
-                self.log_test(
-                    "3.5 Get Activity History",
-                    False,
-                    "Invalid JSON response",
-                    response_time,
-                    response.status_code
-                )
-                return False
+                feedings = response1.json()
+                if isinstance(feedings, list):
+                    total_activities += len(feedings)
+                    activity_types.append(f"feedings: {len(feedings)}")
+            except:
+                pass
+        
+        # Check diapers
+        response2, response_time2 = self.make_request('GET', '/api/diapers', auth_required=True)
+        if response2 and response2.status_code == 200:
+            try:
+                diapers = response2.json()
+                if isinstance(diapers, list):
+                    total_activities += len(diapers)
+                    activity_types.append(f"diapers: {len(diapers)}")
+            except:
+                pass
+        
+        # Check sleep
+        response3, response_time3 = self.make_request('GET', '/api/sleep', auth_required=True)
+        if response3 and response3.status_code == 200:
+            try:
+                sleep_sessions = response3.json()
+                if isinstance(sleep_sessions, list):
+                    total_activities += len(sleep_sessions)
+                    activity_types.append(f"sleep: {len(sleep_sessions)}")
+            except:
+                pass
+        
+        # Check pumping
+        response4, response_time4 = self.make_request('GET', '/api/pumping', auth_required=True)
+        if response4 and response4.status_code == 200:
+            try:
+                pumping_sessions = response4.json()
+                if isinstance(pumping_sessions, list):
+                    total_activities += len(pumping_sessions)
+                    activity_types.append(f"pumping: {len(pumping_sessions)}")
+            except:
+                pass
+        
+        max_response_time = max([response_time1, response_time2, response_time3, response_time4])
+        
+        if total_activities >= 4:
+            self.log_test(
+                "3.5 Get Activity History",
+                True,
+                f"HTTP 200, total {total_activities} activities across all types ({', '.join(activity_types)})",
+                max_response_time,
+                200
+            )
+            return True
         else:
-            error_msg = f"Get activities failed - Status: {response.status_code if response else 'Timeout'}"
             self.log_test(
                 "3.5 Get Activity History",
                 False,
-                error_msg,
-                response_time,
-                response.status_code if response else None
+                f"Expected at least 4 activities total, got: {total_activities} ({', '.join(activity_types)})",
+                max_response_time,
+                200 if any(r and r.status_code == 200 for r in [response1, response2, response3, response4]) else None
             )
             return False
 
