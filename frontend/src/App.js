@@ -430,10 +430,23 @@ function App() {
     console.log('📧 Login credentials:', { email, password: password ? '***' : 'empty' });
     
     try {
-      // Use local authentication (standalone mode)
-      console.log('🏠 Calling offlineAPI.login...');
-      const response = await offlineAPI.login(email, password);
-      console.log('✅ Login response received:', response);
+      // Use backend authentication (online mode)
+      console.log('🌐 Calling backend API for login...');
+      const response = await androidFetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      const responseData = { data }; // Match expected format
+      console.log('✅ Login response received:', responseData);
       
       const { access_token, user: userData } = response.data;
       console.log('👤 User data from login:', userData);
