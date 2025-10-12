@@ -326,21 +326,16 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
 
 # User endpoints
 @app.get("/api/user/profile")
-async def get_profile(current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("SELECT id, email, name FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
-    conn.close()
+async def get_profile(current_user_email: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
     return User(
-        id=user["id"],
-        email=user["email"], 
-        name=user["name"]
+        id=user.id,
+        email=user.email, 
+        name=user.name
     )
 
 # Baby endpoints
