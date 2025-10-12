@@ -359,13 +359,12 @@ class ActivityTrackingTester:
         current_time = datetime.now(timezone.utc).isoformat()
         diaper_data = {
             "baby_id": self.baby_id,
-            "type": "diaper",
-            "diaper_type": "wet",
+            "type": "wet",
             "notes": "Wet diaper test",
             "timestamp": current_time
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', diaper_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/diapers', diaper_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
