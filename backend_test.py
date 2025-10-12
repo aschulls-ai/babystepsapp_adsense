@@ -21,7 +21,7 @@ LOCAL_URL = "http://localhost:8001"
 
 # Try production first, fallback to local if production fails
 BACKEND_URL = PRODUCTION_URL
-self.api_base = f"{BACKEND_URL}/api"
+API_BASE = f"{BACKEND_URL}/api"
 
 class BabyStepsBackendTester:
     def __init__(self, backend_url=None):
