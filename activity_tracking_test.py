@@ -1026,8 +1026,33 @@ class ActivityTrackingTester:
                 None
             )
             return False
+        
+        # Check all activity endpoints for persistence
+        endpoints = [
+            ('/api/feedings', 'feeding'),
+            ('/api/diapers', 'diaper'),
+            ('/api/sleep', 'sleep'),
+            ('/api/pumping', 'pumping'),
+            ('/api/measurements', 'measurement'),
+            ('/api/milestones', 'milestone')
+        ]
+        
+        total_activities = 0
+        found_types = []
+        total_response_time = 0
+        
+        for endpoint, activity_type in endpoints:
+            response, response_time = self.make_request('GET', f'{endpoint}?baby_id={self.baby_id}', auth_required=True)
+            total_response_time += response_time
             
-        response, response_time = self.make_request('GET', f'/api/activities?baby_id={self.baby_id}', auth_required=True)
+            if response and response.status_code == 200:
+                try:
+                    data = response.json()
+                    if isinstance(data, list) and len(data) > 0:
+                        total_activities += len(data)
+                        found_types.append(activity_type)
+                except json.JSONDecodeError:
+                    pass
         
         if response and response.status_code == 200:
             try:
