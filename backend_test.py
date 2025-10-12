@@ -377,91 +377,58 @@ class BabyStepsBackendTester:
         
         return True
     
-    def test_ai_features(self):
-        """4. AI Features (with auth)"""
-        print("\n🤖 4. AI FEATURES")
-        print("=" * 50)
+    def test_phase4_error_scenarios(self):
+        """PHASE 4: Error Scenarios"""
+        print("\n⚠️ PHASE 4: ERROR SCENARIOS")
+        print("=" * 60)
         
-        if not self.auth_token:
-            self.log_result("AI Features", False, "No authentication token available")
-            return False
-        
+        # 11. Invalid Login Credentials
+        print("\n11. Invalid Login Credentials")
         try:
-            # POST /api/ai/chat (test query: "When can babies eat strawberries?")
-            chat_query = {
-                "message": "When can babies eat strawberries?",
-                "baby_age_months": 6
+            invalid_login_data = {
+                "email": "demo@babysteps.com",
+                "password": "wrongpassword123"
             }
             
             start_time = time.time()
-            response = self.session.post(f"{self.api_base}/ai/chat", json=chat_query, timeout=120)
+            response = requests.post(f"{self.api_base}/auth/login", json=invalid_login_data, timeout=30)
             response_time = time.time() - start_time
             
-            if response.status_code == 200:
-                data = response.json()
-                if 'response' in data and len(data['response']) > 20:
-                    self.log_result("POST /api/ai/chat", True, f"AI response received ({len(data['response'])} chars)", response_time)
-                else:
-                    self.log_result("POST /api/ai/chat", False, "Empty or invalid AI response", response_time)
-                    return False
-            else:
-                self.log_result("POST /api/ai/chat", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+            if response.status_code == 401:
+                self.log_result("Invalid Login Credentials", True, "401 Unauthorized (NOT 500)", response_time)
+            elif response.status_code == 500:
+                self.log_result("Invalid Login Credentials", False, "HTTP 500 - Should be 401", response_time)
                 return False
-            
-            # POST /api/food/research (test food safety query)
-            food_query = {
-                "question": "Are strawberries safe for babies?",
-                "baby_age_months": 8
-            }
-            
-            start_time = time.time()
-            response = self.session.post(f"{self.api_base}/food/research", json=food_query, timeout=60)
-            response_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                data = response.json()
-                if 'answer' in data and 'safety_level' in data:
-                    self.log_result("POST /api/food/research", True, f"Food safety assessment: {data['safety_level']}", response_time)
-                else:
-                    self.log_result("POST /api/food/research", False, "Invalid food research response format", response_time)
-                    return False
             else:
-                self.log_result("POST /api/food/research", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                self.log_result("Invalid Login Credentials", False, f"HTTP {response.status_code} - Expected 401", response_time)
                 return False
-            
-            # POST /api/meals/search (test meal planning)
-            meal_query = {
-                "query": "breakfast ideas for 8 month old baby",
-                "baby_age_months": 8
-            }
-            
-            start_time = time.time()
-            response = self.session.post(f"{self.api_base}/meals/search", json=meal_query, timeout=120)
-            response_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                data = response.json()
-                if 'results' in data:
-                    # Check if results is a list of meal objects or a string
-                    results = data['results']
-                    if isinstance(results, list) and len(results) > 0:
-                        self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(results)} meals)", response_time)
-                    elif isinstance(results, str) and len(results) > 50:
-                        self.log_result("POST /api/meals/search", True, f"Meal planning results received ({len(results)} chars)", response_time)
-                    else:
-                        self.log_result("POST /api/meals/search", False, f"Empty or invalid meal search response: {results}", response_time)
-                        return False
-                else:
-                    self.log_result("POST /api/meals/search", False, f"No 'results' field in response: {data}", response_time)
-                    return False
-            else:
-                self.log_result("POST /api/meals/search", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
-                return False
-            
-            return True
         except Exception as e:
-            self.log_result("AI Features", False, f"Error: {str(e)}")
+            self.log_result("Invalid Login Credentials", False, f"Error: {str(e)}")
             return False
+        
+        # 12. Unauthorized Access
+        print("\n12. Unauthorized Access")
+        try:
+            # Create session without auth token
+            unauth_session = requests.Session()
+            
+            start_time = time.time()
+            response = unauth_session.get(f"{self.api_base}/babies", timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code in [401, 403]:
+                self.log_result("Unauthorized Access", True, f"{response.status_code} (NOT 500)", response_time)
+            elif response.status_code == 500:
+                self.log_result("Unauthorized Access", False, "HTTP 500 - Should be 401/403", response_time)
+                return False
+            else:
+                self.log_result("Unauthorized Access", False, f"HTTP {response.status_code} - Expected 401/403", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Unauthorized Access", False, f"Error: {str(e)}")
+            return False
+        
+        return True
     
     def test_tracking_endpoints(self):
         """5. Tracking Endpoints (with auth)"""
