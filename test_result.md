@@ -329,17 +329,17 @@
 
 ## test_plan:
   current_focus:
-    - "User Registration Response Format Fix - CRITICAL"
-    - "Food Research Safety Level Standardization - ai_assessed → safe/caution/avoid/consult_doctor"
-    - "Meal Search Response Format Fix - 1 char → structured data"
-    - "Error Handling Timeout Issues - Should return 401/403 not timeout"
+    - "User Registration and Login - Frontend using localStorage instead of backend API - CRITICAL"
+    - "AI Assistant not sending requests to backend"
   stuck_tasks: 
-    - "User Registration Invalid Response Format"
-    - "Food Research Endpoint Safety Level Format"
-    - "Meal Search Minimal Data Response"
-    - "Error Handling Timeouts Instead of HTTP Codes"
+    - "User Registration and Login Persistence Issue"
+    - "AI Assistant Request Failure"
   test_all: false
   test_priority: "critical_first"
+
+## agent_communication:
+    -agent: "main"
+    -message: "CRITICAL ROOT CAUSE IDENTIFIED: Frontend App.js register() function (line 525) is calling offlineAPI.register() which stores user data in localStorage instead of calling the backend API. This explains why users can 'register' but backend shows 'user not found'. The login() function correctly calls backend API (line 448), but register() does not. Fix: Update register() function to use androidFetch to call backend /api/auth/register endpoint, matching the pattern used in login() function. Also need to investigate AI Assistant to confirm it's properly configured."
 
   - task: "Activity History repositioning and renaming"
     implemented: true
