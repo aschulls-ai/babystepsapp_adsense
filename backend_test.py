@@ -55,34 +55,158 @@ class BabyStepsBackendTester:
             self.results['details'].append(f"❌ {test_name}: {message}{time_info}")
             print(f"❌ {test_name}: FAILED {message}{time_info}")
     
-    def test_health_connectivity(self):
-        """1. Health & Connectivity - GET /api/health"""
-        print("\n🏥 1. HEALTH & CONNECTIVITY")
-        print("=" * 50)
+    def test_phase1_core_auth_database(self):
+        """PHASE 1: Core Authentication & Database"""
+        print("\n🔐 PHASE 1: CORE AUTHENTICATION & DATABASE")
+        print("=" * 60)
         
+        # 1. Health Check
+        print("\n1. Health Check - GET /api/health")
         try:
             start_time = time.time()
             response = requests.get(f"{self.api_base}/health", timeout=10)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
-                try:
-                    data = response.json()
-                    if data.get('status') == 'healthy':
-                        self.log_result("Health Check", True, f"Backend responding - {data.get('service', 'Baby Steps API')}", response_time)
-                        return True
-                    else:
-                        self.log_result("Health Check", False, f"Unhealthy status: {data}", response_time)
-                        return False
-                except json.JSONDecodeError:
-                    self.log_result("Health Check", False, f"Invalid JSON response: {response.text[:100]}", response_time)
-                    return False
+                self.log_result("Health Check", True, "200 OK", response_time)
             else:
                 self.log_result("Health Check", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
                 return False
         except Exception as e:
             self.log_result("Health Check", False, f"Connection error: {str(e)}")
             return False
+        
+        # 2. Demo Account Login
+        print("\n2. Demo Account Login")
+        try:
+            login_data = {
+                "email": "demo@babysteps.com",
+                "password": "demo123"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{self.api_base}/auth/login", json=login_data, timeout=30)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'access_token' in data and data.get('token_type') == 'bearer':
+                    self.auth_token = data['access_token']
+                    self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
+                    self.log_result("Demo Account Login", True, "200 OK with JWT token", response_time)
+                else:
+                    self.log_result("Demo Account Login", False, f"Invalid login response: {data}", response_time)
+                    return False
+            else:
+                self.log_result("Demo Account Login", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Demo Account Login", False, f"Error: {str(e)}")
+            return False
+        
+        # 3. New User Registration (Test 1)
+        print("\n3. New User Registration (Test 1)")
+        try:
+            timestamp = int(time.time())
+            test_email = f"newuser_{timestamp}@test.com"
+            user_data = {
+                "email": test_email,
+                "name": "Test User",
+                "password": "TestPassword123"
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{self.api_base}/auth/register", json=user_data, timeout=30)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.log_result("New User Registration", True, f"200 OK - Created {test_email}", response_time)
+                
+                # 4. Immediate Login After Registration
+                print("\n4. Immediate Login After Registration")
+                login_data = {
+                    "email": test_email,
+                    "password": "TestPassword123"
+                }
+                
+                start_time = time.time()
+                login_response = self.session.post(f"{self.api_base}/auth/login", json=login_data, timeout=30)
+                login_response_time = time.time() - start_time
+                
+                if login_response.status_code == 200:
+                    login_data_resp = login_response.json()
+                    if 'access_token' in login_data_resp:
+                        self.log_result("Immediate Login After Registration", True, "200 OK with JWT token", login_response_time)
+                    else:
+                        self.log_result("Immediate Login After Registration", False, "No JWT token in response", login_response_time)
+                        return False
+                else:
+                    self.log_result("Immediate Login After Registration", False, f"HTTP {login_response.status_code}", login_response_time)
+                    return False
+            else:
+                self.log_result("New User Registration", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("New User Registration", False, f"Error: {str(e)}")
+            return False
+        
+        # 5. User Persistence Test (Create 3 unique users)
+        print("\n5. User Persistence Test (Create 3 unique users)")
+        created_users = []
+        for i in range(3):
+            try:
+                timestamp = int(time.time() * 1000) + i  # Ensure uniqueness
+                test_email = f"persisttest_{timestamp}@test.com"
+                user_data = {
+                    "email": test_email,
+                    "name": f"Persist Test User {i+1}",
+                    "password": "PersistTest123"
+                }
+                
+                # Create user
+                start_time = time.time()
+                response = self.session.post(f"{self.api_base}/auth/register", json=user_data, timeout=30)
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    created_users.append((test_email, "PersistTest123"))
+                    self.log_result(f"Create User {i+1}", True, f"Created {test_email}", response_time)
+                else:
+                    self.log_result(f"Create User {i+1}", False, f"HTTP {response.status_code}", response_time)
+                    return False
+            except Exception as e:
+                self.log_result(f"Create User {i+1}", False, f"Error: {str(e)}")
+                return False
+        
+        # Test login for all 3 users sequentially
+        print("\n   Testing login for all 3 users sequentially:")
+        for i, (email, password) in enumerate(created_users):
+            try:
+                login_data = {
+                    "email": email,
+                    "password": password
+                }
+                
+                start_time = time.time()
+                response = self.session.post(f"{self.api_base}/auth/login", json=login_data, timeout=30)
+                response_time = time.time() - start_time
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if 'access_token' in data:
+                        self.log_result(f"Login User {i+1}", True, f"SUCCESS - {email}", response_time)
+                    else:
+                        self.log_result(f"Login User {i+1}", False, "No JWT token", response_time)
+                        return False
+                else:
+                    self.log_result(f"Login User {i+1}", False, f"HTTP {response.status_code}", response_time)
+                    return False
+            except Exception as e:
+                self.log_result(f"Login User {i+1}", False, f"Error: {str(e)}")
+                return False
+        
+        return True
     
     def test_authentication_flow(self):
         """2. Authentication Flow - Register and Login"""
