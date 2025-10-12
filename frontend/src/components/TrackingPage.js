@@ -9,7 +9,7 @@ import { Textarea } from './ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { shouldUseOfflineMode, offlineAPI } from '../offlineMode';
+import { androidFetch } from '../App';
 import { 
   Milk, 
   Droplet, 
