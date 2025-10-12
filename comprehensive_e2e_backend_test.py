@@ -441,13 +441,14 @@ class ComprehensiveE2ETester:
             
         current_time = datetime.now(timezone.utc).isoformat()
         activity_data = {
-            "type": "feeding",
             "baby_id": self.baby_id,
+            "type": "bottle",
+            "amount": 8.0,
             "notes": "8oz formula",
             "timestamp": current_time
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', activity_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/feedings', activity_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
