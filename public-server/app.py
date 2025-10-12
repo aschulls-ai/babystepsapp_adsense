@@ -268,14 +268,28 @@ async def login(login_data: LoginRequest, http_request: Request):
     conn = get_db_connection()
     cursor = conn.cursor()
     
+    # Debug: List all users in database
+    cursor.execute("SELECT email FROM users")
+    all_users = cursor.fetchall()
+    print(f"🔍 DEBUG: Users in database: {[u['email'] for u in all_users]}")
+    
     cursor.execute("SELECT id, email, name, password FROM users WHERE email = ?", (login_data.email,))
     user = cursor.fetchone()
-    conn.close()
     
-    if not user or user["password"] != login_data.password:
-        print(f"Invalid login for {login_data.email}")
+    if not user:
+        print(f"❌ User not found in database: {login_data.email}")
+        print(f"🔍 DEBUG: This user may have been created before a server restart")
+        print(f"🔍 DEBUG: SQLite database is ephemeral on Render - resets on restart")
+        conn.close()
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
+    if user["password"] != login_data.password:
+        print(f"❌ Password mismatch for {login_data.email}")
+        print(f"🔍 DEBUG: Stored password length: {len(user['password'])}, Provided: {len(login_data.password)}")
+        conn.close()
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    conn.close()
     access_token = create_access_token(data={"sub": login_data.email})
     print(f"✅ Successful login for {login_data.email}")
     return {"access_token": access_token, "token_type": "bearer"}
