@@ -99,6 +99,9 @@ class BabyStepsBackendTester:
                 data = response.json()
                 if 'message' in data and 'email' in data:
                     self.log_result("Registration", True, f"Test account created: {data['email']}", response_time)
+                elif 'access_token' in data and 'token_type' in data:
+                    # Some backends auto-login after registration
+                    self.log_result("Registration", True, f"Test account created and auto-logged in: {test_email}", response_time)
                 else:
                     self.log_result("Registration", False, f"Invalid registration response: {data}", response_time)
             else:
