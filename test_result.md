@@ -404,6 +404,18 @@
         -agent: "testing"
         -comment: "✅ LOGOUT FUNCTIONALITY COMPREHENSIVE TESTING COMPLETE: All logout functionality working perfectly as requested. DETAILED TEST RESULTS: 1) LOGIN VERIFICATION: ✅ Successfully logged in with test@babysteps.com/TestPassword123 and accessed dashboard 2) LOGOUT BUTTON VERIFICATION: ✅ Logout button ('Sign Out') found at bottom of sidebar menu with proper red text styling and LogOut icon, data-testid='logout-btn' present 3) LOGOUT FUNCTIONALITY: ✅ Clicking logout button successfully logs user out and redirects to auth page (/auth) 4) AUTHENTICATION STATE CLEARED: ✅ localStorage token cleared (verified as null), axios authorization headers removed 5) PROTECTED PAGE ACCESS: ✅ Attempting to access /dashboard after logout properly redirects to /auth page 6) SUCCESS TOAST MESSAGE: ✅ 'Logged out successfully' toast message appears in top-right corner after logout 7) UI VERIFICATION: ✅ Login form visible after logout, user returned to authentication page. All expected logout functionality confirmed working correctly - user authentication is properly cleared, protected routes are inaccessible, and success feedback is provided."
 
+  - task: "Frontend Login & Authentication Testing - User Registration Persistence Issue"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/App.js, /app/frontend/src/components/AuthPage.js"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        -working: false
+        -agent: "testing"
+        -comment: "🚨 CRITICAL ISSUE CONFIRMED - USER'S REPORTED PROBLEM REPRODUCED: Conducted comprehensive frontend authentication testing and successfully reproduced the exact issue reported by the user. DETAILED TEST RESULTS: 1) ✅ DEMO ACCOUNT LOGIN: demo@babysteps.com/demo123 works perfectly - proper JWT token generation, correct request format (JSON with email/password), successful dashboard redirect, token storage working correctly. 2) ❌ NEW USER REGISTRATION → LOGIN CYCLE FAILS: This is the exact issue! New user registration works with auto-login, but after logout, attempting to login with same credentials fails with 401 'Invalid credentials' error. Tested with unique email test.user.1760271926@babysteps.com - registration successful, auto-login works, logout successful, but subsequent login fails with backend returning 'Invalid credentials'. 3) ✅ FRONTEND IMPLEMENTATION CORRECT: Request format verified correct (POST to /api/auth/login with JSON body), Content-Type headers correct (application/json), androidFetch function working properly, network connectivity confirmed, token storage/retrieval working. 4) ✅ AI FUNCTIONALITY WORKING: AI Assistant responds correctly to 'When can babies eat strawberries?' query, proper authentication with JWT tokens, backend API calls successful (200 status), food research working correctly. 5) 🔍 ROOT CAUSE IDENTIFIED - BACKEND DATABASE ISSUE: Frontend is working correctly and sending proper requests. The issue is backend-side: either new user accounts are not being properly persisted during registration, or there's a password hashing/verification issue for newly created accounts. This explains why existing demo account works but new users fail after logout. CRITICAL FINDING: This matches exactly what the user reported - 'Can create account, can logout, CANNOT log back in (401 error)'. The frontend authentication system is working correctly; this is a backend database persistence or password verification issue."
+
   - task: "Complete Baby Steps app functionality testing with backend deployment issues"
     implemented: true
     working: false
