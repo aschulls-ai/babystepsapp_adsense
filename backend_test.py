@@ -22,30 +22,77 @@ import sys
 # Production backend URL
 BASE_URL = "https://baby-steps-demo-api.onrender.com"
 
-class BabyStepsBackendTester:
-    def __init__(self, backend_url=None):
-        self.backend_url = backend_url or BACKEND_URL
-        self.api_base = f"{self.backend_url}/api"
+class BackendTester:
+    def __init__(self):
+        self.base_url = BASE_URL
         self.session = requests.Session()
-        self.session.timeout = 120  # 2 minute timeout for AI endpoints
+        self.session.headers.update({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        })
         self.auth_token = None
-        # Demo credentials from review request
-        self.demo_email = "demo@babysteps.com"
-        self.demo_password = "demo123"
-        self.baby_id = None
-        self.results = {
-            'passed': 0,
-            'failed': 0,
-            'errors': [],
-            'details': []
+        self.test_results = []
+        self.total_tests = 12
+        self.passed_tests = 0
+        self.failed_tests = 0
+        
+    def log_test(self, test_name, success, details, response_time=None, status_code=None):
+        """Log test result with detailed information"""
+        result = {
+            'test': test_name,
+            'success': success,
+            'details': details,
+            'response_time': response_time,
+            'status_code': status_code,
+            'timestamp': datetime.now().isoformat()
         }
-    
-    def log_result(self, test_name, success, message="", response_time=None):
-        """Log test results with details"""
-        time_info = f" ({response_time:.2f}s)" if response_time else ""
+        self.test_results.append(result)
+        
         if success:
-            self.results['passed'] += 1
-            self.results['details'].append(f"✅ {test_name}: {message}{time_info}")
+            self.passed_tests += 1
+            status = "✅ PASS"
+        else:
+            self.failed_tests += 1
+            status = "❌ FAIL"
+            
+        print(f"{status} - {test_name}")
+        if response_time:
+            print(f"    Response Time: {response_time:.2f}s")
+        if status_code:
+            print(f"    Status Code: {status_code}")
+        print(f"    Details: {details}")
+        print()
+        
+    def make_request(self, method, endpoint, data=None, auth_required=False):
+        """Make HTTP request with error handling and timing"""
+        url = f"{self.base_url}{endpoint}"
+        headers = {}
+        
+        if auth_required and self.auth_token:
+            headers['Authorization'] = f'Bearer {self.auth_token}'
+            
+        start_time = time.time()
+        
+        try:
+            if method.upper() == 'GET':
+                response = self.session.get(url, headers=headers, timeout=30)
+            elif method.upper() == 'POST':
+                response = self.session.post(url, json=data, headers=headers, timeout=30)
+            elif method.upper() == 'PUT':
+                response = self.session.put(url, json=data, headers=headers, timeout=30)
+            else:
+                raise ValueError(f"Unsupported method: {method}")
+                
+            response_time = time.time() - start_time
+            
+            return response, response_time
+            
+        except requests.exceptions.Timeout:
+            response_time = time.time() - start_time
+            return None, response_time
+        except requests.exceptions.RequestException as e:
+            response_time = time.time() - start_time
+            return None, response_time
             print(f"✅ {test_name}: PASSED {message}{time_info}")
         else:
             self.results['failed'] += 1
