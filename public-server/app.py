@@ -435,44 +435,42 @@ async def get_baby(
     }
 
 @app.put("/api/babies/{baby_id}")
-async def update_baby(baby_id: str, request: BabyCreateRequest, current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def update_baby(
+    baby_id: str,
+    request: BabyCreateRequest,
+    current_user_email: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     # Check if baby exists and belongs to user
-    cursor.execute("SELECT id FROM babies WHERE id = ? AND user_id = ?", (baby_id, user["id"]))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Baby not found")
+    baby = db.query(DBBaby).filter(
+        DBBaby.id == baby_id,
+        DBBaby.user_id == user.id
+    ).first()
+    if not baby:
+        raise HTTPException(status_code=404, detail="Baby not found or doesn't belong to user")
     
     # Update baby
-    try:
-        cursor.execute("""
-            UPDATE babies SET name = ?, birth_date = ?, gender = ?
-            WHERE id = ? AND user_id = ?
-        """, (request.name, request.birth_date, request.gender, baby_id, user["id"]))
-        
-        conn.commit()
-        
-        # Get updated baby
-        cursor.execute("SELECT id, name, birth_date, gender, profile_image, user_id FROM babies WHERE id = ?", (baby_id,))
-        baby = cursor.fetchone()
-        conn.close()
-        
-        print(f"✅ Baby updated: {request.name}")
-        return Baby(**dict(baby))
-        
-    except Exception as e:
-        conn.close()
-        print(f"❌ Baby update failed: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update baby")
+    baby.name = request.name
+    baby.birth_date = request.birth_date
+    baby.gender = request.gender
+    
+    db.commit()
+    db.refresh(baby)
+    
+    print(f"✅ Baby updated: {baby.name}")
+    return {
+        "id": baby.id,
+        "name": baby.name,
+        "birth_date": baby.birth_date,
+        "gender": baby.gender,
+        "profile_image": baby.profile_image,
+        "user_id": baby.user_id
+    }
 
 # Activity endpoints
 @app.get("/api/activities")
