@@ -308,7 +308,7 @@
 
 ## test_plan:
   current_focus:
-    - "Backend Connectivity After offlineMode.js Fix - COMPLETED"
+    - "Render Production Backend API - Pydantic Validation Error Fix - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
