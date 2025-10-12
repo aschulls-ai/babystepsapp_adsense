@@ -109,11 +109,24 @@ const TrackingPage = ({ currentBaby }) => {
     if (!currentBaby) return;
 
     try {
-      // Use offline API to get all activities for this baby
-      const response = await offlineAPI.getActivities(currentBaby.id);
+      // PHASE 2: Fetch from backend API
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities?baby_id=${currentBaby.id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
       
       // Add display type for each activity
-      const activitiesWithDisplayType = response.data.map(activity => ({
+      const activitiesWithDisplayType = data.map(activity => ({
         ...activity,
         activity_type: activity.type,
         display_type: activity.type.charAt(0).toUpperCase() + activity.type.slice(1)
