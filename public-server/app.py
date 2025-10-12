@@ -265,37 +265,29 @@ async def health_check():
 
 # Authentication endpoints
 @app.post("/api/auth/login")
-async def login(login_data: LoginRequest, http_request: Request):
+async def login(login_data: LoginRequest, http_request: Request, db: Session = Depends(get_db)):
     # Enhanced logging for debugging mobile connections
     print(f"Login attempt from: {http_request.client.host if http_request.client else 'unknown'}")
     print(f"User-Agent: {http_request.headers.get('user-agent', 'unknown')}")
     print(f"Email: {login_data.email}")
     
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
     # Debug: List all users in database
-    cursor.execute("SELECT email FROM users")
-    all_users = cursor.fetchall()
-    print(f"🔍 DEBUG: Users in database: {[u['email'] for u in all_users]}")
+    all_users = db.query(User.email).all()
+    print(f"🔍 DEBUG: Users in database: {[u.email for u in all_users]}")
     
-    cursor.execute("SELECT id, email, name, password FROM users WHERE email = ?", (login_data.email,))
-    user = cursor.fetchone()
+    # Find user by email
+    user = db.query(User).filter(User.email == login_data.email).first()
     
     if not user:
         print(f"❌ User not found in database: {login_data.email}")
-        print(f"🔍 DEBUG: This user may have been created before a server restart")
-        print(f"🔍 DEBUG: SQLite database is ephemeral on Render - resets on restart")
-        conn.close()
+        print(f"✅ Using PostgreSQL - user data persists across restarts!")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    if user["password"] != login_data.password:
+    if user.password != login_data.password:
         print(f"❌ Password mismatch for {login_data.email}")
-        print(f"🔍 DEBUG: Stored password length: {len(user['password'])}, Provided: {len(login_data.password)}")
-        conn.close()
+        print(f"🔍 DEBUG: Stored password length: {len(user.password)}, Provided: {len(login_data.password)}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    conn.close()
     access_token = create_access_token(data={"sub": login_data.email})
     print(f"✅ Successful login for {login_data.email}")
     return {"access_token": access_token, "token_type": "bearer"}
