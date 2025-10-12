@@ -208,65 +208,107 @@ class BabyStepsBackendTester:
         
         return True
     
-    def test_authentication_flow(self):
-        """2. Authentication Flow - Register and Login"""
-        print("\n🔐 2. AUTHENTICATION FLOW")
-        print("=" * 50)
+    def test_phase2_ai_integration(self):
+        """PHASE 2: AI Integration"""
+        print("\n🤖 PHASE 2: AI INTEGRATION")
+        print("=" * 60)
         
-        # Test account registration first
+        if not self.auth_token:
+            self.log_result("AI Integration", False, "No authentication token available")
+            return False
+        
+        # 6. AI Chat Endpoint
+        print("\n6. AI Chat Endpoint")
         try:
-            test_email = f"test_{uuid.uuid4().hex[:8]}@babysteps.com"
-            user_data = {
-                "email": test_email,
-                "name": "Test User",
-                "password": "TestPassword123"
+            chat_query = {
+                "message": "When can babies eat strawberries?",
+                "baby_age_months": 6
             }
             
             start_time = time.time()
-            response = self.session.post(f"{self.api_base}/auth/register", json=user_data, timeout=30)
+            response = self.session.post(f"{self.api_base}/ai/chat", json=chat_query, timeout=120)
             response_time = time.time() - start_time
             
             if response.status_code == 200:
                 data = response.json()
-                if 'message' in data and 'email' in data:
-                    self.log_result("Registration", True, f"Test account created: {data['email']}", response_time)
-                elif 'access_token' in data and 'token_type' in data:
-                    # Some backends auto-login after registration
-                    self.log_result("Registration", True, f"Test account created and auto-logged in: {test_email}", response_time)
+                if 'response' in data:
+                    response_text = data['response']
+                    # Check if it's a real AI response (NOT "demo response" or "temporarily unavailable")
+                    if len(response_text) > 100 and "demo response" not in response_text.lower() and "temporarily unavailable" not in response_text.lower():
+                        self.log_result("AI Chat Endpoint", True, f"Real AI response ({len(response_text)} chars)", response_time)
+                    else:
+                        self.log_result("AI Chat Endpoint", False, f"Demo/fallback response: {response_text[:100]}...", response_time)
+                        return False
                 else:
-                    self.log_result("Registration", False, f"Invalid registration response: {data}", response_time)
-            else:
-                self.log_result("Registration", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
-        except Exception as e:
-            self.log_result("Registration", False, f"Error: {str(e)}")
-        
-        # Test demo user login
-        try:
-            login_data = {
-                "email": self.demo_email,
-                "password": self.demo_password
-            }
-            
-            start_time = time.time()
-            response = self.session.post(f"{self.api_base}/auth/login", json=login_data, timeout=30)
-            response_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                data = response.json()
-                if 'access_token' in data and data.get('token_type') == 'bearer':
-                    self.auth_token = data['access_token']
-                    self.session.headers.update({'Authorization': f"Bearer {self.auth_token}"})
-                    self.log_result("Demo Login", True, "JWT token generated successfully", response_time)
-                    return True
-                else:
-                    self.log_result("Demo Login", False, f"Invalid login response: {data}", response_time)
+                    self.log_result("AI Chat Endpoint", False, "No 'response' field in data", response_time)
                     return False
             else:
-                self.log_result("Demo Login", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                self.log_result("AI Chat Endpoint", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
                 return False
         except Exception as e:
-            self.log_result("Demo Login", False, f"Error: {str(e)}")
+            self.log_result("AI Chat Endpoint", False, f"Error: {str(e)}")
             return False
+        
+        # 7. Food Research Endpoint
+        print("\n7. Food Research Endpoint")
+        try:
+            food_query = {
+                "question": "Are strawberries safe for 6 month old?",
+                "baby_age_months": 6
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{self.api_base}/food/research", json=food_query, timeout=60)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'answer' in data and 'safety_level' in data:
+                    self.log_result("Food Research Endpoint", True, f"Real food safety assessment with safety_level: {data['safety_level']}", response_time)
+                else:
+                    self.log_result("Food Research Endpoint", False, "Missing answer or safety_level fields", response_time)
+                    return False
+            else:
+                self.log_result("Food Research Endpoint", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Food Research Endpoint", False, f"Error: {str(e)}")
+            return False
+        
+        # 8. Meal Search Endpoint
+        print("\n8. Meal Search Endpoint")
+        try:
+            meal_query = {
+                "query": "breakfast ideas for 8 month old",
+                "baby_age_months": 8
+            }
+            
+            start_time = time.time()
+            response = self.session.post(f"{self.api_base}/meals/search", json=meal_query, timeout=120)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'results' in data:
+                    results = data['results']
+                    if isinstance(results, str) and len(results) > 100:
+                        self.log_result("Meal Search Endpoint", True, f"Real meal suggestions (structured data, {len(results)} chars)", response_time)
+                    elif isinstance(results, list) and len(results) > 0:
+                        self.log_result("Meal Search Endpoint", True, f"Real meal suggestions ({len(results)} meals)", response_time)
+                    else:
+                        self.log_result("Meal Search Endpoint", False, f"Empty or invalid results: {results}", response_time)
+                        return False
+                else:
+                    self.log_result("Meal Search Endpoint", False, "No 'results' field in response", response_time)
+                    return False
+            else:
+                self.log_result("Meal Search Endpoint", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Meal Search Endpoint", False, f"Error: {str(e)}")
+            return False
+        
+        return True
     
     def test_baby_profile_endpoints(self):
         """3. Baby Profile Endpoints (with auth)"""
