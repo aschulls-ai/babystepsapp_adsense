@@ -210,6 +210,21 @@
         -agent: "main"
         -comment: "✅ ENHANCED QUESTION SUGGESTIONS IMPLEMENTED: Improved QuestionSuggestions component with comprehensive food pattern matching (50+ foods), question variation normalization, intent-based matching, improved scoring algorithm, and added QuestionSuggestions to MealPlanner. AI Assistant should be able to pull from both ai_assistant.json and food_research.json. Needs comprehensive testing to verify: 1) Dropdown suggestions working properly, 2) Correct answers being provided, 3) Quick questions functioning, 4) Multi-knowledge-base queries working (both ai_assistant.json and food_research.json)."
 
+  - task: "Frontend Registration Using localStorage Instead of Backend API"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        -working: false
+        -agent: "user"
+        -comment: "User reports: Can register and create account, but after logout cannot log back in. Backend logs show 'User not found in database' even though frontend shows 'account already exists'. Registration appears to save to internal storage, not to server."
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROOT CAUSE IDENTIFIED: App.js line 525 calls offlineAPI.register() which stores user in localStorage (key: babysteps_offline_users) instead of calling backend API. The login() function (line 448) correctly calls backend ${API}/api/auth/login, but register() uses offline mode. FIX PLAN: Update register() function to use androidFetch() to call backend /api/auth/register endpoint, matching the implementation pattern in login() function. This will ensure users are persisted to PostgreSQL database on Render backend."
+
   - task: "Render Production Backend API - Pydantic Validation Error Fix"
     implemented: true
     working: true
