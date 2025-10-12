@@ -182,10 +182,13 @@ const AIAssistant = ({ currentBaby }) => {
   };
 
   const MessageBubble = ({ message }) => {
-    const isBot = message.type === 'assistant' || message.type === 'bot';
+    const isBot = message.type === 'assistant' || message.type === 'bot' || message.type === 'ai';
 
     return (
-      <div className={`flex items-start gap-3 ${isBot ? '' : 'flex-row-reverse'} w-full mb-4`}>
+      <div 
+        className={`flex items-start gap-3 ${isBot ? '' : 'flex-row-reverse'} w-full mb-4`}
+        data-message-type={message.type}
+      >
         <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
           isBot ? 'bg-rose-500 text-white' : 'bg-blue-500 text-white'
         }`}>
