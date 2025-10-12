@@ -35,6 +35,9 @@ import { format, formatDistanceToNow } from 'date-fns';
 import PageAd from './ads/PageAd';
 
 const TrackingPage = ({ currentBaby }) => {
+  // PHASE 2: Cloud-first - Always use backend API
+  const API = process.env.REACT_APP_BACKEND_URL;
+  
   const [activeTab, setActiveTab] = useState('feeding');
   const [recentActivities, setRecentActivities] = useState({});
   const [reminders, setReminders] = useState([]);
