@@ -236,10 +236,10 @@ def init_demo_data():
     
     conn.close()
 
-# Initialize database and demo data on startup using new SQLAlchemy functions
-from database import init_database as init_db_new, init_demo_data as init_demo_new
-init_db_new()
-init_demo_new()
+# Initialize database and demo data on startup
+# Using new SQLAlchemy-based functions imported from database.py at top of file
+init_database()  # This calls the NEW function from database.py
+init_demo_data()  # This calls the NEW function from database.py
 
 # Root endpoint
 @app.get("/")
