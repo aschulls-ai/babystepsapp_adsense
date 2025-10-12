@@ -54,10 +54,10 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 480
 EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
 
-# Database setup
-DATABASE_PATH = "baby_steps.db"
+# Note: Database setup is now in database.py module
+# This section is kept for backwards compatibility but uses the new module
 
-def init_database():
+def init_database_old():
     """Initialize SQLite database with tables"""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
