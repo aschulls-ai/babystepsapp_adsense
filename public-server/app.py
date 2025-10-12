@@ -296,28 +296,38 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
 
 @app.post("/api/auth/register") 
 async def register(request: RegisterRequest, db: Session = Depends(get_db)):
-    # Check if email already exists
-    existing_user = db.query(DBUser).filter(DBUser.email == request.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # Create new user
-    user_id = str(uuid.uuid4())
-    new_user = DBUser(
-        id=user_id,
-        email=request.email,
-        name=request.name,
-        password=request.password  # In production, should be hashed
-    )
-    
     try:
+        # Check if email already exists
+        existing_user = db.query(DBUser).filter(DBUser.email == request.email).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Create new user
+        user_id = str(uuid.uuid4())
+        new_user = DBUser(
+            id=user_id,
+            email=request.email,
+            name=request.name,
+            password=request.password  # In production, should be hashed
+        )
+        
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
         
         access_token = create_access_token(data={"sub": request.email})
         print(f"✅ New user registered: {request.email} (PostgreSQL - persistent!)")
-        return {"access_token": access_token, "token_type": "bearer"}
+        
+        # Return complete user data with token
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": {
+                "id": new_user.id,
+                "email": new_user.email,
+                "name": new_user.name
+            }
+        }
         
     except Exception as e:
         db.rollback()
