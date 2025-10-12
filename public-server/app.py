@@ -274,7 +274,7 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
     print(f"Email: {login_data.email}")
     
     # Debug: List all users in database
-    all_users = db.query(User.email).all()
+    all_users = db.query(User).all()
     print(f"🔍 DEBUG: Users in database: {[u.email for u in all_users]}")
     
     # Find user by email
