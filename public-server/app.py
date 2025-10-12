@@ -282,7 +282,7 @@ async def login(login_data: LoginRequest, http_request: Request, db: Session = D
     
     if not user:
         print(f"❌ User not found in database: {login_data.email}")
-        print(f"✅ Using PostgreSQL - user data persists across restarts!")
+        print("✅ Using PostgreSQL - user data persists across restarts!")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     if user.password != login_data.password:
