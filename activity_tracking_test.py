@@ -687,7 +687,7 @@ class ActivityTrackingTester:
     # PHASE 3: Retrieve Activities (Verify Persistence)
     
     def test_3_1_get_all_activities(self):
-        """Test 3.1: Get All Activities"""
+        """Test 3.1: Get All Activities (from all endpoints)"""
         if not self.auth_token or not self.baby_id:
             self.log_test(
                 "3.1 Get All Activities",
@@ -697,68 +697,50 @@ class ActivityTrackingTester:
                 None
             )
             return False
-            
-        response, response_time = self.make_request('GET', f'/api/activities?baby_id={self.baby_id}', auth_required=True)
         
-        if response and response.status_code == 200:
-            try:
-                data = response.json()
-                if isinstance(data, list):
-                    # Check if we have the 6 activities we just created
-                    activity_types = [activity.get('type') for activity in data]
-                    expected_types = ['feeding', 'diaper', 'sleep', 'pumping', 'measurement', 'milestone']
-                    
-                    found_types = []
-                    for expected_type in expected_types:
-                        if expected_type in activity_types:
-                            found_types.append(expected_type)
-                    
-                    if len(found_types) >= 6:
-                        self.log_test(
-                            "3.1 Get All Activities",
-                            True,
-                            f"Retrieved {len(data)} activities, found all 6 expected types: {found_types} ({response_time:.2f}s)",
-                            response_time,
-                            response.status_code
-                        )
-                        return True
-                    else:
-                        self.log_test(
-                            "3.1 Get All Activities",
-                            False,
-                            f"Retrieved {len(data)} activities, but only found {len(found_types)}/6 expected types: {found_types}",
-                            response_time,
-                            response.status_code
-                        )
-                        return False
-                else:
-                    self.log_test(
-                        "3.1 Get All Activities",
-                        False,
-                        "Response is not a list of activities",
-                        response_time,
-                        response.status_code
-                    )
-                    return False
-            except json.JSONDecodeError:
-                self.log_test(
-                    "3.1 Get All Activities",
-                    False,
-                    "Invalid JSON response",
-                    response_time,
-                    response.status_code
-                )
-                return False
+        # Test all activity endpoints
+        endpoints = [
+            ('/api/feedings', 'feeding'),
+            ('/api/diapers', 'diaper'),
+            ('/api/sleep', 'sleep'),
+            ('/api/pumping', 'pumping'),
+            ('/api/measurements', 'measurement'),
+            ('/api/milestones', 'milestone')
+        ]
+        
+        total_activities = 0
+        found_types = []
+        total_response_time = 0
+        
+        for endpoint, activity_type in endpoints:
+            response, response_time = self.make_request('GET', f'{endpoint}?baby_id={self.baby_id}', auth_required=True)
+            total_response_time += response_time
+            
+            if response and response.status_code == 200:
+                try:
+                    data = response.json()
+                    if isinstance(data, list) and len(data) > 0:
+                        total_activities += len(data)
+                        found_types.append(activity_type)
+                except json.JSONDecodeError:
+                    pass
+        
+        if len(found_types) >= 6:
+            self.log_test(
+                "3.1 Get All Activities",
+                True,
+                f"Retrieved {total_activities} activities across all endpoints, found all 6 expected types: {found_types} ({total_response_time:.2f}s)",
+                total_response_time,
+                200
+            )
+            return True
         else:
-            error_msg = f"Get activities failed - Status: {response.status_code if response else 'Timeout'}"
-            if response and response.status_code == 500:
-                error_msg += " (HTTP 500 - CRITICAL: get_db_connection() bug may still exist)"
             self.log_test(
                 "3.1 Get All Activities",
                 False,
-                error_msg,
-                response_time,
-                response.status_code if response else None
+                f"Retrieved {total_activities} activities, but only found {len(found_types)}/6 expected types: {found_types}",
+                total_response_time,
+                None
             )
             return False
     
