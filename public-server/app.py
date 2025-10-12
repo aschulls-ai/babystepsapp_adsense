@@ -234,7 +234,7 @@ init_demo_data()
 
 # Root endpoint
 @app.get("/")
-async def root(request):
+async def root(request: Request):
     # Log request details for debugging
     print(f"Request from: {request.client.host if request.client else 'unknown'}")
     print(f"User-Agent: {request.headers.get('user-agent', 'unknown')}")
