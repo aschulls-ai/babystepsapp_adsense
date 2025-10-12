@@ -416,11 +416,9 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to fetch babies:', error);
-      
-      // If online fetch fails and not already in offline mode, try offline
-      // Don't fallback to offline mode - keep trying backend connectivity
-      console.log('⚠️ Backend fetch failed, but staying in online mode for debugging');
-      throw error; // Throw error to maintain existing behavior and allow debugging
+      console.log('⚠️ Backend fetch failed, app will continue without babies loaded');
+      // DON'T throw during initialization - let the app start successfully
+      // User can try to add a baby or login again
     }
   };
 
