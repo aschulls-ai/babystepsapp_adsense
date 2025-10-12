@@ -364,43 +364,41 @@ async def get_babies(current_user_email: str = Depends(get_current_user), db: Se
     ) for baby in babies]
 
 @app.post("/api/babies")
-async def create_baby(request: BabyCreateRequest, current_user_email: str = Depends(get_current_user)):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
+async def create_baby(request: BabyCreateRequest, current_user_email: str = Depends(get_current_user), db: Session = Depends(get_db)):
     # Get user
-    cursor.execute("SELECT id FROM users WHERE email = ?", (current_user_email,))
-    user = cursor.fetchone()
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
     if not user:
-        conn.close()
         raise HTTPException(status_code=404, detail="User not found")
     
     baby_id = str(uuid.uuid4())
     try:
-        cursor.execute("""
-            INSERT INTO babies (id, name, birth_date, gender, user_id)
-            VALUES (?, ?, ?, ?, ?)
-        """, (baby_id, request.name, request.birth_date, request.gender, user["id"]))
+        new_baby = DBBaby(
+            id=baby_id,
+            name=request.name,
+            birth_date=request.birth_date,
+            gender=request.gender,
+            user_id=user.id
+        )
         
-        conn.commit()
-        conn.close()
+        db.add(new_baby)
+        db.commit()
+        db.refresh(new_baby)
         
-        baby_data = {
-            "id": baby_id,
-            "name": request.name,
-            "birth_date": request.birth_date,
-            "gender": request.gender,
-            "profile_image": None,
-            "user_id": user["id"]
-        }
+        print(f"✅ New baby created: {request.name} (PostgreSQL)")
         
-        print(f"✅ New baby created: {request.name}")
-        return Baby(**baby_data)
+        return Baby(
+            id=new_baby.id,
+            name=new_baby.name,
+            birth_date=new_baby.birth_date,
+            gender=new_baby.gender,
+            profile_image=None,
+            user_id=new_baby.user_id
+        )
         
     except Exception as e:
-        conn.close()
+        db.rollback()
         print(f"❌ Baby creation failed: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create baby")
+        raise HTTPException(status_code=500, detail=f"Failed to create baby: {str(e)}")
 
 @app.get("/api/babies/{baby_id}")
 async def get_baby(baby_id: str, current_user_email: str = Depends(get_current_user)):
