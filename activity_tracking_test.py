@@ -423,16 +423,17 @@ class ActivityTrackingTester:
             )
             return False
             
-        current_time = datetime.now(timezone.utc).isoformat()
+        current_time = datetime.now(timezone.utc)
+        start_time = current_time - timedelta(hours=2)
         sleep_data = {
             "baby_id": self.baby_id,
-            "type": "sleep",
-            "duration": "120",
-            "notes": "Nap time test",
-            "timestamp": current_time
+            "start_time": start_time.isoformat(),
+            "end_time": current_time.isoformat(),
+            "quality": "good",
+            "notes": "Nap time test"
         }
         
-        response, response_time = self.make_request('POST', '/api/activities', sleep_data, auth_required=True)
+        response, response_time = self.make_request('POST', '/api/sleep', sleep_data, auth_required=True)
         
         if response and response.status_code in [200, 201]:
             try:
