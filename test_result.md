@@ -210,6 +210,18 @@
         -agent: "main"
         -comment: "✅ ENHANCED QUESTION SUGGESTIONS IMPLEMENTED: Improved QuestionSuggestions component with comprehensive food pattern matching (50+ foods), question variation normalization, intent-based matching, improved scoring algorithm, and added QuestionSuggestions to MealPlanner. AI Assistant should be able to pull from both ai_assistant.json and food_research.json. Needs comprehensive testing to verify: 1) Dropdown suggestions working properly, 2) Correct answers being provided, 3) Quick questions functioning, 4) Multi-knowledge-base queries working (both ai_assistant.json and food_research.json)."
 
+  - task: "Phase 2: Cloud-First Architecture Refactor"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ PHASE 2 IMPLEMENTATION STARTED: Refactoring app to cloud-first architecture per user request. ROOT CAUSE ANALYSIS: User correctly identified that mixed local/cloud dependencies (SQLite, localStorage, offlineAPI) are causing inconsistent behavior. CHANGES IMPLEMENTED: 1) register() function - Uses backend API (Phase 1 fix), 2) fetchBabies() - Removed shouldUseOfflineMode() check, now always fetches from backend API, 3) addBaby() - Removed offlineAPI.createBaby(), now uses POST to ${API}/api/babies, 4) updateBaby() - Removed offlineAPI.updateBaby(), now uses PUT to ${API}/api/babies/{id}. ARCHITECTURE CHANGE: Backend API (PostgreSQL on Render) is now the single source of truth. localStorage only used for JWT token storage. All user data (registration, babies, activities) persists to cloud. Benefits: Cross-device sync, data survives app uninstall, simpler codebase. Needs testing to verify all operations work correctly with backend."
+
   - task: "Frontend Registration Using localStorage Instead of Backend API"
     implemented: true
     working: false
