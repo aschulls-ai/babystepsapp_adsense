@@ -106,8 +106,9 @@ def init_database_old_sqlite():
     conn.close()
     print("✅ Database initialized")
 
-def get_db_connection():
-    """Get database connection"""
+def get_db_connection_old_sqlite():
+    """OLD - Get SQLite database connection - DEPRECATED"""
+    import sqlite3
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row  # Enable dict-like access to rows
     return conn
