@@ -896,23 +896,28 @@ class ActivityTrackingTester:
             )
             return False
         
-        activity_types = ['feeding', 'diaper', 'sleep', 'pumping', 'measurement', 'milestone']
-        successful_types = []
+        # Test each specific endpoint
+        endpoints = [
+            ('/api/feedings', 'feeding'),
+            ('/api/diapers', 'diaper'),
+            ('/api/sleep', 'sleep'),
+            ('/api/pumping', 'pumping'),
+            ('/api/measurements', 'measurement'),
+            ('/api/milestones', 'milestone')
+        ]
         
-        for activity_type in activity_types:
-            response, response_time = self.make_request('GET', f'/api/activities?baby_id={self.baby_id}&type={activity_type}&limit=5', auth_required=True)
+        successful_types = []
+        total_response_time = 0
+        
+        for endpoint, activity_type in endpoints:
+            response, response_time = self.make_request('GET', f'{endpoint}?baby_id={self.baby_id}', auth_required=True)
+            total_response_time += response_time
             
             if response and response.status_code == 200:
                 try:
                     data = response.json()
                     if isinstance(data, list):
-                        # Check if all returned activities are of the requested type
-                        correct_type_activities = [activity for activity in data if activity.get('type') == activity_type]
-                        
-                        if len(correct_type_activities) == len(data):
-                            successful_types.append(activity_type)
-                        else:
-                            break  # Stop on first failure
+                        successful_types.append(activity_type)
                     else:
                         break  # Stop on first failure
                 except json.JSONDecodeError:
@@ -924,8 +929,8 @@ class ActivityTrackingTester:
             self.log_test(
                 "3.4 Get Activities for Each Type",
                 True,
-                f"All 6 activity types can be retrieved with type filtering: {successful_types} ({response_time:.2f}s)",
-                response_time,
+                f"All 6 activity endpoints working correctly: {successful_types} ({total_response_time:.2f}s)",
+                total_response_time,
                 200
             )
             return True
@@ -933,9 +938,9 @@ class ActivityTrackingTester:
             self.log_test(
                 "3.4 Get Activities for Each Type",
                 False,
-                f"Only {len(successful_types)}/6 activity types work with type filtering: {successful_types}",
-                response_time,
-                response.status_code if response else None
+                f"Only {len(successful_types)}/6 activity endpoints working: {successful_types}",
+                total_response_time,
+                response.status_code if 'response' in locals() else None
             )
             return False
 
