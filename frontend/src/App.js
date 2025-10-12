@@ -453,12 +453,24 @@ function App() {
         body: JSON.stringify({ email, password })
       });
       
+      console.log('📡 Response status:', response.status, response.statusText);
+      
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        // Try to get error details from response body
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+          console.error('❌ Backend error response:', errorData);
+        } catch (e) {
+          console.error('❌ Could not parse error response');
+        }
+        throw new Error(errorMessage);
       }
       
       const data = await response.json();
       console.log('✅ Login response received:', data);
+      console.log('🔍 Response type:', typeof data, 'Keys:', Object.keys(data));
       
       // Backend returns {access_token, token_type} directly
       const access_token = data.access_token || data.data?.access_token;
