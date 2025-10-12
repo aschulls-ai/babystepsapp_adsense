@@ -329,10 +329,12 @@
 
 ## test_plan:
   current_focus:
-    - "Production Backend Critical Failure Investigation - URGENT"
+    - "Baby Profile Endpoints HTTP 500 Error Fix - CRITICAL"
+    - "Food Research Safety Level Standardization"
+    - "Meal Search Response Format Fix"
   stuck_tasks: 
-    - "Production Backend Authentication Endpoints - HTTP 500 Errors"
-    - "Render Deployment Configuration Issues"
+    - "Baby Profile Management - HTTP 500 on Create/Retrieve"
+    - "Production Backend Error Handling - Some 500s instead of 401/403"
   test_all: false
   test_priority: "critical_first"
 
