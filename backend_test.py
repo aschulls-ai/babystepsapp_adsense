@@ -98,7 +98,15 @@ class BabyStepsBackendTester:
                     self.log_result("Demo Account Login", False, f"Invalid login response: {data}", response_time)
                     return False
             else:
-                self.log_result("Demo Account Login", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                # Capture more detailed error information
+                error_text = response.text if response.text else "No response body"
+                self.log_result("Demo Account Login", False, f"HTTP {response.status_code}: {error_text[:200]}", response_time)
+                
+                # Log additional debugging info
+                print(f"   🔍 Debug Info:")
+                print(f"      - Status Code: {response.status_code}")
+                print(f"      - Headers: {dict(response.headers)}")
+                print(f"      - Response Body: {error_text[:500]}")
                 return False
         except Exception as e:
             self.log_result("Demo Account Login", False, f"Error: {str(e)}")
