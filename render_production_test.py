@@ -245,21 +245,38 @@ class RenderProductionTester:
             
             if response.status_code == 200:
                 result = response.json()
-                meal_results = result.get("results", "")
+                meal_results = result.get("results", [])
                 query_echo = result.get("query", "")
                 
-                # Check for Pydantic validation errors
-                if "missing http_request" in meal_results.lower():
-                    self.log_test("Meal Search Endpoint", False, 
-                                f"❌ PYDANTIC ERROR IN RESPONSE: {meal_results[:200]}...", response_time)
-                    return False
-                elif len(meal_results) > 100:  # Expect comprehensive response
-                    self.log_test("Meal Search Endpoint", True, 
-                                f"Meal search successful | Query: '{query_echo}' | Response: {len(meal_results)} chars", response_time)
-                    return True
+                # Handle both string and list response formats
+                if isinstance(meal_results, list):
+                    # New format - list of meal objects
+                    if len(meal_results) > 0:
+                        self.log_test("Meal Search Endpoint", True, 
+                                    f"Meal search successful | Query: '{query_echo}' | Found {len(meal_results)} meal ideas", response_time)
+                        return True
+                    else:
+                        self.log_test("Meal Search Endpoint", False, 
+                                    "No meal results returned", response_time)
+                        return False
+                elif isinstance(meal_results, str):
+                    # Old format - string response
+                    # Check for Pydantic validation errors
+                    if "missing http_request" in meal_results.lower():
+                        self.log_test("Meal Search Endpoint", False, 
+                                    f"❌ PYDANTIC ERROR IN RESPONSE: {meal_results[:200]}...", response_time)
+                        return False
+                    elif len(meal_results) > 100:  # Expect comprehensive response
+                        self.log_test("Meal Search Endpoint", True, 
+                                    f"Meal search successful | Query: '{query_echo}' | Response: {len(meal_results)} chars", response_time)
+                        return True
+                    else:
+                        self.log_test("Meal Search Endpoint", False, 
+                                    f"Response too short ({len(meal_results)} chars): {meal_results}", response_time)
+                        return False
                 else:
                     self.log_test("Meal Search Endpoint", False, 
-                                f"Response too short ({len(meal_results)} chars): {meal_results}", response_time)
+                                f"Unexpected response format: {type(meal_results)}", response_time)
                     return False
             else:
                 # Check for Pydantic validation errors
