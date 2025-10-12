@@ -14,26 +14,7 @@ const AIAssistant = ({ currentBaby }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const messagesEndRef = useRef(null);
 
-  const scrollToLatestAIResponse = () => {
-    // Find the most recent AI message and scroll to its top
-    const chatContainer = document.querySelector('.h-\\[500px\\].overflow-y-auto');
-    if (!chatContainer) return;
-    
-    // Get all AI message elements (those with the bot icon)
-    const aiMessages = chatContainer.querySelectorAll('[data-message-type="ai"]');
-    
-    if (aiMessages.length > 0) {
-      // Get the last (most recent) AI message
-      const lastAIMessage = aiMessages[aiMessages.length - 1];
-      
-      // Scroll to show the top of the AI response
-      lastAIMessage.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start',  // Align to the top of the viewport
-        inline: 'nearest'
-      });
-    }
-  };
+  // Removed automatic scrolling - users can manually scroll to read responses
 
   useEffect(() => {
     // Only scroll when there are messages and the last one is from AI
