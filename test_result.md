@@ -320,8 +320,9 @@
 
 ## test_plan:
   current_focus:
-    - "User Registration & Login Persistence Testing - Render Backend - COMPLETED"
-  stuck_tasks: []
+    - "Frontend Login & Authentication Testing - COMPLETED"
+  stuck_tasks: 
+    - "User Registration & Login Persistence Issue - Backend Database Problem"
   test_all: false
   test_priority: "high_first"
 
