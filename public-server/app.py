@@ -257,25 +257,25 @@ async def health_check():
 
 # Authentication endpoints
 @app.post("/api/auth/login")
-async def login(request: LoginRequest, http_request):
+async def login(login_data: LoginRequest, http_request: Request):
     # Enhanced logging for debugging mobile connections
     print(f"Login attempt from: {http_request.client.host if http_request.client else 'unknown'}")
     print(f"User-Agent: {http_request.headers.get('user-agent', 'unknown')}")
-    print(f"Email: {request.email}")
+    print(f"Email: {login_data.email}")
     
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    cursor.execute("SELECT id, email, name, password FROM users WHERE email = ?", (request.email,))
+    cursor.execute("SELECT id, email, name, password FROM users WHERE email = ?", (login_data.email,))
     user = cursor.fetchone()
     conn.close()
     
-    if not user or user["password"] != request.password:
-        print(f"Invalid login for {request.email}")
+    if not user or user["password"] != login_data.password:
+        print(f"Invalid login for {login_data.email}")
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    access_token = create_access_token(data={"sub": request.email})
-    print(f"✅ Successful login for {request.email}")
+    access_token = create_access_token(data={"sub": login_data.email})
+    print(f"✅ Successful login for {login_data.email}")
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/api/auth/register") 
