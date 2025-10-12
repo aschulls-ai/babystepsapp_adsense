@@ -175,7 +175,7 @@ class BackendTester:
             return False
     
     def test_3_new_user_registration(self):
-        """Test 3: New User Registration"""
+        """Test 3: New User Registration - FIXED: Now expects auto-login format"""
         unique_id = str(uuid.uuid4())[:8]
         register_data = {
             "email": f"testuser{unique_id}@babysteps.com",
@@ -188,23 +188,36 @@ class BackendTester:
         if response and response.status_code == 200:
             try:
                 data = response.json()
-                if 'message' in data and 'email' in data:
-                    self.log_test(
-                        "3. New User Registration",
-                        True,
-                        f"User {register_data['email']} created successfully ({response_time:.2f}s)",
-                        response_time,
-                        response.status_code
-                    )
-                    # Store for next test
-                    self.new_user_email = register_data['email']
-                    self.new_user_password = register_data['password']
-                    return True
+                # NEW FORMAT: {access_token, token_type, user: {id, email, name}}
+                if 'access_token' in data and 'token_type' in data and 'user' in data:
+                    user_info = data['user']
+                    if 'id' in user_info and 'email' in user_info and 'name' in user_info:
+                        self.log_test(
+                            "3. New User Registration",
+                            True,
+                            f"User {register_data['email']} created with auto-login - ID: {user_info['id']} ({response_time:.2f}s)",
+                            response_time,
+                            response.status_code
+                        )
+                        # Store for next test
+                        self.new_user_email = register_data['email']
+                        self.new_user_password = register_data['password']
+                        self.new_user_token = data['access_token']
+                        return True
+                    else:
+                        self.log_test(
+                            "3. New User Registration",
+                            False,
+                            "Invalid user object in response - missing id, email, or name",
+                            response_time,
+                            response.status_code
+                        )
+                        return False
                 else:
                     self.log_test(
                         "3. New User Registration",
                         False,
-                        "Invalid response format",
+                        f"Invalid response format - expected {{access_token, token_type, user}} but got: {list(data.keys())}",
                         response_time,
                         response.status_code
                     )
