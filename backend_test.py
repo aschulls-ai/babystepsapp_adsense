@@ -959,7 +959,7 @@ class BackendTester:
     # PHASE 4: Error Handling Tests
     
     def test_11_invalid_login_credentials(self):
-        """Test 11: Invalid Login Credentials - Should return 401 (not 500)"""
+        """Test 11: Invalid Login Credentials - Should return 401 (not 500 or timeout)"""
         invalid_login_data = {
             "email": "nonexistent@babysteps.com",
             "password": "wrongpassword"
@@ -985,14 +985,29 @@ class BackendTester:
                 response.status_code
             )
             return False
+        elif response is None:
+            self.log_test(
+                "11. Invalid Login Credentials",
+                False,
+                f"Request timeout ({response_time:.2f}s) - Backend may be overloaded or unresponsive (expected 401)",
+                response_time,
+                None
+            )
+            return False
         else:
-            error_msg = f"Unexpected status code: {response.status_code if response else 'Timeout'} (expected 401)"
+            error_msg = f"Unexpected status code: {response.status_code} (expected 401)"
+            if hasattr(response, 'text'):
+                try:
+                    error_detail = response.json().get('detail', 'No detail')
+                    error_msg += f" - Detail: {error_detail}"
+                except:
+                    error_msg += f" - Response: {response.text[:100]}"
             self.log_test(
                 "11. Invalid Login Credentials",
                 False,
                 error_msg,
                 response_time,
-                response.status_code if response else None
+                response.status_code
             )
             return False
     
