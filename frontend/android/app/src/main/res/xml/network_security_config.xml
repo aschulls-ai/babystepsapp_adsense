@@ -12,13 +12,25 @@
     
     <!-- Allow all external domains with maximum compatibility -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">onrender.com</domain>
-        <domain includeSubdomains="true">baby-steps-demo-api.onrender.com</domain>
+        <!-- Backend APIs -->
         <domain includeSubdomains="true">onrender.com</domain>
         <domain includeSubdomains="true">baby-steps-demo-api.onrender.com</domain>
         <domain includeSubdomains="true">vercel.app</domain>
         <domain includeSubdomains="true">herokuapp.com</domain>
         <domain includeSubdomains="true">netlify.app</domain>
+        <!-- External Scripts and Analytics -->
+        <domain includeSubdomains="true">googlesyndication.com</domain>
+        <domain includeSubdomains="true">pagead2.googlesyndication.com</domain>
+        <domain includeSubdomains="true">googleadservices.com</domain>
+        <domain includeSubdomains="true">platform.openai.com</domain>
+        <domain includeSubdomains="true">cdn.platform.openai.com</domain>
+        <domain includeSubdomains="true">unpkg.com</domain>
+        <domain includeSubdomains="true">cloudfront.net</domain>
+        <domain includeSubdomains="true">d2adkz2s9zrlge.cloudfront.net</domain>
+        <domain includeSubdomains="true">posthog.com</domain>
+        <domain includeSubdomains="true">us.i.posthog.com</domain>
+        <domain includeSubdomains="true">githubusercontent.com</domain>
+        <domain includeSubdomains="true">avatars.githubusercontent.com</domain>
         <trust-anchors>
             <certificates src="system"/>
             <certificates src="user"/>
