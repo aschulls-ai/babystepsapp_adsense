@@ -353,11 +353,12 @@
 
 ## test_plan:
   current_focus:
-    - "Frontend Registration Using localStorage Instead of Backend API"
-  stuck_tasks: 
-    - "Frontend Registration Using localStorage Instead of Backend API"
+    - "Phase 2: Cloud-First Architecture Implementation"
+    - "Remove offlineAPI from primary data flows"
+    - "Ensure all CRUD operations use backend as single source of truth"
+  stuck_tasks: []
   test_all: false
-  test_priority: "critical_first"
+  test_priority: "cloud_first_verification"
 
 ## agent_communication:
     -agent: "main"
