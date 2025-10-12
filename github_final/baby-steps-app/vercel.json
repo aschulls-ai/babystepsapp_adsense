@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://openai-parent.preview.emergentagent.com/api/$1"
+      "destination": "https://baby-steps-demo-api.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",

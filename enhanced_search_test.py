@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv('/app/frontend/.env')
 
 # Get backend URL from frontend environment
-BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://openai-parent.preview.emergentagent.com')
+BACKEND_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://baby-steps-demo-api.onrender.com')
 API_BASE = f"{BACKEND_URL}/api"
 
 class EnhancedSearchTester:

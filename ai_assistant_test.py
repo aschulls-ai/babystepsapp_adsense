@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://openai-parent.preview.emergentagent.com"
+BACKEND_URL = "https://baby-steps-demo-api.onrender.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 # Test credentials
@@ -210,7 +210,7 @@ class AIAssistantTester:
                 "headers": {
                     **self.android_headers,
                     'Authorization': f'Bearer {self.auth_token}',
-                    'Origin': 'https://openai-parent.preview.emergentagent.com'
+                    'Origin': 'https://baby-steps-demo-api.onrender.com'
                 },
                 "message": "What are good finger foods for a 9 month old?"
             }

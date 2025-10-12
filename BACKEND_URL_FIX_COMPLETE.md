@@ -4,7 +4,7 @@
 
 **Problem**: Android app crashing on startup with "Baby Steps keeps stopping" error due to hardcoded old backend URL.
 
-**Root Cause**: The app was built with the old preview URL (`https://openai-parent.preview.emergentagent.com`) instead of the new Render production URL (`https://baby-steps-demo-api.onrender.com`).
+**Root Cause**: The app was built with the old preview URL (`https://baby-steps-demo-api.onrender.com`) instead of the new Render production URL (`https://baby-steps-demo-api.onrender.com`).
 
 ## ✅ Files Updated
 

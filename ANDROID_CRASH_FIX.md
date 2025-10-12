@@ -9,7 +9,7 @@ Android app crashes on startup with "Baby Steps keeps stopping" error.
 The main `.env` file still pointed to the old **preview backend URL** instead of the **Render production URL**:
 
 ```
-❌ OLD: https://openai-parent.preview.emergentagent.com
+❌ OLD: https://baby-steps-demo-api.onrender.com
 ✅ NEW: https://baby-steps-demo-api.onrender.com
 ```
 
@@ -19,7 +19,7 @@ The main `.env` file still pointed to the old **preview backend URL** instead of
 
 ```bash
 # Changed from:
-REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com
 
 # To:
 REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com

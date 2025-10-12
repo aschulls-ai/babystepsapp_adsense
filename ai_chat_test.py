@@ -11,7 +11,7 @@ from datetime import datetime
 import time
 
 # Configuration
-BACKEND_URL = "https://openai-parent.preview.emergentagent.com/api"
+BACKEND_URL = "https://baby-steps-demo-api.onrender.com/api"
 TEST_USER_EMAIL = "demo@babysteps.com"
 TEST_USER_PASSWORD = "demo123"
 

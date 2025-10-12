@@ -1,10 +1,10 @@
 # Backend URL Configuration Locations
 
 ## Overview
-This document lists every location where the backend URL `https://openai-parent.preview.emergentagent.com` has been configured throughout the Baby Steps application. When moving to production, ALL of these locations must be updated to point to the production backend server.
+This document lists every location where the backend URL `https://baby-steps-demo-api.onrender.com` has been configured throughout the Baby Steps application. When moving to production, ALL of these locations must be updated to point to the production backend server.
 
 ## Current Backend URL
-**Development/Preview**: `https://openai-parent.preview.emergentagent.com`
+**Development/Preview**: `https://baby-steps-demo-api.onrender.com`
 **Production**: `https://baby-steps-demo-api.onrender.com`
 
 ---
@@ -14,17 +14,17 @@ This document lists every location where the backend URL `https://openai-parent.
 ### 1. Frontend Environment Files
 **Location**: `/app/frontend/.env`
 ```
-REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com
 ```
 
 **Location**: `/app/frontend/.env.production` 
 ```
-REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com
 ```
 
 **Location**: `/app/frontend/.env.local`
 ```
-REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com
 ```
 
 ### 2. Backend Environment Files
@@ -41,13 +41,13 @@ REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com
 **Location**: `/app/.github/workflows/android-build.yml`
 **Line**: ~133
 ```yaml
-echo "REACT_APP_BACKEND_URL=https://openai-parent.preview.emergentagent.com" > .env.production
+echo "REACT_APP_BACKEND_URL=https://baby-steps-demo-api.onrender.com" > .env.production
 ```
 
 **Line**: ~141
 ```yaml
 env:
-  REACT_APP_BACKEND_URL: https://openai-parent.preview.emergentagent.com
+  REACT_APP_BACKEND_URL: https://baby-steps-demo-api.onrender.com
 ```
 
 ---
@@ -60,8 +60,8 @@ env:
 "server": {
   "cleartext": true,
   "allowNavigation": [
-    "https://openai-parent.preview.emergentagent.com",
-    "https://openai-parent.preview.emergentagent.com/*"
+    "https://baby-steps-demo-api.onrender.com",
+    "https://baby-steps-demo-api.onrender.com/*"
   ]
 }
 ```
