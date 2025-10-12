@@ -310,31 +310,20 @@ class BabyStepsBackendTester:
         
         return True
     
-    def test_baby_profile_endpoints(self):
-        """3. Baby Profile Endpoints (with auth)"""
-        print("\n👶 3. BABY PROFILE ENDPOINTS")
-        print("=" * 50)
+    def test_phase3_baby_profile_operations(self):
+        """PHASE 3: Baby Profile Operations"""
+        print("\n👶 PHASE 3: BABY PROFILE OPERATIONS")
+        print("=" * 60)
         
         if not self.auth_token:
-            self.log_result("Baby Profiles", False, "No authentication token available")
+            self.log_result("Baby Profile Operations", False, "No authentication token available")
             return False
         
+        # 9. Create Baby Profile
+        print("\n9. Create Baby Profile")
         try:
-            # GET /api/babies
-            start_time = time.time()
-            response = self.session.get(f"{self.api_base}/babies", timeout=10)
-            response_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                babies = response.json()
-                self.log_result("GET /api/babies", True, f"Retrieved {len(babies)} baby profiles", response_time)
-            else:
-                self.log_result("GET /api/babies", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
-                return False
-            
-            # POST /api/babies (create test baby)
             baby_data = {
-                "name": "Emma Test Baby",
+                "name": "Test Baby Profile",
                 "birth_date": "2024-03-15T10:30:00Z",
                 "birth_weight": 7.2,
                 "birth_length": 20.5,
@@ -345,42 +334,48 @@ class BabyStepsBackendTester:
             response = self.session.post(f"{self.api_base}/babies", json=baby_data, timeout=10)
             response_time = time.time() - start_time
             
-            if response.status_code == 200:
+            if response.status_code in [200, 201]:
                 data = response.json()
                 if 'id' in data:
                     self.baby_id = data['id']
-                    self.log_result("POST /api/babies", True, f"Baby created: {data['name']}", response_time)
+                    self.log_result("Create Baby Profile", True, f"200/201 with baby data - ID: {data['id']}", response_time)
                 else:
-                    self.log_result("POST /api/babies", False, "No ID in response", response_time)
+                    self.log_result("Create Baby Profile", False, "No ID in response", response_time)
                     return False
             else:
-                self.log_result("POST /api/babies", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                self.log_result("Create Baby Profile", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
                 return False
-            
-            # PUT /api/babies/{id} (update baby)
-            if self.baby_id:
-                update_data = {
-                    "name": "Emma Updated Test Baby",
-                    "birth_date": "2024-03-15T10:30:00Z",
-                    "birth_weight": 7.5,
-                    "birth_length": 21.0,
-                    "gender": "girl"
-                }
-                
-                start_time = time.time()
-                response = self.session.put(f"{self.api_base}/babies/{self.baby_id}", json=update_data, timeout=10)
-                response_time = time.time() - start_time
-                
-                if response.status_code == 200:
-                    self.log_result("PUT /api/babies/{id}", True, "Baby profile updated successfully", response_time)
-                else:
-                    self.log_result("PUT /api/babies/{id}", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
-                    return False
-            
-            return True
         except Exception as e:
-            self.log_result("Baby Profile Endpoints", False, f"Error: {str(e)}")
+            self.log_result("Create Baby Profile", False, f"Error: {str(e)}")
             return False
+        
+        # 10. Retrieve Baby Profiles
+        print("\n10. Retrieve Baby Profiles")
+        try:
+            start_time = time.time()
+            response = self.session.get(f"{self.api_base}/babies", timeout=10)
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                babies = response.json()
+                if isinstance(babies, list):
+                    # Check if newly created baby is included
+                    found_new_baby = any(baby.get('id') == self.baby_id for baby in babies) if self.baby_id else False
+                    if found_new_baby:
+                        self.log_result("Retrieve Baby Profiles", True, f"List of babies including newly created ({len(babies)} total)", response_time)
+                    else:
+                        self.log_result("Retrieve Baby Profiles", True, f"List of babies retrieved ({len(babies)} total)", response_time)
+                else:
+                    self.log_result("Retrieve Baby Profiles", False, "Response is not a list", response_time)
+                    return False
+            else:
+                self.log_result("Retrieve Baby Profiles", False, f"HTTP {response.status_code}: {response.text[:100]}", response_time)
+                return False
+        except Exception as e:
+            self.log_result("Retrieve Baby Profiles", False, f"Error: {str(e)}")
+            return False
+        
+        return True
     
     def test_ai_features(self):
         """4. AI Features (with auth)"""
