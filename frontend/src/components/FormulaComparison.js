@@ -713,6 +713,19 @@ const FormulaComparison = ({ currentBaby }) => {
                 {/* Description */}
                 <p className="text-sm text-gray-700">{formula.description}</p>
 
+                {/* Brand Website Link */}
+                {formula.website && (
+                  <a
+                    href={formula.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Visit {formula.brand} Website
+                  </a>
+                )}
+
                 {/* Good For */}
                 <div>
                   <h4 className="text-sm font-semibold mb-2 flex items-center">
