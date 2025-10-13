@@ -3,7 +3,7 @@
 COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - POST-DEPLOYMENT VERIFICATION
 Testing all 6 activity types end-to-end with 25 tests total
 
-Backend: https://parentapp-deploy.preview.emergentagent.com
+Backend: https://activity-repair.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 """
 
@@ -15,7 +15,7 @@ import uuid
 
 class ActivityTrackingTester:
     def __init__(self):
-        self.base_url = "https://parentapp-deploy.preview.emergentagent.com"
+        self.base_url = "https://activity-repair.preview.emergentagent.com"
         self.token = None
         self.baby_id = None
         self.activity_ids = {}
