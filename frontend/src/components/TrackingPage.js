@@ -2047,11 +2047,10 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
                 value={formData.duration || data.duration || ''}
                 onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
                 placeholder="15"
-                readOnly={data.isCompleting}
               />
               {data.isCompleting && (
                 <div className="text-sm text-gray-500 mt-1">
-                  Duration automatically calculated from timer. You can adjust if needed.
+                  Duration automatically calculated from timer ({data.duration} min). You can adjust if needed.
                 </div>
               )}
             </div>
