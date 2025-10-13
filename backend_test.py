@@ -208,12 +208,12 @@ class ProductionBackendTester:
             return False
     
     def test_2_2_create_diaper_activity(self):
-        """Test 2.2: Create Diaper Activity"""
+        """Test 2.2: Create Diaper Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "diaper",
-            "diaper_type": "wet",
-            "notes": "Test diaper change",
+            "diaper_type": "wet",  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration diaper test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
