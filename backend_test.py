@@ -1,28 +1,19 @@
 #!/usr/bin/env python3
 """
-FINAL VERIFICATION - All Endpoints Migrated to PostgreSQL
-Comprehensive Backend Testing for Production Deployment
+COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - POST-DEPLOYMENT VERIFICATION
+Testing all 6 activity types end-to-end with 25 tests total
 
-This test suite covers all 12 critical tests specified in the review request:
-- PHASE 1: Authentication & PostgreSQL (5 tests)
-- PHASE 2: AI Integration (3 tests) 
-- PHASE 3: Baby Profile Operations (2 tests)
-- PHASE 4: Error Handling (2 tests)
-
-SUCCESS CRITERIA: 12/12 tests pass (100% success rate), NO HTTP 500 errors
+Backend: https://baby-steps-demo-api.onrender.com
+Test Account: demo@babysteps.com / demo123
 """
 
 import requests
 import json
 import time
-import uuid
 from datetime import datetime, timezone
-import sys
+import uuid
 
-# Production backend URL
-BASE_URL = "https://baby-steps-demo-api.onrender.com"
-
-class BackendTester:
+class ActivityTrackingTester:
     def __init__(self):
         self.base_url = BASE_URL
         self.session = requests.Session()
