@@ -640,8 +640,8 @@ const TrackingPage = ({ currentBaby }) => {
             </CardContent>
           </Card>
 
-          {/* Recent Activities */}
-          <Card className="glass border-0">
+          {/* Recent Activities - HIDDEN */}
+          <Card className="glass border-0" style={{display: 'none'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Clock className="w-5 h-5 text-rose-500" />
