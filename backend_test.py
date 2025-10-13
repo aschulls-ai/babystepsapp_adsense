@@ -21,7 +21,7 @@ class ProductionBackendTester:
         self.baby_id = None
         self.activity_ids = {}
         self.test_results = []
-        self.total_tests = 25
+        self.total_tests = 29
         self.passed_tests = 0
         self.failed_tests = 0
         
