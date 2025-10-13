@@ -2192,26 +2192,92 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
 
   const formatActivityDetails = (activity) => {
     const type = activity.activity_type;
+    const details = [];
+    
     switch (type) {
       case 'feeding':
-        return activity.amount ? `${activity.amount} oz` : activity.duration ? `${activity.duration} min` : activity.type;
+        // Show feeding type first
+        if (activity.feeding_type) {
+          details.push({ label: 'Type', value: activity.feeding_type });
+        }
+        // Show amount and duration
+        if (activity.amount) {
+          details.push({ label: 'Amount', value: `${activity.amount} oz` });
+        }
+        if (activity.duration) {
+          details.push({ label: 'Duration', value: `${activity.duration} min` });
+        }
+        break;
+        
       case 'diaper':
-        return activity.type?.charAt(0).toUpperCase() + activity.type?.slice(1) || 'Changed';
+        if (activity.diaper_type || activity.type) {
+          const diaperType = activity.diaper_type || activity.type;
+          details.push({ label: 'Type', value: diaperType.charAt(0).toUpperCase() + diaperType.slice(1) });
+        }
+        break;
+        
       case 'sleep':
-        return activity.duration ? `${activity.duration} min` : 'Sleep session';
+        if (activity.duration) {
+          details.push({ label: 'Duration', value: `${activity.duration} min` });
+        }
+        if (activity.start_time) {
+          const startTime = new Date(activity.start_time);
+          details.push({ label: 'Started', value: format(startTime, 'h:mm a') });
+        }
+        if (activity.end_time) {
+          const endTime = new Date(activity.end_time);
+          details.push({ label: 'Ended', value: format(endTime, 'h:mm a') });
+        }
+        break;
+        
       case 'pumping':
+        if (activity.left_breast) {
+          details.push({ label: 'Left', value: `${activity.left_breast} oz` });
+        }
+        if (activity.right_breast) {
+          details.push({ label: 'Right', value: `${activity.right_breast} oz` });
+        }
         const total = (activity.left_breast || 0) + (activity.right_breast || 0);
-        return total > 0 ? `${total} oz total` : activity.duration ? `${activity.duration} min` : 'Pumping session';
+        if (total > 0) {
+          details.push({ label: 'Total', value: `${total} oz` });
+        }
+        if (activity.duration && !total) {
+          details.push({ label: 'Duration', value: `${activity.duration} min` });
+        }
+        break;
+        
       case 'measurements':
-        const parts = [];
-        if (activity.weight) parts.push(`${activity.weight} lbs`);
-        if (activity.height) parts.push(`${activity.height} in`);
-        return parts.length > 0 ? parts.join(', ') : 'Measured';
+        if (activity.weight) {
+          details.push({ label: 'Weight', value: `${activity.weight} lbs` });
+        }
+        if (activity.height) {
+          details.push({ label: 'Height', value: `${activity.height} in` });
+        }
+        if (activity.head_circumference) {
+          details.push({ label: 'Head Circumference', value: `${activity.head_circumference} in` });
+        }
+        if (activity.temperature) {
+          details.push({ label: 'Temperature', value: `${activity.temperature}°F` });
+        }
+        break;
+        
       case 'milestones':
-        return activity.title || activity.milestone || 'Milestone achieved';
+        if (activity.title) {
+          details.push({ label: 'Milestone', value: activity.title });
+        }
+        if (activity.description) {
+          details.push({ label: 'Description', value: activity.description });
+        }
+        if (activity.category) {
+          details.push({ label: 'Category', value: activity.category });
+        }
+        break;
+        
       default:
-        return 'Activity logged';
+        details.push({ label: 'Info', value: 'Activity logged' });
     }
+    
+    return details;
   };
 
   const getActivityTimestamp = (activity) => {
