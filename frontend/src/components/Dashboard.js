@@ -218,7 +218,7 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
           </div>
           
           {/* Current Milestones */}
-          <div className="bg-white rounded-lg p-4 border border-green-100">
+          <div className="bg-white rounded-lg p-4 border border-green-100 mb-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-green-600" />
               Current Milestones ({currentAge} months)
@@ -237,6 +237,9 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
               </p>
             )}
           </div>
+
+          {/* Feed Reminder */}
+          <FeedReminder currentBaby={currentBaby} />
         </CardContent>
       </Card>
 
