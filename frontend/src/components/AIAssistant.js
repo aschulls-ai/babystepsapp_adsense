@@ -201,8 +201,8 @@ const AIAssistant = ({ currentBaby }) => {
             <WifiOff className="w-6 h-6 text-red-500" title="Offline - AI Unavailable" />
           )}
         </div>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
-          Ask any question for parenting guidance, meal prep, food safety, and general baby care knowledge
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          Ask me anything about parenting!
         </p>
         {currentBaby && (
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
