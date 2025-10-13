@@ -176,6 +176,30 @@ class ActivityRequest(BaseModel):
     type: str
     notes: Optional[str] = None
     baby_id: str
+    
+    # Feeding-specific fields
+    feeding_type: Optional[str] = None  # breast, bottle, formula, solid
+    amount: Optional[float] = None  # in oz or ml
+    
+    # Sleep and pumping fields
+    duration: Optional[int] = None  # in minutes
+    
+    # Diaper-specific fields
+    diaper_type: Optional[str] = None  # wet, dirty, both
+    
+    # Measurement-specific fields
+    weight: Optional[float] = None  # in lbs or kg
+    height: Optional[float] = None  # in inches or cm
+    head_circumference: Optional[float] = None  # in inches or cm
+    temperature: Optional[float] = None  # in F or C
+    
+    # Milestone-specific fields
+    title: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None  # physical, cognitive, social, language
+    
+    class Config:
+        extra = "allow"  # Allow extra fields without validation errors
 
 # Helper functions
 def create_access_token(data: dict):
