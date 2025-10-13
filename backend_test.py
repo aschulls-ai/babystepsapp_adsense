@@ -15,7 +15,7 @@ import uuid
 
 class ActivityTrackingTester:
     def __init__(self):
-        self.base_url = "https://baby-steps-demo-api.onrender.com"
+        self.base_url = "https://parentapp-deploy.preview.emergentagent.com"
         self.token = None
         self.baby_id = None
         self.activity_ids = {}
