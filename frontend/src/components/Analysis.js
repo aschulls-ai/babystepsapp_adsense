@@ -444,14 +444,68 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
           <div>
             <p className="text-sm font-semibold mb-2">7 DAY AVERAGE</p>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Avg. time between feeds</span>
-                <span className="font-semibold">-</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Avg. daily number of feeds</span>
-                <span className="font-semibold">-</span>
-              </div>
+              {(() => {
+                // Calculate 7-day averages
+                const last7Days = [...Array(7)].map((_, i) => subDays(new Date(), i));
+                const feedsByDay = last7Days.map(day => {
+                  const dayFeeds = bottleFeeds.filter(a => {
+                    try {
+                      return format(new Date(a.timestamp), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd');
+                    } catch {
+                      return false;
+                    }
+                  });
+                  return {
+                    count: dayFeeds.length,
+                    totalOz: dayFeeds.reduce((sum, a) => sum + (parseFloat(a.amount) || 0), 0)
+                  };
+                });
+                
+                const avgDailyFeeds = (feedsByDay.reduce((sum, day) => sum + day.count, 0) / 7).toFixed(1);
+                const avgDailyOz = (feedsByDay.reduce((sum, day) => sum + day.totalOz, 0) / 7).toFixed(1);
+                
+                // Calculate avg time between feeds (in hours)
+                const allFeedTimes = bottleFeeds
+                  .filter(a => {
+                    try {
+                      const feedDate = new Date(a.timestamp);
+                      return feedDate >= subDays(new Date(), 7);
+                    } catch {
+                      return false;
+                    }
+                  })
+                  .map(a => new Date(a.timestamp).getTime())
+                  .sort((a, b) => a - b);
+                
+                let avgTimeBetween = '-';
+                if (allFeedTimes.length > 1) {
+                  const intervals = [];
+                  for (let i = 1; i < allFeedTimes.length; i++) {
+                    intervals.push(allFeedTimes[i] - allFeedTimes[i - 1]);
+                  }
+                  const avgMs = intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length;
+                  const avgHours = Math.floor(avgMs / (1000 * 60 * 60));
+                  const avgMinutes = Math.round((avgMs % (1000 * 60 * 60)) / (1000 * 60));
+                  avgTimeBetween = avgHours > 0 ? `${avgHours}h ${avgMinutes}m` : `${avgMinutes}m`;
+                }
+                
+                return (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Avg. ounces per day</span>
+                      <span className="font-semibold text-orange-600">{avgDailyOz} oz</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Avg. daily number of feeds</span>
+                      <span className="font-semibold text-orange-600">{avgDailyFeeds}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Avg. time between feeds</span>
+                      <span className="font-semibold text-orange-600">{avgTimeBetween}</span>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         </CardContent>
