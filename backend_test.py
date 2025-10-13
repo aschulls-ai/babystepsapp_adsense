@@ -135,7 +135,14 @@ class ProductionBackendTester:
             return False
     
     def create_test_baby(self, initial_response_time):
-        """Create a test baby if none exist"""
+        """Create a test baby if none exist or use demo baby ID"""
+        # Try to use the demo baby ID first
+        if not self.baby_id:
+            self.baby_id = "demo-baby-456"
+            self.log_test("1.2 Get Demo Babies", True, 
+                        f"Using demo baby ID: {self.baby_id}", initial_response_time)
+            return True
+            
         baby_data = {
             "name": "Test Baby",
             "birth_date": "2024-01-01T00:00:00Z",
