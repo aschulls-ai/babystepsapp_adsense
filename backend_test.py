@@ -292,13 +292,13 @@ class ProductionBackendTester:
             return False
     
     def test_2_4_create_pumping_activity(self):
-        """Test 2.4: Create Pumping Activity"""
+        """Test 2.4: Create Pumping Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "pumping",
-            "amount": "4",
-            "duration": "15",
-            "notes": "Test pumping session",
+            "amount": 4.0,  # NEW FIELD - should not cause 500 error
+            "duration": 15,  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration pumping test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
