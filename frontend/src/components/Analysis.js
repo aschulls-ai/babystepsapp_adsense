@@ -123,7 +123,7 @@ const Analysis = ({ currentBaby }) => {
             <TabsTrigger value="express">EXPRESS</TabsTrigger>
             <TabsTrigger value="diaper">DIAPER</TabsTrigger>
             <TabsTrigger value="growth">GROWTH</TabsTrigger>
-          </Tabs>
+          </TabsList>
 
           {/* Summary Tab */}
           <TabsContent value="summary">
