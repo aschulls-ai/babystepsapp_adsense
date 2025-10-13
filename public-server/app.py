@@ -608,12 +608,20 @@ async def create_activity(
         
         print(f"✅ Activity logged to PostgreSQL: {new_activity.type} for baby {baby.name}")
         
+        # Helper function to format timestamp
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            if isinstance(ts, str):
+                return ts
+            return ts.isoformat()
+        
         return {
             "id": new_activity.id,
             "type": new_activity.type,
             "baby_id": new_activity.baby_id,
             "user_id": new_activity.user_id,
-            "timestamp": new_activity.timestamp.isoformat() if new_activity.timestamp else None,
+            "timestamp": format_timestamp(new_activity.timestamp),
             "notes": new_activity.notes
         }
     except Exception as e:
