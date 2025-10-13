@@ -3,45 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { format, subDays, parseISO, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
+import { androidFetch } from '../App';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
-
-// Android-optimized fetch function
-const androidFetch = async (url, options = {}) => {
-  const isAndroid = /android/i.test(navigator.userAgent);
-  
-  if (!isAndroid) {
-    return fetch(url, options);
-  }
-
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const timeout = options.timeout || 30000;
-    
-    xhr.timeout = timeout;
-    xhr.ontimeout = () => reject(new Error('Request timeout'));
-    
-    xhr.open(options.method || 'GET', url);
-    
-    if (options.headers) {
-      Object.entries(options.headers).forEach(([key, value]) => {
-        xhr.setRequestHeader(key, value);
-      });
-    }
-    
-    xhr.onload = () => {
-      resolve({
-        ok: xhr.status >= 200 && xhr.status < 300,
-        status: xhr.status,
-        json: async () => JSON.parse(xhr.responseText),
-        text: async () => xhr.responseText
-      });
-    };
-    
-    xhr.onerror = () => reject(new Error('Network error'));
-    xhr.send(options.body);
-  });
-};
 
 const Analysis = ({ currentBaby }) => {
   const [activities, setActivities] = useState([]);
