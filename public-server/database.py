@@ -64,6 +64,10 @@ class Activity(Base):
     feeding_type = Column(String)  # breast, bottle, formula, solid
     amount = Column(Float)  # in oz or ml
     
+    # Pumping-specific fields (for tracking left/right breast separately)
+    left_breast = Column(Float)  # left breast amount in oz
+    right_breast = Column(Float)  # right breast amount in oz
+    
     # Sleep-specific fields
     duration = Column(Integer)  # in minutes
     
