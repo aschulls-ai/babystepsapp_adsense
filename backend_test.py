@@ -926,10 +926,11 @@ class ProductionBackendTester:
         return passed_edge_cases >= 7
     
     def run_all_tests(self):
-        """Run all 25 tests in sequence"""
-        print("🚀 COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - POST-DEPLOYMENT VERIFICATION")
+        """Run all 29 tests in sequence"""
+        print("🚀 COMPREHENSIVE BACKEND TESTING AFTER DATABASE MIGRATION AND TIMESTAMP FIX")
         print(f"Backend: {self.base_url}")
         print(f"Test Account: demo@babysteps.com / demo123")
+        print(f"Demo Baby ID: demo-baby-456")
         print(f"Total Tests: {self.total_tests}")
         print("=" * 80)
         
