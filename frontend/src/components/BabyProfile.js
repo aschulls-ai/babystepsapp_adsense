@@ -458,7 +458,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                 </div>
 
                 {/* Profile Picture */}
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2 md:col-span-2" style={{display: 'none'}}>
                   <Label htmlFor="edit-profile-picture" className="text-sm font-medium text-gray-700">
                     Profile Picture
                   </Label>
