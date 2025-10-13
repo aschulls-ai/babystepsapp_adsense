@@ -307,7 +307,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2" style={{display: 'none'}}>
                     <Label htmlFor="profile-picture" className="text-sm font-medium text-gray-700">
                       Profile Picture
                     </Label>
