@@ -235,7 +235,7 @@ const Analysis = ({ currentBaby }) => {
           {/* Growth Tab */}
           <TabsContent value="growth">
             <GrowthView 
-              activities={getActivitiesByType('measurement')}
+              activities={getMeasurementActivities()}
               currentBaby={currentBaby}
               calculatePercentile={calculatePercentile}
             />
