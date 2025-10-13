@@ -929,7 +929,7 @@ const DiaperForm = ({ babyId, onSuccess }) => {
           <SelectTrigger data-testid="diaper-type-selector">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" sideOffset={5}>
             <SelectItem value="wet">Wet</SelectItem>
             <SelectItem value="dirty">Dirty</SelectItem>
             <SelectItem value="mixed">Mixed (Wet & Dirty)</SelectItem>
