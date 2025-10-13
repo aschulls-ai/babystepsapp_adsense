@@ -2311,18 +2311,26 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
                   <h4 className="font-medium text-gray-900 text-sm">
                     {activity.display_type}
                   </h4>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {formatActivityDetails(activity)}
-                  </p>
+                  
+                  {/* Display all activity details */}
+                  <div className="mt-2 space-y-1">
+                    {formatActivityDetails(activity).map((detail, idx) => (
+                      <div key={idx} className="text-sm text-gray-600 flex items-baseline gap-2">
+                        <span className="font-medium text-gray-700">{detail.label}:</span>
+                        <span>{detail.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
                   {activity.notes && (
-                    <p className="text-xs text-gray-500 mt-1 italic">
+                    <p className="text-xs text-gray-500 mt-2 italic border-l-2 border-gray-300 pl-2">
                       "{activity.notes}"
                     </p>
                   )}
                 </div>
                 
                 {/* Timestamp */}
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <div className="text-xs font-medium text-gray-500">
                     {format(date, 'MMM d')}
                   </div>
