@@ -58,9 +58,15 @@ const Analysis = ({ currentBaby }) => {
   const fetchActivities = async () => {
     if (!currentBaby) return;
     
+    console.log('📊 Analysis: Fetching activities for baby:', currentBaby.id);
+    
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API}/api/activities?baby_id=${currentBaby.id}`, {
+      const url = `${API}/api/activities?baby_id=${currentBaby.id}`;
+      console.log('📡 Analysis: Fetching from:', url);
+      
+      const response = await androidFetch(url, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -69,10 +75,14 @@ const Analysis = ({ currentBaby }) => {
       
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Analysis: Received', data.length, 'activities');
+        console.log('Sample activity:', data[0]);
         setActivities(data);
+      } else {
+        console.error('❌ Analysis: HTTP', response.status);
       }
     } catch (error) {
-      console.error('Failed to fetch activities:', error);
+      console.error('❌ Analysis: Failed to fetch activities:', error);
     } finally {
       setLoading(false);
     }
