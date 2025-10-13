@@ -618,7 +618,15 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         <CardContent className="space-y-3">
           <div className="flex justify-between">
             <span className="text-gray-600">Total amount pumped</span>
-            <span className="font-semibold text-orange-600">{totalPumpAmount} oz</span>
+            <span className="font-semibold text-orange-600">{totalPumpAmount.toFixed(1)} oz</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Left breast total</span>
+            <span className="font-semibold text-blue-600">{totalLeftBreast.toFixed(1)} oz</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Right breast total</span>
+            <span className="font-semibold text-purple-600">{totalRightBreast.toFixed(1)} oz</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Avg. per session</span>
