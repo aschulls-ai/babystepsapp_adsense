@@ -382,9 +382,23 @@ const TrackingPage = ({ currentBaby }) => {
 
       switch (type) {
         case 'feeding':
+          // Rename 'type' field to 'feeding_type' to avoid conflict with activity type
+          if (data.type) {
+            payload.feeding_type = data.type;
+            delete payload.type;
+          }
+          // Re-add the activity type
+          payload.type = 'feeding';
           successMessage = 'Feeding logged successfully!';
           break;
         case 'diaper':
+          // Rename 'type' field to 'diaper_type' to avoid conflict with activity type
+          if (data.type) {
+            payload.diaper_type = data.type;
+            delete payload.type;
+          }
+          // Re-add the activity type
+          payload.type = 'diaper';
           successMessage = 'Diaper change logged!';
           break;
         case 'sleep':
