@@ -153,6 +153,125 @@ const EmergencyTraining = ({ currentBaby }) => {
                   ))}
                 </div>
 
+                {/* Normal Health Parameters */}
+                <Card className="mt-6 bg-green-50 border-green-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Heart className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                      <div className="w-full">
+                        <h3 className="font-semibold text-green-800 mb-3">
+                          Normal Health Parameters by Age
+                        </h3>
+                        <p className="text-green-700 text-sm mb-4">
+                          Reference ranges for healthy babies. Always consult your pediatrician if concerned.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          {/* 0-3 months */}
+                          <div className="bg-white border border-green-200 rounded-lg p-3">
+                            <p className="font-semibold text-green-800 text-sm mb-2">0-3 Months</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-green-700">
+                              <div>
+                                <span className="font-medium">Heart Rate:</span> 100-150 bpm
+                              </div>
+                              <div>
+                                <span className="font-medium">Temp:</span> 97.7-100.3°F (36.5-38°C)
+                              </div>
+                              <div>
+                                <span className="font-medium">Respiratory:</span> 30-60 breaths/min
+                              </div>
+                              <div>
+                                <span className="font-medium">O2 Sat:</span> 95-100%
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 4-6 months */}
+                          <div className="bg-white border border-green-200 rounded-lg p-3">
+                            <p className="font-semibold text-green-800 text-sm mb-2">4-6 Months</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-green-700">
+                              <div>
+                                <span className="font-medium">Heart Rate:</span> 90-140 bpm
+                              </div>
+                              <div>
+                                <span className="font-medium">Temp:</span> 97.7-100.3°F (36.5-38°C)
+                              </div>
+                              <div>
+                                <span className="font-medium">Respiratory:</span> 25-45 breaths/min
+                              </div>
+                              <div>
+                                <span className="font-medium">O2 Sat:</span> 95-100%
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 7-12 months */}
+                          <div className="bg-white border border-green-200 rounded-lg p-3">
+                            <p className="font-semibold text-green-800 text-sm mb-2">7-12 Months</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-green-700">
+                              <div>
+                                <span className="font-medium">Heart Rate:</span> 80-130 bpm
+                              </div>
+                              <div>
+                                <span className="font-medium">Temp:</span> 97.7-100.3°F (36.5-38°C)
+                              </div>
+                              <div>
+                                <span className="font-medium">Respiratory:</span> 20-40 breaths/min
+                              </div>
+                              <div>
+                                <span className="font-medium">O2 Sat:</span> 95-100%
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 13-18 months */}
+                          <div className="bg-white border border-green-200 rounded-lg p-3">
+                            <p className="font-semibold text-green-800 text-sm mb-2">13-18 Months</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-green-700">
+                              <div>
+                                <span className="font-medium">Heart Rate:</span> 75-120 bpm
+                              </div>
+                              <div>
+                                <span className="font-medium">Temp:</span> 97.7-100.3°F (36.5-38°C)
+                              </div>
+                              <div>
+                                <span className="font-medium">Respiratory:</span> 20-35 breaths/min
+                              </div>
+                              <div>
+                                <span className="font-medium">O2 Sat:</span> 95-100%
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 19-24 months */}
+                          <div className="bg-white border border-green-200 rounded-lg p-3">
+                            <p className="font-semibold text-green-800 text-sm mb-2">19-24 Months</p>
+                            <div className="grid grid-cols-2 gap-2 text-xs text-green-700">
+                              <div>
+                                <span className="font-medium">Heart Rate:</span> 70-110 bpm
+                              </div>
+                              <div>
+                                <span className="font-medium">Temp:</span> 97.7-100.3°F (36.5-38°C)
+                              </div>
+                              <div>
+                                <span className="font-medium">Respiratory:</span> 20-30 breaths/min
+                              </div>
+                              <div>
+                                <span className="font-medium">O2 Sat:</span> 95-100%
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+                          <AlertTriangle className="w-3 h-3 inline mr-1" />
+                          These are general ranges. Every baby is different. Contact your doctor if concerned.
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Professional Training Recommendation */}
                 <Card className="mt-6 bg-blue-50 border-blue-200">
                   <CardContent className="p-4">
