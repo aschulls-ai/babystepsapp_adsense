@@ -57,8 +57,29 @@ class Activity(Base):
     notes = Column(Text)
     baby_id = Column(String, nullable=False, index=True)
     user_id = Column(String, nullable=False, index=True)
-    timestamp = Column(String, nullable=False)
+    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Feeding-specific fields
+    feeding_type = Column(String)  # breast, bottle, formula, solid
+    amount = Column(Float)  # in oz or ml
+    
+    # Sleep-specific fields
+    duration = Column(Integer)  # in minutes
+    
+    # Diaper-specific fields
+    diaper_type = Column(String)  # wet, dirty, both
+    
+    # Measurement-specific fields
+    weight = Column(Float)  # in lbs or kg
+    height = Column(Float)  # in inches or cm
+    head_circumference = Column(Float)  # in inches or cm
+    temperature = Column(Float)  # in F or C
+    
+    # Milestone-specific fields
+    title = Column(String)
+    description = Column(Text)
+    category = Column(String)  # physical, cognitive, social, language
 
 # Database initialization
 def init_database():
