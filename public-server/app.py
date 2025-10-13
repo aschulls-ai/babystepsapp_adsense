@@ -529,13 +529,21 @@ async def get_activities(
     activities = query.all()
     
     # Convert to dict
+    def format_timestamp(ts):
+        """Handle both datetime objects and string timestamps"""
+        if ts is None:
+            return None
+        if isinstance(ts, str):
+            return ts  # Already a string
+        return ts.isoformat()  # Convert datetime to ISO format
+    
     return [
         {
             "id": a.id,
             "type": a.type,
             "baby_id": a.baby_id,
             "user_id": a.user_id,
-            "timestamp": a.timestamp.isoformat() if a.timestamp else None,
+            "timestamp": format_timestamp(a.timestamp),
             "notes": a.notes,
             "feeding_type": a.feeding_type,
             "amount": a.amount,
