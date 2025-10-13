@@ -16,6 +16,7 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import BabyProfile from './components/BabyProfile';
 import TrackingPage from './components/TrackingPage';
+import Analysis from './components/Analysis';
 import FormulaComparison from './components/FormulaComparison';
 import EmergencyTraining from './components/EmergencyTraining';
 import AIAssistant from './components/AIAssistant';
