@@ -952,11 +952,15 @@ class ProductionBackendTester:
         self.test_3_3_get_activities_with_limit()
         self.test_3_4_test_all_type_filters()
         
-        # Phase 4: Logout & Re-Login Persistence Test (3 tests)
-        print("\n📋 PHASE 4: Logout & Re-Login Persistence Test")
+        # Phase 4: Logout & Re-Login Persistence Test + Secondary Endpoints (7 tests)
+        print("\n📋 PHASE 4: Logout & Re-Login Persistence Test + Secondary Endpoints")
         self.test_4_1_simulate_logout()
         self.test_4_2_re_login()
         self.test_4_3_verify_activities_persist()
+        self.test_4_4_baby_profile_with_image()
+        self.test_4_5_ai_chat_endpoint()
+        self.test_4_6_food_research_endpoint()
+        self.test_4_7_meal_search_endpoint()
         
         # Phase 5: Edge Cases & Error Handling (10 tests)
         print("\n📋 PHASE 5: Edge Cases & Error Handling")
