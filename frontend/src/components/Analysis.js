@@ -543,6 +543,8 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
   });
 
   const totalPumpAmount = todayPumping.reduce((sum, a) => sum + (parseFloat(a.amount) || 0), 0);
+  const totalLeftBreast = todayPumping.reduce((sum, a) => sum + (parseFloat(a.left_breast) || 0), 0);
+  const totalRightBreast = todayPumping.reduce((sum, a) => sum + (parseFloat(a.right_breast) || 0), 0);
   const avgPumpAmount = todayPumping.length > 0 ? (totalPumpAmount / todayPumping.length).toFixed(1) : 0;
   const totalBreastDuration = todayBreastfeeding.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
   
@@ -567,6 +569,17 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
   
   const avg7DayPumping = last7DaysPumping.length > 0 ? (last7DaysPumping.length / 7).toFixed(1) : 0;
   const avg7DayBreastfeeding = last7DaysBreastfeeding.length > 0 ? (last7DaysBreastfeeding.length / 7).toFixed(1) : 0;
+  
+  // 7-day totals for left/right breast
+  const avg7DayLeftBreast = last7DaysPumping.length > 0 
+    ? (last7DaysPumping.reduce((sum, a) => sum + (parseFloat(a.left_breast) || 0), 0) / 7).toFixed(1) 
+    : '0';
+  const avg7DayRightBreast = last7DaysPumping.length > 0 
+    ? (last7DaysPumping.reduce((sum, a) => sum + (parseFloat(a.right_breast) || 0), 0) / 7).toFixed(1) 
+    : '0';
+  const avg7DayTotalOz = last7DaysPumping.length > 0 
+    ? (last7DaysPumping.reduce((sum, a) => sum + (parseFloat(a.amount) || 0), 0) / 7).toFixed(1) 
+    : '0';
 
   return (
     <div className="space-y-6">
