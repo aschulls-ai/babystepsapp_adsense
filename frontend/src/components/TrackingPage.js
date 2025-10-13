@@ -406,12 +406,18 @@ const TrackingPage = ({ currentBaby }) => {
           successMessage = 'Sleep session logged!';
           break;
         case 'pumping':
-          // Transform leftBreast and rightBreast into total amount
-          if (data.leftBreast !== undefined && data.rightBreast !== undefined) {
-            payload.amount = (data.leftBreast || 0) + (data.rightBreast || 0);
-            delete payload.leftBreast;
-            delete payload.rightBreast;
+          // Store individual breast amounts
+          if (data.leftBreast !== undefined) {
+            payload.left_breast = data.leftBreast || 0;
           }
+          if (data.rightBreast !== undefined) {
+            payload.right_breast = data.rightBreast || 0;
+          }
+          // Calculate total amount for backward compatibility
+          payload.amount = (data.leftBreast || 0) + (data.rightBreast || 0);
+          // Clean up frontend field names
+          delete payload.leftBreast;
+          delete payload.rightBreast;
           // Ensure duration is set (from timer or default)
           if (!payload.duration) {
             payload.duration = data.duration || 0;
