@@ -236,6 +236,11 @@
         -working: false
         -agent: "main"
         -comment: "🔧 CRITICAL 500 ERROR FIX IDENTIFIED - ActivityRequest Model Too Simple: Investigated the 500 errors on POST /api/activities. ROOT CAUSE: The ActivityRequest Pydantic model only had 3 fields (type, notes, baby_id) but clients were sending activity-specific fields like feeding_type, amount, duration, diaper_type, etc. Pydantic rejected these requests causing 500 errors. Tested on production: ALL 6 activity types return HTTP 500. FIX APPLIED: Updated ActivityRequest model in /app/public-server/app.py to include ALL optional fields: feeding_type, amount, duration, diaper_type, weight, height, head_circumference, temperature, title, description, category. Added 'class Config: extra=allow' to prevent validation errors. LOCAL TESTING PASSED: Model now accepts all activity-specific fields correctly. NEXT: User needs to trigger Render redeployment. After deployment, all activity POST operations should return 200/201 (not 500). Created /app/ACTIVITY_REQUEST_FIX.md with complete documentation."
+        -working: "NA"
+        -agent: "main"
+        -comment: "🔧 DATABASE SCHEMA MISMATCH IDENTIFIED FROM RENDER LOGS: Despite code fixes (database.py models and ActivityRequest Pydantic model), user reports 500 errors persist on Render after multiple deployments including cache clears. CRITICAL ROOT CAUSE from Render logs: `psycopg2.errors.UndefinedColumn` for babies.profile_image and activities.feeding_type. The PostgreSQL tables on Render DO NOT HAVE the columns that updated code expects. CODE IS CORRECT - DATABASE SCHEMA IS INCOMPLETE. SOLUTION CREATED: 1) Migration script already exists at /app/public-server/migrate_database.py 2) Created comprehensive guide /app/RENDER_MIGRATION_GUIDE.md with 3 execution options 3) Migration will add 12 missing columns (1 to babies, 11 to activities) using safe ADD COLUMN IF NOT EXISTS syntax. NEXT STEPS: User needs to run migration on Render PostgreSQL database using one of three options: Option 1 (RECOMMENDED) - Render Shell, Option 2 - Local with production DATABASE_URL, Option 3 - Manual SQL. After migration, all activity endpoints should return 200/201 (not 500)."
+        -needs_retesting: true
+        -priority: "critical"
 
   - task: "Frontend Registration Using localStorage Instead of Backend API"
     implemented: true
