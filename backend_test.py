@@ -3,7 +3,7 @@
 COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - POST-DEPLOYMENT VERIFICATION
 Testing all 6 activity types end-to-end with 25 tests total
 
-Backend: https://baby-steps-demo-api.onrender.com
+Backend: https://parentapp-deploy.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 """
 
