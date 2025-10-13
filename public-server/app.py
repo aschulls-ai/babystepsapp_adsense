@@ -567,6 +567,8 @@ async def get_activities(
             "feeding_type": a.feeding_type,
             "amount": a.amount,
             "duration": a.duration,
+            "left_breast": a.left_breast,
+            "right_breast": a.right_breast,
             "diaper_type": a.diaper_type,
             "weight": a.weight,
             "height": a.height,
