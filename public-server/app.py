@@ -623,12 +623,22 @@ async def create_activity(
         
         print(f"✅ Activity logged to PostgreSQL: {new_activity.type} for baby {baby.name}")
         
-        # Helper function to format timestamp
+        # Helper function to format timestamp with timezone
         def format_timestamp(ts):
             if ts is None:
                 return None
             if isinstance(ts, str):
-                return ts
+                try:
+                    from dateutil import parser
+                    dt = parser.parse(ts)
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=timezone.utc)
+                    return dt.isoformat()
+                except:
+                    return ts
+            # Ensure datetime has timezone
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
             return ts.isoformat()
         
         return {
