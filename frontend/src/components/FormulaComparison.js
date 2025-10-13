@@ -43,7 +43,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Brain development support', 'Easy to digest', 'Closest to breast milk'],
       cons: ['More expensive', 'Contains palm oil'],
       description: 'Premium formula with brain-nourishing ingredients like MFGM and DHA.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.enfamil.com/products/enfamil-neuropro-infant-formula/'
     },
     {
       id: 2,
