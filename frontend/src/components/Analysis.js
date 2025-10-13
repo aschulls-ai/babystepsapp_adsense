@@ -124,43 +124,76 @@ const Analysis = ({ currentBaby }) => {
     // WHO growth standard percentile calculation
     if (!measurement || ageMonths === undefined) return 'N/A';
     
-    // WHO growth chart reference data (simplified)
-    // Data represents 50th percentile values by age in months
+    // WHO growth chart reference data (50th percentile values)
+    // Weight in lbs, height in inches, head in inches
     const whoData = {
       weight: {
-        boy: [7.5, 9.6, 11.5, 13.0, 14.2, 15.3, 16.3, 17.1, 17.8, 18.5, 19.1, 19.7, 20.2],
-        girl: [7.0, 9.0, 10.8, 12.2, 13.3, 14.3, 15.2, 15.9, 16.5, 17.1, 17.7, 18.2, 18.7]
+        boy: [7.5, 9.6, 11.5, 13.0, 14.2, 15.3, 16.3, 17.1, 17.8, 18.5, 19.1, 19.7, 20.2, 20.7, 21.2, 21.6, 22.0, 22.4, 22.8, 23.1, 23.5, 23.8, 24.2, 24.5],
+        girl: [7.0, 9.0, 10.8, 12.2, 13.3, 14.3, 15.2, 15.9, 16.5, 17.1, 17.7, 18.2, 18.7, 19.2, 19.6, 20.1, 20.5, 20.9, 21.3, 21.7, 22.0, 22.4, 22.8, 23.1]
       },
       height: {
-        boy: [19.7, 21.7, 23.2, 24.4, 25.4, 26.2, 26.9, 27.6, 28.2, 28.7, 29.2, 29.7, 30.2],
-        girl: [19.3, 21.3, 22.7, 23.9, 24.9, 25.7, 26.4, 27.1, 27.7, 28.2, 28.7, 29.2, 29.6]
+        boy: [19.7, 21.7, 23.2, 24.4, 25.4, 26.2, 26.9, 27.6, 28.2, 28.7, 29.2, 29.7, 30.2, 30.6, 31.0, 31.4, 31.8, 32.2, 32.6, 32.9, 33.3, 33.6, 34.0, 34.3],
+        girl: [19.3, 21.3, 22.7, 23.9, 24.9, 25.7, 26.4, 27.1, 27.7, 28.2, 28.7, 29.2, 29.6, 30.0, 30.4, 30.8, 31.2, 31.6, 31.9, 32.3, 32.6, 33.0, 33.3, 33.6]
       },
       head: {
-        boy: [13.8, 15.2, 16.1, 16.7, 17.1, 17.5, 17.8, 18.0, 18.2, 18.4, 18.6, 18.7, 18.9],
-        girl: [13.5, 14.9, 15.7, 16.3, 16.7, 17.1, 17.3, 17.6, 17.8, 18.0, 18.1, 18.3, 18.4]
+        boy: [13.8, 15.2, 16.1, 16.7, 17.1, 17.5, 17.8, 18.0, 18.2, 18.4, 18.6, 18.7, 18.9, 19.0, 19.1, 19.3, 19.4, 19.5, 19.6, 19.7, 19.8, 19.9, 20.0, 20.0],
+        girl: [13.5, 14.9, 15.7, 16.3, 16.7, 17.1, 17.3, 17.6, 17.8, 18.0, 18.1, 18.3, 18.4, 18.5, 18.7, 18.8, 18.9, 19.0, 19.1, 19.2, 19.3, 19.4, 19.4, 19.5]
       }
     };
     
-    // Determine gender (default to 'boy' if not specified or unknown)
+    // WHO standard deviations (SD) for z-score calculation
+    const whoSD = {
+      weight: {
+        boy: [1.1, 1.3, 1.5, 1.6, 1.7, 1.8, 1.9, 1.9, 2.0, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.3, 2.4, 2.4, 2.5, 2.5, 2.6, 2.6, 2.7, 2.7],
+        girl: [1.0, 1.2, 1.4, 1.5, 1.6, 1.7, 1.7, 1.8, 1.9, 1.9, 2.0, 2.0, 2.1, 2.1, 2.2, 2.2, 2.3, 2.3, 2.4, 2.4, 2.5, 2.5, 2.6, 2.6]
+      },
+      height: {
+        boy: [0.9, 1.0, 1.1, 1.1, 1.2, 1.2, 1.2, 1.3, 1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 1.5, 1.5, 1.6, 1.6, 1.6, 1.6, 1.7],
+        girl: [0.9, 1.0, 1.0, 1.1, 1.1, 1.1, 1.2, 1.2, 1.2, 1.2, 1.3, 1.3, 1.3, 1.3, 1.3, 1.4, 1.4, 1.4, 1.4, 1.5, 1.5, 1.5, 1.5, 1.5]
+      },
+      head: {
+        boy: [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6],
+        girl: [0.5, 0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6]
+      }
+    };
+    
+    // Determine gender
     const genderKey = (gender === 'girl' || gender === 'female') ? 'girl' : 'boy';
     
-    // Get reference values for the age
-    const ageIndex = Math.min(Math.floor(ageMonths), 12);
-    const referenceValue = whoData[type]?.[genderKey]?.[ageIndex];
+    // Get reference values for the age (limit to available data)
+    const ageIndex = Math.min(Math.floor(ageMonths), whoData[type][genderKey].length - 1);
+    const median = whoData[type]?.[genderKey]?.[ageIndex];
+    const sd = whoSD[type]?.[genderKey]?.[ageIndex];
     
-    if (!referenceValue) return '50th';
+    if (!median || !sd) return '50th';
     
-    // Calculate z-score (simplified)
-    const deviation = (measurement - referenceValue) / referenceValue;
+    // Calculate z-score: (measurement - median) / SD
+    const zScore = (measurement - median) / sd;
     
-    // Convert z-score to percentile approximation
-    if (deviation > 0.25) return '75th';
-    if (deviation > 0.15) return '65th';
-    if (deviation > 0.05) return '55th';
-    if (deviation > -0.05) return '50th';
-    if (deviation > -0.15) return '45th';
-    if (deviation > -0.25) return '35th';
-    return '25th';
+    // Convert z-score to percentile
+    // z-score to percentile mapping (standard normal distribution)
+    if (zScore >= 2.5) return '99th';
+    if (zScore >= 2.0) return '98th';
+    if (zScore >= 1.88) return '97th';
+    if (zScore >= 1.75) return '96th';
+    if (zScore >= 1.645) return '95th';
+    if (zScore >= 1.5) return '93rd';
+    if (zScore >= 1.28) return '90th';
+    if (zScore >= 1.04) return '85th';
+    if (zScore >= 0.84) return '80th';
+    if (zScore >= 0.67) return '75th';
+    if (zScore >= 0.52) return '70th';
+    if (zScore >= 0.25) return '60th';
+    if (zScore >= 0) return '55th';
+    if (zScore >= -0.25) return '45th';
+    if (zScore >= -0.52) return '35th';
+    if (zScore >= -0.67) return '25th';
+    if (zScore >= -0.84) return '20th';
+    if (zScore >= -1.04) return '15th';
+    if (zScore >= -1.28) return '10th';
+    if (zScore >= -1.645) return '5th';
+    if (zScore >= -1.88) return '3rd';
+    return '1st';
   };
 
   if (loading) {
