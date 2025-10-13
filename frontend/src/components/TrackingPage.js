@@ -2008,45 +2008,53 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
                 </p>
               </div>
             )}
+            <div className="bg-pink-50 border border-pink-200 rounded-lg p-3 mb-3">
+              <p className="text-sm text-pink-800 font-medium">
+                💡 Enter the amount pumped from each breast (enter 0 if nothing was pumped)
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Left Breast (oz)</Label>
+                <Label className="text-sm font-semibold text-blue-700">Left Breast (oz) *</Label>
                 <Input
                   type="number"
                   step="0.1"
-                  value={formData.leftBreast || ''}
+                  value={formData.leftBreast === 0 ? '0' : (formData.leftBreast || '')}
                   onChange={(e) => setFormData({...formData, leftBreast: parseFloat(e.target.value) || 0})}
-                  placeholder="0"
+                  placeholder="0.0"
+                  className="mt-1 border-blue-300 focus:border-blue-500"
                 />
               </div>
               <div>
-                <Label>Right Breast (oz)</Label>
+                <Label className="text-sm font-semibold text-purple-700">Right Breast (oz) *</Label>
                 <Input
                   type="number"
                   step="0.1"
-                  value={formData.rightBreast || ''}
+                  value={formData.rightBreast === 0 ? '0' : (formData.rightBreast || '')}
                   onChange={(e) => setFormData({...formData, rightBreast: parseFloat(e.target.value) || 0})}
-                  placeholder="0"
+                  placeholder="0.0"
+                  className="mt-1 border-purple-300 focus:border-purple-500"
                 />
               </div>
+            </div>
+            <div className="text-xs text-gray-500 text-center">
+              Total: {((formData.leftBreast || 0) + (formData.rightBreast || 0)).toFixed(1)} oz
             </div>
             <div>
-              <Label>Total Amount: {((formData.leftBreast || 0) + (formData.rightBreast || 0)).toFixed(1)} oz</Label>
-              <div className="text-sm text-gray-500 mt-1">
-                Enter the amount pumped from each breast separately
-              </div>
+              <Label>Duration (minutes)</Label>
+              <Input
+                type="number"
+                value={formData.duration || data.duration || ''}
+                onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                placeholder="15"
+                readOnly={data.isCompleting}
+              />
+              {data.isCompleting && (
+                <div className="text-sm text-gray-500 mt-1">
+                  Duration automatically calculated from timer. You can adjust if needed.
+                </div>
+              )}
             </div>
-            {!data.isCompleting && (
-              <div>
-                <Label>Duration (minutes)</Label>
-                <Input
-                  type="number"
-                  value={formData.duration || ''}
-                  onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
-                  placeholder="15"
-                />
-              </div>
-            )}
           </div>
         );
       case 'measurements':
