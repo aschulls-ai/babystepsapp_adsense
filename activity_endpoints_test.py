@@ -3,7 +3,7 @@
 COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - CORRECT ENDPOINTS
 Testing all 6 activity types using the actual backend endpoints
 
-Backend: https://activity-repair.preview.emergentagent.com
+Backend: https://growth-tracker-41.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 
 Actual endpoints:
@@ -23,7 +23,7 @@ import uuid
 
 class ActivityEndpointsTester:
     def __init__(self):
-        self.base_url = "https://activity-repair.preview.emergentagent.com"
+        self.base_url = "https://growth-tracker-41.preview.emergentagent.com"
         self.token = None
         self.baby_id = None
         self.activity_ids = {}

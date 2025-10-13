@@ -6,7 +6,7 @@ Testing the complete data flow for the "Recent Feeding" widget in the Baby Steps
 The user reported that feeding activities logged via Quick Feed button are NOT showing up 
 in the "Recent Feeding" sidebar widget, even though they appear in "Activity History".
 
-Backend: https://activity-repair.preview.emergentagent.com
+Backend: https://growth-tracker-41.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 Demo Baby ID: demo-baby-456
 """
@@ -19,7 +19,7 @@ import uuid
 
 class RecentFeedingWidgetTester:
     def __init__(self):
-        self.base_url = "https://activity-repair.preview.emergentagent.com"
+        self.base_url = "https://growth-tracker-41.preview.emergentagent.com"
         self.token = None
         self.baby_id = "demo-baby-456"
         self.created_feeding_ids = []
