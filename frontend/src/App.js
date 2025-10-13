@@ -501,6 +501,11 @@ function App() {
       console.log('👶 Fetching babies after successful login...');
       await fetchBabies();
       console.log('✅ Login process completed successfully');
+      
+      // Force navigation to dashboard after successful login
+      console.log('🔄 Navigating to dashboard...');
+      window.location.href = '/dashboard';
+      
       return true;
     } catch (error) {
       console.error('❌ Standalone login failed:', error);
