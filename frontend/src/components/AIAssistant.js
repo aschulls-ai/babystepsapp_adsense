@@ -89,7 +89,7 @@ const AIAssistant = ({ currentBaby }) => {
       console.log('🔑 Token present:', !!token);
       console.log('👶 Baby context:', currentBaby ? `${currentBaby.name} (${Math.floor((new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44))} months)` : 'None');
 
-      // Call backend API using Android-optimized fetch
+      // Call backend API using Android-optimized fetch with extended timeout for AI
       const response = await androidFetch(`${process.env.REACT_APP_BACKEND_URL}/api/ai/chat`, {
         method: 'POST',
         headers: {
@@ -101,7 +101,8 @@ const AIAssistant = ({ currentBaby }) => {
           baby_age_months: currentBaby ? Math.floor(
             (new Date() - new Date(currentBaby.birth_date)) / (1000 * 60 * 60 * 24 * 30.44)
           ) : null
-        })
+        }),
+        timeout: 30000 // 30 second timeout for AI responses (LLM can take 10-20 seconds)
       });
 
       if (!response.ok) {
