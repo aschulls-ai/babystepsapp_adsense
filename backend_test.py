@@ -250,12 +250,12 @@ class ProductionBackendTester:
             return False
     
     def test_2_3_create_sleep_activity(self):
-        """Test 2.3: Create Sleep Activity"""
+        """Test 2.3: Create Sleep Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "sleep",
-            "duration": "120",
-            "notes": "Test nap session",
+            "duration": 120,  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration sleep test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
