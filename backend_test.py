@@ -380,14 +380,14 @@ class ProductionBackendTester:
             return False
     
     def test_2_6_create_milestone_activity(self):
-        """Test 2.6: Create Milestone Activity"""
+        """Test 2.6: Create Milestone Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "milestone",
-            "title": "First smile",
-            "category": "social",
-            "description": "Baby smiled for the first time",
-            "notes": "Test milestone",
+            "title": "First smile",  # NEW FIELD - should not cause 500 error
+            "category": "social",  # NEW FIELD - should not cause 500 error
+            "description": "Baby smiled for the first time - post-migration test",  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration milestone test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
