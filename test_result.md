@@ -377,12 +377,11 @@
 
 ## test_plan:
   current_focus:
-    - "Phase 2: Cloud-First Architecture Implementation"
-    - "Remove offlineAPI from primary data flows"
-    - "Ensure all CRUD operations use backend as single source of truth"
-  stuck_tasks: []
+    - "Phase 2: Cloud-First Architecture Refactor - Activity Endpoints"
+  stuck_tasks:
+    - "Phase 2: Cloud-First Architecture Refactor - COMPLETE"
   test_all: false
-  test_priority: "cloud_first_verification"
+  test_priority: "high_first"
 
 ## agent_communication:
     -agent: "main"
