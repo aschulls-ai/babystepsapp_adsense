@@ -222,24 +222,21 @@ const AIAssistant = ({ currentBaby }) => {
           {/* Messages Area */}
           <div className="h-[500px] overflow-y-auto mb-4 space-y-4 scroll-smooth">
             {messages.length === 0 ? (
-              <div className="text-center py-12">
-                <Bot className="w-16 h-16 mx-auto mb-4 text-rose-500" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <div className="text-center py-8">
+                <Bot className="w-12 h-12 mx-auto mb-3 text-rose-500" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   Welcome to AI Parenting Assistant!
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Ask me anything about baby care, food safety, meals, sleep, or development.
-                </p>
                 
                 {/* Quick Questions */}
                 <div className="max-w-2xl mx-auto">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Quick questions to try:</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Try these questions:</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {quickQuestions.map((question, idx) => (
                       <button
                         key={idx}
                         onClick={() => setInputValue(question)}
-                        className="text-left px-4 py-2 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-lg text-sm text-gray-700 dark:text-gray-300 transition-colors"
+                        className="text-left px-3 py-2 bg-rose-50 dark:bg-rose-900/20 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-lg text-xs text-gray-700 dark:text-gray-300 transition-colors"
                       >
                         {question}
                       </button>
