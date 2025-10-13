@@ -509,8 +509,8 @@ const TrackingPage = ({ currentBaby }) => {
       </Card>
 
       <div className="grid lg:grid-cols-4 gap-6">
-        {/* Tracking Forms */}
-        <div className="lg:col-span-3">
+        {/* Tracking Forms - HIDDEN */}
+        <div className="lg:col-span-3" style={{display: 'none'}}>
           <Card className="glass-strong border-0">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
@@ -562,8 +562,8 @@ const TrackingPage = ({ currentBaby }) => {
 
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Reminders Section */}
-          <Card className="glass border-0">
+          {/* Reminders Section - HIDDEN */}
+          <Card className="glass border-0" style={{display: 'none'}}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 text-gray-800">
@@ -600,13 +600,13 @@ const TrackingPage = ({ currentBaby }) => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-800">
                 <Clock className="w-5 h-5 text-rose-500" />
-                Recent {tabs.find(t => t.id === activeTab)?.label}
+                Recent Feeding
               </CardTitle>
             </CardHeader>
             <CardContent>
               <RecentActivityList 
-                activities={recentActivities[activeTab] || []}
-                type={activeTab}
+                activities={recentActivities['feeding'] || []}
+                type="feeding"
               />
             </CardContent>
           </Card>
