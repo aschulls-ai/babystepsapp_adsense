@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - POST-DEPLOYMENT VERIFICATION
-Testing all 6 activity types end-to-end with 25 tests total
+COMPREHENSIVE BACKEND TESTING AFTER DATABASE MIGRATION AND TIMESTAMP FIX
+Testing production Render backend with focus on activity endpoints and new database fields
 
-Backend: https://activity-repair.preview.emergentagent.com
+Backend: https://baby-steps-demo-api.onrender.com
 Test Account: demo@babysteps.com / demo123
+Demo Baby ID: demo-baby-456
 """
 
 import requests
@@ -13,9 +14,9 @@ import time
 from datetime import datetime, timezone
 import uuid
 
-class ActivityTrackingTester:
+class ProductionBackendTester:
     def __init__(self):
-        self.base_url = "https://activity-repair.preview.emergentagent.com"
+        self.base_url = "https://baby-steps-demo-api.onrender.com"
         self.token = None
         self.baby_id = None
         self.activity_ids = {}
