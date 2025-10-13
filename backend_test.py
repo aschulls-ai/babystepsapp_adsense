@@ -1073,5 +1073,5 @@ class ProductionBackendTester:
         }
 
 if __name__ == "__main__":
-    tester = ActivityTrackingTester()
+    tester = ProductionBackendTester()
     results = tester.run_all_tests()
