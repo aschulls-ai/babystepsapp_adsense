@@ -359,11 +359,11 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
         <CardContent className="space-y-3">
           <div className="flex justify-between">
             <span className="text-gray-600">Total amount</span>
-            <span className="font-semibold text-orange-600">{totalAmount} ml</span>
+            <span className="font-semibold text-orange-600">{totalAmount} oz</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Avg. per feed</span>
-            <span className="font-semibold text-orange-600">{avgAmount} ml</span>
+            <span className="font-semibold text-orange-600">{avgAmount} oz</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Number of feeds</span>
