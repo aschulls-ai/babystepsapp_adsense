@@ -611,6 +611,8 @@ async def create_activity(
             feeding_type=getattr(request, 'feeding_type', None),
             amount=getattr(request, 'amount', None),
             duration=getattr(request, 'duration', None),
+            left_breast=getattr(request, 'left_breast', None),
+            right_breast=getattr(request, 'right_breast', None),
             diaper_type=getattr(request, 'diaper_type', None),
             weight=getattr(request, 'weight', None),
             height=getattr(request, 'height', None),
