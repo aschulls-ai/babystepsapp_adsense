@@ -171,6 +171,7 @@ class BabyCreateRequest(BaseModel):
     name: str
     birth_date: str
     gender: Optional[str] = None
+    profile_image: Optional[str] = None
 
 class ActivityRequest(BaseModel):
     type: str
