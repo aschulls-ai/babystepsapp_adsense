@@ -9,6 +9,7 @@ import { Baby, ShieldCheck, Heart, Utensils, Activity, ChefHat } from 'lucide-re
 import LoginPageAd from './ads/LoginPageAd';
 
 const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerification }) => {
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: '', password: '', rememberMe: false });
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '' });
   const [resetEmail, setResetEmail] = useState('');
@@ -20,7 +21,11 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
     e.preventDefault();
     setLoading(true);
     try {
-      await onLogin(loginData.email, loginData.password, loginData.rememberMe);
+      const success = await onLogin(loginData.email, loginData.password, loginData.rememberMe);
+      if (success) {
+        console.log('✅ Login successful, navigating to dashboard...');
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Login error:', error);
       // Error handling is done in App.js login function via toast
