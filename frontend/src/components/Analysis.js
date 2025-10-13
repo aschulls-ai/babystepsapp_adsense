@@ -576,9 +576,13 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
 // Diaper View Component
 const DiaperView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setDayOffset }) => {
   const today = subDays(new Date(), dayOffset);
-  const todayDiapers = activities.filter(a => 
-    format(parseISO(a.timestamp), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')
-  );
+  const todayDiapers = activities.filter(a => {
+    try {
+      return format(new Date(a.timestamp), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+    } catch {
+      return false;
+    }
+  });
 
   const wetCount = todayDiapers.filter(a => a.diaper_type === 'wet').length;
   const dirtyCount = todayDiapers.filter(a => a.diaper_type === 'dirty').length;
