@@ -417,16 +417,59 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
   );
 };
 
-// Express (Pumping) View Component
+// Express (Pumping + Breastfeeding) View Component
 const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setDayOffset }) => {
   const today = subDays(new Date(), dayOffset);
-  const todayPumping = activities.filter(a => 
-    format(parseISO(a.timestamp), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')
+  
+  // Filter for pumping and breastfeeding
+  const pumpingActivities = activities.filter(a => a.type === 'pumping');
+  const breastfeedingActivities = activities.filter(a => 
+    a.type === 'feeding' && (a.feeding_type === 'breast' || a.feeding_type === 'breastfeeding')
   );
+  
+  // Today's pumping
+  const todayPumping = pumpingActivities.filter(a => {
+    try {
+      return format(new Date(a.timestamp), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+    } catch {
+      return false;
+    }
+  });
+  
+  // Today's breastfeeding
+  const todayBreastfeeding = breastfeedingActivities.filter(a => {
+    try {
+      return format(new Date(a.timestamp), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+    } catch {
+      return false;
+    }
+  });
 
-  const totalAmount = todayPumping.reduce((sum, a) => sum + (parseFloat(a.amount) || 0), 0);
-  const avgAmount = todayPumping.length > 0 ? (totalAmount / todayPumping.length).toFixed(1) : 0;
-  const totalDuration = todayPumping.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
+  const totalPumpAmount = todayPumping.reduce((sum, a) => sum + (parseFloat(a.amount) || 0), 0);
+  const avgPumpAmount = todayPumping.length > 0 ? (totalPumpAmount / todayPumping.length).toFixed(1) : 0;
+  const totalBreastDuration = todayBreastfeeding.reduce((sum, a) => sum + (parseInt(a.duration) || 0), 0);
+  
+  // 7-day averages
+  const last7DaysPumping = pumpingActivities.filter(a => {
+    try {
+      const date = new Date(a.timestamp);
+      return date >= subDays(new Date(), 7);
+    } catch {
+      return false;
+    }
+  });
+  
+  const last7DaysBreastfeeding = breastfeedingActivities.filter(a => {
+    try {
+      const date = new Date(a.timestamp);
+      return date >= subDays(new Date(), 7);
+    } catch {
+      return false;
+    }
+  });
+  
+  const avg7DayPumping = last7DaysPumping.length > 0 ? (last7DaysPumping.length / 7).toFixed(1) : 0;
+  const avg7DayBreastfeeding = last7DaysBreastfeeding.length > 0 ? (last7DaysBreastfeeding.length / 7).toFixed(1) : 0;
 
   return (
     <div className="space-y-6">
@@ -457,27 +500,72 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         </CardContent>
       </Card>
 
-      {/* Overview */}
+      {/* Pumping Overview */}
       <Card className="glass-strong border-0">
         <CardHeader>
-          <CardTitle>Overview</CardTitle>
+          <CardTitle>Pumping Overview</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total amount expressed</span>
-            <span className="font-semibold text-orange-600">{totalAmount} oz</span>
+            <span className="text-gray-600">Total amount pumped</span>
+            <span className="font-semibold text-orange-600">{totalPumpAmount} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Avg. expressed per session</span>
-            <span className="font-semibold text-orange-600">{avgAmount} oz</span>
+            <span className="text-gray-600">Avg. per session</span>
+            <span className="font-semibold text-orange-600">{avgPumpAmount} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of expressions</span>
+            <span className="text-gray-600">Number of sessions</span>
             <span className="font-semibold text-orange-600">{todayPumping.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Time since last expressed</span>
+            <span className="text-gray-600">Time since last pumped</span>
             <span className="font-semibold text-orange-600">{getTimeSinceLast('pumping')}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Breastfeeding Overview */}
+      <Card className="glass-strong border-0">
+        <CardHeader>
+          <CardTitle>Breastfeeding Overview</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex justify-between">
+            <span className="text-gray-600">Total breastfeeding time</span>
+            <span className="font-semibold text-pink-600">{Math.floor(totalBreastDuration / 60)}h {totalBreastDuration % 60}m</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Number of sessions</span>
+            <span className="font-semibold text-pink-600">{todayBreastfeeding.length}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Avg. duration per session</span>
+            <span className="font-semibold text-pink-600">
+              {todayBreastfeeding.length > 0 ? Math.round(totalBreastDuration / todayBreastfeeding.length) : 0} min
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Trends */}
+      <Card className="glass-strong border-0">
+        <CardHeader>
+          <CardTitle>Trends</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="text-sm font-semibold mb-2">7 DAY AVERAGE</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Avg. pumping sessions per day</span>
+                <span className="font-semibold">{avg7DayPumping}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Avg. breastfeeding sessions per day</span>
+                <span className="font-semibold">{avg7DayBreastfeeding}</span>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
