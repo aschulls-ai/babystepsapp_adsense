@@ -532,11 +532,24 @@ async def get_activities(
     
     # Convert to dict
     def format_timestamp(ts):
-        """Handle both datetime objects and string timestamps"""
+        """Handle both datetime objects and string timestamps, ensure ISO format with timezone"""
         if ts is None:
             return None
         if isinstance(ts, str):
-            return ts  # Already a string
+            # If already a string, try to parse and convert to ISO format
+            try:
+                from dateutil import parser
+                dt = parser.parse(ts)
+                # If no timezone info, assume UTC
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt.isoformat()
+            except:
+                return ts  # Return as-is if parsing fails
+        # If datetime object
+        # Ensure it has timezone info (assume UTC if not)
+        if ts.tzinfo is None:
+            ts = ts.replace(tzinfo=timezone.utc)
         return ts.isoformat()  # Convert datetime to ISO format
     
     return [
