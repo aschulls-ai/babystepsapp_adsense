@@ -16,7 +16,8 @@ import {
   CheckCircle,
   XCircle,
   Info,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
 import PageAd from './ads/PageAd';
