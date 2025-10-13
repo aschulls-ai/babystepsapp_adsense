@@ -3,7 +3,7 @@ Database configuration and utilities
 Supports both SQLite (local) and PostgreSQL (production)
 """
 import os
-from sqlalchemy import create_engine, Column, String, DateTime, Integer, Text
+from sqlalchemy import create_engine, Column, String, DateTime, Integer, Text, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
