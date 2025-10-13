@@ -256,8 +256,9 @@ class ActivityEndpointsTester:
     
     def test_2_3_create_sleep_activity(self):
         """Test 2.3: Create Sleep Activity"""
+        from datetime import timedelta
         now = datetime.now(timezone.utc)
-        start_time = now.replace(hour=now.hour-2)  # 2 hours ago
+        start_time = now - timedelta(hours=2)  # 2 hours ago
         
         data = {
             "baby_id": self.baby_id,
