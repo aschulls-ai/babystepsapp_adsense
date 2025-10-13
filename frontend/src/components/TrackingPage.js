@@ -2261,7 +2261,8 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
         if (total > 0) {
           details.push({ label: 'Total', value: `${total} oz` });
         }
-        if (activity.duration && !total) {
+        // Always show duration if available
+        if (activity.duration) {
           details.push({ label: 'Duration', value: `${activity.duration} min` });
         }
         break;
