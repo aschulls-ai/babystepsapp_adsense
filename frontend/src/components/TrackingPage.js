@@ -138,6 +138,34 @@ const TrackingPage = ({ currentBaby }) => {
     }
   };
 
+  // Dedicated function to fetch feeding activities for "Recent Feeding" widget
+  const fetchRecentFeeding = async () => {
+    if (!currentBaby) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await androidFetch(`${API}/api/activities?baby_id=${currentBaby.id}&type=feeding&limit=5`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setRecentActivities(prev => ({
+        ...prev,
+        feeding: data
+      }));
+    } catch (error) {
+      console.error('Failed to fetch recent feeding:', error);
+    }
+  };
+
   const fetchReminders = async () => {
     if (!currentBaby) return;
     
