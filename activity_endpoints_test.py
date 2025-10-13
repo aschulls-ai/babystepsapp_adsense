@@ -3,7 +3,7 @@
 COMPREHENSIVE ACTIVITY TRACKING BACKEND TEST - CORRECT ENDPOINTS
 Testing all 6 activity types using the actual backend endpoints
 
-Backend: https://baby-steps-demo-api.onrender.com
+Backend: https://parentapp-deploy.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 
 Actual endpoints:
