@@ -97,13 +97,25 @@ const Analysis = ({ currentBaby }) => {
     });
   };
 
-  // Get activities by type
+  // Get activities by type with safe date parsing
   const getActivitiesByType = (type, days = 7) => {
     const cutoffDate = subDays(new Date(), days);
+    return activities.filter(activity => {
+      if (activity.type !== type) return false;
+      try {
+        const activityDate = new Date(activity.timestamp);
+        return activityDate >= cutoffDate;
+      } catch {
+        return false;
+      }
+    });
+  };
+
+  // Get measurement activities (any activity with weight, height, or head_circumference)
+  const getMeasurementActivities = () => {
     return activities.filter(activity => 
-      activity.type === type && 
-      parseISO(activity.timestamp) >= cutoffDate
-    );
+      activity.weight || activity.height || activity.head_circumference
+    ).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   };
 
   // Calculate time since last activity
