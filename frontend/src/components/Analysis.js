@@ -631,6 +631,48 @@ const DiaperView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
           <p className="text-center text-sm text-gray-600 mt-2">Since last Diaper</p>
         </CardContent>
       </Card>
+
+      {/* 7-Day Trends */}
+      <Card className="glass-strong border-0">
+        <CardHeader>
+          <CardTitle>7-Day Trends</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[...Array(7)].map((_, index) => {
+              const dayDate = subDays(new Date(), 6 - index);
+              const dayDiapers = activities.filter(a => {
+                try {
+                  return format(new Date(a.timestamp), 'yyyy-MM-dd') === format(dayDate, 'yyyy-MM-dd');
+                } catch {
+                  return false;
+                }
+              });
+              
+              const dayWet = dayDiapers.filter(a => a.diaper_type === 'wet').length;
+              const dayDirty = dayDiapers.filter(a => a.diaper_type === 'dirty').length;
+              const dayMixed = dayDiapers.filter(a => a.diaper_type === 'mixed').length;
+              const totalCount = dayDiapers.length;
+              
+              return (
+                <div key={index} className="border-b border-gray-200 pb-3 last:border-0">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-medium">{format(dayDate, 'EEE, MMM d')}</span>
+                    <span className="font-bold text-blue-600">{totalCount} total</span>
+                  </div>
+                  {totalCount > 0 && (
+                    <div className="flex gap-2 text-sm">
+                      {dayWet > 0 && <span className="text-blue-400">💧 {dayWet} wet</span>}
+                      {dayDirty > 0 && <span className="text-yellow-600">💩 {dayDirty} dirty</span>}
+                      {dayMixed > 0 && <span className="text-orange-600">💧💩 {dayMixed} both</span>}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
