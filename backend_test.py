@@ -1008,6 +1008,13 @@ class ProductionBackendTester:
         has_500_errors = any("500" in r["details"] for r in self.test_results)
         criteria_met.append("✅ No 500 Internal Server Errors" if not has_500_errors else "❌ 500 Internal Server Errors detected")
         
+        # Check for specific migration-related errors
+        has_undefined_column_errors = any("UndefinedColumn" in r["details"] for r in self.test_results)
+        criteria_met.append("✅ No UndefinedColumn errors" if not has_undefined_column_errors else "❌ UndefinedColumn errors detected")
+        
+        has_isoformat_errors = any("isoformat" in r["details"] for r in self.test_results)
+        criteria_met.append("✅ No isoformat errors" if not has_isoformat_errors else "❌ isoformat timestamp errors detected")
+        
         # Check authentication
         auth_tests = [r for r in self.test_results if "Login" in r["test"]]
         auth_success = all("✅" in t["status"] for t in auth_tests)
