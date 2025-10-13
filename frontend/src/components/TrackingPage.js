@@ -423,6 +423,7 @@ const TrackingPage = ({ currentBaby }) => {
       
       fetchRecentActivities();
       fetchAllActivities(); // Refresh comprehensive activity list
+      fetchRecentFeeding(); // Refresh Recent Feeding widget
       
       // Reset active timers if completing a timer-based action
       if (data.isCompleting) {
