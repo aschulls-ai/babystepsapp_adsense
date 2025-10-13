@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   Utensils,
-  Settings
+  Settings,
+  BarChart3
 } from 'lucide-react';
 import { useState } from 'react';
 
