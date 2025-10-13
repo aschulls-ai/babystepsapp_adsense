@@ -407,6 +407,7 @@ async def create_baby(request: BabyCreateRequest, current_user_email: str = Depe
             name=request.name,
             birth_date=request.birth_date,
             gender=request.gender,
+            profile_image=request.profile_image,
             user_id=user.id
         )
         
