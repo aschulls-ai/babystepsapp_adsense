@@ -165,13 +165,13 @@ class ProductionBackendTester:
             return False
     
     def test_2_1_create_feeding_activity(self):
-        """Test 2.1: Create Feeding Activity"""
+        """Test 2.1: Create Feeding Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "feeding",
-            "feeding_type": "bottle",
-            "amount": "8",
-            "notes": "Test feeding activity",
+            "feeding_type": "bottle",  # NEW FIELD - should not cause 500 error
+            "amount": 8.0,  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration feeding test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
