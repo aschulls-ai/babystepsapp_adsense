@@ -210,10 +210,10 @@ const Analysis = ({ currentBaby }) => {
             />
           </TabsContent>
 
-          {/* Express (Pumping) Tab */}
+          {/* Express (Pumping + Breastfeeding) Tab */}
           <TabsContent value="express">
             <ExpressView 
-              activities={getActivitiesByType('pumping')}
+              activities={activities}
               currentBaby={currentBaby}
               getTimeSinceLast={getTimeSinceLast}
               dayOffset={dayOffset}
