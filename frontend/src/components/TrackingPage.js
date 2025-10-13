@@ -58,6 +58,7 @@ const TrackingPage = ({ currentBaby }) => {
       fetchRecentActivities();
       fetchReminders();
       fetchAllActivities();
+      fetchRecentFeeding(); // Fetch feeding activities for "Recent Feeding" widget
     }
   }, [currentBaby, activeTab]);
 
