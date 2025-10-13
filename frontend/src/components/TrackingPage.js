@@ -1497,8 +1497,18 @@ const RecentActivityList = ({ activities, type }) => {
   const formatActivity = (activity, type) => {
     switch (type) {
       case 'feeding':
+        // Map feeding_type to display names
+        const feedingTypeMap = {
+          'bottle': 'Bottle',
+          'breast': 'Breastfeeding',
+          'breastfeeding': 'Breastfeeding',
+          'solid': 'Solid Food',
+          'formula': 'Formula'
+        };
+        const feedingLabel = feedingTypeMap[activity.feeding_type?.toLowerCase()] || 'Feeding';
+        
         return {
-          title: `${activity.type.charAt(0).toUpperCase() + activity.type.slice(1)} feeding`,
+          title: feedingLabel,
           subtitle: activity.amount ? `${activity.amount} oz` : `${activity.duration || 0} min`,
           time: formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })
         };
