@@ -118,7 +118,7 @@ const Analysis = ({ currentBaby }) => {
     ).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   };
 
-  // Calculate time since last activity
+  // Calculate time since last activity with safe date parsing
   const getTimeSinceLast = (type) => {
     const typeActivities = activities.filter(a => a.type === type);
     if (typeActivities.length === 0) return 'No data';
@@ -127,15 +127,19 @@ const Analysis = ({ currentBaby }) => {
       new Date(b.timestamp) - new Date(a.timestamp)
     )[0];
     
-    const now = new Date();
-    const lastTime = parseISO(latest.timestamp);
-    const hours = differenceInHours(now, lastTime);
-    const minutes = differenceInMinutes(now, lastTime) % 60;
-    const days = differenceInDays(now, lastTime);
-    
-    if (days > 0) return `${days}d ${hours % 24}h ${minutes}m`;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
+    try {
+      const now = new Date();
+      const lastTime = new Date(latest.timestamp);
+      const hours = differenceInHours(now, lastTime);
+      const minutes = differenceInMinutes(now, lastTime) % 60;
+      const days = differenceInDays(now, lastTime);
+      
+      if (days > 0) return `${days}d ${hours % 24}h ${minutes}m`;
+      if (hours > 0) return `${hours}h ${minutes}m`;
+      return `${minutes}m`;
+    } catch {
+      return 'Error';
+    }
   };
 
   // Calculate WHO growth percentile
