@@ -2251,16 +2251,23 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
         break;
         
       case 'pumping':
-        if (activity.left_breast) {
+        // Show individual breast amounts if available
+        if (activity.left_breast !== undefined && activity.left_breast > 0) {
           details.push({ label: 'Left', value: `${activity.left_breast} oz` });
         }
-        if (activity.right_breast) {
+        if (activity.right_breast !== undefined && activity.right_breast > 0) {
           details.push({ label: 'Right', value: `${activity.right_breast} oz` });
         }
+        
+        // Show total amount (always show if > 0, or if no individual amounts)
         const total = (activity.left_breast || 0) + (activity.right_breast || 0);
         if (total > 0) {
           details.push({ label: 'Total', value: `${total} oz` });
+        } else if (activity.amount && activity.amount > 0) {
+          // Fallback to amount field if no breast-specific data
+          details.push({ label: 'Amount', value: `${activity.amount} oz` });
         }
+        
         // Always show duration if available
         if (activity.duration) {
           details.push({ label: 'Duration', value: `${activity.duration} min` });
