@@ -20,11 +20,15 @@ const Analysis = ({ currentBaby }) => {
   }, [currentBaby]);
 
   const fetchActivities = async () => {
-    if (!currentBaby) return;
-    
+    if (!currentBaby) {
+      console.log('❌ Analysis: No current baby');
+      return;
+    }
+
     console.log('📊 Analysis: Fetching activities for baby:', currentBaby.id);
-    
+
     try {
+      // EXACTLY match TrackingPage fetchAllActivities implementation
       const token = localStorage.getItem('token');
       const url = `${API}/api/activities?baby_id=${currentBaby.id}`;
       console.log('📡 Analysis: Fetching from:', url);
@@ -37,16 +41,25 @@ const Analysis = ({ currentBaby }) => {
         }
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Analysis: Received', data.length, 'activities');
-        console.log('Sample activity:', data[0]);
-        setActivities(data);
-      } else {
-        console.error('❌ Analysis: HTTP', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
+      
+      const data = await response.json();
+      console.log('✅ Analysis: Received', data.length, 'activities');
+      console.log('📋 Sample activity:', data[0]);
+      
+      // Add display type for consistency with Activity History
+      const activitiesWithDisplayType = data.map(activity => ({
+        ...activity,
+        activity_type: activity.type,
+        display_type: activity.type.charAt(0).toUpperCase() + activity.type.slice(1)
+      }));
+      
+      setActivities(activitiesWithDisplayType);
+      console.log('💾 Analysis: Activities stored in state');
     } catch (error) {
-      console.error('❌ Analysis: Failed to fetch activities:', error);
+      console.error('❌ Analysis: Failed to fetch all activities:', error);
     } finally {
       setLoading(false);
     }
