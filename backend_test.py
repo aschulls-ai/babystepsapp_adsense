@@ -641,6 +641,160 @@ class ProductionBackendTester:
                         f"HTTP {status}", response_time)
             return False
     
+    def test_4_4_baby_profile_with_image(self):
+        """Test 4.4: Baby Profile with NEW profile_image Field"""
+        baby_data = {
+            "name": "Migration Test Baby",
+            "birth_date": "2024-06-01T00:00:00Z",
+            "gender": "girl",
+            "profile_image": "https://example.com/baby-photo.jpg"  # NEW FIELD - should not cause 500 error
+        }
+        
+        response, response_time = self.make_request("POST", "/api/babies", baby_data,
+                                                  headers=self.get_auth_headers())
+        
+        if response and response.status_code in [200, 201]:
+            try:
+                baby = response.json()
+                if baby.get("profile_image") == baby_data["profile_image"]:
+                    self.log_test("4.4 Baby Profile with Image", True, 
+                                f"Baby created with profile_image field: {baby.get('id')}", response_time)
+                    return True
+                else:
+                    self.log_test("4.4 Baby Profile with Image", False, 
+                                "profile_image field not saved correctly", response_time)
+                    return False
+            except json.JSONDecodeError:
+                self.log_test("4.4 Baby Profile with Image", False, 
+                            "Invalid JSON response", response_time)
+                return False
+        else:
+            status = response.status_code if response else "Timeout"
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("4.4 Baby Profile with Image", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
+            return False
+    
+    def test_4_5_ai_chat_endpoint(self):
+        """Test 4.5: AI Chat Endpoint"""
+        data = {
+            "message": "When can babies eat strawberries?",
+            "baby_age_months": 6
+        }
+        
+        response, response_time = self.make_request("POST", "/api/ai/chat", data,
+                                                  headers=self.get_auth_headers())
+        
+        if response and response.status_code == 200:
+            try:
+                result = response.json()
+                ai_response = result.get("response", "")
+                if len(ai_response) > 50:  # Reasonable AI response length
+                    self.log_test("4.5 AI Chat Endpoint", True, 
+                                f"AI response received ({len(ai_response)} chars)", response_time)
+                    return True
+                else:
+                    self.log_test("4.5 AI Chat Endpoint", False, 
+                                f"AI response too short ({len(ai_response)} chars)", response_time)
+                    return False
+            except json.JSONDecodeError:
+                self.log_test("4.5 AI Chat Endpoint", False, 
+                            "Invalid JSON response", response_time)
+                return False
+        else:
+            status = response.status_code if response else "Timeout"
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("4.5 AI Chat Endpoint", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
+            return False
+    
+    def test_4_6_food_research_endpoint(self):
+        """Test 4.6: Food Research Endpoint"""
+        data = {
+            "question": "Are strawberries safe for babies?",
+            "baby_age_months": 6
+        }
+        
+        response, response_time = self.make_request("POST", "/api/food/research", data,
+                                                  headers=self.get_auth_headers())
+        
+        if response and response.status_code == 200:
+            try:
+                result = response.json()
+                answer = result.get("answer", "")
+                safety_level = result.get("safety_level", "")
+                if len(answer) > 20 and safety_level:
+                    self.log_test("4.6 Food Research Endpoint", True, 
+                                f"Food safety response received (safety_level: {safety_level})", response_time)
+                    return True
+                else:
+                    self.log_test("4.6 Food Research Endpoint", False, 
+                                f"Incomplete food research response", response_time)
+                    return False
+            except json.JSONDecodeError:
+                self.log_test("4.6 Food Research Endpoint", False, 
+                            "Invalid JSON response", response_time)
+                return False
+        else:
+            status = response.status_code if response else "Timeout"
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("4.6 Food Research Endpoint", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
+            return False
+    
+    def test_4_7_meal_search_endpoint(self):
+        """Test 4.7: Meal Search Endpoint"""
+        data = {
+            "query": "breakfast ideas for 8 month old",
+            "baby_age_months": 8
+        }
+        
+        response, response_time = self.make_request("POST", "/api/meals/search", data,
+                                                  headers=self.get_auth_headers())
+        
+        if response and response.status_code == 200:
+            try:
+                result = response.json()
+                meal_results = result.get("results", "")
+                if len(meal_results) > 50:  # Reasonable meal suggestions length
+                    self.log_test("4.7 Meal Search Endpoint", True, 
+                                f"Meal suggestions received ({len(meal_results)} chars)", response_time)
+                    return True
+                else:
+                    self.log_test("4.7 Meal Search Endpoint", False, 
+                                f"Meal suggestions too short ({len(meal_results)} chars)", response_time)
+                    return False
+            except json.JSONDecodeError:
+                self.log_test("4.7 Meal Search Endpoint", False, 
+                            "Invalid JSON response", response_time)
+                return False
+        else:
+            status = response.status_code if response else "Timeout"
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("4.7 Meal Search Endpoint", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
+            return False
+    
     def test_5_edge_cases(self):
         """Test 5: Edge Cases & Error Handling (10 tests)"""
         edge_test_results = []
