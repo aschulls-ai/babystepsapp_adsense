@@ -182,6 +182,10 @@ class ActivityRequest(BaseModel):
     feeding_type: Optional[str] = None  # breast, bottle, formula, solid
     amount: Optional[float] = None  # in oz or ml
     
+    # Pumping-specific fields (for tracking left/right breast separately)
+    left_breast: Optional[float] = None  # left breast amount in oz
+    right_breast: Optional[float] = None  # right breast amount in oz
+    
     # Sleep and pumping fields
     duration: Optional[int] = None  # in minutes
     
