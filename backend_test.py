@@ -335,14 +335,15 @@ class ProductionBackendTester:
             return False
     
     def test_2_5_create_measurement_activity(self):
-        """Test 2.5: Create Measurement Activity"""
+        """Test 2.5: Create Measurement Activity with NEW FIELDS"""
         data = {
             "baby_id": self.baby_id,
             "type": "measurement",
-            "weight": "15.5",
-            "height": "65",
-            "head_circumference": "42",
-            "notes": "Test measurement",
+            "weight": 15.5,  # NEW FIELD - should not cause 500 error
+            "height": 65.0,  # NEW FIELD - should not cause 500 error
+            "head_circumference": 42.0,  # NEW FIELD - should not cause 500 error
+            "temperature": 98.6,  # NEW FIELD - should not cause 500 error
+            "notes": "Post-migration measurement test with new database fields",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
