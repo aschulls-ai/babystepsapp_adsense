@@ -407,6 +407,18 @@
   test_sequence: 1
   run_ui: false
 
+  - task: "Emergency Training - Normal Health Parameters Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/EmergencyTraining.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ IMPLEMENTATION COMPLETE: Added 'Normal Health Parameters by Age' section to Emergency Training page. LOCATION: Positioned below Emergency Assessment Training topic and above Professional Course recommendation. CONTENT: Displays 5 age ranges (0-3, 4-6, 7-12, 13-18, 19-24 months) with parameters: Heart Rate (bpm), Temperature (°F/°C), Respiratory Rate (breaths/min), O2 Saturation (%). Green-themed card with white individual age group boxes. Includes disclaimer noting these are general ranges and to contact doctor if concerned. Static data - no backend connection needed. Ready for frontend testing."
+
 ## test_plan:
   current_focus:
     - "Activity History - Display All Saved Details for Each Log Entry"
