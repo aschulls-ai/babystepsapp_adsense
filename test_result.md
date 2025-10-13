@@ -213,10 +213,10 @@
   - task: "Phase 2: Cloud-First Architecture Refactor - COMPLETE"
     implemented: true
     working: true
-    file: "/app/frontend/src/App.js, /app/frontend/src/components/TrackingPage.js, /app/public-server/database.py"
+    file: "/app/frontend/src/App.js, /app/frontend/src/components/TrackingPage.js, /app/public-server/database.py, /app/public-server/app.py"
     stuck_count: 2
     priority: "critical"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         -working: "NA"
         -agent: "main"
