@@ -141,11 +141,19 @@ const TrackingPage = ({ currentBaby }) => {
 
   // Dedicated function to fetch feeding activities for "Recent Feeding" widget
   const fetchRecentFeeding = async () => {
-    if (!currentBaby) return;
+    if (!currentBaby) {
+      console.log('❌ fetchRecentFeeding: No current baby');
+      return;
+    }
 
+    console.log('🔄 Fetching recent feeding for baby:', currentBaby.id);
+    
     try {
       const token = localStorage.getItem('token');
-      const response = await androidFetch(`${API}/api/activities?baby_id=${currentBaby.id}&type=feeding&limit=5`, {
+      const url = `${API}/api/activities?baby_id=${currentBaby.id}&type=feeding&limit=5`;
+      console.log('📡 Fetching from:', url);
+      
+      const response = await androidFetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -158,12 +166,19 @@ const TrackingPage = ({ currentBaby }) => {
       }
       
       const data = await response.json();
-      setRecentActivities(prev => ({
-        ...prev,
-        feeding: data
-      }));
+      console.log('✅ Recent feeding data received:', data.length, 'activities');
+      console.log('Sample:', data[0]);
+      
+      setRecentActivities(prev => {
+        const updated = {
+          ...prev,
+          feeding: data
+        };
+        console.log('📊 Updated recentActivities.feeding:', updated.feeding.length);
+        return updated;
+      });
     } catch (error) {
-      console.error('Failed to fetch recent feeding:', error);
+      console.error('❌ Failed to fetch recent feeding:', error);
     }
   };
 
