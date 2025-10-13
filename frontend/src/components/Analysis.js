@@ -673,15 +673,32 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p className="text-sm font-semibold mb-2">7 DAY AVERAGE</p>
+            <p className="text-sm font-semibold mb-2">7 DAY AVERAGE - PUMPING</p>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. pumping sessions per day</span>
-                <span className="font-semibold">{avg7DayPumping}</span>
+                <span className="text-gray-600">Avg. total ounces per day</span>
+                <span className="font-semibold text-orange-600">{avg7DayTotalOz} oz</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-gray-600">Avg. left breast per day</span>
+                <span className="font-semibold text-blue-600">{avg7DayLeftBreast} oz</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Avg. right breast per day</span>
+                <span className="font-semibold text-purple-600">{avg7DayRightBreast} oz</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Avg. pumping sessions per day</span>
+                <span className="font-semibold text-orange-600">{avg7DayPumping}</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm font-semibold mb-2">7 DAY AVERAGE - BREASTFEEDING</p>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
                 <span className="text-gray-600">Avg. breastfeeding sessions per day</span>
-                <span className="font-semibold">{avg7DayBreastfeeding}</span>
+                <span className="font-semibold text-pink-600">{avg7DayBreastfeeding}</span>
               </div>
             </div>
           </div>
