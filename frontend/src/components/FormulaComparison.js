@@ -79,7 +79,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Easier to digest', 'Reduces fussiness', 'Good for sensitive babies'],
       cons: ['Slightly thicker consistency', 'More expensive than basic formulas'],
       description: 'Gentle formula with partially broken down proteins for easier digestion.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.gerber.com/gerber-good-start-gentlepro'
     },
     {
       id: 4,
@@ -96,7 +97,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['USDA Organic certified', 'No artificial colors/flavors', 'Non-GMO'],
       cons: ['Most expensive option', 'Limited availability', 'Some mixing issues'],
       description: 'Certified organic formula made with organic lactose and no artificial ingredients.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.earthsbest.com/en/products/formula'
     },
     {
       id: 5,
@@ -113,7 +115,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Reduces fussiness in 24 hours', 'Easy to digest', 'Great for colicky babies'],
       cons: ['Thicker than regular formula', 'Slightly sweet taste'],
       description: 'Designed to reduce fussiness, gas, and crying in just 24 hours.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.enfamil.com/products/enfamil-gentlease-infant-formula/'
     },
     {
       id: 6,
@@ -130,7 +133,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Hypoallergenic', 'For severe allergies', 'Fast relief for colic'],
       cons: ['Very expensive', 'Strong smell', 'Bitter taste'],
       description: 'Hypoallergenic formula for babies with severe food allergies and colic.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.similac.com/baby-formula/alimentum.html'
     },
     {
       id: 7,
@@ -147,7 +151,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Reduces spit-up', 'Thickens in stomach', 'Clinically proven'],
       cons: ['Requires special nipple', 'More expensive', 'Thicker consistency'],
       description: 'Specially designed to reduce spit-up in babies with reflux issues.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.enfamil.com/products/enfamil-ar-infant-formula/'
     },
     {
       id: 8,
@@ -164,7 +169,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Lactose-free', 'Easy digestion', 'Immune support'],
       cons: ['Contains corn syrup', 'Sweet taste', 'Some gas issues'],
       description: 'Lactose-free formula for babies with lactose sensitivity.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.similac.com/baby-formula/pro-sensitive.html'
     },
     {
       id: 9,
@@ -181,7 +187,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['No palm oil', 'Made with whole milk', 'Organic certified', 'Closest to breast milk composition'],
       cons: ['Premium pricing', 'Limited availability in some areas'],
       description: 'Premium organic formula made with whole milk and free from palm oil, designed to be closest to breast milk.',
-      ageRange: '0-6 months'
+      ageRange: '0-6 months',
+      website: 'https://www.kendamil.com/products/organic-first-infant-milk'
     },
     {
       id: 10,
@@ -198,7 +205,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['No palm oil', 'Made with whole milk', 'Great taste', 'Easy to digest'],
       cons: ['Slightly more expensive', 'Creamier texture may take adjustment'],
       description: 'Premium formula made with whole milk and naturally sourced nutrients, free from palm oil.',
-      ageRange: '0-6 months'
+      ageRange: '0-6 months',
+      website: 'https://www.kendamil.com/products/classic-first-infant-milk'
     },
     {
       id: 11,
@@ -215,7 +223,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Reduces colic and constipation', 'Easier digestion', 'No palm oil', 'Less gas and fussiness'],
       cons: ['More expensive than standard formula', 'Slight change in taste'],
       description: 'Specially formulated for babies with digestive sensitivities, featuring reduced lactose and partially hydrolyzed proteins.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.kendamil.com/products/comfort-milk'
     },
     {
       id: 12,
