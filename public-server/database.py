@@ -45,6 +45,7 @@ class Baby(Base):
     name = Column(String, nullable=False)
     birth_date = Column(String, nullable=False)
     gender = Column(String)
+    profile_image = Column(String)  # Added missing field
     user_id = Column(String, nullable=False, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
