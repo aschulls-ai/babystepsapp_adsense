@@ -61,7 +61,8 @@ const FormulaComparison = ({ currentBaby }) => {
       pros: ['Immune system support', 'No artificial growth hormones', 'Easy mixing'],
       cons: ['Contains corn syrup', 'Some babies have gas issues'],
       description: 'Features 2\'-FL HMO, an immune-nourishing prebiotic like that found in breast milk.',
-      ageRange: '0-12 months'
+      ageRange: '0-12 months',
+      website: 'https://www.similac.com/baby-formula/pro-advance.html'
     },
     {
       id: 3,
