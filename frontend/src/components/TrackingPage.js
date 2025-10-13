@@ -1452,7 +1452,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
           <SelectTrigger data-testid="milestone-category-selector">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" sideOffset={5}>
             <SelectItem value="physical">Physical Development</SelectItem>
             <SelectItem value="cognitive">Cognitive Development</SelectItem>
             <SelectItem value="social">Social Development</SelectItem>
