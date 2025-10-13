@@ -782,6 +782,14 @@ function App() {
                       } 
                     />
                     <Route 
+                      path="/analysis" 
+                      element={
+                        <Analysis 
+                          currentBaby={currentBaby}
+                        />
+                      } 
+                    />
+                    <Route 
                       path="/formula-comparison" 
                       element={<FormulaComparison />} 
                     />
