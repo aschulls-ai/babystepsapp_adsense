@@ -409,7 +409,7 @@
 
 ## test_plan:
   current_focus:
-    - "Phase 2: Cloud-First Architecture Refactor - Activity Endpoints"
+    - "Recent Feeding Widget Data Flow - Frontend-Backend API Endpoint Mismatch"
   stuck_tasks:
     - "Phase 2: Cloud-First Architecture Refactor - COMPLETE"
   test_all: false
