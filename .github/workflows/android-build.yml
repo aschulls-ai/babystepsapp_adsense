@@ -89,16 +89,35 @@ jobs:
         echo "   - App Signing Key: Managed by Google for final distribution"
         echo ""
         
-        # Use extracted certificate from working AAB or generate consistent keystore
-        if [ -n "${{ secrets.UPLOAD_CERTIFICATE_BASE64 }}" ]; then
-          echo "🎯 Using extracted certificate from successful AAB"
-          # Extract certificate and attempt to reconstruct keystore
-          echo "${{ secrets.UPLOAD_CERTIFICATE_BASE64 }}" | base64 -d > upload_cert.p7s
+        # PRIORITY 1: Use permanent keystore from GitHub Secrets (RECOMMENDED)
+        if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+          echo "✅ Using permanent keystore from GitHub Secrets"
+          echo "This ensures consistent SHA1 fingerprint across all builds"
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload.keystore
           
-          # Try to extract the certificate details
-          openssl pkcs7 -inform DER -in upload_cert.p7s -print_certs | openssl x509 -outform PEM > upload_cert.pem
+          # Verify keystore was decoded successfully
+          if [ ! -f upload.keystore ] || [ ! -s upload.keystore ]; then
+            echo "❌ ERROR: Keystore file is empty or failed to decode"
+            echo "Please verify ANDROID_KEYSTORE_BASE64 secret is set correctly"
+            exit 1
+          fi
           
-          # Generate keystore with matching parameters and try to import certificate
+          # Display keystore info (without showing sensitive data)
+          echo ""
+          echo "📋 Keystore Information:"
+          keytool -list -keystore upload.keystore -storepass "${{ secrets.KEYSTORE_PASSWORD || 'upload2024' }}" | grep -A 5 "Certificate fingerprint"
+          echo ""
+          
+        else
+          echo "⚠️  WARNING: ANDROID_KEYSTORE_BASE64 secret not found!"
+          echo "⚠️  Generating temporary keystore - SHA1 WILL CHANGE with each build"
+          echo "⚠️  This will cause Google Play upload issues!"
+          echo ""
+          echo "📚 To fix this permanently, follow the guide:"
+          echo "   See: ANDROID_SIGNING_SETUP.md in the repository"
+          echo ""
+          
+          # Generate temporary keystore (NOT RECOMMENDED for production)
           keytool -genkeypair -v \
             -keystore upload.keystore \
             -alias upload \
@@ -109,23 +128,11 @@ jobs:
             -keypass upload2024 \
             -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
             
-          echo "⚠️ Note: Certificate extracted but private key cannot be recreated"
-          echo "SHA1 fingerprint may differ from expected: A0:B7:D4:97:A7:BE:5F:C4:D1:AA:48:87:75:E9:95:0A:AE:76:0D:5E"
-        elif [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
-          echo "✅ Using keystore from GitHub Secrets"
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload.keystore
-        else
-          echo "🔧 Generating consistent upload keystore"
-          keytool -genkeypair -v \
-            -keystore upload.keystore \
-            -alias upload \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass upload2024 \
-            -keypass upload2024 \
-            -dname "CN=Baby Steps Upload,OU=Baby Steps,O=Baby Steps App,L=Unknown,ST=Unknown,C=US"
-          echo "✅ Consistent upload key generated"
+          echo ""
+          echo "⚠️  TEMPORARY keystore generated (will change on next build)"
+          echo "📋 SHA1 Fingerprint for this build:"
+          keytool -list -keystore upload.keystore -storepass upload2024 | grep -A 5 "Certificate fingerprint"
+          echo ""
         fi
         
         # Configure signing in gradle.properties (matches build.gradle expectations)
@@ -134,7 +141,7 @@ jobs:
         echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS || 'upload' }}" >> ../gradle.properties
         echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD || 'upload2024' }}" >> ../gradle.properties
         
-        echo "✅ Upload key configured for AAB signing"
+        echo "✅ Signing configuration completed"
         
     - name: 🔧 Setup Gradle
       uses: gradle/gradle-build-action@v2
