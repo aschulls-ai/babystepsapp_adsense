@@ -217,7 +217,7 @@ const Analysis = ({ currentBaby }) => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Analysis</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Analysis</h1>
           <p className="text-gray-600 dark:text-gray-300">{currentBaby.name}'s Data</p>
         </div>
 
