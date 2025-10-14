@@ -760,7 +760,7 @@ const TrackingPage = ({ currentBaby }) => {
       />
 
       {/* Page Ad */}
-      <PageAd position="bottom" />
+      <PageAd position="bottom" adUnitKey="banner_tracking" />
     </div>
   );
 };
