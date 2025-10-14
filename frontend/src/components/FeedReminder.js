@@ -152,17 +152,74 @@ const FeedReminder = ({ currentBaby }) => {
 
           {isEditing ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min="1"
-                  max="12"
-                  value={tempInterval}
-                  onChange={(e) => setTempInterval(parseInt(e.target.value) || 1)}
-                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-                />
-                <span className="text-gray-600">hours</span>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Hours Input */}
+                <div className="space-y-1">
+                  <label className="text-xs text-gray-500">Hours</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      max="24"
+                      value={tempHours}
+                      onChange={(e) => setTempHours(parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                    />
+                    <span className="text-gray-600 dark:text-gray-400 text-sm">h</span>
+                  </div>
+                </div>
+                
+                {/* Minutes Input */}
+                <div className="space-y-1">
+                  <label className="text-xs text-gray-500">Minutes</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      max="59"
+                      value={tempMinutes}
+                      onChange={(e) => setTempMinutes(parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                    />
+                    <span className="text-gray-600 dark:text-gray-400 text-sm">m</span>
+                  </div>
+                </div>
               </div>
+              
+              {/* Quick Presets */}
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => { setTempHours(0); setTempMinutes(30); }}
+                  className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                >
+                  30 min
+                </button>
+                <button
+                  onClick={() => { setTempHours(1); setTempMinutes(0); }}
+                  className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                >
+                  1 hour
+                </button>
+                <button
+                  onClick={() => { setTempHours(2); setTempMinutes(0); }}
+                  className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                >
+                  2 hours
+                </button>
+                <button
+                  onClick={() => { setTempHours(2); setTempMinutes(30); }}
+                  className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                >
+                  2h 30m
+                </button>
+                <button
+                  onClick={() => { setTempHours(3); setTempMinutes(0); }}
+                  className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                >
+                  3 hours
+                </button>
+              </div>
+              
               <div className="flex gap-2">
                 <Button
                   onClick={handleSaveInterval}
@@ -184,9 +241,12 @@ const FeedReminder = ({ currentBaby }) => {
               </div>
             </div>
           ) : (
-            <div className="text-center py-2 bg-blue-50 rounded-lg">
-              <span className="text-2xl font-bold text-blue-600">{reminderInterval}</span>
-              <span className="text-sm text-gray-600 ml-2">hours</span>
+            <div className="text-center py-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+              <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {reminderHours > 0 && `${reminderHours}h `}
+                {reminderMinutes > 0 && `${reminderMinutes}m`}
+                {reminderHours === 0 && reminderMinutes === 0 && '0m'}
+              </span>
             </div>
           )}
         </div>
