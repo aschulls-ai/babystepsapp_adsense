@@ -186,7 +186,8 @@ const PrivacyPolicy = () => {
 
               <h3 className="text-lg font-medium text-gray-800 mb-3">Limited Sharing Situations:</h3>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li><strong>Service Providers:</strong> Trusted vendors who help operate our service (hosting, email delivery) under strict confidentiality agreements</li>
+                <li><strong>Service Providers:</strong> Trusted vendors who help operate our service (cloud hosting, email delivery, AI processing) under strict confidentiality agreements</li>
+                <li><strong>AI Service Provider:</strong> OpenAI for AI-powered parenting assistance (see Third-Party Services section above)</li>
                 <li><strong>Legal Requirements:</strong> When required by law, legal process, or to protect rights and safety</li>
                 <li><strong>Business Transfers:</strong> In case of merger or acquisition (with continued privacy protection)</li>
                 <li><strong>Consent:</strong> With your explicit permission for specific purposes</li>
@@ -195,7 +196,7 @@ const PrivacyPolicy = () => {
 
             {/* Data Security */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Data Security</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Data Security</h2>
               
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="p-4 border border-gray-200 rounded-lg">
