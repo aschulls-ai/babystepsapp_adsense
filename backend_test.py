@@ -146,41 +146,57 @@ class UserProfileTester:
                         f"HTTP {status}", response_time)
             return False
     
-    def create_test_baby(self, initial_response_time):
-        """Create a test baby if none exist or use demo baby ID"""
-        # Try to use the demo baby ID first
-        if not self.baby_id:
-            self.baby_id = "demo-baby-456"
-            self.log_test("1.2 Get Demo Babies", True, 
-                        f"Using demo baby ID: {self.baby_id}", initial_response_time)
-            return True
-            
-        baby_data = {
-            "name": "Test Baby",
-            "birth_date": "2024-01-01T00:00:00Z",
-            "gender": "other"
+    def test_3_update_name(self):
+        """Test 3: PUT /api/user/profile - Update name"""
+        new_name = "New Demo Name"
+        data = {
+            "name": new_name,
+            "current_password": self.original_password
         }
         
-        response, response_time = self.make_request("POST", "/api/babies", baby_data,
+        response, response_time = self.make_request("PUT", "/api/user/profile", data,
                                                   headers=self.get_auth_headers())
         
-        total_time = initial_response_time + response_time
-        
-        if response and response.status_code in [200, 201]:
+        if response and response.status_code == 200:
             try:
-                baby = response.json()
-                self.baby_id = baby["id"]
-                self.log_test("1.2 Get Demo Babies", True, 
-                            f"Created test baby with ID: {self.baby_id}", total_time)
-                return True
+                result = response.json()
+                if result.get("message") and "updated successfully" in result["message"]:
+                    # Verify the name was updated by getting profile again
+                    profile_response, profile_time = self.make_request("GET", "/api/user/profile", 
+                                                                     headers=self.get_auth_headers())
+                    
+                    if profile_response and profile_response.status_code == 200:
+                        profile = profile_response.json()
+                        if profile.get("name") == new_name:
+                            self.log_test("3. Update Name", True, 
+                                        f"Name updated to: {new_name}", response_time + profile_time)
+                            return True
+                        else:
+                            self.log_test("3. Update Name", False, 
+                                        f"Name not updated correctly: {profile.get('name')}", response_time + profile_time)
+                            return False
+                    else:
+                        self.log_test("3. Update Name", False, 
+                                    "Could not verify name update", response_time)
+                        return False
+                else:
+                    self.log_test("3. Update Name", False, 
+                                f"Unexpected response: {result}", response_time)
+                    return False
             except json.JSONDecodeError:
-                self.log_test("1.2 Get Demo Babies", False, 
-                            "Failed to create test baby - invalid JSON", total_time)
+                self.log_test("3. Update Name", False, 
+                            "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("1.2 Get Demo Babies", False, 
-                        f"Failed to create test baby - HTTP {status}", total_time)
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("3. Update Name", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
             return False
     
     def test_2_1_create_feeding_activity(self):
