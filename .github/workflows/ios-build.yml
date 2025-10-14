@@ -196,17 +196,42 @@ jobs:
         echo "Scheme: App"
         echo "Configuration: Release"
         
-        # Build the app archive
-        set -o pipefail
-        xcodebuild -workspace ios/App/App.xcworkspace \
-          -scheme App \
-          -configuration Release \
-          -destination generic/platform=iOS \
-          -archivePath ios/App/build/App.xcarchive \
-          -allowProvisioningUpdates \
-          clean archive | tee build.log
+        # Check if we have code signing configured
+        if [ -z "${{ secrets.APPLE_TEAM_ID }}" ]; then
+          echo "⚠️ No APPLE_TEAM_ID configured - building without code signing"
+          echo "This will create an archive but cannot be installed on physical devices"
           
-        echo "✅ iOS build completed successfully!"
+          # Build the app archive without code signing (for validation purposes)
+          set -o pipefail
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -archivePath ios/App/build/App.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            clean archive | tee build.log
+            
+          echo "✅ iOS simulator build completed successfully!"
+          echo "Note: This build is for validation only and cannot be deployed to physical devices"
+        else
+          echo "✅ APPLE_TEAM_ID configured - building with code signing"
+          
+          # Build the app archive with code signing
+          set -o pipefail
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination generic/platform=iOS \
+            -archivePath ios/App/build/App.xcarchive \
+            -allowProvisioningUpdates \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+            clean archive | tee build.log
+            
+          echo "✅ iOS build completed successfully!"
+        fi
           
     - name: Export IPA
       working-directory: ./frontend
