@@ -1941,9 +1941,9 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
       case 'diaper':
         return (
           <div>
-            <Label className="text-sm font-medium">Type</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Type</Label>
             <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-              <SelectTrigger className="mt-1">
+              <SelectTrigger className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
