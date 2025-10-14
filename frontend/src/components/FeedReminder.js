@@ -37,7 +37,7 @@ const FeedReminder = ({ currentBaby }) => {
     }
   }, [currentBaby]);
 
-  // Update timer every minute
+  // Update timer every second for real-time countdown
   useEffect(() => {
     const updateTimer = () => {
       if (!lastFeedTime || (reminderHours === 0 && reminderMinutes === 0)) {
@@ -57,20 +57,25 @@ const FeedReminder = ({ currentBaby }) => {
       } else {
         const hours = Math.floor(diffMs / (1000 * 60 * 60));
         const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
         
-        if (hours > 0 && minutes > 0) {
-          setTimeRemaining(`${hours}h ${minutes}m`);
-        } else if (hours > 0) {
-          setTimeRemaining(`${hours}h`);
-        } else {
-          setTimeRemaining(`${minutes}m`);
+        // Build countdown string with seconds
+        let countdownParts = [];
+        if (hours > 0) {
+          countdownParts.push(`${hours}hr`);
         }
+        if (minutes > 0 || hours > 0) {
+          countdownParts.push(`${minutes}min`);
+        }
+        countdownParts.push(`${seconds}sec`);
+        
+        setTimeRemaining(countdownParts.join(' '));
         setIsDue(false);
       }
     };
 
     updateTimer();
-    const timer = setInterval(updateTimer, 60000); // Update every minute
+    const timer = setInterval(updateTimer, 1000); // Update every second for real-time countdown
 
     return () => clearInterval(timer);
   }, [lastFeedTime, reminderHours, reminderMinutes]);
