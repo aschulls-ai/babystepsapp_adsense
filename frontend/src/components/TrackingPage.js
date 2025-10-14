@@ -2092,18 +2092,18 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         return (
           <>
             <div>
-              <Label className="text-sm font-medium">Title</Label>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Title</Label>
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 placeholder="e.g., First smile"
-                className="mt-1"
+                className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium">Category</Label>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
