@@ -31,7 +31,7 @@ class UserProfileTester:
         self.failed_tests = 0
         self.original_email = "demo@babysteps.com"
         self.original_password = "demo123"
-        self.original_name = "Demo Parent"
+        self.original_name = "Demo User"
         
     def log_test(self, test_name, success, details="", response_time=0):
         """Log test result"""
