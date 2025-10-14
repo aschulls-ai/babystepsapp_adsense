@@ -2003,59 +2003,60 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
       case 'pumping':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {data.isCompleting ? 'Complete Pumping Session' : 'Log Pumping Session'}
             </h3>
             {data.isCompleting && (
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-sm text-blue-800">
+              <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-lg border border-blue-200 dark:border-blue-700">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
                   <Clock className="w-4 h-4 inline mr-1" />
                   Session Duration: {data.duration} minutes
                 </p>
               </div>
             )}
-            <div className="bg-pink-50 border border-pink-200 rounded-lg p-3 mb-3">
-              <p className="text-sm text-pink-800 font-medium">
+            <div className="bg-pink-50 dark:bg-pink-900/30 border border-pink-200 dark:border-pink-700 rounded-lg p-3 mb-3">
+              <p className="text-sm text-pink-800 dark:text-pink-200 font-medium">
                 💡 Enter the amount pumped from each breast (enter 0 if nothing was pumped)
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-sm font-semibold text-blue-700">Left Breast (oz) *</Label>
+                <Label className="text-sm font-semibold text-blue-700 dark:text-blue-300">Left Breast (oz) *</Label>
                 <Input
                   type="number"
                   step="0.1"
                   value={formData.leftBreast === 0 ? '0' : (formData.leftBreast || '')}
                   onChange={(e) => setFormData({...formData, leftBreast: parseFloat(e.target.value) || 0})}
                   placeholder="0.0"
-                  className="mt-1 border-blue-300 focus:border-blue-500"
+                  className="mt-1 border-blue-300 dark:border-blue-600 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
-                <Label className="text-sm font-semibold text-purple-700">Right Breast (oz) *</Label>
+                <Label className="text-sm font-semibold text-purple-700 dark:text-purple-300">Right Breast (oz) *</Label>
                 <Input
                   type="number"
                   step="0.1"
                   value={formData.rightBreast === 0 ? '0' : (formData.rightBreast || '')}
                   onChange={(e) => setFormData({...formData, rightBreast: parseFloat(e.target.value) || 0})}
                   placeholder="0.0"
-                  className="mt-1 border-purple-300 focus:border-purple-500"
+                  className="mt-1 border-purple-300 dark:border-purple-600 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
-            <div className="text-xs text-gray-500 text-center">
+            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
               Total: {((formData.leftBreast || 0) + (formData.rightBreast || 0)).toFixed(1)} oz
             </div>
             <div>
-              <Label>Duration (minutes)</Label>
+              <Label className="text-gray-700 dark:text-gray-300">Duration (minutes)</Label>
               <Input
                 type="number"
                 value={formData.duration || data.duration || ''}
                 onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
                 placeholder="15"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {data.isCompleting && (
-                <div className="text-sm text-gray-500 mt-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Duration automatically calculated from timer ({data.duration} min). You can adjust if needed.
                 </div>
               )}
