@@ -1873,7 +1873,8 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState(data);
 
   useEffect(() => {
-    setFormData(data);
+    // Initialize formData with data, ensuring all fields are properly set
+    setFormData({...data});
   }, [data]);
 
   if (!show) return null;
