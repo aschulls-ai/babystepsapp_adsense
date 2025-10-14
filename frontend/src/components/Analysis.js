@@ -13,6 +13,11 @@ const Analysis = ({ currentBaby }) => {
   const [selectedTab, setSelectedTab] = useState('summary');
   const [dayOffset, setDayOffset] = useState(0); // 0 = today, 1 = yesterday, etc.
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   useEffect(() => {
     if (currentBaby) {
       fetchActivities();
