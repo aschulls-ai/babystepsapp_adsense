@@ -380,7 +380,7 @@ const PrivacyPolicy = () => {
             {/* Footer */}
             <div className="border-t pt-6 mt-8">
               <p className="text-center text-gray-500 text-sm">
-                This privacy policy is effective as of October 5, 2025, and applies to all users of the Baby Steps application.
+                This privacy policy is effective as of September 15, 2025, and applies to all users of the Baby Steps application.
               </p>
               <div className="flex justify-center mt-4">
                 <Button 
