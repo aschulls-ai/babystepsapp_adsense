@@ -197,7 +197,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Age Information */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   <CalendarIcon className="w-5 h-5 text-green-500" />
                   Age Information
                 </h3>
@@ -222,7 +222,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
 
               {/* Feeding Stage */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   <Heart className="w-5 h-5 text-green-500" />
                   Development Stage
                 </h3>
