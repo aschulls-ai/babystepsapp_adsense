@@ -523,7 +523,7 @@ const TrackingPage = ({ currentBaby }) => {
       {/* Quick Action Buttons */}
       <Card className="glass border-0 bg-gradient-to-r from-blue-50 to-green-50">
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
             <Play className="w-5 h-5 text-blue-600" />
             Quick Actions
           </h2>
