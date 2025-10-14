@@ -2122,23 +2122,23 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '85vh'}}>
-        <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0">
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md flex flex-col overflow-visible">
+        <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{getModalTitle()}</h3>
           <button
             onClick={onCancel}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-          <div className="px-6 overflow-y-auto flex-1 space-y-4" style={{maxHeight: '60vh'}}>
+        <form onSubmit={handleSubmit} className="flex flex-col overflow-visible">
+          <div className="px-6 py-6 space-y-4 overflow-visible">
             {renderFormFields()}
           </div>
           
-          <div className="flex gap-3 p-6 pt-4 flex-shrink-0 border-t">
+          <div className="flex gap-3 p-6 pt-4 flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
             <Button
               type="submit"
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
@@ -2150,7 +2150,7 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
               type="button"
               onClick={onCancel}
               variant="outline"
-              className="flex-1"
+              className="flex-1 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
             >
               Cancel
             </Button>
