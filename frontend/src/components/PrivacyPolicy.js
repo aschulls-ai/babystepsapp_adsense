@@ -73,11 +73,13 @@ const PrivacyPolicy = () => {
 
               <h3 className="text-lg font-medium text-gray-800 mb-3">2.2 Tracking Data</h3>
               <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-4">
-                <li><strong>Feeding Records:</strong> Feeding times, amounts, types (bottle, breast, solid foods)</li>
+                <li><strong>Feeding Records:</strong> Feeding times, amounts, types (bottle, breastfeeding, solid foods)</li>
+                <li><strong>Pumping/Express Records:</strong> Express breast milk times, duration, amounts (left breast, right breast)</li>
                 <li><strong>Sleep Patterns:</strong> Sleep start/end times, duration, quality notes</li>
                 <li><strong>Diaper Changes:</strong> Change times, types (wet/dirty), notes</li>
                 <li><strong>Developmental Milestones:</strong> Milestone tracking and progress notes</li>
-                <li><strong>Growth Measurements:</strong> Weight, height, head circumference (when provided)</li>
+                <li><strong>Growth Measurements:</strong> Weight, height, head circumference with WHO standard percentile calculations</li>
+                <li><strong>Health Parameters:</strong> Age-specific health data (heart rate, breathing rate, temperature)</li>
               </ul>
 
               <h3 className="text-lg font-medium text-gray-800 mb-3">2.3 Usage Information</h3>
