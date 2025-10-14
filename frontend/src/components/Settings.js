@@ -46,9 +46,10 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
 
   const loadUserData = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       if (!token) {
         console.error('No auth token found');
+        toast.error('Please login again');
         return;
       }
 
