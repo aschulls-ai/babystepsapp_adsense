@@ -367,7 +367,7 @@ const PrivacyPolicy = () => {
 
             {/* Legal Basis */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">11. Legal Basis for Processing (GDPR)</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">13. Legal Basis for Processing (GDPR)</h2>
               <p className="text-gray-700 mb-3">For users in the European Union, we process your data based on:</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li><strong>Consent:</strong> For marketing communications and optional features</li>
