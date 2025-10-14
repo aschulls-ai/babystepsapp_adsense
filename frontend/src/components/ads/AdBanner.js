@@ -17,12 +17,27 @@ const AdBanner = ({
     setIsNative(isNativePlatform);
 
     if (isNativePlatform && adUnitKey) {
-      // Show AdMob banner on native platforms
-      adMobService.showBanner(adUnitKey);
+      // Show AdMob banner on native platforms (non-blocking, with error handling)
+      const showAd = async () => {
+        try {
+          await adMobService.showBanner(adUnitKey);
+        } catch (error) {
+          console.error('Non-critical: AdMob banner failed to show:', error);
+          // Continue without showing ad - don't crash the app
+        }
+      };
+      
+      // Delay slightly to ensure AdMob is initialized
+      const timer = setTimeout(showAd, 1500);
 
       // Cleanup: hide banner when component unmounts
       return () => {
-        adMobService.hideBanner(adUnitKey);
+        clearTimeout(timer);
+        try {
+          adMobService.hideBanner(adUnitKey).catch(() => {});
+        } catch (error) {
+          // Ignore cleanup errors
+        }
       };
     } else {
       // Initialize AdSense ad for web
