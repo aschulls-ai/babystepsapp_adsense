@@ -1696,7 +1696,7 @@ const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onC
       <Icon className="w-6 h-6" />
       <span className="text-sm font-medium">{label}</span>
       {isActive && (
-        <div className="text-xs font-mono bg-white dark:bg-gray-700 bg-opacity-50 px-2 py-1 rounded">
+        <div className="text-xs font-mono bg-white dark:bg-gray-700 bg-opacity-50 px-2 py-1 rounded text-gray-900 dark:text-white">
           {formatTime(elapsed)}
         </div>
       )}
