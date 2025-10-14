@@ -439,6 +439,15 @@ const AuthPage = ({ onLogin, onRegister, onRequestPasswordReset, onResendVerific
             >
               Contact Support
             </a>
+            <span>•</span>
+            <a 
+              href="https://babystepsapp.app" 
+              className="text-blue-600 hover:text-blue-800 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Desktop Version
+            </a>
           </div>
         </div>
       </div>
