@@ -298,7 +298,7 @@ const AIAssistant = ({ currentBaby }) => {
 
       {/* Page Ad */}
       <div className="mt-6">
-        <PageAd position="bottom" />
+        <PageAd position="bottom" adUnitKey="banner_ai_assistant" />
       </div>
     </div>
   );
