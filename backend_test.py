@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-COMPREHENSIVE BACKEND TESTING AFTER DATABASE MIGRATION AND TIMESTAMP FIX
-Testing production Render backend with focus on activity endpoints and new database fields
+USER PROFILE UPDATE ENDPOINT TESTING
+Testing the new user profile endpoints as specified in review request
 
-Backend: https://baby-steps-demo-api.onrender.com
+Backend: https://babysteps-tracker.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
-Demo Baby ID: demo-baby-456
 """
 
 import requests
@@ -14,7 +13,7 @@ import time
 from datetime import datetime, timezone
 import uuid
 
-class ProductionBackendTester:
+class UserProfileTester:
     def __init__(self):
         self.base_url = "https://baby-steps-demo-api.onrender.com"
         self.token = None
