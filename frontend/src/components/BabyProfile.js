@@ -538,7 +538,7 @@ const EmptyState = ({ onAddBaby }) => (
 
 const StatItem = ({ label, value, icon }) => (
   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-    <div className="p-2 bg-white rounded-lg shadow-sm">
+    <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       {icon}
     </div>
     <div>
