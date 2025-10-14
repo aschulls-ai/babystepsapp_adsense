@@ -44,21 +44,44 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
     loadUserData();
   }, []);
 
-  const loadUserData = () => {
-    // Load from localStorage or API
-    const savedEmail = localStorage.getItem('rememberedEmail');
-    if (savedEmail) {
-      setAccountData(prev => ({ ...prev, email: savedEmail }));
-    }
-    
-    // Load user profile from localStorage
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      try {
-        setUserProfile(JSON.parse(savedProfile));
-      } catch (error) {
-        console.error('Failed to parse saved profile:', error);
+  const loadUserData = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No auth token found');
+        return;
       }
+
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      const response = await fetch(`${backendUrl}/api/user/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setAccountData(prev => ({ 
+          ...prev, 
+          email: userData.email 
+        }));
+        
+        // Parse name into first and last name
+        const nameParts = userData.name.split(' ');
+        setUserProfile({
+          firstName: nameParts[0] || '',
+          lastName: nameParts.slice(1).join(' ') || '',
+          phone: userProfile.phone,
+          timezone: userProfile.timezone
+        });
+      } else {
+        console.error('Failed to fetch user profile');
+        toast.error('Failed to load profile data');
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      toast.error('Failed to load profile data');
     }
   };
 
