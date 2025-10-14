@@ -330,38 +330,36 @@ const PrivacyPolicy = () => {
                 Contact Us
               </h2>
               
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-medium text-gray-800 mb-2">Privacy Questions</h3>
-                  <p className="text-gray-700 mb-2">
-                    If you have questions about this Privacy Policy or our data practices:
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <h3 className="font-medium text-gray-800 mb-3">📧 Get in Touch</h3>
+                  <p className="text-gray-700 mb-3">
+                    For any questions about this Privacy Policy, data practices, or to exercise your privacy rights:
                   </p>
-                  <div className="space-y-1 text-gray-600">
-                    <p>📧 Email: privacy@babysteps.app</p>
-                    <p>📮 Mail: Baby Steps Privacy Team</p>
-                    <p className="ml-4">123 Parent Lane</p>
-                    <p className="ml-4">Safe City, SC 12345</p>
-                    <p className="ml-4">United States</p>
+                  <div className="space-y-2 text-gray-700">
+                    <p className="font-semibold text-lg">📧 Email: <a href="mailto:babystepsapp@gmail.com" className="text-green-600 hover:text-green-700 underline">babystepsapp@gmail.com</a></p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      📮 Mailing Address: We operate digitally and do not maintain a physical office. 
+                      Please contact us via email for all inquiries, support, and privacy-related requests.
+                    </p>
                   </div>
                 </div>
-                
-                <div>
-                  <h3 className="font-medium text-gray-800 mb-2">Data Rights Requests</h3>
-                  <p className="text-gray-700 mb-2">
-                    To exercise your privacy rights (access, correct, delete data):
-                  </p>
-                  <div className="space-y-1 text-gray-600">
-                    <p>📧 Email: rights@babysteps.app</p>
-                    <p>🔒 Include: Full name and email address</p>
-                    <p>⏱️ Response Time: Within 30 days</p>
-                    <p>🆔 Identity verification may be required</p>
-                  </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <h3 className="font-medium text-blue-900 mb-2">💬 What You Can Contact Us About:</h3>
+                  <ul className="text-blue-800 text-sm space-y-1 list-disc pl-4">
+                    <li>Privacy policy questions or clarifications</li>
+                    <li>Data access, correction, or deletion requests</li>
+                    <li>Account security concerns</li>
+                    <li>Technical support and feature questions</li>
+                    <li>General feedback and suggestions</li>
+                  </ul>
                 </div>
               </div>
               
-              <div className="mt-6 p-4 bg-green-100 border border-green-300 rounded">
+              <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded">
                 <p className="text-green-800 text-sm">
-                  <strong>Quick Response Guarantee:</strong> We typically respond to privacy inquiries within 48 hours 
+                  <strong>⚡ Quick Response Guarantee:</strong> We typically respond to all inquiries within 48-72 hours 
                   and fulfill data requests within 7-14 business days.
                 </p>
               </div>
