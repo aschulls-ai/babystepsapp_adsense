@@ -542,12 +542,12 @@ const EmptyState = ({ onAddBaby }) => (
 );
 
 const StatItem = ({ label, value, icon }) => (
-  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+  <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
     <div className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       {icon}
     </div>
     <div>
-      <div className="text-sm text-gray-500">{label}</div>
+      <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
       <div className="font-medium text-gray-900 dark:text-white">{value}</div>
     </div>
   </div>
