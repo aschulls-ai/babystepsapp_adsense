@@ -216,6 +216,9 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
       </div>
 
       <div className="grid gap-6">
+        {/* Ad Removal / Premium Settings */}
+        <AdRemovalSettings />
+
         {/* Appearance Settings */}
         <Card className="glass border-0">
           <CardHeader>
