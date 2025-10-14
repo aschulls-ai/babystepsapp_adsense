@@ -289,14 +289,14 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Activity className="h-4 w-4 text-blue-600" />
+                <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-blue-600 dark:text-blue-300" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Ready to start tracking!</p>
-                  <p className="text-xs text-gray-600">Log your first activity to see it here</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">Ready to start tracking!</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Log your first activity to see it here</p>
                 </div>
               </div>
               <Link to="/tracking">
