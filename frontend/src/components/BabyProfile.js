@@ -29,6 +29,11 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showEditDatePicker, setShowEditDatePicker] = useState(false);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
