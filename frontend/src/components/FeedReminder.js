@@ -122,19 +122,19 @@ const FeedReminder = ({ currentBaby }) => {
         <div className="text-center py-4">
           {lastFeedTime ? (
             <>
-              <div className={`text-4xl font-bold ${isDue ? 'text-red-600' : 'text-blue-600'}`}>
+              <div className={`text-3xl font-bold font-mono ${isDue ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
                 {timeRemaining}
               </div>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 {isDue ? 'Time to feed!' : 'Until next feed'}
               </p>
             </>
           ) : (
             <>
-              <div className="text-2xl font-semibold text-gray-400">
+              <div className="text-2xl font-semibold text-gray-400 dark:text-gray-500">
                 No reminder set
               </div>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 Start tracking to get reminders
               </p>
             </>
