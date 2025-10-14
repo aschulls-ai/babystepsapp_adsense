@@ -218,9 +218,9 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
           </div>
           
           {/* Current Milestones */}
-          <div className="bg-white rounded-lg p-4 border border-green-100 mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-green-600" />
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-100 dark:border-gray-700 mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-green-600 dark:text-green-400" />
               Current Milestones ({currentAge} months)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
