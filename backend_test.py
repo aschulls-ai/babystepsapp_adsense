@@ -110,29 +110,39 @@ class UserProfileTester:
                         f"HTTP {status}", response_time)
             return False
     
-    def test_1_2_get_demo_babies(self):
-        """Test 1.2: Get Demo User's Babies"""
-        response, response_time = self.make_request("GET", "/api/babies", 
+    def test_2_get_user_profile(self):
+        """Test 2: GET /api/user/profile - Get current user profile"""
+        response, response_time = self.make_request("GET", "/api/user/profile", 
                                                   headers=self.get_auth_headers())
         
         if response and response.status_code == 200:
             try:
-                babies = response.json()
-                if babies and len(babies) > 0:
-                    self.baby_id = babies[0]["id"]
-                    self.log_test("1.2 Get Demo Babies", True, 
-                                f"Found {len(babies)} babies, using ID: {self.baby_id}", response_time)
+                profile = response.json()
+                expected_fields = ["id", "email", "name"]
+                
+                # Check if all expected fields are present
+                missing_fields = [field for field in expected_fields if field not in profile]
+                if missing_fields:
+                    self.log_test("2. Get User Profile", False, 
+                                f"Missing fields: {missing_fields}", response_time)
+                    return False
+                
+                # Verify demo account details
+                if profile["email"] == self.original_email and profile["name"] == self.original_name:
+                    self.log_test("2. Get User Profile", True, 
+                                f"Profile retrieved: {profile['email']}, {profile['name']}", response_time)
                     return True
                 else:
-                    # Create a baby for testing
-                    return self.create_test_baby(response_time)
+                    self.log_test("2. Get User Profile", False, 
+                                f"Unexpected profile data: {profile}", response_time)
+                    return False
             except json.JSONDecodeError:
-                self.log_test("1.2 Get Demo Babies", False, 
+                self.log_test("2. Get User Profile", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("1.2 Get Demo Babies", False, 
+            self.log_test("2. Get User Profile", False, 
                         f"HTTP {status}", response_time)
             return False
     
