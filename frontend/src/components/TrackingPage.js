@@ -1957,36 +1957,37 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
       case 'sleep':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               {data.isCompleting ? 'Complete Sleep Session' : 'Log Sleep Session'}
             </h3>
             {data.isCompleting && (
-              <div className="bg-purple-50 p-3 rounded-lg">
-                <p className="text-sm text-purple-800">
+              <div className="bg-purple-50 dark:bg-purple-900/30 p-3 rounded-lg border border-purple-200 dark:border-purple-700">
+                <p className="text-sm text-purple-800 dark:text-purple-200">
                   <Clock className="w-4 h-4 inline mr-1" />
                   Sleep Duration: {data.duration} minutes ({Math.floor(data.duration / 60)}h {data.duration % 60}m)
                 </p>
               </div>
             )}
             <div>
-              <Label>Duration (minutes)</Label>
+              <Label className="text-gray-700 dark:text-gray-300">Duration (minutes)</Label>
               <Input
                 type="number"
                 value={formData.duration || data.duration || ''}
                 onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
                 placeholder="60"
                 readOnly={data.isCompleting}
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {data.isCompleting && (
-                <div className="text-sm text-gray-500 mt-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Duration automatically calculated from timer. You can adjust if needed.
                 </div>
               )}
             </div>
             <div>
-              <Label>Sleep Quality</Label>
+              <Label className="text-gray-700 dark:text-gray-300">Sleep Quality</Label>
               <Select value={formData.quality || 'good'} onValueChange={(value) => setFormData({...formData, quality: value})}>
-                <SelectTrigger>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
