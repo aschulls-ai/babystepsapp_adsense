@@ -133,7 +133,7 @@ const AdRemovalSettings = () => {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 text-lg"
               >
-                {loading ? 'Processing...' : '🎁 Remove Ads - $1.99'}
+                {loading ? 'Processing...' : '🎁 Remove Ads - $4.99'}
               </Button>
 
               <Button
