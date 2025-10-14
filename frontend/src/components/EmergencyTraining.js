@@ -390,7 +390,7 @@ const EmergencyTraining = ({ currentBaby }) => {
       </div>
 
       {/* Page Ad */}
-      <PageAd position="bottom" />
+      <PageAd position="bottom" adUnitKey="banner_emergency" />
     </div>
   );
 };
