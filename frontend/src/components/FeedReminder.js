@@ -83,13 +83,16 @@ const FeedReminder = ({ currentBaby }) => {
   };
 
   const handleSaveInterval = () => {
-    setReminderInterval(tempInterval);
-    localStorage.setItem(`feedInterval_${currentBaby.id}`, tempInterval.toString());
+    setReminderHours(tempHours);
+    setReminderMinutes(tempMinutes);
+    localStorage.setItem(`feedIntervalHours_${currentBaby.id}`, tempHours.toString());
+    localStorage.setItem(`feedIntervalMinutes_${currentBaby.id}`, tempMinutes.toString());
     setIsEditing(false);
   };
 
   const handleCancelEdit = () => {
-    setTempInterval(reminderInterval);
+    setTempHours(reminderHours);
+    setTempMinutes(reminderMinutes);
     setIsEditing(false);
   };
 
