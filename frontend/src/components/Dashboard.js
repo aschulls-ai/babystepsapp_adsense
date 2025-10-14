@@ -338,7 +338,7 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
       </Card>
 
       {/* Page Ad */}
-      <PageAd position="bottom" />
+      <PageAd position="bottom" adUnitKey="banner_dashboard" />
     </div>
   );
 };
