@@ -27,6 +27,11 @@ const FormulaComparison = ({ currentBaby }) => {
   const [selectedCondition, setSelectedCondition] = useState('all');
   const [selectedFormulas, setSelectedFormulas] = useState([]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   // Comprehensive formula database
   const formulas = [
     {
