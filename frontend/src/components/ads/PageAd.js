@@ -3,7 +3,6 @@ import AdBanner from './AdBanner';
 
 const PageAd = ({ 
   position = "bottom", // "top", "bottom", "sidebar"
-  adUnitKey, // AdMob ad unit key (e.g., 'banner_dashboard')
   title = "Advertisement", 
   className = "" 
 }) => {
