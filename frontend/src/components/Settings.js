@@ -17,6 +17,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Switch } from './ui/switch';
 import { toast } from 'sonner';
+import AdRemovalSettings from './AdRemovalSettings';
 
 const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
   const [showPassword, setShowPassword] = useState(false);
