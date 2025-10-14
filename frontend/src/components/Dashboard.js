@@ -131,10 +131,10 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
       iconColor: 'text-blue-500'
     },
     {
-      title: 'Food Research',
-      description: 'Check food safety & meal ideas',
-      icon: Apple,
-      link: '/food-research',
+      title: 'AI Parenting Assistant',
+      description: 'Get parenting advice & tips',
+      icon: MessageCircle,
+      link: '/ai-assistant',
       color: 'bg-green-500 hover:bg-green-600',
       iconColor: 'text-green-500'
     },
