@@ -45,6 +45,9 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- Google Play Billing for in-app purchases and subscriptions -->
+    <uses-permission android:name="com.android.vending.BILLING" />
     <!-- Notifications disabled to prevent crashes -->
     <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> -->
     
