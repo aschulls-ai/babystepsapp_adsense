@@ -237,7 +237,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
       {showAddForm && (
         <Card className="glass-strong border-0">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+            <CardTitle className="text-2xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Baby className="w-6 h-6 text-green-500" />
               Add Baby Profile
             </CardTitle>
