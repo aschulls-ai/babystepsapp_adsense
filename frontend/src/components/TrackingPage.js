@@ -1973,8 +1973,8 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
               <Label className="text-gray-700 dark:text-gray-300">Duration (minutes)</Label>
               <Input
                 type="number"
-                value={formData.duration || data.duration || ''}
-                onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                value={formData.duration !== undefined ? formData.duration : ''}
+                onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value) || 0})}
                 placeholder="60"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
