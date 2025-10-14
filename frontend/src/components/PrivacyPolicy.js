@@ -312,7 +312,7 @@ const PrivacyPolicy = () => {
 
             {/* Updates to Policy */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">10. Changes to This Privacy Policy</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">12. Changes to This Privacy Policy</h2>
               <p className="text-gray-700 leading-relaxed mb-3">
                 We may update this Privacy Policy periodically. We will notify you of any material changes by:
               </p>
