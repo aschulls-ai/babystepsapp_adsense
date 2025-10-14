@@ -592,7 +592,7 @@ const TrackingPage = ({ currentBaby }) => {
                       <TabsTrigger
                         key={tab.id}
                         value={tab.id}
-                        className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200 flex items-center gap-1 px-2 py-2"
+                        className="rounded-lg data-[state=active]:bg-white data-[state=active]:dark:bg-gray-700 data-[state=active]:shadow-md transition-all duration-200 flex items-center gap-1 px-2 py-2"
                         data-testid={`${tab.id}-tab`}
                       >
                         <Icon className="w-4 h-4" />
@@ -693,7 +693,7 @@ const TrackingPage = ({ currentBaby }) => {
                 </CardTitle>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Select value={activityFilter} onValueChange={setActivityFilter}>
-                    <SelectTrigger className="w-full sm:w-40 bg-white border-gray-200">
+                    <SelectTrigger className="w-full sm:w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                       <SelectValue placeholder="Filter activities" />
                     </SelectTrigger>
                     <SelectContent>
@@ -711,7 +711,7 @@ const TrackingPage = ({ currentBaby }) => {
                     setActivitySortBy(sortBy);
                     setActivitySortOrder(sortOrder);
                   }}>
-                    <SelectTrigger className="w-full sm:w-40 bg-white border-gray-200">
+                    <SelectTrigger className="w-full sm:w-40 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                       <SelectValue placeholder="Sort by">
                         {activitySortBy === 'timestamp' && activitySortOrder === 'desc' && 'Newest First'}
                         {activitySortBy === 'timestamp' && activitySortOrder === 'asc' && 'Oldest First'}
@@ -1691,7 +1691,7 @@ const TimerQuickActionButton = ({ icon: Icon, label, color, isActive, timer, onC
       <Icon className="w-6 h-6" />
       <span className="text-sm font-medium">{label}</span>
       {isActive && (
-        <div className="text-xs font-mono bg-white bg-opacity-50 px-2 py-1 rounded">
+        <div className="text-xs font-mono bg-white dark:bg-gray-700 bg-opacity-50 px-2 py-1 rounded">
           {formatTime(elapsed)}
         </div>
       )}
@@ -2117,7 +2117,7 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '95vh'}}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '95vh'}}>
         <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{getModalTitle()}</h3>
           <button
@@ -2333,7 +2333,7 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
         
         return (
           <div key={`${activityType}-${activity.id || index}`} 
-               className="flex items-start gap-3 p-3 bg-white rounded-lg border hover:shadow-sm transition-shadow">
+               className="flex items-start gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 hover:shadow-sm transition-shadow">
             {/* Activity Icon */}
             <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${getActivityColor(activityType)}`}>
               <Icon className="w-4 h-4" />
