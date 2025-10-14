@@ -288,7 +288,7 @@ const PrivacyPolicy = () => {
 
             {/* Children's Privacy */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">9. Children's Privacy (COPPA Compliance)</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">10. Children's Privacy (COPPA Compliance)</h2>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-900">
                   <strong>👶 Special Protection for Children:</strong> While our app tracks baby information, 
