@@ -12,20 +12,20 @@ import billingService from './BillingService';
 const ADMOB_CONFIG = {
   appId: 'ca-app-pub-1934622676928053~2387202873',
   
-  // Ad Unit IDs - TO BE FILLED AFTER CREATING IN ADMOB CONSOLE
+  // Ad Unit IDs - Real production IDs from AdMob Console
   adUnits: {
     // Banner Ads
-    banner_dashboard: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_tracking: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_ai_assistant: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_formula: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_emergency: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_baby_profile: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
-    banner_analysis: 'ca-app-pub-3940256099942544/6300978111', // TEST ID - Replace with real
+    banner_dashboard: 'ca-app-pub-1934622676928053/2387202873',
+    banner_tracking: 'ca-app-pub-1934622676928053/2031979657',
+    banner_ai_assistant: 'ca-app-pub-1934622676928053/3389293355',
+    banner_formula: 'ca-app-pub-1934622676928053/7002710080',
+    banner_emergency: 'ca-app-pub-1934622676928053/6811138394',
+    banner_baby_profile: 'ca-app-pub-1934622676928053/4510803338',
+    banner_analysis: 'ca-app-pub-1934622676928053/5505795582',
     
     // Interstitial Ads
-    interstitial_app_open: 'ca-app-pub-3940256099942544/1033173712', // TEST ID - Replace with real
-    interstitial_page_transition: 'ca-app-pub-3940256099942544/1033173712', // TEST ID - Replace with real
+    interstitial_app_open: 'ca-app-pub-1934622676928053/3018716129',
+    interstitial_page_transition: 'ca-app-pub-1934622676928053/4966222611',
   },
   
   // Test device IDs (add your device ID for testing)
