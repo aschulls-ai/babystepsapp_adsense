@@ -173,6 +173,12 @@ class BabyCreateRequest(BaseModel):
     gender: Optional[str] = None
     profile_image: Optional[str] = None
 
+class UserUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    current_password: Optional[str] = None
+    new_password: Optional[str] = None
+
 class ActivityRequest(BaseModel):
     type: str
     notes: Optional[str] = None
