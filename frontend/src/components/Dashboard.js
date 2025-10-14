@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Plus, Baby, Activity, Apple, BookOpen, Calendar, Heart, TrendingUp, Clock } from 'lucide-react';
+import { Plus, Baby, Activity, Apple, BookOpen, Calendar, Heart, TrendingUp, Clock, MessageCircle } from 'lucide-react';
 import InContentAd from './ads/InContentAd';
 import PageAd from './ads/PageAd';
 import FeedReminder from './FeedReminder';
