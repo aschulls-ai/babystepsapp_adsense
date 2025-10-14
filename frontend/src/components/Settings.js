@@ -98,18 +98,59 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
       return;
     }
     
+    if (!accountData.currentPassword) {
+      toast.error('Current password is required');
+      return;
+    }
+    
     try {
-      // Here you would typically make an API call to update account info
-      // For demo purposes, we'll just show success
-      toast.success('Account information updated successfully');
-      setEditingAccount(false);
-      setAccountData(prev => ({ 
-        ...prev, 
-        currentPassword: '', 
-        newPassword: '', 
-        confirmPassword: '' 
-      }));
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        toast.error('Authentication required');
+        return;
+      }
+
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      const response = await fetch(`${backendUrl}/api/user/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: accountData.email,
+          current_password: accountData.currentPassword,
+          new_password: accountData.newPassword || undefined
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        // If email was changed, update token
+        if (result.token) {
+          localStorage.setItem('authToken', result.token);
+          toast.success('Email updated! Please use your new email to login next time.');
+        } else {
+          toast.success(result.message || 'Account information updated successfully');
+        }
+        
+        setEditingAccount(false);
+        setAccountData(prev => ({ 
+          ...prev, 
+          currentPassword: '', 
+          newPassword: '', 
+          confirmPassword: '' 
+        }));
+        
+        // Reload user data
+        await loadUserData();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update account information');
+      }
     } catch (error) {
+      console.error('Account update error:', error);
       toast.error('Failed to update account information');
     }
   };
@@ -118,11 +159,39 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
     e.preventDefault();
     
     try {
-      // Save to localStorage for demo
-      localStorage.setItem('userProfile', JSON.stringify(userProfile));
-      toast.success('Profile information updated successfully');
-      setEditingProfile(false);
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        toast.error('Authentication required');
+        return;
+      }
+
+      const fullName = `${userProfile.firstName} ${userProfile.lastName}`.trim();
+      
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      const response = await fetch(`${backendUrl}/api/user/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: fullName
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast.success(result.message || 'Profile information updated successfully');
+        setEditingProfile(false);
+        
+        // Reload user data
+        await loadUserData();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update profile information');
+      }
     } catch (error) {
+      console.error('Profile update error:', error);
       toast.error('Failed to update profile information');
     }
   };
