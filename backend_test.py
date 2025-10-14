@@ -11,7 +11,7 @@ Test Scenarios:
 3. Update Email - PUT with email and current_password, verify new token
 4. Update Password - PUT with current_password and new_password, test old/new login
 
-Backend: https://babysteps-tracker.preview.emergentagent.com
+Backend: https://infant-care-app-2.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 """
 
@@ -23,7 +23,7 @@ import uuid
 
 class UserProfileTester:
     def __init__(self):
-        self.base_url = "https://babysteps-tracker.preview.emergentagent.com"
+        self.base_url = "https://infant-care-app-2.preview.emergentagent.com"
         self.token = None
         self.test_results = []
         self.total_tests = 8

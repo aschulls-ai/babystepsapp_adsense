@@ -8,7 +8,7 @@ import requests
 import json
 
 def test_user_profile_endpoints():
-    base_url = "https://babysteps-tracker.preview.emergentagent.com"
+    base_url = "https://infant-care-app-2.preview.emergentagent.com"
     
     print("🔍 QUICK USER PROFILE ENDPOINT VERIFICATION")
     print("=" * 50)

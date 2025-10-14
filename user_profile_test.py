@@ -3,7 +3,7 @@
 USER PROFILE UPDATE ENDPOINT TESTING
 Testing the new user profile endpoints as specified in review request
 
-Backend: https://babysteps-tracker.preview.emergentagent.com
+Backend: https://infant-care-app-2.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 
 Test Scenarios:
@@ -23,7 +23,7 @@ import uuid
 
 class UserProfileTester:
     def __init__(self):
-        self.base_url = "https://babysteps-tracker.preview.emergentagent.com"
+        self.base_url = "https://infant-care-app-2.preview.emergentagent.com"
         self.token = None
         self.test_results = []
         self.total_tests = 8

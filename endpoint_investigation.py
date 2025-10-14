@@ -9,7 +9,7 @@ import time
 
 class EndpointInvestigator:
     def __init__(self):
-        self.base_url = "https://babysteps-tracker.preview.emergentagent.com"
+        self.base_url = "https://infant-care-app-2.preview.emergentagent.com"
         self.token = None
         
     def authenticate(self):
