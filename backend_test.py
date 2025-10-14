@@ -15,12 +15,10 @@ import uuid
 
 class UserProfileTester:
     def __init__(self):
-        self.base_url = "https://baby-steps-demo-api.onrender.com"
+        self.base_url = "https://babysteps-tracker.preview.emergentagent.com"
         self.token = None
-        self.baby_id = None
-        self.activity_ids = {}
         self.test_results = []
-        self.total_tests = 29
+        self.total_tests = 8
         self.passed_tests = 0
         self.failed_tests = 0
         
