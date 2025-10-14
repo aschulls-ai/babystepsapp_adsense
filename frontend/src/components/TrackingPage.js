@@ -2343,7 +2343,7 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900 text-sm">
+                  <h4 className="font-medium text-gray-900 dark:text-white text-sm">
                     {activity.display_type}
                   </h4>
                   
