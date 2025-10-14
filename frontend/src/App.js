@@ -346,21 +346,12 @@ function App() {
       // Initialize mobile service
       await mobileService.initializeServices();
       
-      // Initialize AdMob and Billing in background (non-blocking)
-      // Don't await these to prevent blocking app startup
+      // Initialize Billing service in background (non-blocking)
       if (Capacitor.isNativePlatform()) {
-        console.log('📱 Starting AdMob initialization in background...');
+        console.log('📱 Starting Billing initialization in background...');
         
         // Run in background without blocking
         setTimeout(async () => {
-          try {
-            await adMobService.initialize();
-            console.log('✅ AdMob initialized');
-          } catch (error) {
-            console.error('⚠️ AdMob initialization failed (non-critical):', error);
-            // Continue without AdMob if it fails
-          }
-          
           try {
             await billingService.initialize();
             console.log('✅ Billing service initialized');
