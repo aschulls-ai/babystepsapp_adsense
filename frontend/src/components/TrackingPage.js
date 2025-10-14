@@ -53,6 +53,11 @@ const TrackingPage = ({ currentBaby }) => {
   const [activitySortBy, setActivitySortBy] = useState('timestamp');
   const [activitySortOrder, setActivitySortOrder] = useState('desc');
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   useEffect(() => {
     if (currentBaby) {
       fetchRecentActivities();
