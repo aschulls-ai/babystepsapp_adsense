@@ -3,6 +3,7 @@ import AdBanner from './AdBanner';
 
 const PageAd = ({ 
   position = "bottom", // "top", "bottom", "sidebar"
+  adUnitKey, // AdMob ad unit key (e.g., 'banner_dashboard')
   title = "Advertisement", 
   className = "" 
 }) => {
@@ -53,7 +54,8 @@ const PageAd = ({
       
       {/* Responsive Page Ad */}
       <AdBanner
-        adSlot="1234567893"  // Replace with your page ad slot
+        adSlot="1234567893"  // AdSense slot for web
+        adUnitKey={adUnitKey}  // AdMob unit key for native
         adFormat="auto"
         style={getAdStyle()}
         className="rounded-md overflow-hidden border border-gray-200 bg-gray-50"
