@@ -4,6 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { format, subDays, parseISO, differenceInMinutes, differenceInHours, differenceInDays } from 'date-fns';
 import { androidFetch } from '../App';
+import PageAd from './ads/PageAd';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
