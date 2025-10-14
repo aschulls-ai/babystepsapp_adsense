@@ -1975,7 +1975,6 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
                 value={formData.duration || data.duration || ''}
                 onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
                 placeholder="60"
-                readOnly={data.isCompleting}
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               {data.isCompleting && (
