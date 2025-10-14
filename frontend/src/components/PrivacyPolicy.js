@@ -40,7 +40,7 @@ const PrivacyPolicy = () => {
             </CardTitle>
             <div className="text-green-100 text-sm flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              Last Updated: October 5, 2025
+              Last Updated: October 13, 2025
             </div>
           </CardHeader>
           
