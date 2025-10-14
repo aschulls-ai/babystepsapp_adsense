@@ -433,6 +433,7 @@
 
 ## test_plan:
   current_focus:
+    - "User Profile Update Endpoints - GET and PUT /api/user/profile"
     - "Activity History - Display All Saved Details for Each Log Entry"
   stuck_tasks:
     - "Phase 2: Cloud-First Architecture Refactor - COMPLETE"
