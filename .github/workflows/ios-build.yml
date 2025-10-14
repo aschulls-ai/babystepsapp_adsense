@@ -178,13 +178,15 @@ jobs:
       run: |
         echo "🔨 Building iOS app..."
         
-        # Verify workspace exists
-        if [ ! -f "ios/App/App.xcworkspace" ]; then
+        # Verify workspace exists (it's a directory, not a file)
+        if [ ! -d "ios/App/App.xcworkspace" ]; then
           echo "❌ iOS workspace not found!"
           echo "Available files in ios/App/:"
           ls -la ios/App/
           exit 1
         fi
+        
+        echo "✅ iOS workspace found"
         
         # Create build directory
         mkdir -p ios/App/build
