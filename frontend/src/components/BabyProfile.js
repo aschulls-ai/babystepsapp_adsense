@@ -139,7 +139,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
           <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white" data-testid="baby-profile-title">
             Baby Profile
           </h1>
-          <p className="text-lg text-gray-600 mt-2">
+          <p className="text-lg text-gray-600 dark:text-gray-400 mt-2">
             {currentBaby ? `Manage ${currentBaby.name}'s information` : 'Add your little one\'s details'}
           </p>
         </div>
