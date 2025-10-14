@@ -53,22 +53,34 @@ class AdMobService {
         return false;
       }
 
-      // Initialize AdMob
-      await AdMob.initialize({
-        requestTrackingAuthorization: true,
-        testingDevices: ADMOB_CONFIG.testDeviceIds,
-        initializeForTesting: false // Set to true for testing
-      });
+      // Initialize AdMob with error handling
+      try {
+        await AdMob.initialize({
+          requestTrackingAuthorization: true,
+          testingDevices: ADMOB_CONFIG.testDeviceIds,
+          initializeForTesting: false
+        });
 
-      this.isInitialized = true;
-      console.log('✅ AdMob initialized successfully');
-      
-      // Preload interstitial ad
-      await this.preloadInterstitial();
-      
-      return true;
+        this.isInitialized = true;
+        console.log('✅ AdMob initialized successfully');
+        
+        // Preload interstitial ad (non-blocking)
+        setTimeout(() => {
+          this.preloadInterstitial().catch(err => {
+            console.log('⚠️ Could not preload interstitial:', err);
+          });
+        }, 2000);
+        
+        return true;
+      } catch (initError) {
+        console.error('❌ AdMob.initialize() failed:', initError);
+        // Mark as not initialized but don't throw
+        this.isInitialized = false;
+        return false;
+      }
     } catch (error) {
       console.error('❌ AdMob initialization failed:', error);
+      this.isInitialized = false;
       return false;
     }
   }
