@@ -131,7 +131,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="baby-profile-title">
+          <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white" data-testid="baby-profile-title">
             Baby Profile
           </h1>
           <p className="text-lg text-gray-600 mt-2">
@@ -243,7 +243,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                 {/* Basic Information */}
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="baby-name" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="baby-name" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Baby's Name *
                     </Label>
                     <Input
@@ -259,7 +259,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="birth-date" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="birth-date" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Birth Date *
                     </Label>
                     <Popover open={showDatePicker} onOpenChange={setShowDatePicker}>
@@ -289,7 +289,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="gender" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="gender" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Gender
                     </Label>
                     <Select 
@@ -308,7 +308,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                   </div>
 
                   <div className="space-y-2" style={{display: 'none'}}>
-                    <Label htmlFor="profile-picture" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="profile-picture" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Profile Picture
                     </Label>
                     <div className="flex items-center gap-4">
@@ -346,7 +346,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
                   </div>
 
                   <div className="disclaimer">
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                       <span className="warning-text">⚠️ Privacy:</span> We only store your baby's name and birth date to provide personalized guidance. No other personal information is collected.
                     </p>
                   </div>
@@ -384,7 +384,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
       {showEditForm && (
         <Card className="glass-strong border-0">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold font-display text-gray-900">
+            <CardTitle className="text-2xl font-bold font-display text-gray-900 dark:text-white">
               Edit {currentBaby?.name}'s Profile
             </CardTitle>
           </CardHeader>
@@ -393,7 +393,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Baby Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="edit-name" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="edit-name" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                     Baby's Name *
                   </Label>
                   <Input
@@ -409,7 +409,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
 
                 {/* Birth Date */}
                 <div className="space-y-2">
-                  <Label htmlFor="edit-birth-date" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="edit-birth-date" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                     Birth Date *
                   </Label>
                   <Popover open={showEditDatePicker} onOpenChange={setShowEditDatePicker}>
@@ -439,7 +439,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
 
                 {/* Gender */}
                 <div className="space-y-2">
-                  <Label htmlFor="edit-gender" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="edit-gender" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                     Gender
                   </Label>
                   <Select 
@@ -459,7 +459,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
 
                 {/* Profile Picture */}
                 <div className="space-y-2 md:col-span-2" style={{display: 'none'}}>
-                  <Label htmlFor="edit-profile-picture" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="edit-profile-picture" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                     Profile Picture
                   </Label>
                   <div className="flex items-center gap-4">
@@ -543,7 +543,7 @@ const StatItem = ({ label, value, icon }) => (
     </div>
     <div>
       <div className="text-sm text-gray-500">{label}</div>
-      <div className="font-medium text-gray-900">{value}</div>
+      <div className="font-medium text-gray-900 dark:text-white">{value}</div>
     </div>
   </div>
 );

@@ -485,7 +485,7 @@ const TrackingPage = ({ currentBaby }) => {
               <Activity className="w-8 h-8 text-gray-400" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">No Baby Selected</h2>
-            <p className="text-gray-600">Please select or add a baby to start tracking activities.</p>
+            <p className="text-gray-600 dark:text-gray-300">Please select or add a baby to start tracking activities.</p>
           </CardContent>
         </Card>
       </div>
@@ -506,7 +506,7 @@ const TrackingPage = ({ currentBaby }) => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="tracking-title">
+          <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white" data-testid="tracking-title">
             Track Activities
           </h1>
           <p className="text-lg text-gray-600 mt-2">
@@ -578,7 +578,7 @@ const TrackingPage = ({ currentBaby }) => {
         <div className="lg:col-span-3" style={{display: 'none'}}>
           <Card className="glass-strong border-0">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-800">
+              <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <Activity className="w-5 h-5 text-blue-600" />
                 Log Activity Details
               </CardTitle>
@@ -631,7 +631,7 @@ const TrackingPage = ({ currentBaby }) => {
           <Card className="glass border-0" style={{display: 'none'}}>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-gray-800">
+                <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                   <Bell className="w-5 h-5 text-blue-500" />
                   Reminders
                 </CardTitle>
@@ -663,7 +663,7 @@ const TrackingPage = ({ currentBaby }) => {
           {/* Recent Activities - HIDDEN */}
           <Card className="glass border-0" style={{display: 'none'}}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-800">
+              <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <Clock className="w-5 h-5 text-rose-500" />
                 Recent Feeding
               </CardTitle>
@@ -684,7 +684,7 @@ const TrackingPage = ({ currentBaby }) => {
           <Card className="glass-strong border-0">
             <CardHeader>
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <CardTitle className="flex items-center gap-2 text-gray-800">
+                <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                   <Activity className="w-5 h-5 text-indigo-500" />
                   Activity History
                   <span className="text-sm font-normal text-gray-500">
@@ -828,7 +828,7 @@ const FeedingForm = ({ babyId, onSuccess }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Feeding Type</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Feeding Type</Label>
           <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
             <SelectTrigger data-testid="feeding-type-selector">
               <SelectValue />
@@ -843,7 +843,7 @@ const FeedingForm = ({ babyId, onSuccess }) => {
 
         {formData.type === 'bottle' && (
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">Amount (oz)</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Amount (oz)</Label>
             <Input
               type="number"
               step="0.5"
@@ -857,7 +857,7 @@ const FeedingForm = ({ babyId, onSuccess }) => {
 
         {formData.type === 'breast' && (
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">Duration (minutes)</Label>
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Duration (minutes)</Label>
             <Input
               type="number"
               placeholder="e.g., 15"
@@ -870,7 +870,7 @@ const FeedingForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Any additional notes..."
           value={formData.notes}
@@ -959,7 +959,7 @@ const DiaperForm = ({ babyId, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Diaper Type</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Diaper Type</Label>
         <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
           <SelectTrigger data-testid="diaper-type-selector">
             <SelectValue />
@@ -973,7 +973,7 @@ const DiaperForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Any observations or notes..."
           value={formData.notes}
@@ -1068,7 +1068,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Start Time</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Start Time</Label>
           <Input
             type="datetime-local"
             value={format(formData.start_time, "yyyy-MM-dd'T'HH:mm")}
@@ -1078,7 +1078,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">End Time (optional)</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">End Time (optional)</Label>
           <Input
             type="datetime-local"
             value={formData.end_time}
@@ -1089,7 +1089,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Sleep Quality (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Sleep Quality (optional)</Label>
         <Select value={formData.quality} onValueChange={(value) => setFormData({...formData, quality: value})}>
           <SelectTrigger data-testid="sleep-quality-selector">
             <SelectValue placeholder="Select quality" />
@@ -1103,7 +1103,7 @@ const SleepForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Sleep environment, interruptions, etc..."
           value={formData.notes}
@@ -1191,7 +1191,7 @@ const PumpingForm = ({ babyId, onSuccess }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Amount (oz) *</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Amount (oz) *</Label>
           <Input
             type="number"
             step="0.5"
@@ -1204,7 +1204,7 @@ const PumpingForm = ({ babyId, onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Duration (minutes) *</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Duration (minutes) *</Label>
           <Input
             type="number"
             placeholder="e.g., 20"
@@ -1217,7 +1217,7 @@ const PumpingForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Comfort level, pump settings, etc..."
           value={formData.notes}
@@ -1319,7 +1319,7 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Weight (lbs)</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Weight (lbs)</Label>
           <Input
             type="number"
             step="0.1"
@@ -1331,7 +1331,7 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Height (inches)</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Height (inches)</Label>
           <Input
             type="number"
             step="0.1"
@@ -1343,7 +1343,7 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Head Circumference (inches)</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Head Circumference (inches)</Label>
           <Input
             type="number"
             step="0.1"
@@ -1355,7 +1355,7 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-gray-700">Temperature (°F)</Label>
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Temperature (°F)</Label>
           <Input
             type="number"
             step="0.1"
@@ -1368,7 +1368,7 @@ const MeasurementForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Doctor visit, growth concerns, etc..."
           value={formData.notes}
@@ -1470,7 +1470,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Milestone Title *</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Milestone Title *</Label>
         <Input
           type="text"
           placeholder="e.g., First smile, Rolling over"
@@ -1482,7 +1482,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Category</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Category</Label>
         <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
           <SelectTrigger data-testid="milestone-category-selector">
             <SelectValue />
@@ -1498,7 +1498,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Achievement Date</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Achievement Date</Label>
         <Input
           type="date"
           value={format(formData.achieved_date, 'yyyy-MM-dd')}
@@ -1508,7 +1508,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Description (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Description (optional)</Label>
         <Textarea
           placeholder="Describe the milestone in detail..."
           value={formData.description}
@@ -1518,7 +1518,7 @@ const MilestoneForm = ({ babyId, onSuccess }) => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-gray-700">Notes (optional)</Label>
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Notes (optional)</Label>
         <Textarea
           placeholder="Additional notes or memories..."
           value={formData.notes}
@@ -1619,7 +1619,7 @@ const RecentActivityList = ({ activities, type }) => {
         return (
           <div key={activity.id || index} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
             <h4 className="font-medium text-gray-900 text-sm">{formatted.title}</h4>
-            <p className="text-sm text-gray-600">{formatted.subtitle}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{formatted.subtitle}</p>
             <p className="text-xs text-gray-400 mt-1">{formatted.time}</p>
           </div>
         );
@@ -2119,7 +2119,7 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '95vh'}}>
         <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0">
-          <h3 className="text-lg font-semibold text-gray-900">{getModalTitle()}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{getModalTitle()}</h3>
           <button
             onClick={onCancel}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -2351,7 +2351,7 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
                   <div className="mt-2 space-y-1">
                     {formatActivityDetails(activity).map((detail, idx) => (
                       <div key={idx} className="text-sm text-gray-600 flex items-baseline gap-2">
-                        <span className="font-medium text-gray-700">{detail.label}:</span>
+                        <span className="font-medium text-gray-700 dark:text-gray-200">{detail.label}:</span>
                         <span>{detail.value}</span>
                       </div>
                     ))}

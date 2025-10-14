@@ -63,7 +63,7 @@ const EmergencyTraining = ({ currentBaby }) => {
       <div className="space-y-4">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
-            <h1 className="text-4xl font-bold font-display text-gray-900" data-testid="emergency-training-title">
+            <h1 className="text-4xl font-bold font-display text-gray-900 dark:text-white" data-testid="emergency-training-title">
               Emergency Training
             </h1>
             <p className="text-lg text-gray-600 mt-2">
@@ -111,7 +111,7 @@ const EmergencyTraining = ({ currentBaby }) => {
           {!selectedTopic ? (
             <Card className="glass-strong border-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-800">
+                <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                   <BookOpen className="w-5 h-5 text-red-500" />
                   Select Emergency Training Topic
                 </CardTitle>
@@ -312,7 +312,7 @@ const EmergencyTraining = ({ currentBaby }) => {
           {/* Emergency Numbers */}
           <Card className="emergency-card border-0">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-800">
+              <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <Phone className="w-5 h-5 text-red-500" />
                 Emergency Numbers
               </CardTitle>
@@ -336,7 +336,7 @@ const EmergencyTraining = ({ currentBaby }) => {
           {/* Quick Emergency Assessment */}
           <Card className="glass border-0">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-gray-800">
+              <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                 <Clock className="w-5 h-5 text-orange-500" />
                 When to Call 911
               </CardTitle>
@@ -371,7 +371,7 @@ const EmergencyTraining = ({ currentBaby }) => {
           {currentBaby && (
             <Card className="glass border-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-800">
+                <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
                   <Baby className="w-5 h-5 text-blue-500" />
                   Age-Specific Notes
                 </CardTitle>
@@ -411,7 +411,7 @@ const EmergencySlideshow = ({ topic, currentSlide, setCurrentSlide, babyAgeMonth
     <Card className="emergency-card border-0">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-gray-800">
+          <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-gray-100">
             {topic.icon}
             {topic.title}
             <Badge variant="outline" className="ml-2">
@@ -497,7 +497,7 @@ const SlideContent = ({ slide }) => (
     <div className="text-center">
       <h2 className="text-2xl font-bold text-gray-900 mb-2">{slide.title}</h2>
       {slide.subtitle && (
-        <p className="text-lg text-gray-600">{slide.subtitle}</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300">{slide.subtitle}</p>
       )}
     </div>
 
@@ -520,7 +520,7 @@ const SlideContent = ({ slide }) => (
               <div className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
                 {index + 1}
               </div>
-              <p className="text-gray-800">{instruction}</p>
+              <p className="text-gray-800 dark:text-gray-100">{instruction}</p>
             </div>
           ))}
         </div>
@@ -590,7 +590,7 @@ const DiagramComponent = ({ type, details }) => {
           {details.steps.map((step, index) => (
             <div key={index} className="border border-gray-300 rounded p-2 bg-white text-center">
               <div className="text-2xl mb-1">{step.icon}</div>
-              <p className="text-xs text-gray-700">{step.text}</p>
+              <p className="text-xs text-gray-700 dark:text-gray-200">{step.text}</p>
             </div>
           ))}
         </div>
@@ -599,7 +599,7 @@ const DiagramComponent = ({ type, details }) => {
     default:
       return (
         <div className="text-center p-4 border border-gray-300 rounded bg-white">
-          <p className="text-sm text-gray-600">{details.description}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">{details.description}</p>
         </div>
       );
   }
@@ -1004,7 +1004,7 @@ const AgeSpecificNotes = ({ babyAgeMonths }) => {
       {notes.map((note, index) => (
         <div key={index} className="flex items-start gap-2 text-sm">
           <Baby className="w-3 h-3 text-blue-500 flex-shrink-0 mt-1" />
-          <span className="text-gray-700">{note}</span>
+          <span className="text-gray-700 dark:text-gray-200">{note}</span>
         </div>
       ))}
     </div>

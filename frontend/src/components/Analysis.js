@@ -218,7 +218,7 @@ const Analysis = ({ currentBaby }) => {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Analysis</h1>
-          <p className="text-gray-600">{currentBaby.name}'s Data</p>
+          <p className="text-gray-600 dark:text-gray-300">{currentBaby.name}'s Data</p>
         </div>
 
         {/* Tabs */}
@@ -318,7 +318,7 @@ const SummaryView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
               <h3 className="text-lg font-semibold">
                 {dayOffset === 0 ? 'TODAY' : format(today, 'EEEE')}
               </h3>
-              <p className="text-sm text-gray-600">{format(today, 'MMM d, yyyy')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{format(today, 'MMM d, yyyy')}</p>
             </div>
             <button
               onClick={() => setDayOffset(Math.max(dayOffset - 1, 0))}
@@ -339,15 +339,15 @@ const SummaryView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <p className="text-sm text-gray-600">Feedings</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Feedings</p>
               <p className="text-3xl font-bold text-pink-600">{feedingCount}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600">Diapers</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Diapers</p>
               <p className="text-3xl font-bold text-blue-600">{diaperCount}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600">Sleep</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Sleep</p>
               <p className="text-3xl font-bold text-purple-600">
                 {Math.floor(sleepTotal / 60)}h {sleepTotal % 60}m
               </p>
@@ -356,11 +356,11 @@ const SummaryView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
 
           <div className="pt-4 border-t space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-600">Time since last feed:</span>
+              <span className="text-gray-600 dark:text-gray-300">Time since last feed:</span>
               <span className="font-semibold">{getTimeSinceLast('feeding')}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Time since last diaper:</span>
+              <span className="text-gray-600 dark:text-gray-300">Time since last diaper:</span>
               <span className="font-semibold">{getTimeSinceLast('diaper')}</span>
             </div>
           </div>
@@ -397,7 +397,7 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
               <h3 className="text-lg font-semibold">
                 {dayOffset === 0 ? 'TODAY' : format(today, 'EEEE')}
               </h3>
-              <p className="text-sm text-gray-600">{format(today, 'MMM d, yyyy')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{format(today, 'MMM d, yyyy')}</p>
             </div>
             <button
               onClick={() => setDayOffset(Math.max(dayOffset - 1, 0))}
@@ -417,19 +417,19 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total amount</span>
+            <span className="text-gray-600 dark:text-gray-300">Total amount</span>
             <span className="font-semibold text-orange-600">{totalAmount} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Avg. per feed</span>
+            <span className="text-gray-600 dark:text-gray-300">Avg. per feed</span>
             <span className="font-semibold text-orange-600">{avgAmount} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of feeds</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of feeds</span>
             <span className="font-semibold text-orange-600">{todayFeeds.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Time since last feed</span>
+            <span className="text-gray-600 dark:text-gray-300">Time since last feed</span>
             <span className="font-semibold text-orange-600">{getTimeSinceLast('feeding')}</span>
           </div>
         </CardContent>
@@ -492,15 +492,15 @@ const BottleView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
                 return (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Avg. ounces per day</span>
+                      <span className="text-gray-600 dark:text-gray-300">Avg. ounces per day</span>
                       <span className="font-semibold text-orange-600">{avgDailyOz} oz</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Avg. daily number of feeds</span>
+                      <span className="text-gray-600 dark:text-gray-300">Avg. daily number of feeds</span>
                       <span className="font-semibold text-orange-600">{avgDailyFeeds}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Avg. time between feeds</span>
+                      <span className="text-gray-600 dark:text-gray-300">Avg. time between feeds</span>
                       <span className="font-semibold text-orange-600">{avgTimeBetween}</span>
                     </div>
                   </>
@@ -597,7 +597,7 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
               <h3 className="text-lg font-semibold">
                 {dayOffset === 0 ? 'TODAY' : format(today, 'EEEE')}
               </h3>
-              <p className="text-sm text-gray-600">{format(today, 'MMM d, yyyy')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{format(today, 'MMM d, yyyy')}</p>
             </div>
             <button
               onClick={() => setDayOffset(Math.max(dayOffset - 1, 0))}
@@ -617,27 +617,27 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total amount pumped</span>
+            <span className="text-gray-600 dark:text-gray-300">Total amount pumped</span>
             <span className="font-semibold text-orange-600">{totalPumpAmount.toFixed(1)} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Left breast total</span>
+            <span className="text-gray-600 dark:text-gray-300">Left breast total</span>
             <span className="font-semibold text-blue-600">{totalLeftBreast.toFixed(1)} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Right breast total</span>
+            <span className="text-gray-600 dark:text-gray-300">Right breast total</span>
             <span className="font-semibold text-purple-600">{totalRightBreast.toFixed(1)} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Avg. per session</span>
+            <span className="text-gray-600 dark:text-gray-300">Avg. per session</span>
             <span className="font-semibold text-orange-600">{avgPumpAmount} oz</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of sessions</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of sessions</span>
             <span className="font-semibold text-orange-600">{todayPumping.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Time since last pumped</span>
+            <span className="text-gray-600 dark:text-gray-300">Time since last pumped</span>
             <span className="font-semibold text-orange-600">{getTimeSinceLast('pumping')}</span>
           </div>
         </CardContent>
@@ -650,15 +650,15 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total breastfeeding time</span>
+            <span className="text-gray-600 dark:text-gray-300">Total breastfeeding time</span>
             <span className="font-semibold text-pink-600">{Math.floor(totalBreastDuration / 60)}h {totalBreastDuration % 60}m</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of sessions</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of sessions</span>
             <span className="font-semibold text-pink-600">{todayBreastfeeding.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Avg. duration per session</span>
+            <span className="text-gray-600 dark:text-gray-300">Avg. duration per session</span>
             <span className="font-semibold text-pink-600">
               {todayBreastfeeding.length > 0 ? Math.round(totalBreastDuration / todayBreastfeeding.length) : 0} min
             </span>
@@ -676,19 +676,19 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
             <p className="text-sm font-semibold mb-2">7 DAY AVERAGE - PUMPING</p>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. total ounces per day</span>
+                <span className="text-gray-600 dark:text-gray-300">Avg. total ounces per day</span>
                 <span className="font-semibold text-orange-600">{avg7DayTotalOz} oz</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. left breast per day</span>
+                <span className="text-gray-600 dark:text-gray-300">Avg. left breast per day</span>
                 <span className="font-semibold text-blue-600">{avg7DayLeftBreast} oz</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. right breast per day</span>
+                <span className="text-gray-600 dark:text-gray-300">Avg. right breast per day</span>
                 <span className="font-semibold text-purple-600">{avg7DayRightBreast} oz</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. pumping sessions per day</span>
+                <span className="text-gray-600 dark:text-gray-300">Avg. pumping sessions per day</span>
                 <span className="font-semibold text-orange-600">{avg7DayPumping}</span>
               </div>
             </div>
@@ -697,7 +697,7 @@ const ExpressView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, set
             <p className="text-sm font-semibold mb-2">7 DAY AVERAGE - BREASTFEEDING</p>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Avg. breastfeeding sessions per day</span>
+                <span className="text-gray-600 dark:text-gray-300">Avg. breastfeeding sessions per day</span>
                 <span className="font-semibold text-pink-600">{avg7DayBreastfeeding}</span>
               </div>
             </div>
@@ -739,7 +739,7 @@ const DiaperView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
               <h3 className="text-lg font-semibold">
                 {dayOffset === 0 ? 'TODAY' : format(today, 'EEEE')}
               </h3>
-              <p className="text-sm text-gray-600">{format(today, 'MMM d, yyyy')}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{format(today, 'MMM d, yyyy')}</p>
             </div>
             <button
               onClick={() => setDayOffset(Math.max(dayOffset - 1, 0))}
@@ -759,19 +759,19 @@ const DiaperView = ({ activities, currentBaby, getTimeSinceLast, dayOffset, setD
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total number of diapers</span>
+            <span className="text-gray-600 dark:text-gray-300">Total number of diapers</span>
             <span className="font-semibold text-blue-600">{todayDiapers.length}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of wet diapers</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of wet diapers</span>
             <span className="font-semibold text-blue-400">{wetCount}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of dirty diapers</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of dirty diapers</span>
             <span className="font-semibold text-yellow-600">{dirtyCount}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Number of wet & dirty diapers</span>
+            <span className="text-gray-600 dark:text-gray-300">Number of wet & dirty diapers</span>
             <span className="font-semibold text-orange-600">{mixedCount}</span>
           </div>
         </CardContent>
@@ -855,23 +855,23 @@ const GrowthView = ({ activities, currentBaby, calculatePercentile }) => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-gray-600">Date of last measurement</span>
+              <span className="text-gray-600 dark:text-gray-300">Date of last measurement</span>
               <span className="font-semibold">
                 {format(parseISO(latestMeasurement.timestamp), 'MMM d, yyyy')}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Age at last measurement</span>
+              <span className="text-gray-600 dark:text-gray-300">Age at last measurement</span>
               <span className="font-semibold">{ageMonths} months</span>
             </div>
             <div className="flex items-center justify-between pt-4 border-t">
               <div>
-                <p className="text-sm text-gray-600">Weight</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Weight</p>
                 <p className="text-4xl font-bold text-green-600">{latestMeasurement.weight}</p>
                 <p className="text-sm text-gray-500">lb</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600">Percentile</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Percentile</p>
                 <p className="text-4xl font-bold text-green-600">
                   {calculatePercentile(latestMeasurement.weight, 'weight', ageMonths, currentBaby.gender)}
                 </p>
@@ -890,12 +890,12 @@ const GrowthView = ({ activities, currentBaby, calculatePercentile }) => {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">length</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">length</p>
                 <p className="text-4xl font-bold text-green-600">{latestMeasurement.height}</p>
                 <p className="text-sm text-gray-500">inches</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600">Percentile</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Percentile</p>
                 <p className="text-4xl font-bold text-green-600">
                   {calculatePercentile(latestMeasurement.height, 'height', ageMonths, currentBaby.gender)}
                 </p>
@@ -914,12 +914,12 @@ const GrowthView = ({ activities, currentBaby, calculatePercentile }) => {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Head circumference</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Head circumference</p>
                 <p className="text-4xl font-bold text-purple-600">{latestMeasurement.head_circumference}</p>
                 <p className="text-sm text-gray-500">inches</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600">Percentile</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Percentile</p>
                 <p className="text-4xl font-bold text-purple-600">
                   {calculatePercentile(latestMeasurement.head_circumference, 'head', ageMonths, currentBaby.gender)}
                 </p>

@@ -547,7 +547,7 @@ const FormulaComparison = ({ currentBaby }) => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Baby Formula Comparison</h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Compare popular baby formulas to find the best choice for {currentBaby?.name || 'your baby'}
         </p>
       </div>
@@ -630,7 +630,7 @@ const FormulaComparison = ({ currentBaby }) => {
                       <td key={formula.id} className="p-4">
                         <div className="flex items-center space-x-2">
                           <div className="flex">{getRatingStars(formula.rating)}</div>
-                          <span className="text-sm text-gray-600">({formula.reviews})</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300">({formula.reviews})</span>
                         </div>
                       </td>
                     ))}
@@ -687,7 +687,7 @@ const FormulaComparison = ({ currentBaby }) => {
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-lg">{formula.name}</CardTitle>
-                  <p className="text-sm text-gray-600">{formula.brand} • {formula.type}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">{formula.brand} • {formula.type}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-green-600">{formula.price}</p>
@@ -705,13 +705,13 @@ const FormulaComparison = ({ currentBaby }) => {
                 {/* Rating */}
                 <div className="flex items-center space-x-2">
                   <div className="flex">{getRatingStars(formula.rating)}</div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
                     {formula.rating} ({formula.reviews} reviews)
                   </span>
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-gray-700">{formula.description}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-200">{formula.description}</p>
 
                 {/* Brand Website Link */}
                 {formula.website && (
