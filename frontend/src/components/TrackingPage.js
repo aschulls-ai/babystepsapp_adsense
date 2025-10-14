@@ -2067,23 +2067,23 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         return (
           <>
             <div>
-              <Label className="text-sm font-medium">Weight (lbs)</Label>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Weight (lbs)</Label>
               <Input
                 type="number"
                 step="0.1"
                 value={formData.weight}
                 onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                className="mt-1"
+                className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
             <div>
-              <Label className="text-sm font-medium">Height (inches)</Label>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Height (inches)</Label>
               <Input
                 type="number"
                 step="0.1"
                 value={formData.height}
                 onChange={(e) => setFormData({...formData, height: e.target.value})}
-                className="mt-1"
+                className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
           </>
