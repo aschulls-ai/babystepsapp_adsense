@@ -707,8 +707,8 @@ const TrackingPage = ({ currentBaby }) => {
                       <SelectItem value="diaper">Diaper</SelectItem>
                       <SelectItem value="sleep">Sleep</SelectItem>
                       <SelectItem value="pumping">Pumping</SelectItem>
-                      <SelectItem value="measurement">Growth</SelectItem>
-                      <SelectItem value="milestone">Milestones</SelectItem>
+                      <SelectItem value="measurements">Growth</SelectItem>
+                      <SelectItem value="milestones">Milestones</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={`${activitySortBy}-${activitySortOrder}`} onValueChange={(value) => {
