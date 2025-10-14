@@ -1901,9 +1901,9 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         return (
           <>
             <div>
-              <Label className="text-sm font-medium">Type</Label>
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Type</Label>
               <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-                <SelectTrigger className="mt-1">
+                <SelectTrigger className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1915,24 +1915,24 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
             </div>
             {formData.type === 'bottle' && (
               <div>
-                <Label className="text-sm font-medium">Amount (oz)</Label>
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Amount (oz)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={formData.amount}
                   onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                  className="mt-1"
+                  className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
             )}
             {formData.type === 'breast' && (
               <div>
-                <Label className="text-sm font-medium">Duration (minutes)</Label>
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes)</Label>
                 <Input
                   type="number"
                   value={formData.duration}
                   onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                  className="mt-1"
+                  className="mt-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
             )}
