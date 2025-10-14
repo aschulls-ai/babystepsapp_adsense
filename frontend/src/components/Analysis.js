@@ -223,7 +223,7 @@ const Analysis = ({ currentBaby }) => {
 
         {/* Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid grid-cols-5 mb-6 bg-white/80 backdrop-blur-sm">
+          <TabsList className="grid grid-cols-5 mb-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
             <TabsTrigger value="summary">SUMMARY</TabsTrigger>
             <TabsTrigger value="bottle">BOTTLE</TabsTrigger>
             <TabsTrigger value="express">EXPRESS</TabsTrigger>
