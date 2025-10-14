@@ -4,10 +4,12 @@ import { Button } from './ui/button';
 import { Bell, Clock, Edit2, X, Check } from 'lucide-react';
 
 const FeedReminder = ({ currentBaby }) => {
-  const [reminderInterval, setReminderInterval] = useState(3); // Default: 3 hours
+  const [reminderHours, setReminderHours] = useState(3); // Default: 3 hours
+  const [reminderMinutes, setReminderMinutes] = useState(0); // Default: 0 minutes
   const [lastFeedTime, setLastFeedTime] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [tempInterval, setTempInterval] = useState(3);
+  const [tempHours, setTempHours] = useState(3);
+  const [tempMinutes, setTempMinutes] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isDue, setIsDue] = useState(false);
 
@@ -19,11 +21,18 @@ const FeedReminder = ({ currentBaby }) => {
         setLastFeedTime(new Date(stored));
       }
       
-      // Load saved interval
-      const savedInterval = localStorage.getItem(`feedInterval_${currentBaby.id}`);
-      if (savedInterval) {
-        setReminderInterval(parseInt(savedInterval));
-        setTempInterval(parseInt(savedInterval));
+      // Load saved interval (hours and minutes)
+      const savedHours = localStorage.getItem(`feedIntervalHours_${currentBaby.id}`);
+      const savedMinutes = localStorage.getItem(`feedIntervalMinutes_${currentBaby.id}`);
+      
+      if (savedHours) {
+        setReminderHours(parseInt(savedHours));
+        setTempHours(parseInt(savedHours));
+      }
+      
+      if (savedMinutes) {
+        setReminderMinutes(parseInt(savedMinutes));
+        setTempMinutes(parseInt(savedMinutes));
       }
     }
   }, [currentBaby]);
@@ -31,14 +40,15 @@ const FeedReminder = ({ currentBaby }) => {
   // Update timer every minute
   useEffect(() => {
     const updateTimer = () => {
-      if (!lastFeedTime || !reminderInterval) {
+      if (!lastFeedTime || (reminderHours === 0 && reminderMinutes === 0)) {
         setTimeRemaining('Not set');
         setIsDue(false);
         return;
       }
 
       const now = new Date();
-      const nextFeedTime = new Date(lastFeedTime.getTime() + reminderInterval * 60 * 60 * 1000);
+      const totalMinutes = reminderHours * 60 + reminderMinutes;
+      const nextFeedTime = new Date(lastFeedTime.getTime() + totalMinutes * 60 * 1000);
       const diffMs = nextFeedTime - now;
 
       if (diffMs <= 0) {
@@ -47,7 +57,14 @@ const FeedReminder = ({ currentBaby }) => {
       } else {
         const hours = Math.floor(diffMs / (1000 * 60 * 60));
         const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        setTimeRemaining(`${hours}h ${minutes}m`);
+        
+        if (hours > 0 && minutes > 0) {
+          setTimeRemaining(`${hours}h ${minutes}m`);
+        } else if (hours > 0) {
+          setTimeRemaining(`${hours}h`);
+        } else {
+          setTimeRemaining(`${minutes}m`);
+        }
         setIsDue(false);
       }
     };
@@ -56,7 +73,7 @@ const FeedReminder = ({ currentBaby }) => {
     const timer = setInterval(updateTimer, 60000); // Update every minute
 
     return () => clearInterval(timer);
-  }, [lastFeedTime, reminderInterval]);
+  }, [lastFeedTime, reminderHours, reminderMinutes]);
 
   const handleStartReminder = () => {
     const now = new Date();
