@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -21,6 +21,11 @@ import PageAd from './ads/PageAd';
 const EmergencyTraining = ({ currentBaby }) => {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   const emergencyTopics = [
     {
