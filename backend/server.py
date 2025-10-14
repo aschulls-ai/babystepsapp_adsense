@@ -751,6 +751,126 @@ async def reset_password(password_data: PasswordReset):
     
     return {"message": "Password reset successfully"}
 
+# User Profile Management Routes
+@api_router.get("/user/profile")
+async def get_user_profile(current_user: User = Depends(get_current_user)):
+    """Get current user's profile information"""
+    user = await db.users.find_one({"email": current_user.email})
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return {
+        "id": user["id"],
+        "email": user["email"],
+        "name": user["name"]
+    }
+
+@api_router.put("/user/profile")
+async def update_user_profile(
+    update_data: UserUpdateRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """Update user profile (name, email, password)"""
+    user = await db.users.find_one({"email": current_user.email})
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    updates = {}
+    
+    # If updating password, verify current password first
+    if update_data.new_password:
+        if not update_data.current_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Current password is required to set a new password"
+            )
+        
+        # Verify current password
+        if not verify_password(update_data.current_password, user["hashed_password"]):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Current password is incorrect"
+            )
+        
+        # Update password
+        updates["hashed_password"] = get_password_hash(update_data.new_password)
+    
+    # Update name if provided
+    if update_data.name:
+        updates["name"] = update_data.name
+    
+    # Update email if provided and different
+    if update_data.email and update_data.email != user["email"]:
+        # Check if new email already exists
+        existing_user = await db.users.find_one({"email": update_data.email})
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already in use"
+            )
+        
+        # Verify current password when changing email
+        if not update_data.current_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Current password is required to change email"
+            )
+        
+        if not verify_password(update_data.current_password, user["hashed_password"]):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Current password is incorrect"
+            )
+        
+        updates["email"] = update_data.email
+    
+    if not updates:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No updates provided"
+        )
+    
+    # Update user in database
+    result = await db.users.update_one(
+        {"email": current_user.email},
+        {"$set": updates}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update profile"
+        )
+    
+    # Prepare response
+    response = {
+        "message": "Profile updated successfully",
+        "user": {
+            "id": user["id"],
+            "email": updates.get("email", user["email"]),
+            "name": updates.get("name", user["name"])
+        }
+    }
+    
+    # If email was changed, generate a new token
+    if update_data.email and update_data.email != current_user.email:
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        new_token = create_access_token(
+            data={"sub": updates["email"]}, expires_delta=access_token_expires
+        )
+        response["token"] = new_token
+        response["message"] = "Profile updated successfully. Please use your new email to login."
+    
+    return response
+
 # Dashboard Management Routes
 @api_router.get("/dashboard/layout")
 async def get_dashboard_layout(current_user: User = Depends(get_current_user)):
