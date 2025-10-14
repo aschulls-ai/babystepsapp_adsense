@@ -827,7 +827,7 @@ const FormulaComparison = ({ currentBaby }) => {
       </Card>
 
       {/* Page Ad */}
-      <PageAd position="bottom" adUnitKey="banner_formula" />
+      <PageAd position="bottom" />
     </div>
   );
 };

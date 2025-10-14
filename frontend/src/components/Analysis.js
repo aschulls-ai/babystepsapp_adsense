@@ -936,7 +936,7 @@ const GrowthView = ({ activities, currentBaby, calculatePercentile }) => {
       )}
       
       {/* Page Ad */}
-      <PageAd position="bottom" adUnitKey="banner_analysis" />
+      <PageAd position="bottom" />
     </div>
   );
 };

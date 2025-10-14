@@ -511,7 +511,7 @@ const BabyProfile = ({ currentBaby, onAddBaby, onUpdateBaby }) => {
       )}
 
       {/* Page Ad */}
-      <PageAd position="bottom" adUnitKey="banner_baby_profile" />
+      <PageAd position="bottom" />
     </div>
   );
 };
