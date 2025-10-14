@@ -2122,7 +2122,7 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '95vh'}}>
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md flex flex-col" style={{maxHeight: '85vh'}}>
         <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{getModalTitle()}</h3>
           <button
@@ -2134,7 +2134,7 @@ const QuickActionModal = ({ show, type, data, onSubmit, onCancel }) => {
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
-          <div className="px-6 overflow-y-auto flex-1 space-y-4">
+          <div className="px-6 overflow-y-auto flex-1 space-y-4" style={{maxHeight: '60vh'}}>
             {renderFormFields()}
           </div>
           
