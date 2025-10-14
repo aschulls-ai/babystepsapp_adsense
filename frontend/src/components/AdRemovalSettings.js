@@ -99,7 +99,7 @@ const AdRemovalSettings = () => {
                 Remove Ads Forever
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Enjoy an ad-free experience for just $1.99
+                Enjoy an ad-free experience for just $4.99
               </p>
               
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-4">
