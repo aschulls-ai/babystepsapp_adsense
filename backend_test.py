@@ -79,11 +79,11 @@ class UserProfileTester:
             return {}
         return {"Authorization": f"Bearer {self.token}"}
     
-    def test_1_1_login_demo_account(self):
-        """Test 1.1: Login with Demo Account"""
+    def test_1_login_demo_account(self):
+        """Test 1: Login with Demo Account (demo@babysteps.com / demo123)"""
         data = {
-            "email": "demo@babysteps.com",
-            "password": "demo123"
+            "email": self.original_email,
+            "password": self.original_password
         }
         
         response, response_time = self.make_request("POST", "/api/auth/login", data)
@@ -93,20 +93,20 @@ class UserProfileTester:
                 result = response.json()
                 self.token = result.get("access_token")
                 if self.token:
-                    self.log_test("1.1 Login Demo Account", True, 
+                    self.log_test("1. Login Demo Account", True, 
                                 f"JWT token received: {self.token[:20]}...", response_time)
                     return True
                 else:
-                    self.log_test("1.1 Login Demo Account", False, 
+                    self.log_test("1. Login Demo Account", False, 
                                 "No access_token in response", response_time)
                     return False
             except json.JSONDecodeError:
-                self.log_test("1.1 Login Demo Account", False, 
+                self.log_test("1. Login Demo Account", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("1.1 Login Demo Account", False, 
+            self.log_test("1. Login Demo Account", False, 
                         f"HTTP {status}", response_time)
             return False
     
