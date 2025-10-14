@@ -347,6 +347,17 @@ function App() {
       // Initialize mobile service
       await mobileService.initializeServices();
       
+      // Initialize AdMob for native platforms
+      if (Capacitor.isNativePlatform()) {
+        console.log('📱 Initializing AdMob...');
+        await adMobService.initialize();
+        console.log('✅ AdMob initialized');
+        
+        // Initialize billing service
+        await billingService.initialize();
+        console.log('✅ Billing service initialized');
+      }
+      
       console.log('Mobile app initialized successfully');
     } catch (error) {
       console.error('Mobile app initialization failed:', error);
