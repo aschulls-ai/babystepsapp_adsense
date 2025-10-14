@@ -546,7 +546,7 @@ const FormulaComparison = ({ currentBaby }) => {
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Baby Formula Comparison</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Baby Formula Comparison</h1>
         <p className="text-lg text-gray-600 dark:text-gray-300">
           Compare popular baby formulas to find the best choice for {currentBaby?.name || 'your baby'}
         </p>
@@ -557,20 +557,20 @@ const FormulaComparison = ({ currentBaby }) => {
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder="Search formulas by name, brand, or type..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
               />
-              <p className="text-xs text-gray-500 mt-2 flex items-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
                 <Clock className="w-3 h-3 mr-1" />
                 Response may take up to a minute due to AI processing and customizing for {currentBaby?.name || 'your baby'}
               </p>
             </div>
             <Select value={selectedCondition} onValueChange={setSelectedCondition}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Filter by condition" />
               </SelectTrigger>
