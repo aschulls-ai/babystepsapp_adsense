@@ -250,7 +250,7 @@ const PrivacyPolicy = () => {
 
             {/* Data Retention */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">7. Data Retention</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Data Retention</h2>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li><strong>Account Data:</strong> Retained while your account is active</li>
                 <li><strong>Baby Tracking Data:</strong> Retained to provide historical insights and trends</li>
