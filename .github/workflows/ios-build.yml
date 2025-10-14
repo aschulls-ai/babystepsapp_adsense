@@ -98,20 +98,24 @@ jobs:
       run: |
         echo "Verifying Capacitor dependencies..."
         
-        # Check if Capacitor dependencies are installed
+        # Check if @capacitor/cli is in package.json
         echo "Checking @capacitor/cli..."
-        if ! yarn list @capacitor/cli > /dev/null 2>&1; then
-          echo "❌ @capacitor/cli not found in package.json dependencies"
+        if ! grep -q '"@capacitor/cli"' package.json; then
+          echo "❌ @capacitor/cli not found in package.json"
           exit 1
         fi
+        echo "✅ @capacitor/cli found in package.json"
         
+        # Check if @capacitor/ios is in package.json
         echo "Checking @capacitor/ios..."
-        if ! yarn list @capacitor/ios > /dev/null 2>&1; then
-          echo "❌ @capacitor/ios not found in package.json dependencies"
+        if ! grep -q '"@capacitor/ios"' package.json; then
+          echo "❌ @capacitor/ios not found in package.json"
           exit 1
         fi
+        echo "✅ @capacitor/ios found in package.json"
         
         # Verify Capacitor CLI is accessible
+        echo "Verifying Capacitor CLI installation..."
         npx cap --version
         echo "✅ All Capacitor dependencies verified"
         
