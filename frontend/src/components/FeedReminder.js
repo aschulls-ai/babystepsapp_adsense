@@ -112,7 +112,7 @@ const FeedReminder = ({ currentBaby }) => {
   return (
     <Card className={`glass border-0 ${isDue ? 'ring-2 ring-red-500 animate-pulse' : ''}`}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-gray-800">
+        <CardTitle className="flex items-center gap-2 text-gray-800 dark:text-white">
           <Bell className={`w-5 h-5 ${isDue ? 'text-red-500' : 'text-blue-500'}`} />
           Next Feed is Due
         </CardTitle>
