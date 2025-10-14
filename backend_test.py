@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-USER PROFILE UPDATE ENDPOINT TESTING
-Testing the new user profile endpoints as specified in review request
+USER PROFILE ENDPOINT TESTING
+Testing the new user profile endpoints as specified in review request:
+1. GET /api/user/profile - Get current user profile
+2. PUT /api/user/profile - Update user profile
 
 Backend: https://babysteps-tracker.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
