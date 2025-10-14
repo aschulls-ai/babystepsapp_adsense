@@ -383,6 +383,81 @@ async def get_profile(current_user_email: str = Depends(get_current_user), db: S
         name=user.name
     )
 
+@app.put("/api/user/profile")
+async def update_profile(
+    request: UserUpdateRequest, 
+    current_user_email: str = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
+    """Update user profile including name, email, and password"""
+    user = db.query(DBUser).filter(DBUser.email == current_user_email).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    try:
+        # If updating password, verify current password
+        if request.new_password:
+            if not request.current_password:
+                raise HTTPException(status_code=400, detail="Current password is required to set a new password")
+            
+            # Verify current password
+            if user.password != request.current_password:
+                raise HTTPException(status_code=400, detail="Current password is incorrect")
+            
+            # Update password
+            user.password = request.new_password
+        
+        # Update name if provided
+        if request.name:
+            user.name = request.name
+        
+        # Update email if provided and different
+        if request.email and request.email != user.email:
+            # Check if new email already exists
+            existing_user = db.query(DBUser).filter(DBUser.email == request.email).first()
+            if existing_user:
+                raise HTTPException(status_code=400, detail="Email already in use")
+            
+            # Verify current password when changing email
+            if not request.current_password:
+                raise HTTPException(status_code=400, detail="Current password is required to change email")
+            
+            if user.password != request.current_password:
+                raise HTTPException(status_code=400, detail="Current password is incorrect")
+            
+            user.email = request.email
+        
+        db.commit()
+        db.refresh(user)
+        
+        # Return updated user info and new token if email changed
+        response = {
+            "user": User(
+                id=user.id,
+                email=user.email,
+                name=user.name
+            ),
+            "message": "Profile updated successfully"
+        }
+        
+        # If email was changed, generate a new token
+        if request.email and request.email != current_user_email:
+            new_token = create_access_token({"sub": user.email})
+            response["token"] = new_token
+            response["message"] = "Profile updated successfully. Please use your new email to login."
+        
+        return response
+        
+    except HTTPException:
+        db.rollback()
+        raise
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Profile update failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update profile")
+
+
 # Baby endpoints
 @app.get("/api/babies")
 async def get_babies(current_user_email: str = Depends(get_current_user), db: Session = Depends(get_db)):
