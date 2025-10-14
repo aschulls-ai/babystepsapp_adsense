@@ -5,6 +5,12 @@ Testing the new user profile endpoints as specified in review request:
 1. GET /api/user/profile - Get current user profile
 2. PUT /api/user/profile - Update user profile
 
+Test Scenarios:
+1. Get User Profile - Login as demo@babysteps.com / demo123 and GET profile
+2. Update Name - PUT with name and current_password
+3. Update Email - PUT with email and current_password, verify new token
+4. Update Password - PUT with current_password and new_password, test old/new login
+
 Backend: https://babysteps-tracker.preview.emergentagent.com
 Test Account: demo@babysteps.com / demo123
 """
@@ -199,417 +205,135 @@ class UserProfileTester:
                         f"HTTP {status} - {error_detail}", response_time)
             return False
     
-    def test_2_1_create_feeding_activity(self):
-        """Test 2.1: Create Feeding Activity with NEW FIELDS"""
+    def test_4_update_email(self):
+        """Test 4: PUT /api/user/profile - Update email"""
+        new_email = "updated@test.com"
         data = {
-            "baby_id": self.baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle",  # NEW FIELD - should not cause 500 error
-            "amount": 8.0,  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration feeding test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "email": new_email,
+            "current_password": self.original_password
         }
         
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["feeding"] = activity_id
-                    self.log_test("2.1 Create Feeding Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.1 Create Feeding Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.1 Create Feeding Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.1 Create Feeding Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_2_2_create_diaper_activity(self):
-        """Test 2.2: Create Diaper Activity with NEW FIELDS"""
-        data = {
-            "baby_id": self.baby_id,
-            "type": "diaper",
-            "diaper_type": "wet",  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration diaper test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["diaper"] = activity_id
-                    self.log_test("2.2 Create Diaper Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.2 Create Diaper Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.2 Create Diaper Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.2 Create Diaper Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_2_3_create_sleep_activity(self):
-        """Test 2.3: Create Sleep Activity with NEW FIELDS"""
-        data = {
-            "baby_id": self.baby_id,
-            "type": "sleep",
-            "duration": 120,  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration sleep test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["sleep"] = activity_id
-                    self.log_test("2.3 Create Sleep Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.3 Create Sleep Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.3 Create Sleep Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.3 Create Sleep Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_2_4_create_pumping_activity(self):
-        """Test 2.4: Create Pumping Activity with NEW FIELDS"""
-        data = {
-            "baby_id": self.baby_id,
-            "type": "pumping",
-            "amount": 4.0,  # NEW FIELD - should not cause 500 error
-            "duration": 15,  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration pumping test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["pumping"] = activity_id
-                    self.log_test("2.4 Create Pumping Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.4 Create Pumping Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.4 Create Pumping Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.4 Create Pumping Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_2_5_create_measurement_activity(self):
-        """Test 2.5: Create Measurement Activity with NEW FIELDS"""
-        data = {
-            "baby_id": self.baby_id,
-            "type": "measurement",
-            "weight": 15.5,  # NEW FIELD - should not cause 500 error
-            "height": 65.0,  # NEW FIELD - should not cause 500 error
-            "head_circumference": 42.0,  # NEW FIELD - should not cause 500 error
-            "temperature": 98.6,  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration measurement test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["measurement"] = activity_id
-                    self.log_test("2.5 Create Measurement Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.5 Create Measurement Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.5 Create Measurement Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.5 Create Measurement Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_2_6_create_milestone_activity(self):
-        """Test 2.6: Create Milestone Activity with NEW FIELDS"""
-        data = {
-            "baby_id": self.baby_id,
-            "type": "milestone",
-            "title": "First smile",  # NEW FIELD - should not cause 500 error
-            "category": "social",  # NEW FIELD - should not cause 500 error
-            "description": "Baby smiled for the first time - post-migration test",  # NEW FIELD - should not cause 500 error
-            "notes": "Post-migration milestone test with new database fields",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        response, response_time = self.make_request("POST", "/api/activities", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                result = response.json()
-                activity_id = result.get("id")
-                if activity_id:
-                    self.activity_ids["milestone"] = activity_id
-                    self.log_test("2.6 Create Milestone Activity", True, 
-                                f"Activity created with ID: {activity_id}", response_time)
-                    return True
-                else:
-                    self.log_test("2.6 Create Milestone Activity", False, 
-                                "No activity ID returned", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("2.6 Create Milestone Activity", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("2.6 Create Milestone Activity", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_3_1_get_all_activities(self):
-        """Test 3.1: Get All Activities for Baby"""
-        response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}",
+        response, response_time = self.make_request("PUT", "/api/user/profile", data,
                                                   headers=self.get_auth_headers())
         
         if response and response.status_code == 200:
             try:
-                activities = response.json()
-                if isinstance(activities, list) and len(activities) >= 6:
-                    # Verify all 6 activity types are present
-                    activity_types = [activity.get("type") for activity in activities]
-                    expected_types = ["feeding", "diaper", "sleep", "pumping", "measurement", "milestone"]
-                    found_types = [t for t in expected_types if t in activity_types]
-                    
-                    self.log_test("3.1 Get All Activities", True, 
-                                f"Found {len(activities)} activities with types: {found_types}", response_time)
-                    return True
-                else:
-                    self.log_test("3.1 Get All Activities", False, 
-                                f"Expected at least 6 activities, got {len(activities) if isinstance(activities, list) else 'invalid'}", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("3.1 Get All Activities", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            self.log_test("3.1 Get All Activities", False, 
-                        f"HTTP {status}", response_time)
-            return False
-    
-    def test_3_2_get_feeding_activities(self):
-        """Test 3.2: Get Activities with Type Filter (Feeding)"""
-        response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}&type=feeding&limit=5",
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code == 200:
-            try:
-                activities = response.json()
-                if isinstance(activities, list):
-                    # Verify all activities are feeding type
-                    feeding_activities = [a for a in activities if a.get("type") == "feeding"]
-                    if len(feeding_activities) == len(activities) and len(activities) > 0:
-                        self.log_test("3.2 Get Feeding Activities", True, 
-                                    f"Found {len(feeding_activities)} feeding activities", response_time)
-                        return True
+                result = response.json()
+                if result.get("message") and "updated successfully" in result["message"]:
+                    # Check if new token was provided
+                    new_token = result.get("token")
+                    if new_token:
+                        # Update our token and verify it works
+                        old_token = self.token
+                        self.token = new_token
+                        
+                        # Test new token by getting profile
+                        profile_response, profile_time = self.make_request("GET", "/api/user/profile", 
+                                                                         headers=self.get_auth_headers())
+                        
+                        if profile_response and profile_response.status_code == 200:
+                            profile = profile_response.json()
+                            if profile.get("email") == new_email:
+                                self.log_test("4. Update Email", True, 
+                                            f"Email updated to: {new_email}, new token works", response_time + profile_time)
+                                return True
+                            else:
+                                self.log_test("4. Update Email", False, 
+                                            f"Email not updated correctly: {profile.get('email')}", response_time + profile_time)
+                                return False
+                        else:
+                            self.log_test("4. Update Email", False, 
+                                        "New token doesn't work", response_time)
+                            return False
                     else:
-                        self.log_test("3.2 Get Feeding Activities", False, 
-                                    f"Mixed activity types or no feeding activities found", response_time)
+                        self.log_test("4. Update Email", False, 
+                                    "No new token provided for email change", response_time)
                         return False
                 else:
-                    self.log_test("3.2 Get Feeding Activities", False, 
-                                "Response is not a list", response_time)
+                    self.log_test("4. Update Email", False, 
+                                f"Unexpected response: {result}", response_time)
                     return False
             except json.JSONDecodeError:
-                self.log_test("3.2 Get Feeding Activities", False, 
+                self.log_test("4. Update Email", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("3.2 Get Feeding Activities", False, 
-                        f"HTTP {status}", response_time)
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("4. Update Email", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
             return False
     
-    def test_3_3_get_activities_with_limit(self):
-        """Test 3.3: Get Activities with Limit"""
-        response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}&limit=3",
+    def test_5_update_password(self):
+        """Test 5: PUT /api/user/profile - Update password"""
+        new_password = "newpass456"
+        data = {
+            "current_password": self.original_password,
+            "new_password": new_password
+        }
+        
+        response, response_time = self.make_request("PUT", "/api/user/profile", data,
                                                   headers=self.get_auth_headers())
         
         if response and response.status_code == 200:
             try:
-                activities = response.json()
-                if isinstance(activities, list) and len(activities) == 3:
-                    # Verify activities are ordered by timestamp descending
-                    timestamps = [activity.get("timestamp") for activity in activities if activity.get("timestamp")]
-                    if len(timestamps) >= 2:
-                        is_descending = all(timestamps[i] >= timestamps[i+1] for i in range(len(timestamps)-1))
-                        self.log_test("3.3 Get Activities with Limit", True, 
-                                    f"Got exactly 3 activities, ordered: {is_descending}", response_time)
-                        return True
-                    else:
-                        self.log_test("3.3 Get Activities with Limit", True, 
-                                    f"Got exactly 3 activities", response_time)
-                        return True
+                result = response.json()
+                if result.get("message") and "updated successfully" in result["message"]:
+                    self.log_test("5. Update Password", True, 
+                                "Password updated successfully", response_time)
+                    # Store new password for next test
+                    self.current_password = new_password
+                    return True
                 else:
-                    self.log_test("3.3 Get Activities with Limit", False, 
-                                f"Expected 3 activities, got {len(activities) if isinstance(activities, list) else 'invalid'}", response_time)
+                    self.log_test("5. Update Password", False, 
+                                f"Unexpected response: {result}", response_time)
                     return False
             except json.JSONDecodeError:
-                self.log_test("3.3 Get Activities with Limit", False, 
+                self.log_test("5. Update Password", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("3.3 Get Activities with Limit", False, 
-                        f"HTTP {status}", response_time)
+            error_detail = ""
+            if response:
+                try:
+                    error_detail = response.text[:200]
+                except:
+                    pass
+            self.log_test("5. Update Password", False, 
+                        f"HTTP {status} - {error_detail}", response_time)
             return False
     
-    def test_3_4_test_all_type_filters(self):
-        """Test 3.4: Test All Type Filters"""
-        activity_types = ["feeding", "diaper", "sleep", "pumping", "measurement", "milestone"]
-        all_passed = True
-        total_time = 0
+    def test_6_login_old_password_fails(self):
+        """Test 6: Try login with old password - should fail"""
+        data = {
+            "email": "updated@test.com",  # Use updated email
+            "password": self.original_password  # Old password
+        }
         
-        for activity_type in activity_types:
-            response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}&type={activity_type}&limit=5",
-                                                      headers=self.get_auth_headers())
-            total_time += response_time
-            
-            if response and response.status_code == 200:
-                try:
-                    activities = response.json()
-                    if isinstance(activities, list):
-                        # Check if all activities are of the correct type
-                        correct_type_activities = [a for a in activities if a.get("type") == activity_type]
-                        if len(correct_type_activities) != len(activities):
-                            all_passed = False
-                            break
-                    else:
-                        all_passed = False
-                        break
-                except json.JSONDecodeError:
-                    all_passed = False
-                    break
-            else:
-                all_passed = False
-                break
+        response, response_time = self.make_request("POST", "/api/auth/login", data)
         
-        if all_passed:
-            self.log_test("3.4 Test All Type Filters", True, 
-                        f"All 6 activity type filters working correctly", total_time)
+        # Should fail with 401
+        if response and response.status_code == 401:
+            self.log_test("6. Login Old Password Fails", True, 
+                        "Old password correctly rejected", response_time)
             return True
         else:
-            self.log_test("3.4 Test All Type Filters", False, 
-                        f"Some activity type filters failed", total_time)
+            status = response.status_code if response else "Timeout"
+            self.log_test("6. Login Old Password Fails", False, 
+                        f"Expected 401, got HTTP {status}", response_time)
             return False
     
-    def test_4_1_simulate_logout(self):
-        """Test 4.1: Simulate Logout"""
-        # Store current token for later re-login test
-        self.old_token = self.token
-        self.token = None
-        
-        self.log_test("4.1 Simulate Logout", True, 
-                    "Token cleared (simulated logout)", 0.0)
-        return True
-    
-    def test_4_2_re_login(self):
-        """Test 4.2: Re-Login with Same Account"""
+    def test_7_login_new_password_works(self):
+        """Test 7: Try login with new password - should work"""
         data = {
-            "email": "demo@babysteps.com",
-            "password": "demo123"
+            "email": "updated@test.com",  # Use updated email
+            "password": getattr(self, 'current_password', 'newpass456')  # New password
         }
         
         response, response_time = self.make_request("POST", "/api/auth/login", data)
@@ -618,396 +342,102 @@ class UserProfileTester:
             try:
                 result = response.json()
                 new_token = result.get("access_token")
-                if new_token and new_token != self.old_token:
-                    self.token = new_token
-                    self.log_test("4.2 Re-Login Same Account", True, 
-                                f"New JWT token received (different from old): {new_token[:20]}...", response_time)
+                if new_token:
+                    self.log_test("7. Login New Password Works", True, 
+                                f"New password login successful: {new_token[:20]}...", response_time)
+                    self.token = new_token  # Update token for final test
                     return True
                 else:
-                    self.log_test("4.2 Re-Login Same Account", False, 
-                                "No new access_token or same as old token", response_time)
+                    self.log_test("7. Login New Password Works", False, 
+                                "No access_token in response", response_time)
                     return False
             except json.JSONDecodeError:
-                self.log_test("4.2 Re-Login Same Account", False, 
+                self.log_test("7. Login New Password Works", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("4.2 Re-Login Same Account", False, 
+            self.log_test("7. Login New Password Works", False, 
                         f"HTTP {status}", response_time)
             return False
     
-    def test_4_3_verify_activities_persist(self):
-        """Test 4.3: Verify Activities Persist After Re-Login"""
-        response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}",
+    def test_8_final_profile_verification(self):
+        """Test 8: Final profile verification with all updates"""
+        response, response_time = self.make_request("GET", "/api/user/profile", 
                                                   headers=self.get_auth_headers())
         
         if response and response.status_code == 200:
             try:
-                activities = response.json()
-                if isinstance(activities, list) and len(activities) >= 6:
-                    # Verify our created activity IDs still exist
-                    activity_ids_in_response = [a.get("id") for a in activities]
-                    found_our_activities = 0
-                    
-                    for activity_type, activity_id in self.activity_ids.items():
-                        if activity_id in activity_ids_in_response:
-                            found_our_activities += 1
-                    
-                    if found_our_activities >= 3:  # At least half of our activities should persist
-                        self.log_test("4.3 Verify Activities Persist", True, 
-                                    f"Found {found_our_activities}/{len(self.activity_ids)} created activities after re-login", response_time)
-                        return True
-                    else:
-                        self.log_test("4.3 Verify Activities Persist", False, 
-                                    f"Only found {found_our_activities}/{len(self.activity_ids)} created activities", response_time)
-                        return False
+                profile = response.json()
+                expected_email = "updated@test.com"
+                expected_name = "New Demo Name"
+                
+                if profile.get("email") == expected_email and profile.get("name") == expected_name:
+                    self.log_test("8. Final Profile Verification", True, 
+                                f"All updates verified: {profile['email']}, {profile['name']}", response_time)
+                    return True
                 else:
-                    self.log_test("4.3 Verify Activities Persist", False, 
-                                f"Expected at least 6 activities, got {len(activities) if isinstance(activities, list) else 'invalid'}", response_time)
+                    self.log_test("8. Final Profile Verification", False, 
+                                f"Profile not as expected: {profile}", response_time)
                     return False
             except json.JSONDecodeError:
-                self.log_test("4.3 Verify Activities Persist", False, 
+                self.log_test("8. Final Profile Verification", False, 
                             "Invalid JSON response", response_time)
                 return False
         else:
             status = response.status_code if response else "Timeout"
-            self.log_test("4.3 Verify Activities Persist", False, 
+            self.log_test("8. Final Profile Verification", False, 
                         f"HTTP {status}", response_time)
             return False
-    
-    def test_4_4_baby_profile_with_image(self):
-        """Test 4.4: Baby Profile with NEW profile_image Field"""
-        baby_data = {
-            "name": "Migration Test Baby",
-            "birth_date": "2024-06-01T00:00:00Z",
-            "gender": "girl",
-            "profile_image": "https://example.com/baby-photo.jpg"  # NEW FIELD - should not cause 500 error
-        }
-        
-        response, response_time = self.make_request("POST", "/api/babies", baby_data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code in [200, 201]:
-            try:
-                baby = response.json()
-                if baby.get("profile_image") == baby_data["profile_image"]:
-                    self.log_test("4.4 Baby Profile with Image", True, 
-                                f"Baby created with profile_image field: {baby.get('id')}", response_time)
-                    return True
-                else:
-                    self.log_test("4.4 Baby Profile with Image", False, 
-                                "profile_image field not saved correctly", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("4.4 Baby Profile with Image", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("4.4 Baby Profile with Image", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_4_5_ai_chat_endpoint(self):
-        """Test 4.5: AI Chat Endpoint"""
-        data = {
-            "message": "When can babies eat strawberries?",
-            "baby_age_months": 6
-        }
-        
-        response, response_time = self.make_request("POST", "/api/ai/chat", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code == 200:
-            try:
-                result = response.json()
-                ai_response = result.get("response", "")
-                if len(ai_response) > 50:  # Reasonable AI response length
-                    self.log_test("4.5 AI Chat Endpoint", True, 
-                                f"AI response received ({len(ai_response)} chars)", response_time)
-                    return True
-                else:
-                    self.log_test("4.5 AI Chat Endpoint", False, 
-                                f"AI response too short ({len(ai_response)} chars)", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("4.5 AI Chat Endpoint", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("4.5 AI Chat Endpoint", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_4_6_food_research_endpoint(self):
-        """Test 4.6: Food Research Endpoint"""
-        data = {
-            "question": "Are strawberries safe for babies?",
-            "baby_age_months": 6
-        }
-        
-        response, response_time = self.make_request("POST", "/api/food/research", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code == 200:
-            try:
-                result = response.json()
-                answer = result.get("answer", "")
-                safety_level = result.get("safety_level", "")
-                if len(answer) > 20 and safety_level:
-                    self.log_test("4.6 Food Research Endpoint", True, 
-                                f"Food safety response received (safety_level: {safety_level})", response_time)
-                    return True
-                else:
-                    self.log_test("4.6 Food Research Endpoint", False, 
-                                f"Incomplete food research response", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("4.6 Food Research Endpoint", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("4.6 Food Research Endpoint", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_4_7_meal_search_endpoint(self):
-        """Test 4.7: Meal Search Endpoint"""
-        data = {
-            "query": "breakfast ideas for 8 month old",
-            "baby_age_months": 8
-        }
-        
-        response, response_time = self.make_request("POST", "/api/meals/search", data,
-                                                  headers=self.get_auth_headers())
-        
-        if response and response.status_code == 200:
-            try:
-                result = response.json()
-                meal_results = result.get("results", "")
-                if len(meal_results) > 50:  # Reasonable meal suggestions length
-                    self.log_test("4.7 Meal Search Endpoint", True, 
-                                f"Meal suggestions received ({len(meal_results)} chars)", response_time)
-                    return True
-                else:
-                    self.log_test("4.7 Meal Search Endpoint", False, 
-                                f"Meal suggestions too short ({len(meal_results)} chars)", response_time)
-                    return False
-            except json.JSONDecodeError:
-                self.log_test("4.7 Meal Search Endpoint", False, 
-                            "Invalid JSON response", response_time)
-                return False
-        else:
-            status = response.status_code if response else "Timeout"
-            error_detail = ""
-            if response:
-                try:
-                    error_detail = response.text[:200]
-                except:
-                    pass
-            self.log_test("4.7 Meal Search Endpoint", False, 
-                        f"HTTP {status} - {error_detail}", response_time)
-            return False
-    
-    def test_5_edge_cases(self):
-        """Test 5: Edge Cases & Error Handling (10 tests)"""
-        edge_test_results = []
-        
-        # Test 5.1: Unauthorized Activity Creation
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": self.baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle"
-        })
-        
-        expected_unauthorized = response and response.status_code in [401, 403]
-        edge_test_results.append(("5.1 Unauthorized Activity Creation", expected_unauthorized, 
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.2: Unauthorized Activity Retrieval
-        response, response_time = self.make_request("GET", f"/api/activities?baby_id={self.baby_id}")
-        
-        expected_unauthorized = response and response.status_code in [401, 403]
-        edge_test_results.append(("5.2 Unauthorized Activity Retrieval", expected_unauthorized,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.3: Activity for Non-Existent Baby
-        fake_baby_id = str(uuid.uuid4())
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": fake_baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle"
-        }, headers=self.get_auth_headers())
-        
-        expected_not_found = response and response.status_code == 404
-        edge_test_results.append(("5.3 Activity Non-Existent Baby", expected_not_found,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.4: Activity with Invalid Type
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": self.baby_id,
-            "type": "invalid_type"
-        }, headers=self.get_auth_headers())
-        
-        expected_validation_error = response and response.status_code in [400, 422]
-        edge_test_results.append(("5.4 Invalid Activity Type", expected_validation_error,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.5: Activity with Missing Required Fields
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": self.baby_id
-        }, headers=self.get_auth_headers())
-        
-        expected_validation_error = response and response.status_code in [400, 422]
-        edge_test_results.append(("5.5 Missing Required Fields", expected_validation_error,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.6: Get Activities Without Baby ID
-        response, response_time = self.make_request("GET", "/api/activities", 
-                                                  headers=self.get_auth_headers())
-        
-        expected_success = response and response.status_code == 200
-        edge_test_results.append(("5.6 Activities Without Baby ID", expected_success,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.7: Get Activities with Invalid Baby ID Format
-        response, response_time = self.make_request("GET", "/api/activities?baby_id=invalid-id-format",
-                                                  headers=self.get_auth_headers())
-        
-        expected_handled = response and response.status_code in [200, 400]
-        edge_test_results.append(("5.7 Invalid Baby ID Format", expected_handled,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Test 5.8: Create Multiple Activities Rapidly
-        rapid_success = True
-        total_rapid_time = 0
-        for i in range(3):
-            response, response_time = self.make_request("POST", "/api/activities", {
-                "baby_id": self.baby_id,
-                "type": "feeding",
-                "feeding_type": "bottle",
-                "amount": f"{i+1}",
-                "notes": f"Rapid test {i+1}"
-            }, headers=self.get_auth_headers())
-            total_rapid_time += response_time
-            
-            if not (response and response.status_code in [200, 201]):
-                rapid_success = False
-                break
-        
-        edge_test_results.append(("5.8 Multiple Activities Rapidly", rapid_success,
-                                f"3 activities in {total_rapid_time:.2f}s", total_rapid_time))
-        
-        # Test 5.9: Very Long Notes Field
-        long_notes = "Test " * 250  # 1250+ characters
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": self.baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle",
-            "notes": long_notes
-        }, headers=self.get_auth_headers())
-        
-        expected_success = response and response.status_code in [200, 201]
-        edge_test_results.append(("5.9 Very Long Notes Field", expected_success,
-                                f"HTTP {response.status_code if response else 'Timeout'} - {len(long_notes)} chars", response_time))
-        
-        # Test 5.10: Special Characters in Notes
-        special_notes = "Test 🍼 baby's feeding @ 3:00pm - 8oz formula!"
-        response, response_time = self.make_request("POST", "/api/activities", {
-            "baby_id": self.baby_id,
-            "type": "feeding",
-            "feeding_type": "bottle",
-            "notes": special_notes
-        }, headers=self.get_auth_headers())
-        
-        expected_success = response and response.status_code in [200, 201]
-        edge_test_results.append(("5.10 Special Characters Notes", expected_success,
-                                f"HTTP {response.status_code if response else 'Timeout'}", response_time))
-        
-        # Log all edge case results
-        for test_name, success, details, response_time in edge_test_results:
-            self.log_test(test_name, success, details, response_time)
-        
-        # Return True if at least 7/10 edge cases pass
-        passed_edge_cases = sum(1 for _, success, _, _ in edge_test_results if success)
-        return passed_edge_cases >= 7
     
     def run_all_tests(self):
-        """Run all 29 tests in sequence"""
-        print("🚀 COMPREHENSIVE BACKEND TESTING AFTER DATABASE MIGRATION AND TIMESTAMP FIX")
+        """Run all user profile tests in sequence"""
+        print("🚀 USER PROFILE ENDPOINT TESTING")
         print(f"Backend: {self.base_url}")
-        print(f"Test Account: demo@babysteps.com / demo123")
-        print(f"Demo Baby ID: demo-baby-456")
+        print(f"Test Account: {self.original_email} / {self.original_password}")
         print(f"Total Tests: {self.total_tests}")
         print("=" * 80)
         
-        # Phase 1: Authentication & Setup (2 tests)
-        print("\n📋 PHASE 1: Authentication & Setup")
-        if not self.test_1_1_login_demo_account():
+        # Test 1: Login
+        print("\n📋 PHASE 1: Authentication")
+        if not self.test_1_login_demo_account():
             print("❌ Cannot proceed without authentication")
             return self.generate_report()
         
-        if not self.test_1_2_get_demo_babies():
-            print("❌ Cannot proceed without baby ID")
-            return self.generate_report()
+        # Test 2: Get Profile
+        print("\n📋 PHASE 2: Get User Profile")
+        self.test_2_get_user_profile()
         
-        # Phase 2: Create All 6 Activity Types (6 tests)
-        print("\n📋 PHASE 2: Create All 6 Activity Types")
-        self.test_2_1_create_feeding_activity()
-        self.test_2_2_create_diaper_activity()
-        self.test_2_3_create_sleep_activity()
-        self.test_2_4_create_pumping_activity()
-        self.test_2_5_create_measurement_activity()
-        self.test_2_6_create_milestone_activity()
+        # Test 3: Update Name
+        print("\n📋 PHASE 3: Update Name")
+        self.test_3_update_name()
         
-        # Phase 3: Retrieve All Activities (4 tests)
-        print("\n📋 PHASE 3: Retrieve All Activities")
-        self.test_3_1_get_all_activities()
-        self.test_3_2_get_feeding_activities()
-        self.test_3_3_get_activities_with_limit()
-        self.test_3_4_test_all_type_filters()
+        # Test 4: Update Email
+        print("\n📋 PHASE 4: Update Email")
+        self.test_4_update_email()
         
-        # Phase 4: Logout & Re-Login Persistence Test + Secondary Endpoints (7 tests)
-        print("\n📋 PHASE 4: Logout & Re-Login Persistence Test + Secondary Endpoints")
-        self.test_4_1_simulate_logout()
-        self.test_4_2_re_login()
-        self.test_4_3_verify_activities_persist()
-        self.test_4_4_baby_profile_with_image()
-        self.test_4_5_ai_chat_endpoint()
-        self.test_4_6_food_research_endpoint()
-        self.test_4_7_meal_search_endpoint()
+        # Test 5: Update Password
+        print("\n📋 PHASE 5: Update Password")
+        self.test_5_update_password()
         
-        # Phase 5: Edge Cases & Error Handling (10 tests)
-        print("\n📋 PHASE 5: Edge Cases & Error Handling")
-        self.test_5_edge_cases()
+        # Test 6: Old Password Fails
+        print("\n📋 PHASE 6: Old Password Verification")
+        self.test_6_login_old_password_fails()
+        
+        # Test 7: New Password Works
+        print("\n📋 PHASE 7: New Password Verification")
+        self.test_7_login_new_password_works()
+        
+        # Test 8: Final Verification
+        print("\n📋 PHASE 8: Final Profile Verification")
+        self.test_8_final_profile_verification()
         
         return self.generate_report()
     
     def generate_report(self):
         """Generate comprehensive test report"""
         print("\n" + "=" * 80)
-        print("📊 COMPREHENSIVE TEST RESULTS")
+        print("📊 USER PROFILE ENDPOINT TEST RESULTS")
         print("=" * 80)
         
         success_rate = (self.passed_tests / self.total_tests) * 100 if self.total_tests > 0 else 0
@@ -1020,56 +450,45 @@ class UserProfileTester:
         print("\n🎯 SUCCESS CRITERIA:")
         criteria_met = []
         
-        # Check if all 6 activity types POST successfully
-        activity_creation_tests = [r for r in self.test_results if "Create" in r["test"] and "Activity" in r["test"]]
-        activity_creation_success = sum(1 for t in activity_creation_tests if "✅" in t["status"])
-        criteria_met.append(f"✅ All 6 activity types POST: {activity_creation_success}/6" if activity_creation_success == 6 else f"❌ All 6 activity types POST: {activity_creation_success}/6")
-        
-        # Check if activities persist after re-login
-        persistence_test = next((r for r in self.test_results if "Persist" in r["test"]), None)
-        if persistence_test and "✅" in persistence_test["status"]:
-            criteria_met.append("✅ Activities persist after logout/re-login (PostgreSQL persistence verified)")
+        # Check GET /api/user/profile
+        get_profile_test = next((r for r in self.test_results if "Get User Profile" in r["test"]), None)
+        if get_profile_test and "✅" in get_profile_test["status"]:
+            criteria_met.append("✅ GET /api/user/profile working")
         else:
-            criteria_met.append("❌ Activities persist after logout/re-login")
+            criteria_met.append("❌ GET /api/user/profile failed")
         
-        # Check for 500 errors
-        has_500_errors = any("500" in r["details"] for r in self.test_results)
-        criteria_met.append("✅ No 500 Internal Server Errors" if not has_500_errors else "❌ 500 Internal Server Errors detected")
+        # Check PUT /api/user/profile for name update
+        update_name_test = next((r for r in self.test_results if "Update Name" in r["test"]), None)
+        if update_name_test and "✅" in update_name_test["status"]:
+            criteria_met.append("✅ PUT /api/user/profile (name update) working")
+        else:
+            criteria_met.append("❌ PUT /api/user/profile (name update) failed")
         
-        # Check for specific migration-related errors
-        has_undefined_column_errors = any("UndefinedColumn" in r["details"] for r in self.test_results)
-        criteria_met.append("✅ No UndefinedColumn errors" if not has_undefined_column_errors else "❌ UndefinedColumn errors detected")
+        # Check PUT /api/user/profile for email update
+        update_email_test = next((r for r in self.test_results if "Update Email" in r["test"]), None)
+        if update_email_test and "✅" in update_email_test["status"]:
+            criteria_met.append("✅ PUT /api/user/profile (email update) working")
+        else:
+            criteria_met.append("❌ PUT /api/user/profile (email update) failed")
         
-        has_isoformat_errors = any("isoformat" in r["details"] for r in self.test_results)
-        criteria_met.append("✅ No isoformat errors" if not has_isoformat_errors else "❌ isoformat timestamp errors detected")
+        # Check PUT /api/user/profile for password update
+        update_password_test = next((r for r in self.test_results if "Update Password" in r["test"]), None)
+        if update_password_test and "✅" in update_password_test["status"]:
+            criteria_met.append("✅ PUT /api/user/profile (password update) working")
+        else:
+            criteria_met.append("❌ PUT /api/user/profile (password update) failed")
         
-        # Check authentication
-        auth_tests = [r for r in self.test_results if "Login" in r["test"]]
-        auth_success = all("✅" in t["status"] for t in auth_tests)
-        criteria_met.append("✅ Authentication working" if auth_success else "❌ Authentication issues")
+        # Check password verification
+        old_password_test = next((r for r in self.test_results if "Old Password Fails" in r["test"]), None)
+        new_password_test = next((r for r in self.test_results if "New Password Works" in r["test"]), None)
+        if (old_password_test and "✅" in old_password_test["status"] and 
+            new_password_test and "✅" in new_password_test["status"]):
+            criteria_met.append("✅ Password change verification working")
+        else:
+            criteria_met.append("❌ Password change verification failed")
         
         for criterion in criteria_met:
             print(criterion)
-        
-        # Failure Indicators
-        print("\n⚠️ FAILURE INDICATORS:")
-        failure_indicators = []
-        
-        if has_500_errors:
-            failure_indicators.append("❌ HTTP 500 errors detected")
-        
-        get_db_errors = any("get_db_connection" in r["details"] for r in self.test_results)
-        if get_db_errors:
-            failure_indicators.append("❌ 'get_db_connection' NameError detected")
-        
-        if activity_creation_success < 6:
-            failure_indicators.append(f"❌ Only {activity_creation_success}/6 activity types working")
-        
-        if not failure_indicators:
-            failure_indicators.append("✅ No critical failure indicators detected")
-        
-        for indicator in failure_indicators:
-            print(indicator)
         
         # Performance Metrics
         response_times = [float(r["response_time"].replace("s", "")) for r in self.test_results if r["response_time"] != "0.00s"]
@@ -1090,13 +509,13 @@ class UserProfileTester:
         # Final Assessment
         print(f"\n🏆 FINAL ASSESSMENT:")
         if success_rate >= 90:
-            print("🎉 EXCELLENT - Backend is production ready")
+            print("🎉 EXCELLENT - User profile endpoints are working perfectly")
         elif success_rate >= 75:
-            print("✅ GOOD - Backend is mostly functional with minor issues")
+            print("✅ GOOD - User profile endpoints are mostly functional with minor issues")
         elif success_rate >= 50:
-            print("⚠️ FAIR - Backend has significant issues requiring attention")
+            print("⚠️ FAIR - User profile endpoints have significant issues requiring attention")
         else:
-            print("❌ POOR - Backend has critical issues preventing normal operation")
+            print("❌ POOR - User profile endpoints have critical issues preventing normal operation")
         
         return {
             "total_tests": self.total_tests,
@@ -1108,5 +527,5 @@ class UserProfileTester:
         }
 
 if __name__ == "__main__":
-    tester = ProductionBackendTester()
+    tester = UserProfileTester()
     results = tester.run_all_tests()
