@@ -105,9 +105,9 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
     }
     
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       if (!token) {
-        toast.error('Authentication required');
+        toast.error('Please login again');
         return;
       }
 
@@ -130,7 +130,7 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
         
         // If email was changed, update token
         if (result.token) {
-          localStorage.setItem('authToken', result.token);
+          localStorage.setItem('token', result.token);
           toast.success('Email updated! Please use your new email to login next time.');
         } else {
           toast.success(result.message || 'Account information updated successfully');
@@ -160,13 +160,18 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
     e.preventDefault();
     
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       if (!token) {
-        toast.error('Authentication required');
+        toast.error('Please login again');
         return;
       }
 
       const fullName = `${userProfile.firstName} ${userProfile.lastName}`.trim();
+      
+      if (!fullName) {
+        toast.error('Please enter your name');
+        return;
+      }
       
       const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
       const response = await fetch(`${backendUrl}/api/user/profile`, {
