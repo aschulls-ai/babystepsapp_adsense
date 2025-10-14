@@ -84,8 +84,10 @@ const PrivacyPolicy = () => {
 
               <h3 className="text-lg font-medium text-gray-800 mb-3">2.3 Usage Information</h3>
               <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-4">
-                <li><strong>Research Queries:</strong> Food safety questions, meal planning searches</li>
-                <li><strong>Dashboard Preferences:</strong> Widget configurations, layout preferences</li>
+                <li><strong>AI Assistant Queries:</strong> Questions asked to our AI Parenting Assistant for guidance and advice</li>
+                <li><strong>Research Queries:</strong> Food safety questions, meal planning searches, formula comparisons</li>
+                <li><strong>Dashboard Preferences:</strong> Widget configurations, layout preferences, feeding reminder settings</li>
+                <li><strong>Analysis Data:</strong> Activity trends and aggregated statistics viewed on the Analysis page</li>
                 <li><strong>Application Usage:</strong> Features used, interaction patterns (aggregated and anonymized)</li>
               </ul>
 
