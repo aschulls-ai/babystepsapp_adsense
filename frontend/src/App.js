@@ -9,6 +9,8 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { mobileService } from './services/MobileService';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { runApiTests } from './utils/apiTest';
+import adMobService from './services/AdMobService';
+import billingService from './services/BillingService';
 import './App.css';
 
 // Components
