@@ -559,30 +559,30 @@ const FeedingStageInfo = ({ babyAgeMonths }) => {
   if (babyAgeMonths < 4) {
     stage = "Exclusive Milk";
     description = "Breast milk or formula only. No solid foods recommended.";
-    stageColor = "age-0-6";
+    stageColor = "bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700";
   } else if (babyAgeMonths < 6) {
     stage = "Pre-Solids";
     description = "Preparing for solid food introduction around 6 months.";
-    stageColor = "age-0-6";
+    stageColor = "bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700";
   } else if (babyAgeMonths < 12) {
     stage = "Food Introduction";
     description = "Introducing purees and soft finger foods gradually.";
-    stageColor = "age-6-12";
+    stageColor = "bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700";
   } else {
     stage = "Family Foods";
     description = "Transitioning to family meals with appropriate modifications.";
-    stageColor = "age-12-plus";
+    stageColor = "bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700";
   }
 
   return (
     <div className="space-y-4">
       <div className={`p-4 rounded-lg ${stageColor}`}>
-        <h4 className="font-medium mb-1">{stage}</h4>
-        <p className="text-sm">{description}</p>
+        <h4 className="font-medium mb-1 text-gray-900 dark:text-white">{stage}</h4>
+        <p className="text-sm text-gray-700 dark:text-gray-300">{description}</p>
       </div>
       
-      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <p className="text-xs text-blue-700">
+      <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+        <p className="text-xs text-blue-700 dark:text-blue-200">
           <strong>Remember:</strong> Every baby develops at their own pace. Always consult your pediatrician for personalized feeding guidance.
         </p>
       </div>
