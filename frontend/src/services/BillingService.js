@@ -97,8 +97,8 @@ class BillingService {
       id: PRODUCT_AD_REMOVAL,
       title: 'Remove Ads',
       description: 'Remove all ads from Baby Steps app',
-      price: '$1.99',
-      priceValue: 1.99
+      price: '$4.99',
+      priceValue: 4.99
     };
   }
 }
