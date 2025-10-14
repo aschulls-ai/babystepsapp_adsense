@@ -146,9 +146,36 @@ const PrivacyPolicy = () => {
               </div>
             </section>
 
+            {/* Third-Party Services */}
+            <section>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">4. Third-Party Services</h2>
+              
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-blue-900 mb-2">🤖 AI Parenting Assistant (OpenAI Integration)</h3>
+                  <ul className="text-blue-800 space-y-2 text-sm list-disc pl-4">
+                    <li>We use OpenAI's GPT models to provide AI-powered parenting guidance and answer your questions</li>
+                    <li>When you interact with the AI Assistant, your questions are sent to OpenAI's API for processing</li>
+                    <li>OpenAI may temporarily log requests for abuse monitoring but does not use your data to train their models</li>
+                    <li>No personally identifiable information about you or your baby is included in AI requests beyond the context of your question</li>
+                    <li>AI responses are generated in real-time and are not stored by OpenAI beyond their standard retention period</li>
+                    <li>Review OpenAI's privacy policy at <a href="https://openai.com/privacy" className="underline" target="_blank" rel="noopener noreferrer">openai.com/privacy</a></li>
+                  </ul>
+                </div>
+
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-green-900 mb-2">🔐 Data Security with Third Parties</h3>
+                  <p className="text-green-800 text-sm">
+                    All third-party service providers are carefully selected and required to maintain strict data protection standards. 
+                    We use secure API connections (HTTPS/TLS) and limit data sharing to only what is necessary for the specific service.
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {/* Information Sharing */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">4. Information Sharing and Disclosure</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Information Sharing and Disclosure</h2>
               
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <h3 className="font-bold text-red-900 mb-2">🚫 We Do NOT Sell Your Data</h3>
