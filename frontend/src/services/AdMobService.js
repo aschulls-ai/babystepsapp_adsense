@@ -98,7 +98,12 @@ class AdMobService {
    */
   async showBanner(adUnitKey, position = BannerAdPosition.BOTTOM_CENTER) {
     try {
-      if (!this.isNativePlatform || !this.isInitialized) {
+      if (!this.isNativePlatform) {
+        return false;
+      }
+      
+      if (!this.isInitialized) {
+        console.log('⚠️ AdMob not initialized, skipping banner');
         return false;
       }
 
@@ -116,7 +121,7 @@ class AdMobService {
 
       // Hide any existing banner at this position
       if (this.currentBanners[adUnitKey]) {
-        await this.hideBanner(adUnitKey);
+        await this.hideBanner(adUnitKey).catch(() => {});
       }
 
       const options = {
@@ -133,6 +138,7 @@ class AdMobService {
       return true;
     } catch (error) {
       console.error(`❌ Failed to show banner: ${adUnitKey}`, error);
+      // Don't throw - just log and return false
       return false;
     }
   }
