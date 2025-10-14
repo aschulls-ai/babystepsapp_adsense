@@ -325,12 +325,12 @@ const Dashboard = ({ currentBaby, onAddBaby }) => {
             <p className="text-green-800 text-sm">
               {currentAge < 6 
                 ? 'Newborns typically feed every 2-3 hours. Look for hunger cues like rooting or fussiness.'
-                : 'At this age, you can start introducing more textured foods. Always check our food research for safety!'
+                : 'At this age, you can start introducing more textured foods. Ask our AI Assistant about food safety!'
               }
             </p>
-            <Link to="/food-research" className="inline-block mt-2">
+            <Link to="/ai-assistant" className="inline-block mt-2">
               <Button variant="outline" size="sm" className="border-green-300 text-green-700 hover:bg-green-100">
-                Learn More
+                Ask AI Assistant
               </Button>
             </Link>
           </div>
