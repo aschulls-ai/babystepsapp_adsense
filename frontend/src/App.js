@@ -27,6 +27,7 @@ import PasswordReset from './components/PasswordReset';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import FAQ from './components/FAQ';
+import DataDeletionRequest from './components/DataDeletionRequest';
 import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
