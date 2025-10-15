@@ -25,12 +25,12 @@ const Layout = ({ children, currentBaby, babies, onSwitchBaby, onLogout, darkMod
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
-    { name: 'Baby Profile', href: '/baby-profile', icon: Baby },
-    { name: 'Track Activities', href: '/tracking', icon: Activity },
+    { name: 'Baby Profile', href: '/profile', icon: Baby },
+    { name: 'Track Activities', href: '/track', icon: Activity },
     { name: 'Analysis', href: '/analysis', icon: BarChart3 },
     { name: 'AI Parenting Assistant', href: '/ai-assistant', icon: BookOpen },
-    { name: 'Formula Comparison', href: '/formula-comparison', icon: Utensils },
-    { name: 'Emergency Training', href: '/emergency-training', icon: ShieldAlert },
+    { name: 'Formula Comparison', href: '/formula', icon: Utensils },
+    { name: 'Emergency Training', href: '/emergency', icon: ShieldAlert },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
