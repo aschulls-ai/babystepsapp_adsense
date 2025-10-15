@@ -2157,6 +2157,45 @@ async def ask_research_question(query: ResearchQuery, current_user: User = Depen
             sources=["Database Error"]
         )
 
+# Data Deletion Request Model
+class DeletionRequestModel(BaseModel):
+    email: EmailStr
+    reason: Optional[str] = None
+
+# Data Deletion Request Endpoint
+@api_router.post("/deletion-request")
+async def create_deletion_request(request: DeletionRequestModel):
+    """
+    Create a data deletion request
+    Public endpoint - does not require authentication
+    Stores the request in MongoDB for admin review
+    """
+    try:
+        deletion_request = {
+            "id": str(uuid.uuid4()),
+            "email": request.email,
+            "reason": request.reason,
+            "status": "pending",
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.deletion_requests.insert_one(deletion_request)
+        
+        logging.info(f"📝 Deletion request created for: {request.email}")
+        
+        return {
+            "success": True,
+            "message": "Your deletion request has been submitted successfully. You will receive a confirmation email once your data has been deleted.",
+            "request_id": deletion_request["id"]
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Error creating deletion request: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to submit deletion request. Please try again or contact support."
+        )
+
 # Health check
 @api_router.get("/health")
 async def health_check():
