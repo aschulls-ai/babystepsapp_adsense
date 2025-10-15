@@ -1,38 +1,59 @@
 {
-  "title": "Baby Steps Login Flow",
-  "description": "Robo script to test Baby Steps app with demo account login",
+  "title": "Baby Steps Main App - Login and Navigation",
+  "description": "Robo script for Baby Steps main app with demo account (demo@babysteps.com / demo123)",
   "actions": [
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000,
+      "note": "Wait for app to load"
+    },
     {
       "eventType": "VIEW_TEXT_CHANGED",
       "replacementText": "demo@babysteps.com",
       "elementDescriptors": [
         {
-          "resourceId": "email",
+          "resourceId": "email"
+        },
+        {
           "text": "Email"
         },
         {
-          "contentDescription": "email"
+          "className": "android.widget.EditText",
+          "contentDescription": "Email"
         },
         {
-          "text": "email"
+          "xpath": "//input[@type='email']"
         }
-      ]
+      ],
+      "note": "Enter email address"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 500
     },
     {
       "eventType": "VIEW_TEXT_CHANGED",
       "replacementText": "demo123",
       "elementDescriptors": [
         {
-          "resourceId": "password",
+          "resourceId": "password"
+        },
+        {
           "text": "Password"
         },
         {
-          "contentDescription": "password"
+          "className": "android.widget.EditText",
+          "contentDescription": "Password"
         },
         {
-          "text": "password"
+          "xpath": "//input[@type='password']"
         }
-      ]
+      ],
+      "note": "Enter password"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 500
     },
     {
       "eventType": "VIEW_CLICKED",
@@ -47,21 +68,174 @@
           "text": "LOG IN"
         },
         {
-          "contentDescription": "login"
+          "contentDescription": "Sign In"
+        },
+        {
+          "className": "android.widget.Button"
         }
-      ]
+      ],
+      "note": "Click login button"
     },
     {
-      "eventType": "DELAYED_VIEW_CLICKED",
+      "eventType": "WAIT",
       "delayTime": 3000,
+      "note": "Wait for login to complete and dashboard to load"
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Track Activities"
+        },
+        {
+          "contentDescription": "Track Activities"
+        }
+      ],
+      "note": "Navigate to Track Activities"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
       "elementDescriptors": [
         {
           "text": "Dashboard"
         },
         {
-          "contentDescription": "dashboard"
+          "contentDescription": "Dashboard"
         }
-      ]
+      ],
+      "note": "Back to Dashboard"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Baby Profile"
+        },
+        {
+          "contentDescription": "Baby Profile"
+        }
+      ],
+      "note": "Navigate to Baby Profile"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Dashboard"
+        },
+        {
+          "contentDescription": "Dashboard"
+        }
+      ],
+      "note": "Back to Dashboard"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Analysis"
+        },
+        {
+          "contentDescription": "Analysis"
+        }
+      ],
+      "note": "Navigate to Analysis"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "AI Parenting Assistant"
+        },
+        {
+          "contentDescription": "AI Parenting Assistant"
+        }
+      ],
+      "note": "Navigate to AI Assistant"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Formula Comparison"
+        },
+        {
+          "contentDescription": "Formula Comparison"
+        }
+      ],
+      "note": "Navigate to Formula Comparison"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Emergency Training"
+        },
+        {
+          "contentDescription": "Emergency Training"
+        }
+      ],
+      "note": "Navigate to Emergency Training"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Settings"
+        },
+        {
+          "contentDescription": "Settings"
+        }
+      ],
+      "note": "Navigate to Settings"
+    },
+    {
+      "eventType": "WAIT",
+      "delayTime": 2000
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Dashboard"
+        },
+        {
+          "contentDescription": "Dashboard"
+        }
+      ],
+      "note": "Return to Dashboard"
     }
   ]
 }
