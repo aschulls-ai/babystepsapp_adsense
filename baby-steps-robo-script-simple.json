@@ -1,0 +1,102 @@
+{
+  "title": "Baby Steps App Navigation",
+  "description": "Robo script for Baby Steps app with auto-login - guides testing through main features",
+  "actions": [
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Track Activities"
+        },
+        {
+          "contentDescription": "Track Activities"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Dashboard"
+        },
+        {
+          "contentDescription": "Dashboard"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Baby Profile"
+        },
+        {
+          "contentDescription": "Baby Profile"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Analysis"
+        },
+        {
+          "contentDescription": "Analysis"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "AI Parenting Assistant"
+        },
+        {
+          "contentDescription": "AI Parenting Assistant"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Formula Comparison"
+        },
+        {
+          "contentDescription": "Formula Comparison"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Emergency Training"
+        },
+        {
+          "contentDescription": "Emergency Training"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 2000,
+      "elementDescriptors": [
+        {
+          "text": "Dashboard"
+        },
+        {
+          "contentDescription": "Dashboard"
+        }
+      ]
+    }
+  ]
+}
