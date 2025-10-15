@@ -1,55 +1,31 @@
-{
-  "roboscript": {
-    "id": 1000,
-    "description": "Baby Steps app login and navigation test with demo account",
-    "executionMode": {
-      "strict": false,
-      "notify": false
-    },
-    "maxNumberOfRuns": 1,
-    "actions": [
+[
+  {
+    "eventType": "VIEW_TEXT_CHANGED",
+    "replacementText": "demo@babysteps.com",
+    "elementDescriptors": [
       {
-        "eventType": "DELAYED_MESSAGE_CLICK",
-        "delayTime": 2000
-      },
+        "className": "android.widget.EditText",
+        "resourceId": "email"
+      }
+    ]
+  },
+  {
+    "eventType": "VIEW_TEXT_CHANGED",
+    "replacementText": "demo123",
+    "elementDescriptors": [
       {
-        "eventType": "VIEW_TEXT_CHANGED",
-        "replacementText": "demo@babysteps.com",
-        "elementDescriptors": [
-          {
-            "resourceId": "email"
-          }
-        ]
-      },
+        "className": "android.widget.EditText",
+        "resourceId": "password"
+      }
+    ]
+  },
+  {
+    "eventType": "VIEW_CLICKED",
+    "elementDescriptors": [
       {
-        "eventType": "DELAYED_MESSAGE_CLICK",
-        "delayTime": 500
-      },
-      {
-        "eventType": "VIEW_TEXT_CHANGED",
-        "replacementText": "demo123",
-        "elementDescriptors": [
-          {
-            "resourceId": "password"
-          }
-        ]
-      },
-      {
-        "eventType": "DELAYED_MESSAGE_CLICK",
-        "delayTime": 500
-      },
-      {
-        "eventType": "VIEW_CLICKED",
-        "elementDescriptors": [
-          {
-            "text": "Sign In"
-          }
-        ]
-      },
-      {
-        "eventType": "DELAYED_MESSAGE_CLICK",
-        "delayTime": 3000
+        "className": "android.widget.Button",
+        "text": "Sign In"
       }
     ]
   }
-}
+]
