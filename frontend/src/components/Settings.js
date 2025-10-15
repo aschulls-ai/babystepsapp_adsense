@@ -444,6 +444,16 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
                 Email: babystepsapp@gmail.com
               </p>
             </a>
+            
+            <a 
+              href="/data-deletion" 
+              className="block p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-red-200 dark:border-red-800"
+            >
+              <h3 className="font-medium text-red-700 dark:text-red-400">Request Data Deletion</h3>
+              <p className="text-sm text-red-600 dark:text-red-500">
+                Delete your account and all associated data
+              </p>
+            </a>
           </CardContent>
         </Card>
 
