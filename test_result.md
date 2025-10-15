@@ -398,6 +398,18 @@
         -working: true
         -agent: "testing"
         -comment: "✅ TESTED: Complete web application working correctly - authentication, navigation, food research interface, baby profiles all functional."
+
+  - task: "Data Deletion Request Page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/DataDeletionRequest.js, /app/frontend/src/App.js, /app/frontend/src/components/Settings.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ IMPLEMENTED: Created comprehensive data deletion request page at /data-deletion. Features: 1) Detailed information about what will be deleted (account, baby profiles, activities, measurements, AI conversations, settings), 2) 30-day processing time notice, 3) Warning that action cannot be undone, 4) Alternative options section (logout, delete specific profiles, contact support), 5) Form with email validation and optional reason field, 6) Success confirmation screen after submission, 7) Dark mode compatible, 8) Link added to Settings page Legal & Support section with red border styling. Route added to App.js. Ready for end-to-end testing."
         -working: "NA"
         -agent: "main"
         -comment: "Need to verify web app still works correctly after Android conversion and mobile feature integration."
