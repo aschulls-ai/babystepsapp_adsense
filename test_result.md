@@ -102,7 +102,20 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Meal Planner search results are too generic and need actual recipe examples with detailed preparation instructions, similar to Bing's output. The age of the baby should be incorporated into the search query (e.g., 'when can my 9 month old baby have honey'). Results should be recipe-focused with step-by-step cooking instructions."
+## user_problem_statement: "Create a data deletion request page for users to request account and data deletion. Required for Google Play Console Data Safety declaration."
+
+## backend:
+  - task: "Data Deletion Request API Endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/public-server/app.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "✅ IMPLEMENTED: Created POST /api/deletion-request endpoint in both local backend (MongoDB) and production backend (PostgreSQL). Endpoint stores deletion requests with email, reason, status (pending), and timestamps. Public endpoint, does not require authentication. Ready for testing."
 
 ## backend:
   - task: "API endpoints functionality"
