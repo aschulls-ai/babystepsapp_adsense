@@ -1,13 +1,7 @@
+// Simplified web vitals for demo - no external dependencies needed
 const reportWebVitals = onPerfEntry => {
-  if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    });
-  }
+  // No-op function for demo deployment
+  // Web vitals tracking can be added later if needed
 };
 
 export default reportWebVitals;
