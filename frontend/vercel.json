@@ -5,24 +5,10 @@
   "devCommand": "yarn start",
   "installCommand": "yarn install",
   "framework": "create-react-app",
-  "routes": [
-    {
-      "src": "/ads.txt",
-      "dest": "/ads.txt"
-    },
-    {
-      "src": "/app-ads.txt",
-      "dest": "/app-ads.txt"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "https://baby-steps-demo-api.onrender.com/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ],
   "headers": [
