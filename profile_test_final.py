@@ -9,7 +9,7 @@ import json
 import time
 
 def test_user_profile_complete():
-    base_url = "https://infant-care-app-2.preview.emergentagent.com"
+    base_url = "https://growithbaby.preview.emergentagent.com"
     
     print("🚀 COMPREHENSIVE USER PROFILE ENDPOINT TEST")
     print("=" * 60)
