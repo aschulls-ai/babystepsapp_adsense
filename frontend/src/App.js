@@ -759,8 +759,10 @@ function App() {
           <Route path="/verify-email/:token" element={<EmailVerification />} />
           <Route path="/reset-password/:token" element={<PasswordReset onResetPassword={resetPassword} />} />
           
-          {/* Privacy policy - accessible without authentication */}
+          {/* Privacy policy, terms, and FAQ - accessible without authentication */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/faq" element={<FAQ />} />
           
           <Route 
             path="/*" 
