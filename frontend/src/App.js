@@ -233,6 +233,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/data-deletion" element={<DataDeletionRequest />} />
           
           {/* All other routes go to dashboard/app */}
           <Route 
