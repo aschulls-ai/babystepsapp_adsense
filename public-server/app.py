@@ -1017,6 +1017,49 @@ async def ai_chat(request: dict, current_user_email: str = Depends(get_current_u
         "model": "fallback"
     }
 
+# Data Deletion Request Endpoint
+class DeletionRequestModel(BaseModel):
+    email: EmailStr
+    reason: Optional[str] = None
+
+@app.post("/api/deletion-request")
+async def create_deletion_request(
+    request: DeletionRequestModel,
+    db: Session = Depends(get_db)
+):
+    """
+    Create a data deletion request
+    Public endpoint - does not require authentication
+    """
+    try:
+        # Create deletion request
+        deletion_request = DBDeletionRequest(
+            id=str(uuid.uuid4()),
+            email=request.email,
+            reason=request.reason,
+            status="pending",
+            created_at=datetime.utcnow()
+        )
+        
+        db.add(deletion_request)
+        db.commit()
+        
+        print(f"📝 Deletion request created for: {request.email}")
+        
+        return {
+            "success": True,
+            "message": "Your deletion request has been submitted successfully. You will receive a confirmation email once your data has been deleted.",
+            "request_id": deletion_request.id
+        }
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error creating deletion request: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to submit deletion request. Please try again or contact support."
+        )
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
