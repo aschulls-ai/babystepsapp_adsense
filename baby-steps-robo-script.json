@@ -1,0 +1,67 @@
+{
+  "title": "Baby Steps Login Flow",
+  "description": "Robo script to test Baby Steps app with demo account login",
+  "actions": [
+    {
+      "eventType": "VIEW_TEXT_CHANGED",
+      "replacementText": "demo@babysteps.com",
+      "elementDescriptors": [
+        {
+          "resourceId": "email",
+          "text": "Email"
+        },
+        {
+          "contentDescription": "email"
+        },
+        {
+          "text": "email"
+        }
+      ]
+    },
+    {
+      "eventType": "VIEW_TEXT_CHANGED",
+      "replacementText": "demo123",
+      "elementDescriptors": [
+        {
+          "resourceId": "password",
+          "text": "Password"
+        },
+        {
+          "contentDescription": "password"
+        },
+        {
+          "text": "password"
+        }
+      ]
+    },
+    {
+      "eventType": "VIEW_CLICKED",
+      "elementDescriptors": [
+        {
+          "text": "Sign In"
+        },
+        {
+          "text": "Login"
+        },
+        {
+          "text": "LOG IN"
+        },
+        {
+          "contentDescription": "login"
+        }
+      ]
+    },
+    {
+      "eventType": "DELAYED_VIEW_CLICKED",
+      "delayTime": 3000,
+      "elementDescriptors": [
+        {
+          "text": "Dashboard"
+        },
+        {
+          "contentDescription": "dashboard"
+        }
+      ]
+    }
+  ]
+}
