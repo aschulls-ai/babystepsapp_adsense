@@ -25,6 +25,8 @@ import Settings from './components/Settings';
 import EmailVerification from './components/EmailVerification';
 import PasswordReset from './components/PasswordReset';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
+import FAQ from './components/FAQ';
 import Layout from './components/Layout';
 import BottomBannerAd from './components/ads/BottomBannerAd';
 
