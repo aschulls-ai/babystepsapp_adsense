@@ -2234,10 +2234,11 @@ const ActivityHistoryList = ({ activities, filter, sortBy, sortOrder, currentBab
         if (activity.feeding_type) {
           details.push({ label: 'Type', value: activity.feeding_type });
         }
-        // Show amount and duration
-        if (activity.amount) {
+        // Show amount only for bottle feeding
+        if (activity.amount && activity.feeding_type === 'bottle') {
           details.push({ label: 'Amount', value: `${activity.amount} oz` });
         }
+        // Show duration for breast and bottle (if applicable)
         if (activity.duration) {
           details.push({ label: 'Duration', value: `${activity.duration} min` });
         }
