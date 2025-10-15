@@ -24,7 +24,7 @@ load_dotenv()
 # Import database configuration (using aliases to avoid naming conflicts)
 from database import (
     get_db, init_database, init_demo_data,
-    User as DBUser, Baby as DBBaby, Activity as DBActivity
+    User as DBUser, Baby as DBBaby, Activity as DBActivity, DeletionRequest as DBDeletionRequest
 )
 
 # Try to import AI functionality
