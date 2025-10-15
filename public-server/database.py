@@ -85,6 +85,16 @@ class Activity(Base):
     description = Column(Text)
     category = Column(String)  # physical, cognitive, social, language
 
+class DeletionRequest(Base):
+    __tablename__ = "deletion_requests"
+    
+    id = Column(String, primary_key=True, index=True)
+    email = Column(String, nullable=False, index=True)
+    reason = Column(Text)
+    status = Column(String, default="pending")  # pending, processing, completed
+    created_at = Column(DateTime, default=datetime.utcnow)
+    processed_at = Column(DateTime)
+
 # Database initialization
 def init_database():
     """Create all tables"""
