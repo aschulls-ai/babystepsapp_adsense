@@ -1,241 +1,55 @@
 {
-  "title": "Baby Steps Main App - Login and Navigation",
-  "description": "Robo script for Baby Steps main app with demo account (demo@babysteps.com / demo123)",
-  "actions": [
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000,
-      "note": "Wait for app to load"
+  "roboscript": {
+    "id": 1000,
+    "description": "Baby Steps app login and navigation test with demo account",
+    "executionMode": {
+      "strict": false,
+      "notify": false
     },
-    {
-      "eventType": "VIEW_TEXT_CHANGED",
-      "replacementText": "demo@babysteps.com",
-      "elementDescriptors": [
-        {
-          "resourceId": "email"
-        },
-        {
-          "text": "Email"
-        },
-        {
-          "className": "android.widget.EditText",
-          "contentDescription": "Email"
-        },
-        {
-          "xpath": "//input[@type='email']"
-        }
-      ],
-      "note": "Enter email address"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 500
-    },
-    {
-      "eventType": "VIEW_TEXT_CHANGED",
-      "replacementText": "demo123",
-      "elementDescriptors": [
-        {
-          "resourceId": "password"
-        },
-        {
-          "text": "Password"
-        },
-        {
-          "className": "android.widget.EditText",
-          "contentDescription": "Password"
-        },
-        {
-          "xpath": "//input[@type='password']"
-        }
-      ],
-      "note": "Enter password"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 500
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Sign In"
-        },
-        {
-          "text": "Login"
-        },
-        {
-          "text": "LOG IN"
-        },
-        {
-          "contentDescription": "Sign In"
-        },
-        {
-          "className": "android.widget.Button"
-        }
-      ],
-      "note": "Click login button"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 3000,
-      "note": "Wait for login to complete and dashboard to load"
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Track Activities"
-        },
-        {
-          "contentDescription": "Track Activities"
-        }
-      ],
-      "note": "Navigate to Track Activities"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Dashboard"
-        },
-        {
-          "contentDescription": "Dashboard"
-        }
-      ],
-      "note": "Back to Dashboard"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Baby Profile"
-        },
-        {
-          "contentDescription": "Baby Profile"
-        }
-      ],
-      "note": "Navigate to Baby Profile"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Dashboard"
-        },
-        {
-          "contentDescription": "Dashboard"
-        }
-      ],
-      "note": "Back to Dashboard"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Analysis"
-        },
-        {
-          "contentDescription": "Analysis"
-        }
-      ],
-      "note": "Navigate to Analysis"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "AI Parenting Assistant"
-        },
-        {
-          "contentDescription": "AI Parenting Assistant"
-        }
-      ],
-      "note": "Navigate to AI Assistant"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Formula Comparison"
-        },
-        {
-          "contentDescription": "Formula Comparison"
-        }
-      ],
-      "note": "Navigate to Formula Comparison"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Emergency Training"
-        },
-        {
-          "contentDescription": "Emergency Training"
-        }
-      ],
-      "note": "Navigate to Emergency Training"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Settings"
-        },
-        {
-          "contentDescription": "Settings"
-        }
-      ],
-      "note": "Navigate to Settings"
-    },
-    {
-      "eventType": "WAIT",
-      "delayTime": 2000
-    },
-    {
-      "eventType": "VIEW_CLICKED",
-      "elementDescriptors": [
-        {
-          "text": "Dashboard"
-        },
-        {
-          "contentDescription": "Dashboard"
-        }
-      ],
-      "note": "Return to Dashboard"
-    }
-  ]
+    "maxNumberOfRuns": 1,
+    "actions": [
+      {
+        "eventType": "DELAYED_MESSAGE_CLICK",
+        "delayTime": 2000
+      },
+      {
+        "eventType": "VIEW_TEXT_CHANGED",
+        "replacementText": "demo@babysteps.com",
+        "elementDescriptors": [
+          {
+            "resourceId": "email"
+          }
+        ]
+      },
+      {
+        "eventType": "DELAYED_MESSAGE_CLICK",
+        "delayTime": 500
+      },
+      {
+        "eventType": "VIEW_TEXT_CHANGED",
+        "replacementText": "demo123",
+        "elementDescriptors": [
+          {
+            "resourceId": "password"
+          }
+        ]
+      },
+      {
+        "eventType": "DELAYED_MESSAGE_CLICK",
+        "delayTime": 500
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "elementDescriptors": [
+          {
+            "text": "Sign In"
+          }
+        ]
+      },
+      {
+        "eventType": "DELAYED_MESSAGE_CLICK",
+        "delayTime": 3000
+      }
+    ]
+  }
 }
