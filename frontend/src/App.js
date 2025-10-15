@@ -46,6 +46,17 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'
 const DEMO_EMAIL = 'demo@babysteps.com';
 const DEMO_PASSWORD = 'demo123';
 
+// Android fetch wrapper for native app compatibility
+export const androidFetch = async (url, options = {}) => {
+  try {
+    const response = await fetch(url, options);
+    return response;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+};
+
 function App() {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
