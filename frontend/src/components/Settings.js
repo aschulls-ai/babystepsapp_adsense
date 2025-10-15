@@ -399,6 +399,54 @@ const Settings = ({ onLogout, darkMode, onToggleDarkMode }) => {
           </CardContent>
         </Card>
 
+        {/* Legal & Support Section */}
+        <Card className="glass border-0">
+          <CardHeader>
+            <CardTitle className="text-gray-900 dark:text-white">Legal & Support</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <a 
+              href="/faq" 
+              className="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <h3 className="font-medium text-gray-900 dark:text-white">User Guide & FAQ</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Get help and answers to common questions
+              </p>
+            </a>
+            
+            <a 
+              href="/privacy-policy" 
+              className="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <h3 className="font-medium text-gray-900 dark:text-white">Privacy Policy</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                How we protect and use your data
+              </p>
+            </a>
+            
+            <a 
+              href="/terms-of-service" 
+              className="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <h3 className="font-medium text-gray-900 dark:text-white">Terms of Service</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Terms and conditions of use
+              </p>
+            </a>
+            
+            <a 
+              href="mailto:babystepsapp@gmail.com" 
+              className="block p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <h3 className="font-medium text-gray-900 dark:text-white">Contact Support</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Email: babystepsapp@gmail.com
+              </p>
+            </a>
+          </CardContent>
+        </Card>
+
         {/* Logout Section */}
         <Card className="glass border-0">
           <CardContent className="pt-6">
